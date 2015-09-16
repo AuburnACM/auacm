@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="loginModule" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="loginModule" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="loginModule" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="loginModule" class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>AU ACM v2</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/components/html5-boilerplate/dist/css/normalize.css">
+  <link rel="stylesheet" href="/static/components/html5-boilerplate/dist/css/main.css">
+  <link rel="stylesheet" href="/static/css/app.css">
+  <script src="/static/components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+</head>
+<body>
+  <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+  
+  <div ng-controller="LoginController">
+    <ng-form name="login">
+      <p>Username:</p>
+      <input ng-model="username" name="username">
+      <p>Password:</p>
+      <input ng-model="password" type="password" name="password">
+    </ng-form>
+    <button ng-click="logIn()">Log In</button>
+  </div>
+
+  <!-- In production use:
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
+  -->
+  <script src="/static/components/angular/angular.js"></script>
+  <script src="/static/components/angular-route/angular-route.js"></script>
+  
+  <!-- Modules -->
+  <script src="/static/js/modules/loginModule.js"></script>
+  
+  <!-- Controllers -->
+  <script src="/static/js/controllers/LoginController.js"></script>
+</body>
+</html>
