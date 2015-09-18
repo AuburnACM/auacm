@@ -10,12 +10,12 @@ class Problem(Resource):
             \n<code>
             {
                 'status': 200,
-                'data':{
+                'data': {
                     'id': '1',
                     'name': 'N Days of Christmas',
                     'contest': '2013 Southeast Regional',
                     'difficulty': 'medium'
-                    'description_url': 'auacm.com/problems/001.pdf'
+                    'descriptionUrl': 'auacm.com/problems/001.pdf'
                 }
             }</code>
         """
@@ -26,12 +26,14 @@ class Problem(Resource):
         except ProblemNotFoundError as pnfe:
             return {'status': 404, 'error': pnfe.message}, 404
         return 
-            {'status': 200, 'data': { 
-                'id': problem.id,
-                'name': problem.name,
-                'contest': problem.contest,
-                'difficulty': problem.difficulty,
-                'description_url': self.url(id) 
+            {
+                'status': 200, 
+                'data': { 
+                    'id': problem.cid,
+                    'name': problem.name,
+                    'contest': problem.contest,
+                    'difficulty': problem.difficulty,
+                    'descriptionUrl': self.url(cid) 
                 }
             }, 200
 
@@ -85,5 +87,3 @@ class ProblemCollection(Resource):
         
         It returns a <code>Problem</code>
         """
-
-
