@@ -4,9 +4,17 @@ Welcome to the Auburn ACM programming competition source code.
 
 You're probably wondering how to set up your environment, so here we go:
 
-1. Start by cloning the repo. 
-``git clone https://github.com/AuburnACM/AUACM.git ``
-2. Navigate to ``/../AUACM/auacm/`` and set up your virtual environment.
+0. Install Homebrew 
+    ``$ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" ``
+
+1. Install git
+    ``brew install git ``
+
+2. Clone the repo. (Or install git if you have not)
+
+    ``git clone https://github.com/AuburnACM/AUACM.git ``
+
+3. Navigate to ``/../AUACM/auacm/`` and set up your virtual environment.
 Do this by executing the following commands: 
 
     ``$ pip install virtualenv``
@@ -14,17 +22,21 @@ Do this by executing the following commands:
     ``$ virtualenv flask``
     
     ``$ pip install -r requirements.txt``
+
+4. Install npm with
+
+    ``$ brew install npm``
     
-3. Install Bower with
+5. Install Bower with
 
     ``$ npm install -g bower``
     
-4. Install local components using Bower
+6. Install local components using Bower
 
     ``$ bower install`` 
 
-5. Now you can run the server on ``localhost:5000`` by running
+7. Now you can run the server on ``localhost:5000`` by running
 
-    ``$ python run.py``
+    ``$ python ./run.py``
     
 More steps to come.
