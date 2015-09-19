@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="problemsModule" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="problemsModule" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="problemsModule" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="problemsModule" class="no-js"> <!--<![endif]-->
+<head>
+  <link rel="icon" href="favicon.ico" />
+  <title>ACM Auburn</title>
+  <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+  <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+</head>
+<body ng-controller="ProblemsController">
+  <div class="header">
+    <div>
+      <span id="logo">Auburn ACM</span>
+      <span id="logout"><a href="logout.php">Sign Out<a/></span>
+      <span id="name">Username</span> <!-- Todo: change this to actually be the username -->
+    </div>
+  </div>
+  <div class="menu">
+    <div>
+      <ul>
+        <!--<a href="index.php"><li $problems_select>Problems</li></a>
+        <a href="judge.php"><li $judge_select>Judge</li></a>
+        <a href="competitions.php"><li $comp_select>Competitions</li></a>
+        <a href="activity.php"><li $activity_select>Activity</li></a>
+        <a href="settings.php"><li $settings_select>Settings</li></a>-->
+        <!--$adminLink-->
+      </ul>
+    </div>
+  </div>
+  <div class="main-fixed">
+    <div class="title">
+      Problems
+    </div>
+    <div class="body">
+      <table>
+        <tr>
+          <th><a id="problem_name">Name</a></th>
+          <th><a id="appeared">Appeared In</a></th>
+          <th><a id="solved">Solved By</a></th>
+          <th><a id="difficulty">Difficulty</a></th>
+          <th>Judge</th>
+        </tr>
+        <tr ng-repeat="problem in problems">
+          <td><a href="">{{ problem.name }}</a></td>
+          <td>{{ problem.appeared }}</td>
+          <td class="center">{{ problem.solved }}</td>
+          <td class="center">{{ problem.difficulty }}</td>
+          <td class="center nopad"><a href="judge.php?pid= problem.pid + ""><img src="/static/img/hammer.svg"></a></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  
+  <script src="/static/components/angular/angular.js"></script>
+  <script src="/static/components/angular-route/angular-route.js"></script>
+  
+  <!-- Modules -->
+  <script src="/static/js/modules/problemsModule.js"></script>
+  
+  <!-- Controllers -->
+  <script src="/static/js/controllers/ProblemsController.js"></script>
+  
+</body>
