@@ -1,0 +1,364 @@
+html {
+  overflow-y: scroll;
+}
+* {
+  font-family: 'Open Sans', sans-serif;
+}
+body {
+  margin: 0px;
+  background-color: #e6e6e6;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+input,
+select {
+  padding: 3px;
+  margin: 3px;
+}
+.center {
+  text-align: center !important;
+}
+.nopad {
+  padding: 0px !important;
+}
+.margin-sides {
+  margin: 0 20px;
+}
+.padding-sides {
+  padding: 0 20px;
+}
+.float-r {
+  float: right;
+}
+#login_wrap {
+  text-align: center;
+  margin: 200px;
+}
+#login_box {
+  border: 1px solid #cecece;
+  background-color: #dedede;
+  padding: 10px;
+  display: inline-block;
+}
+.header {
+  line-height: 50px;
+  max-height: 50px;
+  background-color: #39424e;
+  color: #ffffff;
+}
+.header div {
+  max-width: 1000px;
+  margin: auto;
+}
+.header #logo {
+  font-size: 36px;
+  margin: 0 20px;
+}
+.header #logout {
+  font-size: 12px;
+  margin: 0 20px;
+  float: right;
+}
+.header #name {
+  font-size: 26px;
+  float: right;
+}
+.menu {
+  line-height: 50px;
+  background-color: #f5f5f5;
+}
+.menu div {
+  max-width: 1000px;
+  margin: auto;
+}
+.menu ul {
+  list-style-type: none;
+  margin: 0px;
+  font-size: 18px;
+  color: #232323;
+}
+.menu li {
+  display: inline-block;
+  margin: 0 20px;
+  padding: 0 20px;
+}
+.menu li:hover {
+  border-bottom: 2px solid red;
+}
+.menu .selected {
+  border-bottom: 2px solid red;
+  font-weight: bold;
+}
+.main {
+  background-color: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #d7d7d7;
+  margin: 40px auto;
+}
+.main-fixed {
+  background-color: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #d7d7d7;
+  margin: 40px auto;
+  max-width: 800px;
+}
+.main-var {
+  background-color: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #d7d7d7;
+  margin: 40px auto;
+  display: table;
+}
+.main-wide {
+  background-color: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #d7d7d7;
+  margin: 40px auto;
+  margin: 40px;
+}
+.title {
+  padding: 0 20px;
+  background-color: #f5f5f5;
+  border-radius: 10px 10px 0px 0px;
+  border-bottom: 1px solid #d7d7d7;
+  line-height: 40px;
+  font-size: 18px;
+  color: #323232;
+}
+.body {
+  font-size: 14px;
+  color: #646464;
+  padding: 20px;
+}
+.body a {
+  color: #3179c7;
+}
+.body a:hover {
+  color: #27619f;
+}
+.body table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.body table th {
+  padding: 10px;
+  border: 1px solid #d7d7d7;
+  background-color: #f5f5f5;
+}
+.body table td {
+  padding: 6px 15px;
+  border: 1px solid #d7d7d7;
+}
+.body table img {
+  height: 25px;
+}
+.body table tr:hover {
+  background-color: #f5f5f5;
+}
+.body table .complete {
+  background-color: #d5eed2;
+}
+.body table .complete:hover {
+  background-color: #d0e8cd;
+}
+.body p {
+  font-size: txt-lg;
+}
+.body a.tooltip {
+  background-color: #f0f0f0;
+  text-decoration: none;
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  color: #969696;
+}
+.body a.tooltip:hover {
+  background-color: #dcdcdc;
+}
+.body a.tooltip span {
+  display: none;
+  text-align: left;
+  padding: 10px;
+  position: absolute;
+  background: white;
+  margin-left: -25px;
+  margin-top: 35px;
+  border: thin solid red;
+}
+.body a.tooltip:hover span {
+  display: inline;
+}
+.body a.tooltip#completed {
+  background-color: #B2FEB2;
+}
+.body a.tooltip#completed:hover {
+  background-color: #A1E3A1;
+}
+.body .good {
+  background-color: #65b045;
+  color: #ffffff;
+}
+.body .wrong {
+  background-color: #d73d32;
+  color: #ffffff;
+}
+#auto_describe {
+  color: #969696;
+  margin: 50px 50px 0px 50px;
+}
+/*
+.problems {
+	table {
+		width: 100%;
+		border-collapse: collapse;		
+	}
+
+	th {
+		padding: 10px;
+		border: 1px solid @gray5;
+		background-color: @gray7;
+	}
+
+	td {
+		padding: 2px 15px;
+		border: 1px solid @gray5;
+	}	
+
+	tr:hover {
+		background-color: @gray7;
+	}	
+
+	a {
+		color: rgb(49, 121, 199);
+
+		&:hover {
+			font-weight: bold;
+		}
+	}	
+
+
+	.complete {
+		background-color: rgb(213, 238, 210);
+
+		&:hover {
+			background-color: rgb(208, 232, 205);
+		}
+	}	
+}
+*/
+/*****************
+	TABLES
+******************/
+/*
+table {
+	ccolor: inherit;
+	ffont-size: inherit;
+}
+
+table form {
+	display: inline;
+}
+
+table img {
+	height: 25px;
+}
+
+.shading {
+	border-spacing: 0px;
+}
+
+.shading tr:nth-child(even) {
+	background-color: rgb(240, 240, 240);
+}
+
+.wide {
+	width: 100%;
+}
+
+.wide select {
+	width: 250px;
+}
+
+.center {
+	text-align: center;
+}
+
+.padding td, .padding th, .padding input {
+	padding: 4px;
+	padding-left: 10px;
+}
+
+.compact td, .compact th, .compact input {
+	padding: 2px;
+	margin: 1px;
+}*/
+/*****************
+	NOTIFY
+******************/
+.notify_good {
+  background-color: #65b045;
+  height: 40px;
+  line-height: 40px;
+}
+.notify_bad {
+  background-color: #d73d32;
+  height: 40px;
+  line-height: 40px;
+}
+.notify_text {
+  margin: 20px;
+  font-size: 18px;
+  color: #ffffff;
+}
+/*****************
+	ACTIVITY
+******************/
+/*
+.activity  > p {
+	color: rgb(100, 100, 100);
+	font-size: 18px;
+}
+
+a.tooltip {
+	background-color: rgb(240, 240, 240);
+	text-decoration: none;
+	display: inline-block;
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	color: rgb(150, 150, 150);
+}
+
+a.tooltip:hover {
+	background-color: rgb(220, 220, 220);
+}
+
+a.tooltip span {
+    display:none;
+	text-align: left;
+	padding:10px;
+	position:absolute;
+	background: white;
+	margin-left: -25px;
+	margin-top: 35px;
+	border: thin solid red;
+}
+
+a.tooltip:hover span{
+    display:inline;
+}
+
+a.tooltip#completed {
+	background-color: #B2FEB2;
+}
+
+a.tooltip#completed:hover {
+	background-color: #A1E3A1;
+}
+*/
