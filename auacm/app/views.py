@@ -20,6 +20,10 @@ def index():
 @login_required
 def getProblemsPage():
     return serve_html('problems.html')
+    
+@app.route('/login')
+def getLoginPage():
+    return serve_html('login.html')
 
 # ideally, this would be broken out into a different module, but we can
 # fix that later. For now, this works, and that's all that matters.
@@ -57,3 +61,11 @@ def login():
 def logout():
     logout_user()
     return serve_response({})
+
+@app.route('/api/me')
+@login_required
+def getMe():
+    return serve_response({
+        'username': current_user.user.username, 
+        'displayName': current_user.user.display
+    })
