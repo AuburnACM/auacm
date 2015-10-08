@@ -27,7 +27,7 @@ login_manager.init_app(app)
 from app.modules.user_manager.models import User
 @login_manager.user_loader
 def load_user(user_id):
-    result = session.query(Base.classes.users).filter(Base.classes.users.username=='will').first()
+    result = session.query(Base.classes.users).filter(Base.classes.users.username==user_id).first()
     if result:
         return User(result)
     else:
