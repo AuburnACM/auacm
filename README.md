@@ -46,13 +46,17 @@ More steps to come.
 ##Ubuntu
 
 0. Install git
+    
     ``$ sudo apt-get install git ``
 
 1. Clone the repo.
+
     ``git clone https://github.com/AuburnACM/AUACM.git ``
 
-2. Navigate to ``.../AUACM/auacm/`` and execute setup the environment:
+2. Navigate to ``.../AUACM/auacm/`` and execute this to setup the environment:
+    
     ``source ubuntu_setup.env``
+    
     Follow all the setup instructions.
 
 3. Now you can run the server on localhost:5000 by running
