@@ -1,14 +1,10 @@
-from flask import render_template, jsonify, request
+from flask import render_template, request
 from flask.ext.login import login_user, logout_user, current_user, login_required
-from app import app, session, Base, serve_html, load_user, bcrypt
-from app.modules.user_manager.models import User
+from app import app
+from app.modules.user_manager.models import User, load_user
+from app.util import bcrypt, login_manager, serve_html, serve_response, serve_error
 # from app.modules.problem_manager.models import Problem
 
-def serve_response(response, response_code=200):
-    return jsonify({'status': response_code, 'data': response}), response_code
-
-def serve_error(error, response_code):
-    return jsonify({'status': response_code, 'error': error}), response_code
 
 @app.route('/')
 @app.route('/index')
