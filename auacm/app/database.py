@@ -1,4 +1,4 @@
-'''Database handlers'''
+'''Database handlers.'''
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.automap import automap_base
