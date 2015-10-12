@@ -4,6 +4,8 @@ Welcome to the Auburn ACM programming competition source code.
 
 You're probably wondering how to set up your environment, so here we go:
 
+##Mac
+
 0. Install Homebrew 
     ``$ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" ``
 
@@ -37,6 +39,25 @@ Do this by executing the following commands:
 
 7. Now you can run the server on ``localhost:5000`` by running
 
-    ``$ python ./run.py``
+    ``$ ./run.py``
     
 More steps to come.
+
+##Ubuntu
+
+0. Install git
+    
+    ``$ sudo apt-get install git ``
+
+1. Clone the repo.
+
+    ``git clone https://github.com/AuburnACM/AUACM.git ``
+
+2. Navigate to ``.../AUACM/auacm/`` and execute this to setup the environment:
+    
+    ``source ubuntu_setup.env``
+    
+    Follow all the setup instructions.
+
+3. Now you can run the server on localhost:5000 by running
+    ``$ ./run.py``
