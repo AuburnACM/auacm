@@ -1,11 +1,9 @@
 from flask import render_template, request
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app
-# from app.modules.user_manager.models import load_user
 from app.database import Base, session
 from app.util import bcrypt, login_manager, serve_html, serve_response, serve_error
 from app.modules.user_manager.models import User
-# from app.modules.problem_manager.models import Problem
 
 
 @app.route('/')
@@ -29,6 +27,15 @@ def getLoginPage():
 @login_required
 def getProblems():
     problems = list()
+    Submits = Base.classes.submits
+    solved = session.query(Submits).\
+            filter(Submits.username==current_user.username).\
+            filter(Submits.result=="good").\
+            all()
+    solved_set = set()
+    for solve in solved:
+        solved_set.add(solve.pid)
+    
     for problem in session.query(Base.classes.problems).all():
         problems.append({
             'pid': problem.pid,
@@ -37,7 +44,8 @@ def getProblems():
             'difficulty': problem.difficulty,
             'compRelease': problem.comp_release,
             'added': problem.added,
-            'timeLimit': problem.time_limit
+            'timeLimit': problem.time_limit,
+            'solved': problem.pid in solved_set
         })
     return serve_response(problems)
 

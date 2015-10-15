@@ -42,10 +42,10 @@
           <th><a id="difficulty">Difficulty</a></th>
           <th>Judge</th>
         </tr>
-        <tr ng-repeat="problem in problems">
+        <tr ng-class="{'complete': problem.solved}" ng-repeat="problem in problems">
           <td><a href="">{{ problem.name }}</a></td>
           <td>{{ problem.appeared }}</td>
-          <td class="center">{{ problem.solved }}</td>
+          <td class="center">{{ problem.solvedBy }}</td>
           <td class="center">{{ problem.difficulty }}</td>
           <td class="center nopad"><a href="judge.php?pid= problem.pid + ""><img src="/static/img/hammer.svg"></a></td>
         </tr>
