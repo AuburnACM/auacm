@@ -4,6 +4,8 @@ from flask import send_from_directory, jsonify
 from flask.ext.login import LoginManager
 from flask.ext.bcrypt import Bcrypt
 from app import app
+from app.database import session
+from app.modules.user_manager.models import User
 
 # bcrypt setup
 bcrypt = Bcrypt(app)
@@ -13,7 +15,12 @@ bcrypt = Bcrypt(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+@login_manager.user_loader
+def load_user(user_id):
+    '''Log a user into the app.'''
+    return session.query(User).filter(User.username==user_id).first()
 
+# functions for serving responses 
 def serve_html(filename):
     '''Serve static HTML pages.'''
     return send_from_directory(app.static_folder+"/html/", filename)

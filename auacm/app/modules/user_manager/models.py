@@ -1,32 +1,22 @@
 '''Reflection and utilities for the users database table.'''
 
-from app.database import Base, session
-from app.util import login_manager
+from app.database import Base
 
-class User(Base.classes.users):
+test = 'this is a test'
+
+class User(Base):
     '''Model object for entries in the users database table.'''
-
-    def __init__(self, user):
-        self.user = user
     
+    __tablename__ = 'users'
+
     def is_authenticated(self):
         return True
-        
+
     def is_active(self):
-        return is_authenticated()
-        
+        return True
+
     def is_anonymous(self):
         return False
-    
+
     def get_id(self):
-        return self.user.username
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    '''Log a user into the app.'''
-    result = session.query(Base.classes.users).filter(Base.classes.users.username==user_id).first()
-    if result:
-        return User(result)
-    else:
-        return None
+        return self.username

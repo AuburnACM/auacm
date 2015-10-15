@@ -1,8 +1,10 @@
 from flask import render_template, request
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app
-from app.modules.user_manager.models import User, load_user
+# from app.modules.user_manager.models import load_user
+from app.database import Base, session
 from app.util import bcrypt, login_manager, serve_html, serve_response, serve_error
+from app.modules.user_manager.models import User
 # from app.modules.problem_manager.models import Problem
 
 
@@ -45,7 +47,7 @@ def login():
     password = request.form['password']
     user = load_user(username)
     if user:
-        hashed = user.user.passw
+        hashed = user.passw
         if bcrypt.check_password_hash(hashed, password):
             # everything's gucci
             login_user(user)
@@ -62,6 +64,6 @@ def logout():
 @login_required
 def getMe():
     return serve_response({
-        'username': current_user.user.username, 
-        'displayName': current_user.user.display
+        'username': current_user.username, 
+        'displayName': current_user.display
     })
