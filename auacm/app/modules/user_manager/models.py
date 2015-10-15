@@ -1,7 +1,11 @@
-from app import Base
+'''Reflection and utilities for the users database table.'''
+
+from app.database import Base, session
+from app.util import login_manager
 
 class User(Base.classes.users):
-    
+    '''Model object for entries in the users database table.'''
+
     def __init__(self, user):
         self.user = user
     
@@ -16,3 +20,13 @@ class User(Base.classes.users):
     
     def get_id(self):
         return self.user.username
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    '''Log a user into the app.'''
+    result = session.query(Base.classes.users).filter(Base.classes.users.username==user_id).first()
+    if result:
+        return User(result)
+    else:
+        return None
