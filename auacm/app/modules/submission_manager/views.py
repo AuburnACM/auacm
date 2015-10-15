@@ -18,7 +18,6 @@ def submit():
     file = request.files['file']
     if not allowed_filetype(file.filename):
         return serve_error('filename not allowed', response_code=403)
-    # `job`, `username`, `pid`, `submit_time`, `auto_id`, `file_type`, `result`
     attempt = Submission(username=current_user.username,\
             pid=int(request.form['pid']),\
             submit_time=int(time.time()),\
@@ -28,5 +27,7 @@ def submit():
     session.add(attempt)
     session.flush()
     session.refresh(attempt)
-    file.save(os.path.join(app.config['DATA_FOLDER'], file.filename))
+    directory = os.path.join(app.config['DATA_FOLDER'], str(attempt.job))
+    os.mkdir(directory)
+    file.save(os.path.join(directory, file.filename))
     return serve_response('{}')
