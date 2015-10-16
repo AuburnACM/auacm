@@ -8,8 +8,10 @@ import os, time, subprocess
 from os.path import isfile, join
 from subprocess import Popen
 from time import sleep
+from threading import Thread, Lock
 
 ALLOWED_EXTENSIONS = ['java', 'c', 'cpp', 'c++', 'py', 'go']
+dblock = Lock()
 
 def allowed_filetype(filename):
     return '.' in filename and \
@@ -35,11 +37,13 @@ def submit():
             result='compile')
     session.add(attempt)
     session.flush()
+    session.commit()
     session.refresh(attempt)
     directory = directory_for_submission(attempt)
     os.mkdir(directory)
     file.save(join(directory, file.filename))
-    start_execution(attempt, file)
+    thread = Thread(target=start_execution, args=(attempt, file))
+    thread.start()
     return serve_response('{}')
 
 def start_execution(submission, file):
@@ -58,8 +62,7 @@ def compile_java(submission, file):
     if subprocess.call(['javac', location]):
         return True
     else:
-        submission.result = 'compile'
-        session.flush()
+        update_submission_result(submission, 'compile')
         return False
         
 def compile_c(submission, file):
@@ -67,29 +70,38 @@ def compile_c(submission, file):
     if subprocess.call(['g++', location]):
         return True
     else:
-        submission.result = 'compile'
-        session.flush()
+        update_submission_result(submission, 'compile')
         return False
         
-def get_process_handle(submission, file):
+def update_submission_result(submission, result):
+    submission.result = result
+    dblock.acquire()
+    session.flush()
+    session.commit()
+    dblock.release()
+        
+def get_process_handle(submission, file, in_file, test_num):
+    out_directory = join(directory_for_submission(submission), 'out')
+    os.mkdir(out_directory)
+    input_path = join(directory_for_problem(submission.pid), 'in')
     if submission.file_type=='java':
         return Popen(['java', '-cp',\
                 directory_for_submission(submission),\
                 file.filename.rsplit('.', 1)[0]],\
                 stdin=open(join(input_path, in_file)),\
-                stdout=open(join(sub_out_directory, "out" + str(test_num) + ".txt"), 'w'))
+                stdout=open(join(out_directory, "out" + str(test_num) + ".txt"), 'w'))
     elif submission.file_type=='c' or submission.file_type=='cpp' or submission.file_type=='c++':
-        return Popen(join(directory_for_submission(submission), 'a.out')]\
+        return Popen(join(directory_for_submission(submission), 'a.out'),\
                 stdin=open(join(input_path, in_file)),\
-                stdout=open(join(sub_out_directory, "out" + str(test_num) + ".txt"), 'w'))
+                stdout=open(join(out_directory, "out" + str(test_num) + ".txt"), 'w'))
     elif submission.file_type=='py':
-        return Popen(['python', join(directory_for_submission(submission), file.filename)]\
+        return Popen(['python', join(directory_for_submission(submission), file.filename)],\
                 stdin=open(join(input_path, in_file)),\
-                stdout=open(join(sub_out_directory, "out" + str(test_num) + ".txt"), 'w'))
+                stdout=open(join(out_directory, "out" + str(test_num) + ".txt"), 'w'))
     elif submission.file_type=='go':
-        return Popen('go', 'run', join(directory_for_submission(submission), file.filename)\
+        return Popen('go', 'run', join(directory_for_submission(submission), file.filename),\
                 stdin=open(join(input_path, in_file)),\
-                stdout=open(join(sub_out_directory, "out" + str(test_num) + ".txt"), 'w'))
+                stdout=open(join(out_directory, "out" + str(test_num) + ".txt"), 'w'))
     
 def execute_java(submission, file):
     print 'beginning execution'
@@ -99,13 +111,11 @@ def execute_java(submission, file):
     input_path = join(directory, 'in')
     output_path = join(directory, 'out')
     input_files = [ f for f in os.listdir(input_path) if isfile(join(input_path, f)) ]
-    sub_out_directory = join(directory_for_submission(submission), 'out')
-    os.mkdir(sub_out_directory)
 
     for in_file in input_files:
         print 'checking file'
         test_num = int(in_file.rsplit('.', 1)[0][2:]) # what the fuck
-        process_handle = get_process_handle(submission, file)
+        process_handle = get_process_handle(submission, file, in_file, test_num)
         
         timeout_time = time.time() + problem.time_limit
         while process_handle.poll() is None and time.time() < timeout_time:
@@ -122,16 +132,15 @@ def execute_java(submission, file):
             
             if not len(generated_lines) == len(test_lines):
                 print 'lengths different', len(generated_lines), len(test_lines)
-                submission.result = 'wrong'
-                session.flush()
+                print 'wrong (lengths)'
+                update_submission_result(submission, 'wrong')
                 return
             
             for i in range(0, len(test_lines)):
                 if not test_lines[i] == generated_lines[i]:
-                    submission.result = 'wrong'
-                    session.flush()
+                    print 'wrong'
+                    update_submission_result(submission, 'wrong')
                     return
 
-    submission.result = 'correct'
-    session.flush()
-    
+    print 'correct'
+    update_submission_result(submission, 'good')
