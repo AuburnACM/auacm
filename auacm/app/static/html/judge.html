@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="loginModule" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="loginModule" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="loginModule" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="judgeModule" class="no-js"> <!--<![endif]-->
+<head>
+  <link rel="icon" href="favicon.ico" />
+  <title>ACM Auburn</title>
+  <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+  <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+</head>
+<body ng-controller="JudgeController">
+  <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+  <div class="header">
+    <div>
+      <span id="logo">Auburn ACM</span>
+      <!--<a href="/api/logout">Sign Out<a/>-->
+      <span id="name">{{ username }}</span>
+    </div>
+  </div>
+  <div class='main-fixed'>
+    <div class='title'>
+      Submit File
+    </div>
+    <div class="body">
+      <select name="pid" ng-model="pid">
+        <option value="{{ problem.pid }}" ng-repeat="problem in problems">{{ problem.name }}</option>
+      </select>
+      <input type="file" accept=".java,.py,.c,.cpp,.c++,.go" file-model="file"/>
+      <input type="submit" ng-click="submit()" class="margin-20 float-r">
+    </div>
+  </div>
+
+  <!-- In production use:
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
+  -->
+  <script src="/static/components/angular/angular.js"></script>
+  <script src="/static/components/angular-route/angular-route.js"></script>
+  
+  <!-- Modules -->
+  <script src="/static/js/modules/judgeModule.js"></script>
+  
+  <!-- Controllers -->
+  <script src="/static/js/controllers/JudgeController.js"></script>
+</body>
+</html>

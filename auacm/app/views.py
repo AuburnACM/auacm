@@ -8,7 +8,6 @@ from app.modules.user_manager.models import User
 
 @app.route('/')
 @app.route('/index')
-@login_required
 def index():
     return render_template('login.html')
 
@@ -16,6 +15,12 @@ def index():
 @login_required
 def getProblemsPage():
     return serve_html('problems.html')
+
+@app.route('/judge')
+@app.route('/submit')
+@login_required
+def getJudgePage():
+    return serve_html('judge.html')
     
 @app.route('/login')
 def getLoginPage():

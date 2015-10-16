@@ -13,7 +13,7 @@
   <div class="header">
     <div>
       <span id="logo">Auburn ACM</span>
-      <span id="logout"><a href="/api/logout">Sign Out<a/></span>
+      <!--<span id="logout"><a href="api/logout">Sign Out<a/></span>-->
       <span id="name">{{ username }}</span>
     </div>
   </div>
@@ -47,7 +47,7 @@
           <td>{{ problem.appeared }}</td>
           <td class="center">{{ problem.solvedBy }}</td>
           <td class="center">{{ problem.difficulty }}</td>
-          <td class="center nopad"><a href="judge.php?pid= problem.pid + ""><img src="/static/img/hammer.svg"></a></td>
+          <td class="center nopad"><a href="judge"><img src="/static/img/hammer.svg"></a></td>
         </tr>
       </table>
     </div>
