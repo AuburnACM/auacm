@@ -3,9 +3,7 @@
     Submit File
   </div>
   <div class="body">
-    <select name="pid" ng-model="pid">
-      <option value="{{ problem.pid }}" ng-repeat="problem in problems">{{ problem.name }}</option>
-    </select>
+    <select ng-options="problem.pid as problem.name for problem in problems" ng-model="pid"></select>
     <input type="file" accept=".java,.py,.c,.cpp,.c++,.go" file-model="file"/>
     <input type="submit" ng-click="submit()" class="margin-20 float-r">
   </div>
