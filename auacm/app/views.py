@@ -9,18 +9,10 @@ from os.path import join
 
 @app.route('/')
 @app.route('/index')
-@app.route('/problems')
 @login_required
 def getProblemsPage():
     print "serving index.html"
     return render_template('index.html', username=current_user.display)
-
-
-@app.route('/judge')
-@app.route('/submit')
-@login_required
-def getJudgePage():
-    return serve_html('judge.html')
 
     
 @app.route('/login')
@@ -28,8 +20,9 @@ def getJudgePage():
 def getLoginPage():
     return serve_html('login.html')
 
-    
+
 @app.route('/problems/<pid>')
+@app.route('/problems/<pid>/info.pdf')
 @login_required
 def getProblemInfo(pid):
     return serve_info_pdf(pid)
