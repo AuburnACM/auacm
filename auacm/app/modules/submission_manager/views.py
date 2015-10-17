@@ -6,7 +6,8 @@ from threading import Thread, Lock
 
 from flask import request
 from flask.ext.login import current_user, login_required
-from app import app
+from flask.ext.socketio import emit
+from app import app, socketio
 from app.database import Base, session
 from app.util import serve_response, serve_error
 from .models import Submission
@@ -27,6 +28,11 @@ def directory_for_submission(submission):
 
 def directory_for_problem(pid):
     return join(app.config['DATA_FOLDER'], 'problems', pid)
+    
+
+# @socketio.on('connect', namespace="/judge")
+# def onConnection():
+#     print 'conencted'
 
 
 @app.route("/api/submit", methods=["POST"])
@@ -63,7 +69,9 @@ def submit():
     uploaded_file.save(join(directory, uploaded_file.filename))
     thread = Thread(target=start_execution, args=(attempt, uploaded_file))
     thread.start()
-    return serve_response('{}')
+    return serve_response({
+        'submissionId' : submission.job
+    })
 
 
 def start_execution(submission, uploaded_file):
@@ -90,7 +98,7 @@ def compile_java(submission, uploaded_file):
                        stderr=open(join(directory_for_submission(submission), 'error.txt'), 'w')):
         return True
     else:
-        update_submission_status(submission, 'compile')
+        update_submission_status(submission, 'compile', -1)
         return False
 
 
@@ -100,11 +108,11 @@ def compile_c(submission, uploaded_file):
                        stderr=open(join(directory_for_submission(submission), 'error.txt'), 'w')):
         return True
     else:
-        update_submission_status(submission, 'compile')
+        update_submission_status(submission, 'compile', -1)
         return False
 
 
-def update_submission_status(submission, status):
+def update_submission_status(submission, status, test_num):
     """
     Updates the submission's status in the database.
 
@@ -112,7 +120,13 @@ def update_submission_status(submission, status):
     :param status: the status of the submission
     :return: None
     """
-
+    emit('status', 
+            { 
+                'submissionId' : submission.job,
+                'status' : status,
+                'testNum' : test_num
+            },
+            namespace='/judge')
     submission.result = status
     dblock.acquire()
     session.flush()
@@ -175,6 +189,7 @@ def execute(submission, submission_file):
     for in_file in input_files:
         print 'checking file'
         test_num = int(in_file.rsplit('.', 1)[0][2:])  # what the fuck
+        update_submission_status(submission, 'running', test_num)
         process_handle = get_process_handle(submission, submission_file, in_file, test_num)
 
         timeout_time = time.time() + problem.time_limit
@@ -184,12 +199,12 @@ def execute(submission, submission_file):
         if process_handle.poll() is None:
             # timeout
             process_handle.terminate()
-            update_submission_status(submission, 'timeout')
+            update_submission_status(submission, 'timeout', test_num)
             print 'timeout'
             return
 
         if process_handle.returncode is not 0:
-            update_submission_status(submission, 'runtime')
+            update_submission_status(submission, 'runtime', test_num)
             print 'runtime'
             return
 
@@ -201,14 +216,14 @@ def execute(submission, submission_file):
             if not len(generated_lines) == len(test_lines):
                 print 'lengths different', len(generated_lines), len(test_lines)
                 print 'wrong (lengths)'
-                update_submission_status(submission, 'wrong')
+                update_submission_status(submission, 'wrong', test_num)
                 return
 
             for l1, l2 in zip(generated_lines, test_lines):
                 if not l1 == l2:
                     print 'wrong'
-                    update_submission_status(submission, 'wrong')
+                    update_submission_status(submission, 'wrong', test_num)
                     return
 
     print 'correct'
-    update_submission_status(submission, 'good')
+    update_submission_status(submission, 'good', test_num)

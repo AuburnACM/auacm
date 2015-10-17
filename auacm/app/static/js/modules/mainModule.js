@@ -1,7 +1,7 @@
 'use strict';
 
 // Declare app level module which depends on views, and components
-var app = angular.module('mainModule',['ngRoute']);
+var app = angular.module('mainModule',['ngRoute', 'ngWebsocket']);
 // configure our routes
 app.config(function($routeProvider) {
     $routeProvider

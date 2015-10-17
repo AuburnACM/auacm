@@ -24,6 +24,12 @@ Do this by executing the following commands:
     ``$ virtualenv flask``
     
     ``$ pip install -r requirements.txt``
+    
+3. Run the following commands.
+
+    ``$ CFLAGS='-std=c99' ./flask/bin/pip install gevent``
+    
+    ``$ ./flask/bin/pip install Flask-Sockets``
 
 4. Install npm with
 
