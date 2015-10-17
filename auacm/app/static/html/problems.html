@@ -43,7 +43,7 @@
           <th>Judge</th>
         </tr>
         <tr ng-class="{'complete': problem.solved}" ng-repeat="problem in problems">
-          <td><a href="">{{ problem.name }}</a></td>
+          <td><a href="{{ problem.url }}">{{ problem.name }}</a></td>
           <td>{{ problem.appeared }}</td>
           <td class="center">{{ problem.solvedBy }}</td>
           <td class="center">{{ problem.difficulty }}</td>

@@ -2,15 +2,13 @@ from flask import render_template, request
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app
 from app.database import Base, session
-from app.util import bcrypt, login_manager, serve_html, serve_response, serve_error
+from app.util import bcrypt, login_manager, serve_info_pdf, serve_html, serve_response, serve_error, load_user
 from app.modules.user_manager.models import User
+from os.path import join
 
 
 @app.route('/')
 @app.route('/index')
-def index():
-    return render_template('login.html')
-
 @app.route('/problems')
 @login_required
 def getProblemsPage():
@@ -23,8 +21,14 @@ def getJudgePage():
     return serve_html('judge.html')
     
 @app.route('/login')
+@login_manager.unauthorized_handler
 def getLoginPage():
     return serve_html('login.html')
+    
+@app.route('/problems/<pid>')
+@login_required
+def getProblemInfo(pid):
+    return serve_info_pdf(pid)
 
 # ideally, this would be broken out into a different module, but we can
 # fix that later. For now, this works, and that's all that matters.
@@ -50,9 +54,13 @@ def getProblems():
             'compRelease': problem.comp_release,
             'added': problem.added,
             'timeLimit': problem.time_limit,
-            'solved': problem.pid in solved_set
+            'solved': problem.pid in solved_set,
+            'url': url_for_problem(problem)
         })
     return serve_response(problems)
+    
+def url_for_problem(problem):
+    return join('problems', str(problem.pid))
 
 @app.route('/api/login', methods=['POST'])
 def login():

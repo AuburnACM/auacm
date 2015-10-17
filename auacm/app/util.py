@@ -6,6 +6,7 @@ from flask.ext.bcrypt import Bcrypt
 from app import app
 from app.database import session
 from app.modules.user_manager.models import User
+from os.path import join
 
 # bcrypt setup
 bcrypt = Bcrypt(app)
@@ -24,6 +25,11 @@ def load_user(user_id):
 def serve_html(filename):
     '''Serve static HTML pages.'''
     return send_from_directory(app.static_folder+"/html/", filename)
+
+ 
+def serve_info_pdf(pid):
+    '''Serve static PDFs.'''
+    return send_from_directory(join(app.config['DATA_FOLDER'], 'problems', pid), 'info.pdf')
 
 
 def serve_response(response, response_code=200):
