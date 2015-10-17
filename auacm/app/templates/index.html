@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="mainModule" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="mainModule" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="mainModule" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="mainModule" class="no-js"> <!--<![endif]-->
+<head>
+  <link rel="icon" href="favicon.ico" />
+  <title>ACM Auburn</title>
+  <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+  <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+</head>
+<body ng-controller="MainController">
+  <div class="header">
+    <div>
+      <span id="logo">Auburn ACM</span>
+      <!--<span id="logout"><a href="api/logout">Sign Out<a/></span>-->
+      <span id="name">{{ username }}</span>
+    </div>
+  </div>
+  <div class="menu">
+    <div>
+      <ul>
+        <a href="/#/"><li ng-class="{selected: $route.current.activetab == 'problems'}">Problems</li></a>
+        <a href="/#/judge"><li ng-class="{selected: $route.current.activetab == 'judge'}">Judge</li></a>
+        <a href="/#/competitions"><li ng-class="{selected: $route.current.activetab == 'competitions'}">Competitions</li></a>
+        <a href="/#/settings"><li ng-class="{selected: $route.current.activetab == 'settings'}">Settings</li></a>
+      </ul>
+    </div>
+  </div>
+  <div id="main">
+      <div ng-view></div>
+  </div>
+  
+  <script src="/static/components/angular/angular.js"></script>
+  <script src="/static/components/angular-route/angular-route.js"></script>
+  
+  <!-- Modules -->
+  <script src="/static/js/modules/mainModule.js"></script>
+  
+  <!-- Controllers -->
+  <script src="/static/js/controllers/MainController.js"></script>
+  <script src="/static/js/controllers/ProblemsController.js"></script>
+  <script src="/static/js/controllers/JudgeController.js"></script>
+  
+</body>

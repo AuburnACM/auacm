@@ -1,19 +1,4 @@
 app.controller('JudgeController', ['$scope', '$http', function($scope, $http) {
-    $scope.username = 'placeholder'
-    $http.get('/api/me')
-        .then(function(response) {
-            $scope.username = response.data.data.displayName;
-        },
-        function(error) {
-            
-        })
-    $http.get('/api/problems')
-        .then(function(response) {
-            $scope.problems = response.data.data;
-        },
-        function(error) {
-            
-        });
     $scope.submit = function() {
         var fd = new FormData();
         fd.append('pid', $scope.pid);

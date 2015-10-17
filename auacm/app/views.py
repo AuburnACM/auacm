@@ -12,23 +12,28 @@ from os.path import join
 @app.route('/problems')
 @login_required
 def getProblemsPage():
-    return serve_html('problems.html')
+    print "serving index.html"
+    return render_template('index.html', username=current_user.display)
+
 
 @app.route('/judge')
 @app.route('/submit')
 @login_required
 def getJudgePage():
     return serve_html('judge.html')
+
     
 @app.route('/login')
 @login_manager.unauthorized_handler
 def getLoginPage():
     return serve_html('login.html')
+
     
 @app.route('/problems/<pid>')
 @login_required
 def getProblemInfo(pid):
     return serve_info_pdf(pid)
+
 
 # ideally, this would be broken out into a different module, but we can
 # fix that later. For now, this works, and that's all that matters.
@@ -59,8 +64,10 @@ def getProblems():
         })
     return serve_response(problems)
     
+
 def url_for_problem(problem):
     return join('problems', str(problem.pid))
+
 
 @app.route('/api/login', methods=['POST'])
 def login():
@@ -75,11 +82,13 @@ def login():
             return serve_response({})
     return serve_error('invalid username or password', 401)
 
+
 @app.route('/api/logout')
 @login_required
 def logout():
     logout_user()
     return serve_response({})
+
 
 @app.route('/api/me')
 @login_required
