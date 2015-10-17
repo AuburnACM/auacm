@@ -6,6 +6,9 @@ from app.util import bcrypt, login_manager, serve_info_pdf, serve_html, serve_re
 from app.modules.user_manager.models import User
 from os.path import join
 
+@socketio.on('connect')
+def onConnect():
+    print "sever connected; it's a miracle"
 
 @app.route('/')
 @app.route('/index')

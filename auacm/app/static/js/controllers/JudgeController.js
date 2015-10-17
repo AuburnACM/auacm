@@ -1,5 +1,5 @@
-app.controller('JudgeController', ['$scope', '$http', '$websocket', 
-        function($scope, $http, $websocket) {
+app.controller('JudgeController', ['$scope', '$http', 'socket',
+        function($scope, $http, socket) {
     $scope.submit = function() {
         var fd = new FormData();
         fd.append('pid', $scope.pid);
@@ -17,8 +17,8 @@ app.controller('JudgeController', ['$scope', '$http', '$websocket',
         });
     };
     
-    var ws = $websocket.$new('ws://localhost:5000/test');
-    ws.$on('$open', function() {
-        console.log('websocket is open');
-    });
+    var socket1 = io('http://localhost/judge');
+    socket1.on('connect', function() {
+        console.log('connected');
+    }); 
 }]);

@@ -30,9 +30,9 @@ def directory_for_problem(pid):
     return join(app.config['DATA_FOLDER'], 'problems', pid)
     
 
-# @socketio.on('connect', namespace="/judge")
-# def onConnection():
-#     print 'conencted'
+@socketio.on('connect', namespace="/judge")
+def onConnection():
+    print 'conencted'
 
 
 @app.route("/api/submit", methods=["POST"])
