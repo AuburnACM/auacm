@@ -92,33 +92,3 @@ def getMe():
         'displayName': current_user.display
     })
 
-
-@app.route('/api/competitions')
-@login_required
-def getCompetitions():
-    ongoing = list()
-    past = list()
-    upcoming = list()
-    Competitions = Base.classes.comp_names
-    current_time = int(time())
-    for competition in session.query(Competitions).all():
-        if competition.stop < current_time:
-            past.append(create_competition_object(competition))
-        elif competition.start < current_time:
-            ongoing.append(create_competition_object(competition))
-        else:
-            upcoming.append(create_competition_object(competition))
-    return serve_response({
-        'ongoing' : ongoing,
-        'past' : past,
-        'upcoming' : upcoming
-    })
-
-
-def create_competition_object(competition):
-    return {
-        'cid' : competition.cid,
-        'name' : competition.name,
-        'startTime' : competition.start * 1000,
-        'length' : competition.stop - competition.start
-    }

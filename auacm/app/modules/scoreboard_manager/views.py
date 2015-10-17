@@ -7,6 +7,38 @@ from .models import Competition, CompProblem, CompUser
 from app.modules.submission_manager.models import Submission
 from app.modules.problem_manager.models import Problem
 from sqlalchemy import asc
+from time import time
+
+
+@app.route('/api/competitions')
+@login_required
+def getCompetitions():
+    ongoing = list()
+    past = list()
+    upcoming = list()
+    current_time = int(time())
+    for competition in session.query(Competition).all():
+        if competition.stop < current_time:
+            past.append(create_competition_object(competition))
+        elif competition.start < current_time:
+            ongoing.append(create_competition_object(competition))
+        else:
+            upcoming.append(create_competition_object(competition))
+    return serve_response({
+        'ongoing' : ongoing,
+        'past' : past,
+        'upcoming' : upcoming
+    })
+    
+
+def create_competition_object(competition):
+    return {
+        'cid' : competition.cid,
+        'name' : competition.name,
+        'startTime' : competition.start * 1000,
+        'length' : competition.stop - competition.start
+    }
+
 
 @app.route('/api/competitions/<int:cid>')
 def getCompetitionData(cid):
@@ -14,7 +46,7 @@ def getCompetitionData(cid):
     if competition is None:
         return serve_error('competition not found', response_code=404)
     comp_users = session.query(CompUser).filter(CompUser.cid==cid).all()
-    comp_problems = set([p.pid for p in session.query(CompProblem).filter(CompProblem.cid==cid).all()])
+    comp_problems = [p.pid for p in session.query(CompProblem).filter(CompProblem.cid==cid).all()]
     
     submissions = session.query(Submission)\
             .filter(Submission.submit_time>competition.start,\
@@ -57,5 +89,8 @@ def getCompetitionData(cid):
             }
         scoreboard[team] = team_row
         
-    return serve_response(scoreboard)
+    return serve_response({
+        'compProblems' : comp_problems,
+        'teams' : scoreboard
+    })
     

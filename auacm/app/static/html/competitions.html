@@ -11,7 +11,7 @@
         <th>Start Time</th>
       </tr>
       <tr ng-repeat="competition in competitions.ongoing">
-        <td><a href='/#/scoreboard/{{ competition.cid }}'>{{ competition.name }}</a></td>
+        <td><a href='/#/competitions/{{ competition.cid }}'>{{ competition.name }}</a></td>
         <td>{{ competition.name }}</td>
         <td>{{ competition.length | secondsToDateTime | date:'HH:mm:ss' }}</td>
         <td>{{ competition.startTime | date:'medium' }}</td>
@@ -30,7 +30,7 @@
         <th>Start Time</th>
       </tr>
       <tr ng-repeat="competition in competitions.upcoming">
-        <td><a href='/#/scoreboard/{{ competition.cid }}'>{{ competition.name }}</a></td>
+        <td><a href='/#/competitions/{{ competition.cid }}'>{{ competition.name }}</a></td>
         <td>{{ competition.name }}</td>
         <td>{{ competition.length | secondsToDateTime | date:'HH:mm:ss' }}</td>
         <td>{{ competition.startTime | date:'medium' }}</td>
@@ -49,7 +49,7 @@
         <th>Start Time</th>
       </tr>
       <tr ng-repeat="competition in competitions.past">
-        <td><a href='/#/scoreboard/{{ competition.cid }}'>{{ competition.name }}</a></td>
+        <td><a href='/#/competitions/{{ competition.cid }}'>{{ competition.name }}</a></td>
         <td>{{ competition.name }}</td>
         <td>{{ competition.length | secondsToDateTime | date:'HH:mm:ss' }}</td>
         <td>{{ competition.startTime | date:'medium' }}</td>

@@ -20,6 +20,11 @@ app.config(function($routeProvider) {
             controller : 'CompetitionsController',
             activetab : 'competitions'
         })
+        .when('/competitions/:cid', { // route for the competitions page
+            templateUrl : 'static/html/scoreboard.html',
+            controller : 'ScoreboardController',
+            activetab : 'competitions'
+        })
 });
 
 app.filter('secondsToDateTime', [function() {

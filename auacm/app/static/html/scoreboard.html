@@ -1,0 +1,26 @@
+<div class="main-wide">
+  <div class='title'>
+    Competition
+  </div>
+  <div class='body'>
+    <table class='center'>
+      <tr>
+        <th>Rank</th>
+        <th>Team</th>
+        <th>Solved</th>
+        <th>Time</th>
+        <th ng-repeat="problem in compProblems">{{ problem }}</th>
+      </tr>
+      <tr ng-repeat="(team, teamProblems) in teams">
+        <td>1</td>
+        <td>{{ team }}</td>
+        <td>0</td>
+        <td>0</td>
+        <td ng-repeat="(problem, problemData) in teamProblems" 
+            ng-class="{'good': problemData.status=='solved', 'wrong': problemData.status=='incorrect'}">
+            {{ problemData.submitCount }}
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
