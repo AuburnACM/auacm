@@ -1,5 +1,5 @@
-app.controller('JudgeController', ['$scope', '$http', 'socket',
-        function($scope, $http, socket) {
+app.controller('JudgeController', ['$scope', '$http',
+        function($scope, $http) {
     $scope.submit = function() {
         var fd = new FormData();
         fd.append('pid', $scope.pid);
@@ -16,9 +16,8 @@ app.controller('JudgeController', ['$scope', '$http', 'socket',
                 console.log("error");
         });
     };
-    
-    var socket1 = io('http://localhost/judge');
-    socket1.on('connect', function() {
+    var socket = io.connect('http://localhost:8000/judge')
+    socket.on('connect', function() {
         console.log('connected');
     }); 
 }]);
