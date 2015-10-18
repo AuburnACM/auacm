@@ -11,8 +11,4 @@ class CompProblem(Base):
     
 class CompUser(Base):
     __tablename__ = 'comp_users'
-    
 
-# CompUser = Base.classes.comp_users
-# Competition = Base.classes.comp_names
-# CompProblem = Base.classes.comp_problems

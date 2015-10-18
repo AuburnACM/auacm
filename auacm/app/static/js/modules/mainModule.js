@@ -32,3 +32,9 @@ app.filter('secondsToDateTime', [function() {
         return new Date(1970, 0, 1).setSeconds(seconds);
     };
 }])
+
+app.filter('iif', function () {
+   return function(input, trueValue, falseValue) {
+        return input ? trueValue : falseValue;
+   };
+});

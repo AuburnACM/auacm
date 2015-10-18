@@ -35,7 +35,7 @@ def create_competition_object(competition):
     return {
         'cid' : competition.cid,
         'name' : competition.name,
-        'startTime' : competition.start * 1000,
+        'startTime' : competition.start * 1000,  # to milliseconds
         'length' : competition.stop - competition.start
     }
 
@@ -47,6 +47,7 @@ def getCompetitionData(cid):
         return serve_error('competition not found', response_code=404)
     comp_users = session.query(CompUser).filter(CompUser.cid==cid).all()
     comp_problems = [p.pid for p in session.query(CompProblem).filter(CompProblem.cid==cid).all()]
+    comp_problems.sort()
     
     submissions = session.query(Submission)\
             .filter(Submission.submit_time>competition.start,\
@@ -54,7 +55,7 @@ def getCompetitionData(cid):
             .order_by(asc(Submission.submit_time))\
             .all()
     
-    scoreboard = dict()
+    scoreboard = list()
     
     team_users = dict()
     for user in comp_users:
@@ -63,7 +64,7 @@ def getCompetitionData(cid):
         team_users[user.team].append(user.username)
     
     for team in team_users.keys():
-        team_row = dict()
+        team_problems = dict()
         for problem in comp_problems:
             correct = 0
             incorrect = 0
@@ -77,19 +78,23 @@ def getCompetitionData(cid):
                     correct = s.submit_time - competition.start
                 else:
                     incorrect += 1
-            problem_time = incorrect*20*60+correct
+            problem_time = incorrect*20+correct/60
             submit_count = 0
             if (correct > 0):
                 submit_count = 1
             submit_count += incorrect+pointless
-            team_row[problem] = {
+            team_problems[problem] = {
                 'problemTime' : problem_time,
                 'submitCount' : submit_count,
                 'status' : 'solved' if correct > 0 else 'unattempted' if submit_count == 0 else 'incorrect'
             }
-        scoreboard[team] = team_row
+        team_row = dict()
+        team_row['name'] = team
+        team_row['problemData'] = team_problems
+        scoreboard.append(team_row)
         
     return serve_response({
+        'competition' : create_competition_object(competition),
         'compProblems' : comp_problems,
         'teams' : scoreboard
     })
