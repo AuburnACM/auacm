@@ -11,21 +11,20 @@ from time import time
 @app.route('/')
 @app.route('/index')
 @login_required
-def getProblemsPage():
-    print "serving index.html"
+def get_problems_page():
     return render_template('index.html', username=current_user.display)
 
     
 @app.route('/login')
 @login_manager.unauthorized_handler
-def getLoginPage():
+def get_login_page():
     return serve_html('login.html')
 
 
 @app.route('/problems/<pid>')
 @app.route('/problems/<pid>/info.pdf')
 @login_required
-def getProblemInfo(pid):
+def get_problem_info(pid):
     return serve_info_pdf(pid)
 
 
@@ -33,7 +32,7 @@ def getProblemInfo(pid):
 # fix that later. For now, this works, and that's all that matters.
 @app.route('/api/problems')
 @login_required
-def getProblems():
+def get_problems():
     problems = list()
     Submits = Base.classes.submits
     solved = session.query(Submits).\
@@ -64,7 +63,7 @@ def url_for_problem(problem):
 
 
 @app.route('/api/login', methods=['POST'])
-def login():
+def log_in():
     username = request.form['username']
     password = request.form['password']
     user = load_user(username)
@@ -111,14 +110,14 @@ def change_password():
 
 @app.route('/api/logout')
 @login_required
-def logout():
+def log_out():
     logout_user()
     return serve_response({})
 
 
 @app.route('/api/me')
 @login_required
-def getMe():
+def get_me():
     return serve_response({
         'username': current_user.username, 
         'displayName': current_user.display
