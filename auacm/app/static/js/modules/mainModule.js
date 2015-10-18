@@ -25,6 +25,11 @@ app.config(function($routeProvider) {
             controller : 'ScoreboardController',
             activetab : 'competitions'
         })
+        .when('/settings', { // route for the settings page
+            templateUrl : 'static/html/settings.html',
+            controller : 'SettingsController',
+            activetab : 'settings'
+        })
 });
 
 app.filter('secondsToDateTime', [function() {

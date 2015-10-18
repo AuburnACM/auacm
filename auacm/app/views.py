@@ -77,6 +77,38 @@ def login():
     return serve_error('invalid username or password', 401)
 
 
+@app.route('/api/create_user', methods=['POST'])
+@login_required
+def create_user():
+    username = request.form['username']
+    password = request.form['password']
+    display = request.form['display']
+    user = load_user(username)
+    if user is None:
+        hashed = bcrypt.generate_password_hash(password)
+        user = User(username=username, passw=hashed, display=display, admin=0)
+        session.add(user)
+        session.flush()
+        session.commit()
+        return serve_response({})
+    return serve_error('username already exists', 401)
+
+
+@app.route('/api/change_password', methods=['POST'])
+@login_required
+def change_password():
+    oldPassword = request.form['oldPassword']
+    newPassword = request.form['newPassword']
+    if bcrypt.check_password_hash(current_user.passw, oldPassword):
+        hashed = bcrypt.generate_password_hash(newPassword)
+        current_user.passw = hashed
+        session.add(current_user)
+        session.flush()
+        session.commit()
+        return serve_response({})
+    return serve_error('old password does not match', 401)
+
+
 @app.route('/api/logout')
 @login_required
 def logout():
