@@ -15,4 +15,7 @@ app.controller('JudgeController', ['$scope', '$http', function($scope, $http) {
                 console.log("error");
         });
     };
+    $scope.problems.sort(function(a, b) {
+        return a.name > b.name ? 1 : (a.name < b.name ? -1 : 0);
+    });
 }]);
