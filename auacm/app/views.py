@@ -2,7 +2,7 @@ from flask import render_template, request
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app
 from app.database import Base, session
-from app.util import bcrypt, login_manager, serve_html, serve_response, serve_error
+from app.util import bcrypt, login_manager, serve_html, serve_response, serve_error, load_user
 from app.modules.user_manager.models import User
 
 
