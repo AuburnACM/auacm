@@ -1,17 +1,18 @@
-app.controller('ProblemsController', ['$scope', '$http', function($scope, $http) {
-    $scope.username = 'placeholder'
-    $http.get('/api/me')
-        .then(function(response) {
-            $scope.username = response.data.data.displayName;
-        },
-        function(error) {
-            
-        })
-    $http.get('/api/problems')
-        .then(function(response) {
-            $scope.problems = response.data.data;
-        },
-        function(error) {
-            
+app.controller('ProblemsController', ['$scope', '$filter', function($scope, $filter) {
+    var orderBy = $filter('orderBy');
+    $scope.order = function(predicate) {
+        $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
+        $scope.predicate = predicate;
+        $scope.problems = orderBy($scope.problems, predicate, $scope.reverse);
+    };
+    
+    $scope.integerOrder = function(predicate) {
+        $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
+        $scope.predicate = predicate;
+        $scope.problems.sort(function(a, b) {
+            return $scope.reverse ? 
+                    parseInt(a.difficulty) - parseInt(b.difficulty) : 
+                    parseInt(b.difficulty) - parseInt(a.difficulty);
         });
+    }
 }]);
