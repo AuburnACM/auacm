@@ -61,3 +61,12 @@ More steps to come.
 
 3. Now you can run the server on localhost:5000 by running
     ``$ ./run.py``
+
+
+# Everyone
+
+1. Navigate to the setup folder.
+
+2. Copy SampleData.zip to auacm/app/data/SampleData.zip and extract the
+   contents there. You should now have two folders inside auacm/app/data/,
+   problems and submits.
