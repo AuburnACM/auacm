@@ -19,5 +19,8 @@ app.controller('JudgeController', ['$scope', '$http',
     var socket = io.connect('http://localhost:8000/judge')
     socket.on('connect', function() {
         console.log('connected');
-    }); 
+    });
+    $scope.problems.sort(function(a, b) {
+        return a.name > b.name ? 1 : (a.name < b.name ? -1 : 0);
+    });
 }]);
