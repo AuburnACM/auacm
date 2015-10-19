@@ -205,7 +205,7 @@ def execute(submission, submission_file):
                 return
 
             for l1, l2 in zip(generated_lines, test_lines):
-                if not l1 == l2:
+                if not l1.rstrip('\r\n') == l2.rstrip('\r\n'):
                     print 'wrong'
                     update_submission_status(submission, 'wrong')
                     return
