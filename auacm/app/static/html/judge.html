@@ -7,4 +7,9 @@
     <input type="file" accept=".java,.py,.c,.cpp,.c++,.go" file-model="file"/>
     <input type="submit" ng-click="submit()" class="margin-20 float-r">
   </div>
+  <div ng-repeat="problem in submitted">
+    <h1 ng-class="{good: problem.status=='good', wrong: problem.status=='bad'}">
+      {{ problem.status }}
+    </h1>
+  </div>
 </div>

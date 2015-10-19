@@ -6,7 +6,6 @@ from threading import Thread, Lock
 
 from flask import request
 from flask.ext.login import current_user, login_required
-from flask.ext.socketio import emit
 from app import app, socketio
 from app.database import Base, session
 from app.util import serve_response, serve_error
@@ -28,11 +27,11 @@ def directory_for_submission(submission):
 
 def directory_for_problem(pid):
     return join(app.config['DATA_FOLDER'], 'problems', pid)
-    
+
 
 @socketio.on('connect', namespace="/judge")
 def onConnection():
-    print 'conencted'
+    pass
 
 
 @app.route("/api/submit", methods=["POST"])
@@ -70,7 +69,7 @@ def submit():
     thread = Thread(target=start_execution, args=(attempt, uploaded_file))
     thread.start()
     return serve_response({
-        'submissionId' : submission.job
+        'submissionId' : attempt.job
     })
 
 
@@ -120,11 +119,14 @@ def update_submission_status(submission, status, test_num):
     :param status: the status of the submission
     :return: None
     """
-    emit('status', 
-            { 
+    socketio.emit('status', 
+            {
                 'submissionId' : submission.job,
-                'status' : status,
-                'testNum' : test_num
+                'problemId' : submission.pid,
+                'username' : submission.username,
+                'submitTime' : submission.submit_time * 1000, # to milliseconds
+                'testNum' : test_num,
+                'status' : status
             },
             namespace='/judge')
     submission.result = status

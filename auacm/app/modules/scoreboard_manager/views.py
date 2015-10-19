@@ -90,6 +90,7 @@ def getCompetitionData(cid):
             }
         team_row = dict()
         team_row['name'] = team
+        team_row['users'] = team_users[team]
         team_row['problemData'] = team_problems
         scoreboard.append(team_row)
         

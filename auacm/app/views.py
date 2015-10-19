@@ -7,9 +7,8 @@ from app.modules.user_manager.models import User
 from os.path import join
 from time import time
 
-@socketio.on('connect')
-def onConnect():
-    print "sever connected; it's a miracle"
+from gevent import monkey
+monkey.patch_all()
 
 @app.route('/')
 @app.route('/index')
@@ -17,7 +16,7 @@ def onConnect():
 def get_problems_page():
     return render_template('index.html', username=current_user.display)
 
-    
+
 @app.route('/login')
 @login_manager.unauthorized_handler
 def get_login_page():
