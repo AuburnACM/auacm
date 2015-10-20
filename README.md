@@ -78,7 +78,7 @@ More steps to come.
 
     ``$ chmod +x create_competition.sh``
     
-    ``$ ./create_competition.sh <<< "Your Mock Mock Competition Name"
+    ``$ ./create_competition.sh <<< "Your Mock Mock Competition Name"``
      
 2. When prompted for your passwords, simply enter them there. If you
    don't have one, just press enter.
