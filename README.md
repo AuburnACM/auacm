@@ -23,13 +23,7 @@ Do this by executing the following commands:
   
     ``$ virtualenv flask``
     
-    ``$ pip install -r requirements.txt``
-    
-3. Run the following commands.
-
-    ``$ CFLAGS='-std=c99' ./flask/bin/pip install gevent``
-    
-    ``$ ./flask/bin/pip install Flask-Sockets``
+    ``$ CFLAGS='-std=c99' ./flask/bin/pip install -r requirements.txt``
 
 4. Install npm with
 
@@ -69,10 +63,25 @@ More steps to come.
     ``$ ./run.py``
 
 
-# Everyone
+## Everyone
 
 1. Navigate to the setup folder.
 
-2. Copy SampleData.zip to auacm/app/data/SampleData.zip and extract the
-   contents there. You should now have two folders inside auacm/app/data/,
+2. Copy data.zip to auacm/app/data.zip and extract the contents
+   there. You should now have two folders inside auacm/app/data/,
    problems and submits.
+   
+# Need test solutions or competitions?
+## We've got you covered.
+
+1. Navigate to /setup in terminal and type
+
+    ``$ chmod +x create_competition.sh``
+    
+    ``$ ./create_competition.sh <<< "Your Mock Mock Competition Name"
+     
+2. When prompted for your passwords, simply enter them there. If you
+   don't have one, just press enter.
+   
+3. Have fun with your Mock Mock Competition. All of the solitions
+   should be located in the /testing/testSolutions folder.

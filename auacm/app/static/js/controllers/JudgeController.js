@@ -5,6 +5,17 @@ app.controller('JudgeController', ['$scope', '$http',
         var fd = new FormData();
         fd.append('pid', $scope.pid);
         fd.append('file', $scope.file);
+        var submission = {};
+        var name;
+        for (var i = 0; i < $scope.problems.length; i++) {
+            if ($scope.problems[i].pid === $scope.pid) {
+                name = $scope.problems[i].name;
+                break;
+            }
+        }
+        submission.problem = name;
+        submission.fileName = $scope.file.name;
+        submission.status = 'uploading';
         $http({
             method: 'POST',
             url: '/api/submit',
@@ -12,11 +23,9 @@ app.controller('JudgeController', ['$scope', '$http',
             transformRequest: angular.identity,
             data: fd
         }).then(function(response) {
-            var submission = {
-                'submissionId' : response.data.data.submissionId,
-                'status' : 'compiling',
-                'testNum' : 0
-            }
+            submission.submissionId = response.data.data.submissionId;
+            submission.status = 'compiling';
+            submission.testNum = 0;
             $scope.submitted.push(submission);
         }, function(response) {
                 console.log("error");

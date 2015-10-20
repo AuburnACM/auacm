@@ -86,7 +86,7 @@ def getCompetitionData(cid):
             team_problems[problem] = {
                 'problemTime' : problem_time,
                 'submitCount' : submit_count,
-                'status' : 'solved' if correct > 0 else 'unattempted' if submit_count == 0 else 'incorrect'
+                'status' : 'correct' if correct > 0 else 'unattempted' if submit_count == 0 else 'incorrect'
             }
         team_row = dict()
         team_row['name'] = team

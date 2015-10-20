@@ -17,7 +17,7 @@
         <td>{{ team.solved }}</td>
         <td>{{ team.time }}</td>
         <td ng-repeat="(problem, problemData) in team.problemData" 
-            ng-class="{'good': problemData.status=='solved', 'wrong': problemData.status=='incorrect'}">
+            ng-class="{'good': problemData.status=='correct', 'wrong': problemData.status=='incorrect'}">
             <div ng-hide="problemData.status=='unattempted'">
               {{ problemData.submitCount }}
             <br>

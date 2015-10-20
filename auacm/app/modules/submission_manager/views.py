@@ -30,7 +30,7 @@ def directory_for_problem(pid):
 
 
 @socketio.on('connect', namespace="/judge")
-def onConnection():
+def on_connection():
     pass
 
 
@@ -58,7 +58,7 @@ def submit():
                          submit_time=int(time.time()),
                          auto_id=0,
                          file_type=uploaded_file.filename.rsplit('.', 1)[1].lower(),
-                         result='compile')
+                         result='start')
     session.add(attempt)
     session.flush()
     session.commit()
@@ -82,7 +82,7 @@ def start_execution(submission, uploaded_file):
     :return: None
     """
     if submission.file_type == 'java':
-        if compile_java(submission, uploaded_file):
+        if not compile_java(submission, uploaded_file):
             return
     elif submission.file_type == 'c' or submission.file_type == 'cpp' or submission.file_type == 'c++':
         result = compile_c(submission, uploaded_file)
@@ -94,7 +94,7 @@ def start_execution(submission, uploaded_file):
 def compile_java(submission, uploaded_file):
     location = join(directory_for_submission(submission), uploaded_file.filename)
     if subprocess.call(['javac', location],
-                       stderr=open(join(directory_for_submission(submission), 'error.txt'), 'w')):
+                       stderr=open(join(directory_for_submission(submission), 'error.txt'), 'w')) == 0:
         return True
     else:
         update_submission_status(submission, 'compile', -1)
@@ -111,7 +111,7 @@ def compile_c(submission, uploaded_file):
         return False
 
 
-def update_submission_status(submission, status, test_num):
+def update_submission_status(submission, status):
     """
     Updates the submission's status in the database.
 
@@ -119,21 +119,32 @@ def update_submission_status(submission, status, test_num):
     :param status: the status of the submission
     :return: None
     """
-    socketio.emit('status', 
-            {
-                'submissionId' : submission.job,
-                'problemId' : submission.pid,
-                'username' : submission.username,
-                'submitTime' : submission.submit_time * 1000, # to milliseconds
-                'testNum' : test_num,
-                'status' : status
-            },
-            namespace='/judge')
+    
     submission.result = status
     dblock.acquire()
     session.flush()
     session.commit()
     dblock.release()
+    
+def emit_submission_status(submission, status, test_num):
+    """
+    Shares the status of a submission with the client via a web socket.
+    
+    :param submission: the newly created submission
+    :param status: the status of the submission
+    :return: None
+    """
+
+    socketio.emit('status', 
+        {
+            'submissionId' : submission.job,
+            'problemId' : submission.pid,
+            'username' : submission.username,
+            'submitTime' : submission.submit_time * 1000, # to milliseconds
+            'testNum' : test_num,
+            'status' : status
+        },
+        namespace='/judge')
 
 
 def get_process_handle(submission, uploaded_file, in_file, test_num):
@@ -179,8 +190,7 @@ def execute(submission, submission_file):
     :param submission_file: the file that was uploaded
     :return: None
     """
-
-    print 'beginning execution'
+    
     directory = directory_for_problem(submission.pid)
     problem = session.query(Base.classes.problems) \
         .filter(Base.classes.problems.pid == submission.pid).first()
@@ -189,9 +199,8 @@ def execute(submission, submission_file):
     input_files = [f for f in os.listdir(input_path) if isfile(join(input_path, f))]
 
     for in_file in input_files:
-        print 'checking file'
         test_num = int(in_file.rsplit('.', 1)[0][2:])  # what the fuck
-        update_submission_status(submission, 'running', test_num)
+        emit_submission_status(submission, 'running', test_num)
         process_handle = get_process_handle(submission, submission_file, in_file, test_num)
 
         timeout_time = time.time() + problem.time_limit
@@ -201,13 +210,13 @@ def execute(submission, submission_file):
         if process_handle.poll() is None:
             # timeout
             process_handle.terminate()
-            update_submission_status(submission, 'timeout', test_num)
-            print 'timeout'
+            update_submission_status(submission, 'timeout')
+            emit_submission_status(submission, 'timeout', test_num)
             return
 
         if process_handle.returncode is not 0:
-            update_submission_status(submission, 'runtime', test_num)
-            print 'runtime'
+            update_submission_status(submission, 'runtime')
+            emit_submission_status(submission, 'runtime', test_num)
             return
 
         with open(join(output_path, 'out' + str(test_num) + '.txt')) as test_output, \
@@ -216,16 +225,14 @@ def execute(submission, submission_file):
             generated_lines = generated.readlines()
 
             if not len(generated_lines) == len(test_lines):
-                print 'lengths different', len(generated_lines), len(test_lines)
-                print 'wrong (lengths)'
-                update_submission_status(submission, 'wrong', test_num)
+                update_submission_status(submission, 'wrong')
+                emit_submission_status(submission, 'incorrect', test_num)
                 return
 
             for l1, l2 in zip(generated_lines, test_lines):
                 if not l1.rstrip('\r\n') == l2.rstrip('\r\n'):
-                    print 'wrong'
-                    update_submission_status(submission, 'wrong', test_num)
+                    update_submission_status(submission, 'wrong')
+                    emit_submission_status(submission, 'incorrect', test_num)
                     return
-
-    print 'correct'
-    update_submission_status(submission, 'good', test_num)
+    update_submission_status(submission, 'good')
+    emit_submission_status(submission, 'correct', test_num)

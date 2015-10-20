@@ -6,10 +6,18 @@
     <select ng-options="problem.pid as problem.name for problem in problems" ng-model="pid"></select>
     <input type="file" accept=".java,.py,.c,.cpp,.c++,.go" file-model="file"/>
     <input type="submit" ng-click="submit()" class="margin-20 float-r">
-  </div>
-  <div ng-repeat="problem in submitted">
-    <h1 ng-class="{good: problem.status=='good', wrong: problem.status=='bad'}">
-      {{ problem.status }}
-    </h1>
+    <table ng-show="submitted.length" class="center">
+      <tr>
+        <th>Problem Name</th>
+        <th>Submitted File</th>
+        <th>Status</th>
+      </tr>
+      <tr ng-repeat="submission in submitted" 
+          ng-class="{ good: submission.status=='correct', wrong: submission.status=='incorrect' }">
+        <td>{{ submission.problem }}</td>
+        <td>{{ submission.fileName }}</td>
+        <td>{{ submission.status }}</td>
+      </tr>
+    </table>
   </div>
 </div>
