@@ -59,7 +59,7 @@ Do this by executing the following commands:
 
 2. Navigate to ``.../AUACM/setup/`` and execute this to setup the environment:
     
-    ``sh ubuntu_setup.sh``
+    ``$ sh ubuntu_setup.sh``
     
     Follow all the setup instructions.
 
