@@ -69,33 +69,6 @@ Do this by executing the following commands:
 
     ``$ ./run.py``
 
-##Additional Notes
-
-###Flask Configuration
-
-In order to run properly, a flask configuration file needs to be added. For
-security purposes, the file is not included in the repository. However, a simple
-development one can be created. Add a ``config.py`` file to
-``auacm/auacm/app/`` directory with the following:
-
-```python
-# This file holds constants for configuration.
-# DO NOT EXPOSE SECRET KEY TO GITHUB
-import os
-
-DEBUG = True
-SECRET_KEY = 'development key'
-DATA_FOLDER = os.getcwd() + '/app/data'
-```
-
-###Database Configuration
-
-In order for the database to work properly, you need to have MySQL installed
-and running on your computer. For Mac, use ``brew install mysql`` to install.
-Once installed, you'll need to run ``mysql.server start`` to spin up the server.
-Then move to the setup folder and run the ``initialize_database.sh`` script
-to configure the database with the appropriate schema.
-
 # Need test solutions or competitions?
 ## We've got you covered.
 
