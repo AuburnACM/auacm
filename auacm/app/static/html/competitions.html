@@ -1,9 +1,7 @@
-<div class='main-fixed'>
-  <div class='title'>
-    Ongoing
-  </div>
-  <div class='body'>
-    <table>
+<div>
+  <div ng-show="competitions.ongoing.length > 0">
+    <h2>Ongoing</h2>
+    <table class="table table-striped">
       <tr>
         <th>Name</th>
         <th>Remaining</th>
@@ -11,18 +9,16 @@
         <th>Start Time</th>
       </tr>
       <tr ng-repeat="competition in competitions.ongoing">
-        <td><a href='/#/competitions/{{ competition.cid }}'>{{ competition.name }}</a></td>
+        <td><a href="/#/competitions/{{ competition.cid }}">{{ competition.name }}</a></td>
         <td>{{ competition.name }}</td>
-        <td>{{ competition.length | secondsToDateTime | date:'HH:mm:ss' }}</td>
-        <td>{{ competition.startTime | date:'medium' }}</td>
+        <td>{{ competition.length | secondsToDateTime | date:"h:mm:ss" }}</td>
+        <td>{{ competition.startTime | date:"medium" }}</td>
       </tr>
     </table>
   </div>
-  <div class='title'>
-    Upcoming
-  </div>
-  <div class='body'>
-    <table>
+  <div ng-show="competitions.upcoming.length > 0">
+    <h2>Upcoming</h2>
+    <table class="table table-striped">
       <tr>
         <th>Name</th>
         <th>Remaining</th>
@@ -30,18 +26,16 @@
         <th>Start Time</th>
       </tr>
       <tr ng-repeat="competition in competitions.upcoming">
-        <td><a href='/#/competitions/{{ competition.cid }}'>{{ competition.name }}</a></td>
+        <td><a href="/#/competitions/{{ competition.cid }}">{{ competition.name }}</a></td>
         <td>{{ competition.name }}</td>
-        <td>{{ competition.length | secondsToDateTime | date:'HH:mm:ss' }}</td>
-        <td>{{ competition.startTime | date:'medium' }}</td>
+        <td>{{ competition.length | secondsToDateTime | date:"h:mm:ss" }}</td>
+        <td>{{ competition.startTime | date:"medium" }}</td>
       </tr>
     </table>
   </div>
-  <div class='title'>
-    Past
-  </div>
-  <div class='body'>
-    <table>
+  <div ng-show="competitions.past.length > 0">
+    <h2>Past</h2>
+    <table class="table table-striped">
       <tr>
         <th>Name</th>
         <th>Remaining</th>
@@ -49,10 +43,10 @@
         <th>Start Time</th>
       </tr>
       <tr ng-repeat="competition in competitions.past">
-        <td><a href='/#/competitions/{{ competition.cid }}'>{{ competition.name }}</a></td>
+        <td><a href="/#/competitions/{{ competition.cid }}">{{ competition.name }}</a></td>
         <td>{{ competition.name }}</td>
-        <td>{{ competition.length | secondsToDateTime | date:'HH:mm:ss' }}</td>
-        <td>{{ competition.startTime | date:'medium' }}</td>
+        <td>{{ competition.length | secondsToDateTime | date:"h:mm:ss" }}</td>
+        <td>{{ competition.startTime | date:"medium" }}</td>
       </tr>
     </table>
   </div>

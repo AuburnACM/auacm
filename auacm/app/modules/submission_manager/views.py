@@ -6,7 +6,7 @@ from threading import Thread, Lock
 
 from flask import request
 from flask.ext.login import current_user, login_required
-from app import app
+from app import app, socketio
 from app.database import Base, session
 from app.util import serve_response, serve_error
 from .models import Submission
@@ -27,6 +27,11 @@ def directory_for_submission(submission):
 
 def directory_for_problem(pid):
     return join(app.config['DATA_FOLDER'], 'problems', pid)
+
+
+@socketio.on('connect', namespace="/judge")
+def on_connection():
+    pass
 
 
 @app.route("/api/submit", methods=["POST"])
@@ -53,7 +58,7 @@ def submit():
                          submit_time=int(time.time()),
                          auto_id=0,
                          file_type=uploaded_file.filename.rsplit('.', 1)[1].lower(),
-                         result='compile')
+                         result='start')
     session.add(attempt)
     session.flush()
     session.commit()
@@ -63,7 +68,9 @@ def submit():
     uploaded_file.save(join(directory, uploaded_file.filename))
     thread = Thread(target=start_execution, args=(attempt, uploaded_file))
     thread.start()
-    return serve_response('{}')
+    return serve_response({
+        'submissionId' : attempt.job
+    })
 
 
 def start_execution(submission, uploaded_file):
@@ -75,7 +82,7 @@ def start_execution(submission, uploaded_file):
     :return: None
     """
     if submission.file_type == 'java':
-        if compile_java(submission, uploaded_file):
+        if not compile_java(submission, uploaded_file):
             return
     elif submission.file_type == 'c' or submission.file_type == 'cpp' or submission.file_type == 'c++':
         result = compile_c(submission, uploaded_file)
@@ -87,10 +94,10 @@ def start_execution(submission, uploaded_file):
 def compile_java(submission, uploaded_file):
     location = join(directory_for_submission(submission), uploaded_file.filename)
     if subprocess.call(['javac', location],
-                       stderr=open(join(directory_for_submission(submission), 'error.txt'), 'w')):
+                       stderr=open(join(directory_for_submission(submission), 'error.txt'), 'w')) == 0:
         return True
     else:
-        update_submission_status(submission, 'compile')
+        update_submission_status(submission, 'compile', -1)
         return False
 
 
@@ -100,7 +107,7 @@ def compile_c(submission, uploaded_file):
                        stderr=open(join(directory_for_submission(submission), 'error.txt'), 'w')):
         return True
     else:
-        update_submission_status(submission, 'compile')
+        update_submission_status(submission, 'compile', -1)
         return False
 
 
@@ -112,12 +119,32 @@ def update_submission_status(submission, status):
     :param status: the status of the submission
     :return: None
     """
-
+    
     submission.result = status
     dblock.acquire()
     session.flush()
     session.commit()
     dblock.release()
+    
+def emit_submission_status(submission, status, test_num):
+    """
+    Shares the status of a submission with the client via a web socket.
+    
+    :param submission: the newly created submission
+    :param status: the status of the submission
+    :return: None
+    """
+
+    socketio.emit('status', 
+        {
+            'submissionId' : submission.job,
+            'problemId' : submission.pid,
+            'username' : submission.username,
+            'submitTime' : submission.submit_time * 1000, # to milliseconds
+            'testNum' : test_num,
+            'status' : status
+        },
+        namespace='/judge')
 
 
 def get_process_handle(submission, uploaded_file, in_file, test_num):
@@ -163,8 +190,7 @@ def execute(submission, submission_file):
     :param submission_file: the file that was uploaded
     :return: None
     """
-
-    print 'beginning execution'
+    
     directory = directory_for_problem(submission.pid)
     problem = session.query(Base.classes.problems) \
         .filter(Base.classes.problems.pid == submission.pid).first()
@@ -173,8 +199,8 @@ def execute(submission, submission_file):
     input_files = [f for f in os.listdir(input_path) if isfile(join(input_path, f))]
 
     for in_file in input_files:
-        print 'checking file'
         test_num = int(in_file.rsplit('.', 1)[0][2:])  # what the fuck
+        emit_submission_status(submission, 'running', test_num)
         process_handle = get_process_handle(submission, submission_file, in_file, test_num)
 
         timeout_time = time.time() + problem.time_limit
@@ -185,12 +211,12 @@ def execute(submission, submission_file):
             # timeout
             process_handle.terminate()
             update_submission_status(submission, 'timeout')
-            print 'timeout'
+            emit_submission_status(submission, 'timeout', test_num)
             return
 
         if process_handle.returncode is not 0:
             update_submission_status(submission, 'runtime')
-            print 'runtime'
+            emit_submission_status(submission, 'runtime', test_num)
             return
 
         with open(join(output_path, 'out' + str(test_num) + '.txt')) as test_output, \
@@ -199,16 +225,14 @@ def execute(submission, submission_file):
             generated_lines = generated.readlines()
 
             if not len(generated_lines) == len(test_lines):
-                print 'lengths different', len(generated_lines), len(test_lines)
-                print 'wrong (lengths)'
                 update_submission_status(submission, 'wrong')
+                emit_submission_status(submission, 'incorrect', test_num)
                 return
 
             for l1, l2 in zip(generated_lines, test_lines):
-                if not l1 == l2:
-                    print 'wrong'
+                if not l1.rstrip('\r\n') == l2.rstrip('\r\n'):
                     update_submission_status(submission, 'wrong')
+                    emit_submission_status(submission, 'incorrect', test_num)
                     return
-
-    print 'correct'
     update_submission_status(submission, 'good')
+    emit_submission_status(submission, 'correct', test_num)

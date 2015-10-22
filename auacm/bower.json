@@ -1,14 +1,17 @@
 {
-    "name": "AUACM",
-    "description": "Auburn University's programming team's website",
-    "version": "0.0.0",
-    "homepage": "http://auacm.com",
-    "license": "Apache",
-    "private": true,
-    "dependencies": {
-        "angular": "~1.4.5",
-        "angular-route": "~1.4.5",
-        "angular-loader": "~1.4.5",
-        "angular-mocks": "~1.4.5"
-    }
+  "name": "AUACM",
+  "description": "Auburn University's programming team's website",
+  "version": "0.0.0",
+  "homepage": "http://auacm.com",
+  "license": "Apache",
+  "private": true,
+  "dependencies": {
+    "angular": "~1.4.5",
+    "angular-route": "~1.4.5",
+    "angular-loader": "~1.4.5",
+    "angular-mocks": "~1.4.5"
+  },
+  "resolutions": {
+    "angular": "~1.4.5"
+  }
 }

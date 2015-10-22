@@ -1,10 +1,37 @@
 <div class='main-fixed' ng-controller="JudgeController">
-  <div class='title'>
-    Submit File
+  <h1>Submit File</h1>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <form class="form-horizontal">
+        <div class="form-group">
+          <label for="pidSelector" class="col-sm-2 control-label">Problem</label>
+          <div class="col-sm-6">
+            <select id="pidSelector" class="col-sm-2 form-control" 
+                    ng-options="problem.pid as problem.name for problem in problems" ng-model="pid"></select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="fileUpload" class="col-sm-2 control-label">Source code</label>
+          <input type="file" accept=".java,.py,.c,.cpp,.c++,.go" file-model="file"/>
+        </div>
+        <button type="submit" class="btn btn-default col-sm-offset-2 col-sm-2" ng-click="submit()">Submit</button>
+      </form>
+    </div>
   </div>
-  <div class="body">
-    <select ng-options="problem.pid as problem.name for problem in problems" ng-model="pid"></select>
-    <input type="file" accept=".java,.py,.c,.cpp,.c++,.go" file-model="file"/>
-    <input type="submit" ng-click="submit()" class="margin-20 float-r">
+  <div ng-show="submitted.length">
+    <h1>Submissions</h1>
+    <table class="table">
+      <tr>
+        <th>Problem Name</th>
+        <th>Submitted File</th>
+        <th>Status</th>
+      </tr>
+      <tr ng-repeat="submission in submitted" 
+          ng-class="{ success: submission.status=='correct', danger: submission.status=='incorrect' }">
+        <td>{{ submission.problem }}</td>
+        <td>{{ submission.fileName }}</td>
+        <td>{{ submission.status }}</td>
+      </tr>
+    </table>
   </div>
 </div>

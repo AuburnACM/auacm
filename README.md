@@ -23,7 +23,7 @@ Do this by executing the following commands:
   
     ``$ virtualenv flask``
     
-    ``$ pip install -r requirements.txt``
+    ``$ CFLAGS='-std=c99' ./flask/bin/pip install -r requirements.txt``
 
 4. Install npm with
 
@@ -41,7 +41,11 @@ Do this by executing the following commands:
 
     ``$ ./run.py``
     
-More steps to come.
+8. Navigate to the setup folder.
+
+9. Copy data.zip to auacm/app/data.zip and extract the contents
+   there. You should now have two folders inside auacm/app/data/,
+   problems and submits.
 
 ##Ubuntu
 
@@ -53,13 +57,16 @@ More steps to come.
 
     ``git clone https://github.com/AuburnACM/AUACM.git ``
 
-2. Navigate to ``.../AUACM/auacm/`` and execute this to setup the environment:
+2. Navigate to ``.../AUACM/setup/`` and execute this to setup the environment:
     
-    ``source ubuntu_setup.env``
+    ``$ sh ubuntu_setup.sh``
     
     Follow all the setup instructions.
 
 3. Now you can run the server on localhost:5000 by running
+    
+    ``$ cd ../auacm``
+
     ``$ ./run.py``
 
 ##Additional Notes
@@ -88,3 +95,18 @@ and running on your computer. For Mac, use ``brew install mysql`` to install.
 Once installed, you'll need to run ``mysql.server start`` to spin up the server.
 Then move to the setup folder and run the ``initialize_database.sh`` script
 to configure the database with the appropriate schema.
+
+# Need test solutions or competitions?
+## We've got you covered.
+
+1. Navigate to /setup in terminal and type
+
+    ``$ chmod +x create_competition.sh``
+
+    ``$ ./create_competition.sh <<< "Your Mock Mock Competition Name"``
+
+2. When prompted for your passwords, simply enter them there. If you
+   don't have one, just press enter.
+
+3. Have fun with your Mock Mock Competition. All of the solitions
+   should be located in the /testing/testSolutions folder.
