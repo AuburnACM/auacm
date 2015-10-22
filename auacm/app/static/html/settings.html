@@ -1,13 +1,22 @@
-<div class='main-fixed'>
-  <div class='title'>
-    Account Settings
-  </div>
-  <div class='body'>
+<h1>Account Settings</h1>
+<div class="panel panel-default">
+  <div class="panel-body">
     <form>
-      <input type="password" placeholder="Old password" ng-model="oldPassword">
-      <input type="password" placeholder="New password" ng-model="newPassword">
-      <input type="password" placeholder="Confirm new password" ng-model="confirmPassword">
-      <input type="submit" value="Change Password" ng-click="changePassword()">
+      <div class="form-group">
+        <label for="oldPassword" class="control-label">Old password</label>
+        <input class="form-control" id="oldPassword" type="password" placeholder="Old password" ng-model="oldPassword">
+      </div>
+      <div class="form-group">
+        <label for="newPassword" class="control-label">New password</label>
+        <input class="form-control" id="newPassword" type="password" placeholder="New password" ng-model="newPassword">
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword" class="control-label">Confirm password</label>
+        <input class="form-control" id="confirmPassword" type="password" placeholder="Confirm password" ng-model="confirmPassword">
+      </div>
+      <button class="btn btn-default" type="submit" ng-click="changePassword()">
+        Change Password
+      </button>
     </form>
   </div>
 </div>

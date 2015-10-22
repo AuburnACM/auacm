@@ -6,33 +6,53 @@
 <head>
   <link rel="icon" href="favicon.ico" />
   <title>ACM Auburn</title>
-  <link rel="stylesheet" type="text/css" href="/static/css/style.css">
-  <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+  <!--<link rel="stylesheet" type="text/css" href="/static/css/style.css">-->
+  
+  <!-- Bootstrap stuff -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/css/style2.css">
 </head>
 <body ng-controller="MainController">
-  <div class="header">
-    <div>
-      <span id="logo">Auburn ACM</span>
-      <span id="logout" ng-click="signOut()">Sign Out</span>
-      <span id="name">{{ username }}</span>
+  <div class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle"  ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a href="/#/" class="navbar-brand" id="logo">Auburn ACM</a>
+      </div>
+      <div class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'">
+        <ul class="nav navbar-nav navbar-left">
+          <li ng-class="{active: $route.current.activetab == 'problems'}"><a href="/#/">Problems</a></li>
+          <li ng-class="{active: $route.current.activetab == 'judge'}"><a href="/#/judge">Judge</a></li>
+          <li ng-class="{active: $route.current.activetab == 'competitions'}"><a href="/#/competitions">Competitions</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown" ng-class="{ open : dd1 }" ng-init="dd1 = false" ng-click="dd1 = !dd1" iub-dropdown>
+            <a href="" class="dropdown-toggle" uib-dropdown-toggle>
+              {{ username }}<span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" dropdown-menu>
+              <li><a href="/#/settings">Settings</a></li>
+              <li><a ng-click="signOut()" href="#">Sign out</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
-  <div class="menu">
-    <div>
-      <ul>
-        <a href="/#/"><li ng-class="{selected: $route.current.activetab == 'problems'}">Problems</li></a>
-        <a href="/#/judge"><li ng-class="{selected: $route.current.activetab == 'judge'}">Judge</li></a>
-        <a href="/#/competitions"><li ng-class="{selected: $route.current.activetab == 'competitions'}">Competitions</li></a>
-        <a href="/#/settings"><li ng-class="{selected: $route.current.activetab == 'settings'}">Settings</li></a>
-      </ul>
-    </div>
-  </div>
-  <div id="main">
+  
+  <div id="main" class="container">
       <div ng-view></div>
   </div>
   
   <script src="/static/components/angular/angular.js"></script>
   <script src="/static/components/angular-route/angular-route.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.14.2/ui-bootstrap-tpls.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
   
   <!-- Modules -->
