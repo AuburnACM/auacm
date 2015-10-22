@@ -1,9 +1,7 @@
 <div class="main-fixed" ng-controller="ProblemsController">
-  <div class="title">
-    Problems
-  </div>
+  <h1>Problems</h1>
   <div class="body">
-    <table>
+    <table class="table table-striped">
       <tr>
         <th><a href="" ng-click="order('name')" id="problem_name">Name</a></th>
         <th><a href="" ng-click="order('appeared')" id="appeared">Appeared In</a></th>
@@ -11,12 +9,12 @@
         <th><a href="" ng-click="integerOrder('difficulty')" id="difficulty">Difficulty</a></th>
         <th>Judge</th>
       </tr>
-      <tr ng-class="{'complete': problem.solved}" ng-repeat="problem in problems">
+      <tr ng-class="{'success': problem.solved}" ng-repeat="problem in problems">
         <td><a href="{{ problem.url }}">{{ problem.name }}</a></td>
         <td>{{ problem.appeared }}</td>
-        <td class="center">{{ problem.solvedBy | number }}</td>
-        <td class="center">{{ problem.difficulty | number }}</td>
-        <td class="center nopad"><a href="/#/judge?problem={{ problem.pid }}"><img src="/static/img/hammer.svg"></a></td>
+        <td>{{ problem.solvedBy | number }}</td>
+        <td>{{ problem.difficulty | number }}</td>
+        <td><a href="/#/judge?problem={{ problem.pid }}">Submit</td>
       </tr>
     </table>
   </div>

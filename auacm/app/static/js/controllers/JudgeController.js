@@ -1,5 +1,6 @@
-app.controller('JudgeController', ['$scope', '$http',
-        function($scope, $http) {
+app.controller('JudgeController', ['$scope', '$http', '$routeParams',
+        function($scope, $http, $routeParams) {
+    $scope.pid = $routeParams.problem;
     $scope.submitted = [];
     $scope.submit = function() {
         var fd = new FormData();

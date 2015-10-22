@@ -1,24 +1,24 @@
-<div class="main-wide">
-  <div class='title'>
-    {{ competition.name }}
-  </div>
-  <div class='body'>
-    <table class='center'>
-      <tr>
-        <th>Rank</th>
-        <th>Team</th>
-        <th>Solved</th>
-        <th>Time</th>
-        <th ng-repeat="problem in compProblems">{{ problem }}</th>
-      </tr>
-      <tr ng-repeat="team in teams | orderBy:['-solved','time']">
+<div>
+  <h1>{{ competition.name }}</div>
+  <div class="body">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Team</th>
+          <th>Solved</th>
+          <th>Time</th>
+          <th ng-repeat="problem in compProblems">{{ problem }}</th>
+        </tr>
+      </thead>
+      <tr ng-repeat="team in teams | orderBy:['-solved', 'time']">
         <td>{{ team.rank }}</td>
         <td>{{ team.name }}</td>
         <td>{{ team.solved }}</td>
         <td>{{ team.time }}</td>
         <td ng-repeat="(problem, problemData) in team.problemData" 
-            ng-class="{'good': problemData.status=='correct', 'wrong': problemData.status=='incorrect'}">
-            <div ng-hide="problemData.status=='unattempted'">
+            ng-class="{'success': problemData.status=='correct', 'danger': problemData.status=='incorrect'}">
+            <div ng-hide="problemData.status=="unattempted"">
               {{ problemData.submitCount }}
             <br>
             <small>
