@@ -3,16 +3,20 @@
   <form>
     <div class="form-group">
       <label for="postTitle">Post title</label>
-      <input type="text" class="form-control" id="postTitle" placeholder="Post title" ng-model="title">
+      <input type="text" class="form-control" id="postTitle" 
+             placeholder="Post title" ng-model="title" ng-disabled="disableForm">
     </div>
     <div class="form-group">
       <label for="postSubtitle">Subtitle</label>
-      <input type="text" class="form-control" id="postSubtitle" placeholder="Subtitle" ng-model="subtitle">
+      <input type="text" class="form-control" id="postSubtitle" 
+             placeholder="Subtitle" ng-model="subtitle" ng-disabled="disableForm">
     </div>
     <div class="form-group">
       <label for="body">Body text (markdown)</label>
-      <textarea class="form-control" rows="5" id="body" ng-model="$parent.body"></textarea>
+      <textarea class="form-control" rows="15" id="body" 
+                ng-model="$parent.body" ng-disabled="disableForm"></textarea>
     </div>
-    <button type="submit" class="btn btn-default" ng-click="createPost()">Create post</button>
+    <button type="submit" class="btn btn-default" 
+            ng-click="createPost()" ng-disabled="disableForm">Create post</button>
   </form>
 </div>

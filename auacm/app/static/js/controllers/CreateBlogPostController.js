@@ -1,13 +1,12 @@
 app.controller('CreateBlogPostController', ['$scope', '$http', '$location', 
         function($scope, $http, $location) {
+    $scope.disableForm = false;
     $scope.createPost = function() {
-        if ($scope.body == undefined) {
-            return;
-        }
+        $scope.disableForm = true;
         var request = {
             'title' : $scope.title,
             'subtitle' : $scope.subtitle,
-            'body' : $scope.body
+            'body' : $scope.$parent.body
         };
         $http({
             method: 'POST',
@@ -21,9 +20,12 @@ app.controller('CreateBlogPostController', ['$scope', '$http', '$location',
             },
             data: request
         }).then(function(response) {
+            $scope.disableForm = false;
+            $scope.$parent.body = '';
             $scope.blogPosts.unshift(response.data.data);
             $location.path('/blog/' + response.data.data.id);
         }, function(response) {
+            $scope.disableForm = false;
             console.log("error");
         });
     }

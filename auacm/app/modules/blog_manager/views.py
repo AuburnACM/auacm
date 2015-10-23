@@ -27,11 +27,11 @@ def get_blog_posts():
     posts = session.query(BlogPost).order_by(desc(BlogPost.post_time)).all()
     postList = list()
     for p in posts:
-        print p.body
         postList.append(create_blog_object(p))
     return serve_response(postList)
 
 @app.route('/api/blog/', methods=["POST"])
+@login_required
 def create_blog_post():
     if not current_user.admin == 1:
         return serve_error('You must be an admin to submit blog posts', response_code=401)
