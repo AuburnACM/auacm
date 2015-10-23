@@ -7,7 +7,7 @@ from sqlalchemy.ext.automap import automap_base
 Base = automap_base()
 from app.modules.user_manager.models import User
 from app.modules.scoreboard_manager.models import Competition, CompUser, CompProblem
-engine = create_engine('mysql://acm@localhost/acm')
+engine = create_engine('mysql+pymysql://acm@localhost/acm')
 connection = engine.connect()
 Base.prepare(engine, reflect=True)
 session = Session(engine)

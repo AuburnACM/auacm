@@ -1,0 +1,18 @@
+<div class="col-md-8 col-md-offset-2">
+  <h2>Create new blog post</h2>
+  <form>
+    <div class="form-group">
+      <label for="postTitle">Post title</label>
+      <input type="text" class="form-control" id="postTitle" placeholder="Post title" ng-model="title">
+    </div>
+    <div class="form-group">
+      <label for="postSubtitle">Subtitle</label>
+      <input type="text" class="form-control" id="postSubtitle" placeholder="Subtitle" ng-model="subtitle">
+    </div>
+    <div class="form-group">
+      <label for="body">Body text (markdown)</label>
+      <textarea class="form-control" rows="5" id="body" ng-model="$parent.body"></textarea>
+    </div>
+    <button type="submit" class="btn btn-default" ng-click="createPost()">Create post</button>
+  </form>
+</div>
