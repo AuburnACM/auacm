@@ -1,0 +1,17 @@
+<div class="body">
+  <!-- Container -->
+  <div class="col-md-8 col-md-offset-2">
+    <div class="row">
+      <h1 class="col-md-8">Auburn ACM Blog</h1>
+      <button type="button" class="btn btn-default col-md-4 margin-top"
+              ng-click="createPost()" ng-show="isAdmin === 1">
+        Create post
+      </button>
+    </div>
+    <div ng-repeat="post in blogPosts">
+      <a href="/#/blog/{{ post.id }}/"><h2>{{ post.title }}</a> <small>{{ post.subtitle }}</small></h2>
+      <h5><small>Posted on {{ post.postTime | date : short }} by {{ post.author.display }}</small></h5>
+      <div class="text-left" markdown="post.body | limitTo : 750"></div>
+    </div>
+  </div>
+</div>

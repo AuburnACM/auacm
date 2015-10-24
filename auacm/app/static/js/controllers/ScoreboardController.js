@@ -41,6 +41,7 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams', funct
             prevSolved = team.solved;
             prevTime = team.time;
         }
+        $scope.$apply();
     }
     $http.get('/api/competitions/' + cid)
         .then(function(response) {
@@ -84,6 +85,5 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams', funct
             }
         }
         genScoreboard();
-        $scope.$apply();
     })
 }]);

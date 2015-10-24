@@ -27,7 +27,8 @@
       </div>
       <div class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'">
         <ul class="nav navbar-nav navbar-left">
-          <li ng-class="{active: $route.current.activetab == 'problems'}"><a href="/#/">Problems</a></li>
+          <li ng-class="{active: $route.current.activetab == 'blog'}"><a href="/#/">Blog</a></li>
+          <li ng-class="{active: $route.current.activetab == 'problems'}"><a href="/#/problems">Problems</a></li>
           <li ng-class="{active: $route.current.activetab == 'judge'}"><a href="/#/judge">Judge</a></li>
           <li ng-class="{active: $route.current.activetab == 'competitions'}"><a href="/#/competitions">Competitions</a></li>
         </ul>
@@ -52,6 +53,8 @@
   
   <script src="/static/components/angular/angular.js"></script>
   <script src="/static/components/angular-route/angular-route.js"></script>
+  <script src="/static/components/angular-sanitize/angular-sanitize.min.js"></script>
+  <script src="/static/components/showdown/src/showdown.js"></script>
   <script src="/static/components/angular-messages/angular-messages.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.14.2/ui-bootstrap-tpls.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
@@ -61,6 +64,9 @@
 
   <!-- Controllers -->
   <script src="/static/js/controllers/MainController.js"></script>
+  <script src="/static/js/controllers/BlogListController.js"></script>
+  <script src="/static/js/controllers/CreateBlogPostController.js"></script>
+  <script src="/static/js/controllers/BlogPostController.js"></script>
   <script src="/static/js/controllers/ProblemsController.js"></script>
   <script src="/static/js/controllers/JudgeController.js"></script>
   <script src="/static/js/controllers/CompetitionsController.js"></script>

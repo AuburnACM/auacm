@@ -1,12 +1,36 @@
 'use strict';
 
 // Declare app level module which depends on views, and components
-var app = angular.module('mainModule',['ngMessages', 'ngRoute', 'ui.bootstrap']);
+var app = angular.module('mainModule',[
+    'ngRoute',
+    'ui.bootstrap',
+    'ngMessages'
+]);
 
 // configure our routes
 app.config(function($routeProvider) {
     $routeProvider
         .when('/', { // route for the problems page
+            templateUrl : 'static/html/blogList.html',
+            controller : 'BlogListController',
+            activetab : 'blog'
+        })
+        .when('/blog', { // route for the problems page
+            templateUrl : 'static/html/blogList.html',
+            controller : 'BlogListController',
+            activetab : 'blog'
+        })
+        .when('/blog/create', {
+            templateUrl : 'static/html/createBlogPost.html',
+            controller : 'CreateBlogPostController',
+            activetab : 'blog'
+        })
+        .when('/blog/:id', {
+            templateUrl : 'static/html/blogPost.html',
+            controller : 'BlogPostController',
+            activetab : 'blog'
+        })
+        .when('/problems', { // route for the problems page
             templateUrl : 'static/html/problems.html',
             controller : 'ProblemsController',
             activetab : 'problems'
@@ -30,7 +54,7 @@ app.config(function($routeProvider) {
             templateUrl : 'static/html/settings.html',
             controller : 'SettingsController',
             activetab : 'settings'
-        })
+        });
 });
 
 app.filter('secondsToDateTime', [function() {
@@ -60,3 +84,14 @@ app.directive('fileModel', ['$parse', function ($parse) {
         }
     };
 }]);
+
+app.directive('markdown', function () {
+    var converter = new Showdown.converter();
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            element.html(converter.makeHtml(scope.$eval(attrs.markdown)  || ''));
+        }
+    };
+
+});
