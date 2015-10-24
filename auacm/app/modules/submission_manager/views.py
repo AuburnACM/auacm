@@ -26,7 +26,7 @@ def directory_for_submission(submission):
 
 
 def directory_for_problem(pid):
-    return join(app.config['DATA_FOLDER'], 'problems', pid)
+    return join(app.config['DATA_FOLDER'], 'problems', pid.lower())
 
 
 @socketio.on('connect', namespace="/judge")
