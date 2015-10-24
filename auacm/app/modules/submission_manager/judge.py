@@ -27,7 +27,7 @@ RUN_COMMAND = {
 TIMEOUT_MULTIPLIER = {
     "java": 1.5,
     "py": 2,
-    "cc": 1,
+    "c": 1,
     "cpp": 1,
     "go": 1
 }
