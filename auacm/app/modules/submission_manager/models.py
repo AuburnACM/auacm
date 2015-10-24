@@ -21,11 +21,11 @@ class Submission(Base.classes.submits):
         )
 
     def update_status(self, status):
-        """Updates status in the database.
+        '''Updates status in the database.
 
         :param status: the status of the submission
         :return: None
-        """
+        '''
         self.result = status
         dblock.acquire()
         session.flush()
@@ -33,13 +33,14 @@ class Submission(Base.classes.submits):
         dblock.release()
 
     def emit_status(self, status, test_num):
-        """Shares status with the clientvia a web socket.
+        '''Shares status with the clientvia a web socket.
 
         :param self: the newly created submission
         :param status: the status of the submission
         :return: None
-        """
-        socketio.emit('status', 
+        '''
+        socketio.emit(
+            'status', 
             {
                 'submissionId': self.job,
                 'problemId': self.pid,
