@@ -81,9 +81,16 @@ def log_in():
 @app.route('/api/create_user', methods=['POST'])
 @login_required
 def create_user():
+    # Verify that the poster is an admin
+    if current_user.admin == 0:
+        return server_error('Must be admin to create users', 401)
+
+    # Get form contents
     username = request.form['username']
     password = request.form['password']
     display = request.form['display']
+
+    # Create the user if doesn't already exist
     user = load_user(username)
     if user is None:
         hashed = bcrypt.generate_password_hash(password)
@@ -121,8 +128,8 @@ def log_out():
 @login_required
 def get_me():
     return serve_response({
-        'username': current_user.username,
+        'username'   : current_user.username, 
         'displayName': current_user.display,
-        'admin' : current_user.admin
+        'isAdmin'    : current_user.admin
     })
 

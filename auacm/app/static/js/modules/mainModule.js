@@ -3,7 +3,8 @@
 // Declare app level module which depends on views, and components
 var app = angular.module('mainModule',[
     'ngRoute',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'ngMessages'
 ]);
 
 // configure our routes

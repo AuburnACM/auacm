@@ -6,17 +6,97 @@
         <label for="oldPassword" class="control-label">Old password</label>
         <input class="form-control" id="oldPassword" type="password" placeholder="Old password" ng-model="oldPassword">
       </div>
+
       <div class="form-group">
         <label for="newPassword" class="control-label">New password</label>
         <input class="form-control" id="newPassword" type="password" placeholder="New password" ng-model="newPassword">
       </div>
+
       <div class="form-group">
         <label for="confirmPassword" class="control-label">Confirm password</label>
         <input class="form-control" id="confirmPassword" type="password" placeholder="Confirm password" ng-model="confirmPassword">
       </div>
+      
       <button class="btn btn-default" type="submit" ng-click="changePassword()">
         Change Password
       </button>
     </form>
   </div>
+</div>
+
+<!-- Additional settings for admins only -->
+<div ng-if="isAdmin">
+  <h1>Additional Settings</h1>
+
+  <div class="panel panel-default">
+    <div class="panel-heading"><h2>Create New User</h2></div>
+    <div class="panel-body">
+      <form name="createUserForm" novalidate ng-submit="createUser(createUserForm)">
+        <!-- Display Name -->
+        <div class="form-group">
+          <label for="newUserDislpayName" class="control-label">Display Name</label>
+          <input class="form-control" name="displayname" id="newUserDisplayName" type="text" 
+            placeholder="William Hester" ng-model="$parent.newUserDisplayName" ng-minlength="2"
+            ng-maxlength="32" required>
+          <!-- Messages for form validation -->
+          <div ng-if="!createUserForm.displayname.$pristine" ng-messages="createUserForm.displayname.$error">
+            <div class="label label-danger" ng-message="minlength">Display name is too short</div>
+            <div class="label label-danger" ng-message="maxlength">Display name is too long</div>
+            <div class="label label-danger" ng-message="required">Display name is required</div>
+          </div>
+        </div>
+
+        <!-- Username -->
+        <div class="form-group">
+          <label for="newUserName" class="control-label">Username</label>
+          <input class="form-control" name="newusername" id="newUserName" type="text" placeholder="willdawg"
+            ng-model="$parent.newUserName" required ng-maxlength="32" ng-minlength="2">
+          <!-- Bit 'o validation -->
+          <div ng-if="!createUserForm.newusername.$pristine" ng-messages="createUserForm.newusername.$error">
+            <div class="label label-danger" ng-message="minlength">Username is too short</div>
+            <div class="label label-danger" ng-message="maxlength">Username is too long</div>
+            <div class="label label-danger" ng-message="required">Username is required</div>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="newUserPassword" class="control-label">Password</label>
+          <input class="form-control" id="newUserPassword" type="password" placeholder="Password"
+            ng-model="$parent.newUserPassword" name="newpassword" required ng-minlength="6" ng-maxlength="32">
+          <!-- Bit 'o validation -->
+          <div ng-if="!createUserForm.newpassword.$pristine" ng-messages="createUserForm.newpassword.$error">
+            <div class="label label-danger" ng-message="minlength">Password is too short</div>
+            <div class="label label-danger" ng-message="maxlength">Password is too long</div>
+            <div class="label label-danger" ng-message="required">Password is required</div>
+          </div>
+        </div>
+
+        <!-- Pasword Comfirm -->
+        <div class="form-group">
+          <label for="newUserPasswordConfirm" class="control-label">Confirm password</label>
+          <input class="form-control" id="newUserPasswordConfirm" type="password" placeholder="Confirm Password" 
+            ng-model="$parent.newUserPasswordConfirm" name="newpasswordconfirm" ng-minlength="6" ng-maxlength="32">
+          <!-- Show if the passwords dont match (only displays after a submit) -->
+          <div ng-show="!getNewUserMatch()">
+            <div class="label label-danger">Passwords do not match</div>
+          </div>
+        </div>
+
+        <!-- Submit button -->
+        <button class="btn btn-default" type="submit">
+          Create User
+        </button>
+
+        <!-- Display a failed/successful user creation -->
+        <div ng-show="getFailedCreate() && getNewUserSubmitted()">
+          <div class="label label-danger">Error creating user</div>
+        </div>
+        <div ng-show="!getFailedCreate() && getNewUserMatch() && getNewUserSubmitted()">
+          <div class="label label-success">User created successfully</div>
+        </div>
+      </form>
+    </div>
+  </div>
+
 </div>

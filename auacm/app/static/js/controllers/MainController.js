@@ -1,20 +1,29 @@
 app.controller('MainController', ['$scope', '$http', '$route', '$window', 
         function($scope, $http, $route, $window) {
-    $scope.username = 'placeholder'
-    $scope.$route = $route
+    // Intialize user fields
+    $scope.username = 'placeholder';
+    $scope.displayName = 'placeholder';
+    $scope.isAdmin = false;
+
+    $scope.$route = $route;
+    // Make a /api/me request and set the current user
     $http.get('/api/me')
         .then(function(response) {
-            $scope.user = response.data.data;
+            $scope.username = response.data.data.username;
+            $scope.displayName = response.data.data.displayName;
+            $scope.isAdmin = response.data.data.isAdmin;
         },
         function(error) {
-            
+            console.log("Error getting current user in MainController");
         });
+
+    // Get the problems to display
     $http.get('/api/problems')
         .then(function(response) {
             $scope.problems = response.data.data;
         },
         function(error) {
-            
+
         });
     $http.get('/api/blog')
         .then(function(response) {
