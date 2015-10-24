@@ -9,6 +9,11 @@
   <title>AU ACM v2</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap stuff -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <link type="text/css" rel="stylesheet" href="static/css/style.css" />
   <script src="/static/components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
 </head>
@@ -16,13 +21,22 @@
   <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
   <![endif]-->
-  <div ng-controller="LoginController" id="login_wrap">
-    <div id="login_box">
-      <ng-form name="login">
-        <input ng-model="username" name="username" placeholder="Username" autofocus><br>
-        <input ng-model="password" type="password" name="password" placeholder="Password" on-enter="submit()"><br>
-        <button ng-click="logIn()">Log In</button>
-      </ng-form>
+  <div ng-controller="LoginController" id="login_wrap" class="container-fluid">
+    <div class="row">
+      <div class="span6">
+        <h1 style="text-align:center">Please log in</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="span6">
+        <div id="login_box" style="text-align:center">
+          <ng-form name="login">
+            <input ng-model="username" name="username" placeholder="Username" autofocus><br>
+            <input ng-model="password" type="password" name="password" placeholder="Password" on-enter="submit()"><br>
+            <button ng-click="logIn()">Log In</button>
+          </ng-form>
+        </div>
+      </div>
     </div>
   </div>
 

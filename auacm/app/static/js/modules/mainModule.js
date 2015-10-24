@@ -1,7 +1,7 @@
 'use strict';
 
 // Declare app level module which depends on views, and components
-var app = angular.module('mainModule',['ngRoute', 'ui.bootstrap']);
+var app = angular.module('mainModule',['ngMessages', 'ngRoute', 'ui.bootstrap']);
 
 // configure our routes
 app.config(function($routeProvider) {

@@ -16,7 +16,7 @@ You're probably wondering how to set up your environment, so here we go:
 
     ``git clone https://github.com/AuburnACM/AUACM.git ``
 
-3. Navigate to ``/../AUACM/auacm/`` and set up your virtual environment.
+3. Navigate to ``/../auacm/auacm/`` and set up your virtual environment.
 Do this by executing the following commands: 
 
     ``$ pip install virtualenv``
@@ -68,18 +68,18 @@ Do this by executing the following commands:
     ``$ cd ../auacm``
 
     ``$ ./run.py``
-   
+
 # Need test solutions or competitions?
 ## We've got you covered.
 
 1. Navigate to /setup in terminal and type
 
     ``$ chmod +x create_competition.sh``
-    
+
     ``$ ./create_competition.sh <<< "Your Mock Mock Competition Name"``
-     
+
 2. When prompted for your passwords, simply enter them there. If you
    don't have one, just press enter.
-   
+
 3. Have fun with your Mock Mock Competition. All of the solitions
    should be located in the /testing/testSolutions folder.
