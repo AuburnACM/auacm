@@ -5,25 +5,30 @@ import threading
 
 from os import path
 
+from app import app
+
+
+ALLOWED_EXTENSIONS = ['java', 'c', 'cpp', 'py', 'go']
+
 COMPILE_COMMAND = {
-    "java": "javac {0}/{1}.java"
-    "py": ""
-    "cc": "gcc {0}.cc -o {0}"
-    "cpp": "g++ {0}.cpp -o {0}"
+    "java": "javac {0}/{1}.java",
+    "py": "",
+    "c": "gcc {0}.cc -o {0}",
+    "cpp": "g++ {0}.cpp -o {0}",
     "go": "go build {0}.go"
 }
 RUN_COMMAND = {
-    "java": "java {0}"
-    "py": "python {0}.py"
-    "cc": "./{0}"
-    "cpp" "./{0}"
+    "java": "java {0}",
+    "py": "python {0}.py",
+    "c": "./{0}",
+    "cpp": "./{0}",
     "go": "./{0}"
 }
 TIMEOUT_MULTIPLIER = {
-    "java": 1.5
-    "py": 2
-    "cc": 1
-    "cpp": 1
+    "java": 1.5,
+    "py": 2,
+    "cc": 1,
+    "cpp": 1,
     "go": 1
 }
 PENDING = 0
@@ -34,8 +39,6 @@ TIMELIMIT_EXCEEDED = 4
 WRONG_ANSWER = 5
 CORRECT_ANSWER = 6
 
-
-ALLOWED_EXTENSIONS = ['java', 'c', 'cpp', 'c++', 'py', 'go']
 
 def allowed_filetype(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -105,8 +108,8 @@ def execute_submission(submission, uploaded_file, problem):
                 submission.emit_status("runtime", test_number)
                 return RUNTIME_ERROR
             result_path = path.join(directory_for_submission, "out")
-            with (open(join(output_path, out_file)) as golden_result,
-                  open(join(result_path, out_file)) as submission_result):
+            with open(join(output_path, out_file)) as golden_result, \
+                 open(join(result_path, out_file)) as submission_result:
                 golden_lines = golden_result.readlines()
                 submission_lines = submission_result.readlines()
                 if len(submission_lines) != len(golden_lines):
@@ -129,7 +132,7 @@ class _JudgementThread(threading.Thread):
     '''This thread will be used to pass judgement on a submission.'''
     
     def __init__(self, **kwargs):
-        threading.Thread.__init__()
+        threading.Thread.__init__(self, kwargs)
         self.process = None
         
     def run():

@@ -8,7 +8,7 @@ dblock = threading.Lock()
 
 
 class Submission(Base.classes.submits):
-    def __init__(self. *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         Base.classes.submits.__init__(self, *args, **kwargs)
         session.add(self)
         session.flush()
