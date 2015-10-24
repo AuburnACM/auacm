@@ -41,14 +41,14 @@ CORRECT_ANSWER = 6
 
 
 def allowed_filetype(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def directory_for_submission(submission):
-    return join(app.config['DATA_FOLDER'], 'submits', str(submission.job))
+    return join(app.config["DATA_FOLDER"], "submits", str(submission.job))
     
     
 def directory_for_problem(pid):
-    return join(app.config['DATA_FOLDER'], 'problems', pid)
+    return join(app.config["DATA_FOLDER"], "problems", pid)
 
 
 def evaluate(submission, uploaded_file, problem):
