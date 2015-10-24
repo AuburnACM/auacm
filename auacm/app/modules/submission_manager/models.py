@@ -1,6 +1,7 @@
 '''Provide a model object for handling submits.'''
 import threading
 
+from app import socketio
 from app.database import Base, session
 
 dblock = threading.Lock()
@@ -40,11 +41,11 @@ class Submission(Base.classes.submits):
         """
         socketio.emit('status', 
             {
-                'submissionId' : self.job,
-                'problemId' : self.pid,
-                'username' : self.username,
-                'submitTime' : self.submit_time * 1000, # to milliseconds
-                'testNum' : test_num,
-                'status' : status
+                'submissionId': self.job,
+                'problemId': self.pid,
+                'username': self.username,
+                'submitTime': self.submit_time * 1000, # to milliseconds
+                'testNum': test_num,
+                'status': status
             },
             namespace='/judge')

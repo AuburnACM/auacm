@@ -1,17 +1,12 @@
 import time
-import subprocess
-from subprocess import Popen
-from time import sleep
 from threading import Thread
 
 from flask import request
 from flask.ext.login import current_user, login_required
 from app import app, socketio
 from app.util import serve_response, serve_error
-from .models import Submission
+from app.modules.submission_manager import models
 from app.modules.submission_manager import judge
-import os
-from os.path import isfile, join
 
 
 @socketio.on('connect', namespace="/judge")
@@ -38,12 +33,13 @@ def submit():
     if not request.form['pid']:
         return serve_error('the field \'pid\' must be specified', response_code=400)
 
-    attempt = Submission(username=current_user.username,
-                         pid=request.form['pid'],
-                         submit_time=int(time.time()),
-                         auto_id=0,
-                         file_type=uploaded_file.filename.split('.')[-1].lower(),
-                         result='start')
+    attempt = models.Submission(
+        username=current_user.username,
+        pid=request.form['pid'],
+        submit_time=int(time.time()),
+        auto_id=0,
+        file_type=uploaded_file.filename.split('.')[-1].lower(),
+        result='start')
     thread = Thread(
         target=judge.evaluate, args=(attempt, uploaded_file, problem))
     thread.start()
