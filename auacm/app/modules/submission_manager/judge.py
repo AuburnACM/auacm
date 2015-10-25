@@ -14,7 +14,7 @@ ALLOWED_EXTENSIONS = ['java', 'c', 'cpp', 'py', 'go']
 
 COMPILE_COMMAND = {
     "java": "javac {0}.java",
-    "py": "",
+    "py": None,
     "c": "gcc {0}.c -o {0}",
     "cpp": "g++ {0}.cpp -o {0}",
     "go": "go build {0}.go"
@@ -74,6 +74,8 @@ def compile_submission(submission, uploaded_file):
     directory = directory_for_submission(submission)
     filename = uploaded_file.filename
     name, ext = filename.rsplit(".", 1)[0], filename.rsplit(".", 1)[-1]
+    if COMPILE_COMMAND[ext] is None:
+        return COMPILATION_SUCCESS
     result = subprocess.call(
         shlex.split(COMPILE_COMMAND[ext].format(path.join(directory, name))),
         stderr=open(path.join(directory, "error.txt"), "w")

@@ -23,6 +23,12 @@ from app.modules.submission_manager import models
 
 
 class JudgeTest(object):
+    '''Mixin class for building tests of the judge in different langauges.
+    
+    This makes 6 methods mandatory for implementation.  The goal is to
+    make it so that we can't add a language without adding unit tests
+    to verify the behavior of submissions in that language.
+    '''
     def setUp(self):
         '''Prepare the test directory to run a new submit.
             
@@ -64,7 +70,7 @@ class JudgeTest(object):
             file_type=ext,
             result="start"
         )
-        #submit.job += str(time.time())
+        submit.job += str(time.time())
         file_path = path.join(
             data_folder, "problems", problem, "solutions", filename)
         # Keep track of submit_file so that we can close it.
@@ -97,7 +103,7 @@ class JudgeTest(object):
 
 
 class JavaTest(JudgeTest, unittest.TestCase):
-    '''Tests for java submissions.'''
+    '''Tests for .java submissions.'''
 
     def testNoCompile(self):
         self.createMockSubmission("addnumbers", "CompileError.java")
@@ -137,6 +143,41 @@ class JavaTest(JudgeTest, unittest.TestCase):
         self.assertEqual(
             judge.CORRECT_ANSWER,
             judge.evaluate(self.submit, self.submit_file))
+
+
+class PythonTest(JudgeTest, unittest.TestCase):
+    '''Tests for .py submissions.'''
+    #TODO(djshuckerow): tests for python2 and python3.
+    def testNoCompile(self):
+        pass
+        
+    def testCompile(self):
+        pass
+
+    def testRuntimeError(self):
+        self.createMockSubmission("addnumbers", "runtime.py")
+        self.assertEqual(
+            judge.RUNTIME_ERROR,
+            judge.evaluate(self.submit, self.submit_file))
+        
+    def testTimelimitError(self):
+        self.createMockSubmission("addnumbers", "timelimit.py")
+        self.assertEqual(
+            judge.TIMELIMIT_EXCEEDED,
+            judge.evaluate(self.submit, self.submit_file))
+    
+    def testWrongAnswer(self):
+        self.createMockSubmission("addnumbers", "wrong.py")
+        self.assertEqual(
+            judge.WRONG_ANSWER,
+            judge.evaluate(self.submit, self.submit_file))
+    
+    def testRightAnswer(self):
+        self.createMockSubmission("addnumbers", "right.py")
+        self.assertEqual(
+            judge.CORRECT_ANSWER,
+            judge.evaluate(self.submit, self.submit_file))
+
 
 
 class MockUploadFile(object):
