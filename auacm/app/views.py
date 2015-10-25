@@ -4,6 +4,7 @@ from app import app, socketio
 from app.database import Base, session
 from app.util import bcrypt, login_manager, serve_info_pdf, serve_html, serve_response, serve_error, load_user
 from app.modules.user_manager.models import User
+from app.modules.submission_manager.models import Submission
 from os.path import join
 from time import time
 
@@ -36,10 +37,9 @@ def get_problem_info(pid):
 @login_required
 def get_problems():
     problems = list()
-    Submits = Base.classes.submits
-    solved = session.query(Submits).\
-            filter(Submits.username==current_user.username).\
-            filter(Submits.result=="good").\
+    solved = session.query(Submission).\
+            filter(Submission.username==current_user.username).\
+            filter(Submission.result=="good").\
             all()
     solved_set = set()
     for solve in solved:
