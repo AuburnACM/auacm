@@ -11,9 +11,9 @@ from app import app
 ALLOWED_EXTENSIONS = ['java', 'c', 'cpp', 'py', 'go']
 
 COMPILE_COMMAND = {
-    "java": "javac {0}/{1}.java",
+    "java": "javac {0}.java",
     "py": "",
-    "c": "gcc {0}.cc -o {0}",
+    "c": "gcc {0}.c -o {0}",
     "cpp": "g++ {0}.cpp -o {0}",
     "go": "go build {0}.go"
 }
@@ -44,14 +44,14 @@ def allowed_filetype(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def directory_for_submission(submission):
-    return join(app.config["DATA_FOLDER"], "submits", str(submission.job))
-    
-    
+    return path.join(app.config["DATA_FOLDER"], "submits", str(submission.job))
+
+
 def directory_for_problem(pid):
-    return join(app.config["DATA_FOLDER"], "problems", pid)
+    return path.join(app.config["DATA_FOLDER"], "problems", pid)
 
 
-def evaluate(submission, uploaded_file, problem):
+def evaluate(submission, uploaded_file):
     '''Attempts to compile (if necessary) then execute a given file.
 
     :param submission: the newly created submission
@@ -60,10 +60,10 @@ def evaluate(submission, uploaded_file, problem):
     '''
     directory = directory_for_submission(submission)
     os.mkdir(directory)
-    uploaded_file.save(join(directory, uploaded_file.filename))
+    uploaded_file.save(path.join(directory, uploaded_file.filename))
     status = compile_submission(submission, uploaded_file)
     if status == COMPILATION_SUCCESS:
-        execute_submission(submission, uploaded_file, problem)
+        status = execute_submission(submission, uploaded_file)
     return status
     
 
@@ -73,7 +73,7 @@ def compile_submission(submission, uploaded_file):
     filename = uploaded_file.filename
     name, ext = filename.rsplit(".", 1)[0], filename.rsplit(".", 1)[-1]
     result = subprocess.call(
-        COMPILE_COMMAND[ext].format(directory, name, ext),
+        COMPILE_COMMAND[ext].format(path.join(directory, name)).split(),
         stderr=open(path.join(directory, "error.txt"), "w")
     )
     if result == 0:
@@ -82,8 +82,9 @@ def compile_submission(submission, uploaded_file):
         return COMPILATION_ERROR
 
 
-def execute_submission(submission, uploaded_file, problem):
+def execute_submission(submission, uploaded_file):
     '''Run the submission.'''
+    problem = submission.get_problem()
     problem_directory = directory_for_problem(submission.pid)
     filename = uploaded_file.filename
     name, ext = filename.rsplit(".", 1)[0], filename.rsplit(".", 1)[-1]
@@ -108,8 +109,8 @@ def execute_submission(submission, uploaded_file, problem):
                 submission.emit_status("runtime", test_number)
                 return RUNTIME_ERROR
             result_path = path.join(directory_for_submission, "out")
-            with open(join(output_path, out_file)) as golden_result, \
-                 open(join(result_path, out_file)) as submission_result:
+            with open(path.join(output_path, out_file)) as golden_result, \
+                 open(path.join(result_path, out_file)) as submission_result:
                 golden_lines = golden_result.readlines()
                 submission_lines = submission_result.readlines()
                 if len(submission_lines) != len(golden_lines):

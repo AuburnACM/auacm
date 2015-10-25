@@ -41,7 +41,7 @@ def submit():
         file_type=uploaded_file.filename.split('.')[-1].lower(),
         result='start')
     thread = Thread(
-        target=judge.evaluate, args=(attempt, uploaded_file, problem))
+        target=judge.evaluate, args=(attempt, uploaded_file))
     thread.start()
     return serve_response({
         'submissionId' : attempt.job
