@@ -40,6 +40,7 @@ def submit():
         auto_id=0,
         file_type=uploaded_file.filename.split('.')[-1].lower(),
         result='start')
+    attempt.commit_to_session()
     thread = Thread(
         target=judge.evaluate, args=(attempt, uploaded_file))
     thread.daemon = False

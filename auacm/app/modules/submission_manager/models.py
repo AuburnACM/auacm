@@ -8,13 +8,21 @@ dblock = threading.Lock()
 
 
 class Submission(Base):
+    '''Submission class that we build by reflecting the mysql database.
+    
+    This class also has some methods for adjusting its status.
+    '''
     __tablename__ = "submits"
     def __init__(self, **kwargs):
         Base.__init__(self, **kwargs)
+
+    def commit_to_session(self):
+        dblock.acquire()        
         session.add(self)
         session.flush()
         session.commit()
         session.refresh(self)
+        dblock.release()
         self._problem = None
 
     def update_status(self, status):
