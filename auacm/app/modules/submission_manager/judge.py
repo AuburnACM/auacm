@@ -75,6 +75,7 @@ def compile_submission(submission, uploaded_file):
     directory = directory_for_submission(submission)
     filename = uploaded_file.filename
     name, ext = filename.rsplit(".", 1)
+    # Don't compile file types that we can't compile.
     if COMPILE_COMMAND[ext] is None:
         return COMPILATION_SUCCESS
     result = subprocess.call(
