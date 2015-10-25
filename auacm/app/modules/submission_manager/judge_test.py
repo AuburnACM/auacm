@@ -39,6 +39,11 @@ class JudgeTest(object):
         self.submit, self.submit_file = None, None
 
     def _purgeDirectory(self, directory):
+        '''Recursively empty out the contents of a directory. USE WITH CAUTION.
+        
+        This is currently used to empty out the judge_tests/submits directory
+        before and after tests are run.
+        '''
         for f in glob.glob(directory):
             if os.path.isfile(f):
                 os.remove(f)
