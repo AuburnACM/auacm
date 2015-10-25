@@ -91,7 +91,16 @@ def compile_submission(submission, uploaded_file):
 
 
 def execute_submission(submission, uploaded_file):
-    '''Run the submission.'''
+    '''Run the submission.
+
+    TODO(djshuckerow): This method magically got out-of-hand.  Refactor.
+    This method:
+        1. detects all the input files associated with this problem.
+        2. runs the submission with each input file
+        3. checks the performance of the submission for errors (TLE, RTE, etc)
+        4. compares the output against golden test output to verify correctness
+    '''
+    # Initial setup
     problem = submission.get_problem()
     problem_directory = directory_for_problem(submission)
     submission_directory = directory_for_submission(submission)
@@ -99,12 +108,13 @@ def execute_submission(submission, uploaded_file):
     name, ext = filename.rsplit(".", 1)
     input_path = os.path.join(problem_directory, "in")
     output_path = os.path.join(problem_directory, "out")
+    # Iterate over all the input files.
     for fname in os.listdir(input_path):
         f = os.path.join(input_path, fname)
         if os.path.isfile(f):
+            # Prepare to run the test file.
             test_number = int(fname.split(".")[0].strip("in"))
             out_file = "out{0}.txt".format(test_number)
-            # TODO(djshuckerow): emit submission status with a pipe
             submission.emit_status("running", test_number)
             max_runtime = problem.time_limit * TIMEOUT_MULTIPLIER[ext]
             execution = JudgementCmd(
