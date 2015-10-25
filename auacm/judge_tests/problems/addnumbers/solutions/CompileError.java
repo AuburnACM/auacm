@@ -3,8 +3,7 @@
  */
 import java.util.*;
 
-public class CompError {
-	public static void main(String[] args) {
-		
-	}
+public class Wrong {
+    public static void main(String[] args) {
+    }
 }
