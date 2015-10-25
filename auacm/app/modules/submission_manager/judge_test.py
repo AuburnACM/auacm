@@ -9,10 +9,9 @@ snake_case.
 '''
 import glob
 import os
+import os.path
 import sys
 import unittest
-
-from os import path
 
 from app import app
 from app.modules.submission_manager import judge
@@ -33,17 +32,17 @@ class JudgeTest(object):
         2. Empty the submits directory
         ''' 
         app.config["DATA_FOLDER"] = os.getcwd() + '/judge_tests'
-        directory = path.join(app.config["DATA_FOLDER"], "submits", "*")
+        directory = os.path.join(app.config["DATA_FOLDER"], "submits", "*")
         self._purgeDirectory(directory)
         # TODO(djshuckerow): more things to clean the directory up.
         self.submit, self.submit_file = None, None
         
     def _purgeDirectory(self, directory):
         for f in glob.glob(directory):
-            if path.isfile(f):
+            if os.path.isfile(f):
                 os.remove(f)
-            if path.isdir(f):
-                self._purgeDirectory(path.join(f, "*"))
+            if os.path.isdir(f):
+                self._purgeDirectory(os.path.join(f, "*"))
                 os.rmdir(f)
 
     def createMockSubmission(self, problem, filename):
@@ -67,7 +66,7 @@ class JudgeTest(object):
             file_type=ext,
             result="start"
         )
-        file_path = path.join(
+        file_path = os.path.join(
             data_folder, "problems", problem, "solutions", filename)
         # Keep track of submit_file so that we can close it.
         self.submit = submit
@@ -76,7 +75,7 @@ class JudgeTest(object):
     def tearDown(self):
         if self.submit_file:
             self.submit_file.close()
-        directory = path.join(app.config["DATA_FOLDER"], "submits", "*")
+        directory = os.path.join(app.config["DATA_FOLDER"], "submits", "*")
         self._purgeDirectory(directory)
         
     def testNoCompile(self):
@@ -111,7 +110,8 @@ class JavaTest(JudgeTest, unittest.TestCase):
         self.createMockSubmission("addnumbers", "CompileSuccess.java")
         directory = judge.directory_for_submission(self.submit)
         os.mkdir(directory)
-        self.submit_file.save(path.join(directory, self.submit_file.filename))
+        self.submit_file.save(
+            os.path.join(directory, self.submit_file.filename))
         self.assertEqual(
             judge.COMPILATION_SUCCESS,
             judge.compile_submission(self.submit, self.submit_file))
@@ -189,7 +189,8 @@ class CTest(JudgeTest, unittest.TestCase):
         self.createMockSubmission("addnumbers", "compilesuccess.c")
         directory = judge.directory_for_submission(self.submit)
         os.mkdir(directory)
-        self.submit_file.save(path.join(directory, self.submit_file.filename))
+        self.submit_file.save(
+            os.path.join(directory, self.submit_file.filename))
         self.assertEqual(
             judge.COMPILATION_SUCCESS,
             judge.compile_submission(self.submit, self.submit_file))
@@ -232,7 +233,8 @@ class CppTest(JudgeTest, unittest.TestCase):
         self.createMockSubmission("addnumbers", "compilesuccess.cpp")
         directory = judge.directory_for_submission(self.submit)
         os.mkdir(directory)
-        self.submit_file.save(path.join(directory, self.submit_file.filename))
+        self.submit_file.save(
+            os.path.join(directory, self.submit_file.filename))
         self.assertEqual(
             judge.COMPILATION_SUCCESS,
             judge.compile_submission(self.submit, self.submit_file))
@@ -275,7 +277,8 @@ class GoTest(JudgeTest, unittest.TestCase):
         self.createMockSubmission("addnumbers", "compilesuccess.go")
         directory = judge.directory_for_submission(self.submit)
         os.mkdir(directory)
-        self.submit_file.save(path.join(directory, self.submit_file.filename))
+        self.submit_file.save(
+            os.path.join(directory, self.submit_file.filename))
         self.assertEqual(
             judge.COMPILATION_SUCCESS,
             judge.compile_submission(self.submit, self.submit_file))
@@ -309,7 +312,7 @@ class MockUploadFile(object):
     '''Mock upload file that has a save method.'''
     def __init__(self, location):
         self.f = open(location)
-        self.filename = path.split(location)[1]
+        self.filename = os.path.split(location)[1]
 
     def save(self, location):
         with open(location, "w") as to_save:

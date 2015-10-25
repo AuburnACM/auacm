@@ -1,11 +1,10 @@
 import itertools
 import os
+import os.path
 import shlex
 import subprocess
 import threading
 import time
-
-from os import path
 
 from app import app
 
@@ -43,14 +42,16 @@ CORRECT_ANSWER = 6
 
 
 def allowed_filetype(filename):
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+    return ("." in filename and 
+            filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS)
 
 def directory_for_submission(submission):
-    return path.join(app.config["DATA_FOLDER"], "submits", str(submission.job))
+    return os.path.join(
+        app.config["DATA_FOLDER"], "submits", str(submission.job))
 
 
 def directory_for_problem(submission):
-    return path.join(app.config["DATA_FOLDER"], "problems", submission.pid)
+    return os.path.join(app.config["DATA_FOLDER"], "problems", submission.pid)
 
 
 def evaluate(submission, uploaded_file):
@@ -62,7 +63,7 @@ def evaluate(submission, uploaded_file):
     '''
     directory = directory_for_submission(submission)
     os.mkdir(directory)
-    uploaded_file.save(path.join(directory, uploaded_file.filename))
+    uploaded_file.save(os.path.join(directory, uploaded_file.filename))
     status = compile_submission(submission, uploaded_file)
     if status == COMPILATION_SUCCESS:
         status = execute_submission(submission, uploaded_file)
@@ -77,8 +78,8 @@ def compile_submission(submission, uploaded_file):
     if COMPILE_COMMAND[ext] is None:
         return COMPILATION_SUCCESS
     result = subprocess.call(
-        shlex.split(COMPILE_COMMAND[ext].format(path.join(directory, name))),
-        stderr=open(path.join(directory, "error.txt"), "w")
+        shlex.split(COMPILE_COMMAND[ext].format(os.path.join(directory, name))),
+        stderr=open(os.path.join(directory, "error.txt"), "w")
     )
     if result == 0:
         return COMPILATION_SUCCESS
@@ -95,11 +96,11 @@ def execute_submission(submission, uploaded_file):
     submission_directory = directory_for_submission(submission)
     filename = uploaded_file.filename
     name, ext = filename.rsplit(".", 1)[0], filename.rsplit(".", 1)[-1]
-    input_path = path.join(problem_directory, "in")
-    output_path = path.join(problem_directory, "out")
+    input_path = os.path.join(problem_directory, "in")
+    output_path = os.path.join(problem_directory, "out")
     for fname in os.listdir(input_path):
-        f = path.join(input_path, fname)
-        if path.isfile(f):
+        f = os.path.join(input_path, fname)
+        if os.path.isfile(f):
             test_number = int(fname.split(".")[0].strip("in"))
             out_file = "out{0}.txt".format(test_number)
             # TODO(djshuckerow): emit submission status with a pipe
@@ -120,10 +121,10 @@ def execute_submission(submission, uploaded_file):
                 submission.update_status("runtime")
                 submission.emit_status("runtime", test_number)
                 return RUNTIME_ERROR
-            result_path = path.join(submission_directory, "out")
+            result_path = os.path.join(submission_directory, "out")
             # The execution is completed.  Check its correctness.
-            with open(path.join(output_path, out_file)) as golden_result, \
-                 open(path.join(result_path, out_file)) as submission_result:
+            with open(os.path.join(output_path, out_file)) as golden_result, \
+                 open(os.path.join(result_path, out_file)) as submission_result:
                 golden_lines = golden_result.readlines()
                 submission_lines = submission_result.readlines()
                 if len(submission_lines) != len(golden_lines):
@@ -163,8 +164,8 @@ class JudgementCmd(threading.Thread):
         self.limit = limit
         # Final setup.
         directory = directory_for_submission(submit)
-        output_path = path.join(directory, 'out')
-        if (not path.exists(output_path)):
+        output_path = os.path.join(directory, 'out')
+        if (not os.path.exists(output_path)):
             os.mkdir(output_path)
         
     def run(self):
@@ -197,10 +198,10 @@ class JudgementCmd(threading.Thread):
         directory = directory_for_submission(submit)
         filename = uploaded_file.filename
         name, ext = filename.rsplit(".", 1)[0], filename.rsplit(".", 1)[-1]
-        input_path = path.join(directory_for_problem(submit), 'in')
-        output_path = path.join(directory, 'out')
+        input_path = os.path.join(directory_for_problem(submit), 'in')
+        output_path = os.path.join(directory, 'out')
         return subprocess.Popen(
             shlex.split(RUN_COMMAND[ext].format(directory, name, ext)),
-            stdin=open(path.join(input_path, in_file)),
-            stdout=open(path.join(output_path, out_file), "w"),
-            stderr=open(path.join(directory, "error.txt"), "w"))
+            stdin=open(os.path.join(input_path, in_file)),
+            stdout=open(os.path.join(output_path, out_file), "w"),
+            stderr=open(os.path.join(directory, "error.txt"), "w"))
