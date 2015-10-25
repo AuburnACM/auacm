@@ -36,7 +36,6 @@ class JudgeTest(object):
         app.config["DATA_FOLDER"] = os.getcwd() + '/judge_tests'
         directory = os.path.join(app.config["DATA_FOLDER"], "submits", "*")
         self._purgeDirectory(directory)
-        # TODO(djshuckerow): more things to clean the directory up.
         self.submit, self.submit_file = None, None
 
     def _purgeDirectory(self, directory):
