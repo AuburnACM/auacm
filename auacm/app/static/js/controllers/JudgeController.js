@@ -1,5 +1,5 @@
-app.controller('JudgeController', ['$scope', '$http', '$routeParams',
-        function($scope, $http, $routeParams) {
+app.controller('JudgeController', ['$scope', '$http', '$routeParams', '$window',
+        function($scope, $http, $routeParams, $window) {
     $scope.pid = $routeParams.problem;
     $scope.submitted = [];
     $scope.submit = function() {
@@ -32,7 +32,7 @@ app.controller('JudgeController', ['$scope', '$http', '$routeParams',
                 console.log("error");
         });
     };
-    var socket = io.connect('http://localhost:5000/judge')
+    var socket = io.connect('http://' + $window.location.host + '/judge')
     socket.on('connect', function() {
         console.log('connected');
     });
