@@ -7,18 +7,15 @@ from app.database import Base, session
 dblock = threading.Lock()
 
 
-class Submission(Base.classes.submits):
-    def __init__(self, *args, **kwargs):
-        Base.classes.submits.__init__(self, *args, **kwargs)
+class Submission(Base):
+    __tablename__ = "submits"
+    def __init__(self, **kwargs):
+        Base.__init__(self, **kwargs)
         session.add(self)
         session.flush()
         session.commit()
         session.refresh(self)
-        problem = (
-            session.query(Base.classes.problems)
-                .filter(Base.classes.problems.pid == self.pid)
-                .first()
-        )
+        self._problem = None
 
     def update_status(self, status):
         '''Updates status in the database.
@@ -50,3 +47,40 @@ class Submission(Base.classes.submits):
                 'status': status
             },
             namespace='/judge')
+
+    def get_problem(self):
+        '''Find the problem that this submit is associated with.'''
+        if self._problem is None:
+            self._problem = (
+                session.query(Base.classes.problems)
+                    .filter(Base.classes.problems.pid == self.pid)
+                    .first()
+            )
+        return self._problem
+
+
+MOCK_PROBLEM_TIMEOUT = 1
+
+
+class MockSubmission(Base):
+    '''Mock submissions class to use in tests.
+    
+    This class contains all the data that Submission does, however it doesn't
+    modify the database or emit any status.
+    '''
+    __tablename__ = "submits"
+    def __init__(self, **kwargs):
+        Base.__init__(self, **kwargs)
+        # The MockSubmission will also mock relevant data about the problem.
+        self.timeout = MOCK_PROBLEM_TIMEOUT
+        self.job = "mocksubmit"
+
+    def update_status(self, status):
+        self.result = status
+
+    def emit_status(self, status, test_num):
+        pass
+        
+    def get_problem(self):
+        '''MockSubmission contains everything relevant to its problem.'''
+        return self
