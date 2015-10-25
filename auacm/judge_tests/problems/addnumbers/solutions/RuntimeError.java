@@ -1,5 +1,5 @@
 /**
- * Java file that does not compile.
+ * Java file that errors at runtime.
  */
 import java.util.*;
 

@@ -28,20 +28,21 @@ def submit():
     uploaded_file = request.files['file']
     if not uploaded_file:
         return serve_error('file must be uploaded', response_code=400)
-    if not allowed_filetype(uploaded_file.filename):
+    if not judge.allowed_filetype(uploaded_file.filename):
         return serve_error('filename not allowed', response_code=403)
     if not request.form['pid']:
         return serve_error('the field \'pid\' must be specified', response_code=400)
 
     attempt = models.Submission(
         username=current_user.username,
-        pid=request.form['pid'],
+        pid=request.form['pid'].lower(),
         submit_time=int(time.time()),
         auto_id=0,
         file_type=uploaded_file.filename.split('.')[-1].lower(),
         result='start')
     thread = Thread(
         target=judge.evaluate, args=(attempt, uploaded_file))
+    thread.daemon = False
     thread.start()
     return serve_response({
         'submissionId' : attempt.job

@@ -1,7 +1,9 @@
 import itertools
 import os
+import shlex
 import subprocess
 import threading
+import time
 
 from os import path
 
@@ -47,8 +49,8 @@ def directory_for_submission(submission):
     return path.join(app.config["DATA_FOLDER"], "submits", str(submission.job))
 
 
-def directory_for_problem(pid):
-    return path.join(app.config["DATA_FOLDER"], "problems", pid)
+def directory_for_problem(submission):
+    return path.join(app.config["DATA_FOLDER"], "problems", submission.pid)
 
 
 def evaluate(submission, uploaded_file):
@@ -73,7 +75,7 @@ def compile_submission(submission, uploaded_file):
     filename = uploaded_file.filename
     name, ext = filename.rsplit(".", 1)[0], filename.rsplit(".", 1)[-1]
     result = subprocess.call(
-        COMPILE_COMMAND[ext].format(path.join(directory, name)).split(),
+        shlex.split(COMPILE_COMMAND[ext].format(path.join(directory, name))),
         stderr=open(path.join(directory, "error.txt"), "w")
     )
     if result == 0:
@@ -85,12 +87,12 @@ def compile_submission(submission, uploaded_file):
 def execute_submission(submission, uploaded_file):
     '''Run the submission.'''
     problem = submission.get_problem()
-    problem_directory = directory_for_problem(submission.pid)
+    problem_directory = directory_for_problem(submission)
+    submission_directory = directory_for_submission(submission)
     filename = uploaded_file.filename
     name, ext = filename.rsplit(".", 1)[0], filename.rsplit(".", 1)[-1]
     input_path = path.join(problem_directory, "in")
     output_path = path.join(problem_directory, "out")
-    print input_path, os.listdir(input_path)
     for fname in os.listdir(input_path):
         f = path.join(input_path, fname)
         if path.isfile(f):
@@ -98,78 +100,95 @@ def execute_submission(submission, uploaded_file):
             out_file = "out{0}.txt".format(test_number)
             # TODO(djshuckerow): emit submission status with a pipe
             submission.emit_status("running", test_number)
-            execution = _JudgementThread(
-                args=(submission, uploaded_file, f, out_file))
+            execution = JudgementCmd(submission, uploaded_file, f, out_file)
+            max_runtime = problem.time_limit * TIMEOUT_MULTIPLIER[ext]
+            start_time = time.time()
             execution.start()
-            execution.run()
-            execution.join(problem.timeout * TIMEOUT_MULTIPLIER[ext])
-            if execution.is_alive():
+            print threading.enumerate()
+            execution.join(max_runtime)
+            print "Done!"
+            if time.time() >= start_time + max_runtime:
+                print "BOO TLE"
                 execution.process.kill()
                 submission.update_status("timeout")
                 submission.emit_status("timeout", test_number)
                 return TIMELIMIT_EXCEEDED
-            elif execution.process.returncode is not 0:
+            elif execution.process.poll() != 0:
+                print "BOO RTE"
                 submission.update_status("runtime")
                 submission.emit_status("runtime", test_number)
                 return RUNTIME_ERROR
-            print "result: %s" % execution.process.returncode
-            result_path = path.join(directory_for_submission, "out")
+            result_path = path.join(submission_directory, "out")
             with open(path.join(output_path, out_file)) as golden_result, \
                  open(path.join(result_path, out_file)) as submission_result:
                 golden_lines = golden_result.readlines()
                 submission_lines = submission_result.readlines()
                 if len(submission_lines) != len(golden_lines):
+                    print "BOO WA"
                     submission.update_status("wrong")
                     submission.emit_status("incorrect", test_number)
                     return WRONG_ANSWER
                 # Use itertools.izip instead of zip to save memory.
                 for gl, sl in itertools.izip(golden_lines, submission_lines):
                     if gl.rstrip() != sl.rstrip():
+                        print "BOO WA"
                         submission.update_status("wrong")
                         submission.emit_status("incorrect", test_number)
                         return WRONG_ANSWER
     # The answer is correct if all the tests complete without any failure.
+    print "YAY ACCEPTED"
     submission.update_status("good")
+    submission.emit_status("correct", test_number)
     return CORRECT_ANSWER
 
 
-class _JudgementThread(threading.Thread):
-    '''This thread will be used to pass judgement on a submission.'''
+class JudgementCmd(threading.Thread):
+    '''Pass judgement on a submission by running it on a thread.'''
     
-    def __init__(self, args):
-        threading.Thread.__init__(self, args=args)
-        self.args = args
+    def __init__(self, submit, uploaded_file, in_file, out_file):
+        '''Create the JudgementCommand.
+
+        :param submit: the newly created submission
+        :param uploaded_file: the file uploaded from flask
+        :param in_file: the input file that is going to be read in
+        :param out_file: the output file that is going to be written to
+        '''
+        threading.Thread.__init__(self)
+        self.submit = submit
+        self.uploaded_file = uploaded_file
+        self.in_file = in_file
+        self.out_file = out_file
         self.process = None
+        # Final setup.
+        directory = directory_for_submission(submit)
+        output_path = path.join(directory, 'out')
+        if (not path.exists(output_path)):
+            os.mkdir(output_path)
         
     def run(self):
         '''Execute a subprocess and keep the pointer to that subprocess.'''
-        self.process = self.judge_as_subprocess(*self.args)
+        self.process = self.judge_as_subprocess()
+        self.process.communicate()
 
-    def judge_as_subprocess(self, submit, uploaded_file, in_file, out_file):
-        '''Returns (and starts) the process handle for the execution.
+    def judge_as_subprocess(self):
+        '''Run the program to judge as a subprocess.
         
-        It routes the output to /data/submits/job/out. The input is read from
+        This routes the output to /data/submits/job/out. The input is read from
         the location at which it is supposed to be found:
     
         <code> 
         /data/problems/pid/in(test_num).txt.
         </code>
-    
-        :param submit: the newly created submission
-        :param uploaded_file: the file uploaded from flask
-        :param in_file: the input file that is going to be read in
-        :param out_file: the output file that is going to be written to
-        :return: a Popen object, the new process handle
         '''
+        submit, uploaded_file = self.submit, self.uploaded_file
+        in_file, out_file = self.in_file, self.out_file
         directory = directory_for_submission(submit)
         filename = uploaded_file.filename
         name, ext = filename.rsplit(".", 1)[0], filename.rsplit(".", 1)[-1]
-        input_path = path.join(directory_for_problem(submit.pid), 'in')
+        input_path = path.join(directory_for_problem(submit), 'in')
         output_path = path.join(directory, 'out')
-        os.mkdir(output_path)
         return subprocess.Popen(
-            RUN_COMMAND[ext].format(directory, name, ext).split(" "),
+            shlex.split(RUN_COMMAND[ext].format(directory, name, ext)),
             stdin=open(path.join(input_path, in_file)),
             stdout=open(path.join(output_path, out_file), "w"),
-            stderr=open(path.join(directory, "error.txt"), "w")
-        )
+            stderr=open(path.join(directory, "error.txt"), "w"))
