@@ -1,4 +1,5 @@
-app.controller('ScoreboardController', ['$scope', '$http', '$routeParams', function($scope, $http, $routeParams) {
+app.controller('ScoreboardController', ['$scope', '$http', '$routeParams', '$window',
+    function($scope, $http, $routeParams, $window) {
     var cid = $routeParams.cid; 
     var genScoreboard = function() {
         for (var i = 0; i < $scope.teams.length; i++) {
@@ -53,7 +54,7 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams', funct
         function(error) {
             
         });
-    var socket = io.connect('http://localhost:5000/judge')
+    var socket = io.connect('http://' $window.location.host + '/judge')
     socket.on('connect', function() {
         console.log('connected');
     });

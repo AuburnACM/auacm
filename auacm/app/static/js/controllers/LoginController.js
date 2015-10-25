@@ -20,7 +20,7 @@ app.controller('LoginController', ['$scope', '$http', '$window',
                     },
                     data: request
                 }).then(function(response) {
-                        $window.location.href = 'http://localhost:5000/#/';
+                        $window.location.href = 'http://' + $window.location.host + '/#/';
                 }, function(response) {
                         console.log("error");
                 });

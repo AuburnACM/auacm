@@ -57,7 +57,7 @@ class Problem(Resource):
 
     @classmethod
     def url(cls, id):
-        return os.path.join('localhost:5000/problem', id, '.pdf')
+        return os.path.join(request.base_url + 'problem', id, '.pdf')
 
 class ProblemCollection(Resource):
 

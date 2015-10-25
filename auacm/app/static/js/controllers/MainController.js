@@ -34,7 +34,7 @@ app.controller('MainController', ['$scope', '$http', '$route', '$window',
         });
     $scope.signOut = function() {
         $http.get('/api/logout').then(function(response) {
-                $window.location.href = 'http://localhost:5000/login';
+                $window.location.href = 'http://' + $window.location.host + '/login';
         }, function(response) {
             console.log("error");
         });
