@@ -46,5 +46,5 @@ def submit():
     thread.daemon = False
     thread.start()
     return serve_response({
-        'submissionId' : attempt.job
+        'submissionId': attempt.job
     })
