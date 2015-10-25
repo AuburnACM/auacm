@@ -7,3 +7,4 @@ func main() {
 		_ = arr[i]
 	}
 }
+

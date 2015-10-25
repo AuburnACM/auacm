@@ -6,3 +6,4 @@ import "fmt"
 func main() {
 	weImportFmtButDontUseIt := 0
 }
+

@@ -6,3 +6,4 @@ int main() {
 	*s = 'H';
 	return 0;
 }
+
