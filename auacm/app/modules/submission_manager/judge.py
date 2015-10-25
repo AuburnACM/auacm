@@ -59,7 +59,7 @@ def evaluate(submission, uploaded_file):
 
     :param submission: the newly created submission
     :param uploaded_file: the uploaded file
-    :return: None
+    :return: the status of the submission (one of the status constants above)
     '''
     directory = directory_for_submission(submission)
     os.mkdir(directory)
