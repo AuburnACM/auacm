@@ -11,6 +11,8 @@ snake_case.
 '''
 import glob
 import os
+import sys
+import time
 import unittest
 
 from os import path
@@ -62,6 +64,7 @@ class JudgeTest(object):
             file_type=ext,
             result="start"
         )
+        #submit.job += str(time.time())
         file_path = path.join(
             data_folder, "problems", problem, "solutions", filename)
         # Keep track of submit_file so that we can close it.
@@ -71,6 +74,8 @@ class JudgeTest(object):
     def tearDown(self):
         if self.submit_file:
             self.submit_file.close()
+        directory = path.join(app.config["DATA_FOLDER"], "submits", "*")
+        self._purgeDirectory(directory)
         
     def testNoCompile(self):
         raise NotImplementedError("Subclasses must implement this test!")
@@ -116,13 +121,22 @@ class JavaTest(JudgeTest, unittest.TestCase):
             judge.evaluate(self.submit, self.submit_file))
         
     def testTimelimitError(self):
-        pass
+        self.createMockSubmission("addnumbers", "TimelimitError.java")
+        self.assertEqual(
+            judge.TIMELIMIT_EXCEEDED,
+            judge.evaluate(self.submit, self.submit_file))
     
     def testWrongAnswer(self):
-        pass
+        self.createMockSubmission("addnumbers", "WrongAnswer.java")
+        self.assertEqual(
+            judge.WRONG_ANSWER,
+            judge.evaluate(self.submit, self.submit_file))
     
     def testRightAnswer(self):
-        pass
+        self.createMockSubmission("addnumbers", "RightAnswer.java")
+        self.assertEqual(
+            judge.CORRECT_ANSWER,
+            judge.evaluate(self.submit, self.submit_file))
 
 
 class MockUploadFile(object):
@@ -137,6 +151,8 @@ class MockUploadFile(object):
     
     def close(self):
         self.f.close()
+
+#TODO(djshuckerow): make sure it's impossible to add a language without tests.
 
 
 if __name__ == "__main__":

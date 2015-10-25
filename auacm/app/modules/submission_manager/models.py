@@ -72,7 +72,7 @@ class MockSubmission(Base):
     def __init__(self, **kwargs):
         Base.__init__(self, **kwargs)
         # The MockSubmission will also mock relevant data about the problem.
-        self.timeout = MOCK_PROBLEM_TIMEOUT
+        self.time_limit = MOCK_PROBLEM_TIMEOUT
         self.job = "mocksubmit"
 
     def update_status(self, status):
