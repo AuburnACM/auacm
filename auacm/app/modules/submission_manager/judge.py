@@ -81,6 +81,8 @@ def compile_submission(submission, uploaded_file):
     if result == 0:
         return COMPILATION_SUCCESS
     else:
+        submission.update_status('compile')
+        submission.emit_status("compile", -1)
         return COMPILATION_ERROR
 
 
@@ -100,43 +102,39 @@ def execute_submission(submission, uploaded_file):
             out_file = "out{0}.txt".format(test_number)
             # TODO(djshuckerow): emit submission status with a pipe
             submission.emit_status("running", test_number)
-            execution = JudgementCmd(submission, uploaded_file, f, out_file)
             max_runtime = problem.time_limit * TIMEOUT_MULTIPLIER[ext]
+            execution = JudgementCmd(
+                submission, uploaded_file, f, out_file, max_runtime)
             start_time = time.time()
             execution.start()
-            print threading.enumerate()
             execution.join(max_runtime)
-            print "Done!"
+            # Check the execution for timeouts and runtime errors.
             if time.time() >= start_time + max_runtime:
-                print "BOO TLE"
                 execution.process.kill()
                 submission.update_status("timeout")
                 submission.emit_status("timeout", test_number)
                 return TIMELIMIT_EXCEEDED
             elif execution.process.poll() != 0:
-                print "BOO RTE"
                 submission.update_status("runtime")
                 submission.emit_status("runtime", test_number)
                 return RUNTIME_ERROR
             result_path = path.join(submission_directory, "out")
+            # The execution is completed.  Check its correctness.
             with open(path.join(output_path, out_file)) as golden_result, \
                  open(path.join(result_path, out_file)) as submission_result:
                 golden_lines = golden_result.readlines()
                 submission_lines = submission_result.readlines()
                 if len(submission_lines) != len(golden_lines):
-                    print "BOO WA"
                     submission.update_status("wrong")
                     submission.emit_status("incorrect", test_number)
                     return WRONG_ANSWER
                 # Use itertools.izip instead of zip to save memory.
                 for gl, sl in itertools.izip(golden_lines, submission_lines):
                     if gl.rstrip() != sl.rstrip():
-                        print "BOO WA"
                         submission.update_status("wrong")
                         submission.emit_status("incorrect", test_number)
                         return WRONG_ANSWER
     # The answer is correct if all the tests complete without any failure.
-    print "YAY ACCEPTED"
     submission.update_status("good")
     submission.emit_status("correct", test_number)
     return CORRECT_ANSWER
@@ -145,13 +143,14 @@ def execute_submission(submission, uploaded_file):
 class JudgementCmd(threading.Thread):
     '''Pass judgement on a submission by running it on a thread.'''
     
-    def __init__(self, submit, uploaded_file, in_file, out_file):
+    def __init__(self, submit, uploaded_file, in_file, out_file, limit):
         '''Create the JudgementCommand.
 
         :param submit: the newly created submission
         :param uploaded_file: the file uploaded from flask
         :param in_file: the input file that is going to be read in
         :param out_file: the output file that is going to be written to
+        :param limit: the time limit for execution.
         '''
         threading.Thread.__init__(self)
         self.submit = submit
@@ -159,6 +158,7 @@ class JudgementCmd(threading.Thread):
         self.in_file = in_file
         self.out_file = out_file
         self.process = None
+        self.limit = limit
         # Final setup.
         directory = directory_for_submission(submit)
         output_path = path.join(directory, 'out')
@@ -167,8 +167,18 @@ class JudgementCmd(threading.Thread):
         
     def run(self):
         '''Execute a subprocess and keep the pointer to that subprocess.'''
+        start_time = time.time()
         self.process = self.judge_as_subprocess()
-        self.process.communicate()
+        #TODO(djshuckerow): Get this thread to join() properly.
+        while self.process.poll() is None:
+            time.sleep(0.1)
+            if time.time() > start_time + self.limit:
+                # The try is to avoid a race condition where the process
+                # finishes between the if and the kill statements.
+                try:
+                    self.process.kill()
+                except:
+                    pass
 
     def judge_as_subprocess(self):
         '''Run the program to judge as a subprocess.
