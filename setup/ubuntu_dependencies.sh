@@ -8,5 +8,4 @@ sudo apt-get install npm
 sudo apt-get install mysql-server
 sudo apt-get install libmysqlclient-dev
 sudo apt-get install build-essential
-sudo apt-get install default-jdk
 echo "Dependencies installed."
