@@ -18,11 +18,11 @@ COMPILE_COMMAND = {
     "go": "go build {0}.go"
 }
 RUN_COMMAND = {
-    "java": "java {0}",
-    "py": "python {0}.py",
-    "c": "./{0}",
-    "cpp": "./{0}",
-    "go": "./{0}"
+    "java": "java -cp {0}/ {1}",
+    "py": "python {0}/{1}.py",
+    "c": "{0}/{1}",
+    "cpp": "{0}/{1}",
+    "go": "{0}/{1}"
 }
 TIMEOUT_MULTIPLIER = {
     "java": 1.5,
@@ -90,14 +90,18 @@ def execute_submission(submission, uploaded_file):
     name, ext = filename.rsplit(".", 1)[0], filename.rsplit(".", 1)[-1]
     input_path = path.join(problem_directory, "in")
     output_path = path.join(problem_directory, "out")
-    for f in os.listdir(input_path):
+    print input_path, os.listdir(input_path)
+    for fname in os.listdir(input_path):
+        f = path.join(input_path, fname)
         if path.isfile(f):
-            test_number = int(f.split(".")[0].strip("in"))
+            test_number = int(fname.split(".")[0].strip("in"))
             out_file = "out{0}.txt".format(test_number)
             # TODO(djshuckerow): emit submission status with a pipe
             submission.emit_status("running", test_number)
             execution = _JudgementThread(
-                args=(submission, submission_file, f, test_number))
+                args=(submission, uploaded_file, f, out_file))
+            execution.start()
+            execution.run()
             execution.join(problem.timeout * TIMEOUT_MULTIPLIER[ext])
             if execution.is_alive():
                 execution.process.kill()
@@ -108,6 +112,7 @@ def execute_submission(submission, uploaded_file):
                 submission.update_status("runtime")
                 submission.emit_status("runtime", test_number)
                 return RUNTIME_ERROR
+            print "result: %s" % execution.process.returncode
             result_path = path.join(directory_for_submission, "out")
             with open(path.join(output_path, out_file)) as golden_result, \
                  open(path.join(result_path, out_file)) as submission_result:
@@ -125,22 +130,22 @@ def execute_submission(submission, uploaded_file):
                         return WRONG_ANSWER
     # The answer is correct if all the tests complete without any failure.
     submission.update_status("good")
-    submission.emit_status("correct", test_number)
     return CORRECT_ANSWER
 
 
 class _JudgementThread(threading.Thread):
     '''This thread will be used to pass judgement on a submission.'''
     
-    def __init__(self, **kwargs):
-        threading.Thread.__init__(self, kwargs)
+    def __init__(self, args):
+        threading.Thread.__init__(self, args=args)
+        self.args = args
         self.process = None
         
-    def run():
+    def run(self):
         '''Execute a subprocess and keep the pointer to that subprocess.'''
         self.process = self.judge_as_subprocess(*self.args)
 
-    def judge_as_subprocess(submission, uploaded_file, in_file, out_file):
+    def judge_as_subprocess(self, submit, uploaded_file, in_file, out_file):
         '''Returns (and starts) the process handle for the execution.
         
         It routes the output to /data/submits/job/out. The input is read from
@@ -150,20 +155,20 @@ class _JudgementThread(threading.Thread):
         /data/problems/pid/in(test_num).txt.
         </code>
     
-        :param submission: the newly created submission
+        :param submit: the newly created submission
         :param uploaded_file: the file uploaded from flask
         :param in_file: the input file that is going to be read in
         :param out_file: the output file that is going to be written to
         :return: a Popen object, the new process handle
         '''
-        directory = directory_for_submission(submission)
+        directory = directory_for_submission(submit)
         filename = uploaded_file.filename
         name, ext = filename.rsplit(".", 1)[0], filename.rsplit(".", 1)[-1]
-        input_path = join(directory_for_problem(submission.pid), 'in')
-        output_path = join(directory, 'out')
+        input_path = path.join(directory_for_problem(submit.pid), 'in')
+        output_path = path.join(directory, 'out')
         os.mkdir(output_path)
-        return Popen(
-            RUN_COMMAND[ext].format(directory, name, ext),
+        return subprocess.Popen(
+            RUN_COMMAND[ext].format(directory, name, ext).split(" "),
             stdin=open(path.join(input_path, in_file)),
             stdout=open(path.join(output_path, out_file), "w"),
             stderr=open(path.join(directory, "error.txt"), "w")

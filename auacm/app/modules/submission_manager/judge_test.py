@@ -29,16 +29,18 @@ class JudgeTest(object):
         ''' 
         app.config["DATA_FOLDER"] = os.getcwd() + '/judge_tests'
         directory = path.join(app.config["DATA_FOLDER"], "submits", "*")
+        self._purgeDirectory(directory)
+        # TODO(djshuckerow): more things to clean the directory up.
+        self.submit, self.submit_file = None, None
+        
+    def _purgeDirectory(self, directory):
         for f in glob.glob(directory):
             if path.isfile(f):
                 os.remove(f)
             if path.isdir(f):
-                for g in os.listdir(f):
-                    os.remove(path.join(f, g))
+                self._purgeDirectory(path.join(f, "*"))
                 os.rmdir(f)
-        # TODO(djshuckerow): more things to clean the directory up.
-        self.submit, self.submit_file = None, None
-    
+
     def createMockSubmission(self, problem, filename):
         '''Create a MockSubmission to use for a test run.
         
@@ -96,14 +98,22 @@ class JavaTest(JudgeTest, unittest.TestCase):
         self.createMockSubmission("addnumbers", "CompileError.java")
         self.assertEqual(
             judge.COMPILATION_ERROR,
-            judge.evaluate(self.submit, self.submit_file)
-        )
-
+            judge.evaluate(self.submit, self.submit_file))
+        
     def testCompile(self):
-        pass
+        self.createMockSubmission("addnumbers", "CompileSuccess.java")
+        directory = judge.directory_for_submission(self.submit)
+        os.mkdir(directory)
+        self.submit_file.save(path.join(directory, self.submit_file.filename))
+        self.assertEqual(
+            judge.COMPILATION_SUCCESS,
+            judge.compile_submission(self.submit, self.submit_file))
 
     def testRuntimeError(self):
-        pass
+        self.createMockSubmission("addnumbers", "RuntimeError.java")
+        self.assertEqual(
+            judge.RUNTIME_ERROR,
+            judge.evaluate(self.submit, self.submit_file))
         
     def testTimelimitError(self):
         pass
