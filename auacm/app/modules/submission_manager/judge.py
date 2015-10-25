@@ -74,7 +74,7 @@ def compile_submission(submission, uploaded_file):
     '''Compile the submission.'''
     directory = directory_for_submission(submission)
     filename = uploaded_file.filename
-    name, ext = filename.rsplit(".", 1)[0], filename.rsplit(".", 1)[-1]
+    name, ext = filename.rsplit(".", 1)
     if COMPILE_COMMAND[ext] is None:
         return COMPILATION_SUCCESS
     result = subprocess.call(
@@ -95,7 +95,7 @@ def execute_submission(submission, uploaded_file):
     problem_directory = directory_for_problem(submission)
     submission_directory = directory_for_submission(submission)
     filename = uploaded_file.filename
-    name, ext = filename.rsplit(".", 1)[0], filename.rsplit(".", 1)[-1]
+    name, ext = filename.rsplit(".", 1)
     input_path = os.path.join(problem_directory, "in")
     output_path = os.path.join(problem_directory, "out")
     for fname in os.listdir(input_path):
@@ -197,7 +197,7 @@ class JudgementCmd(threading.Thread):
         in_file, out_file = self.in_file, self.out_file
         directory = directory_for_submission(submit)
         filename = uploaded_file.filename
-        name, ext = filename.rsplit(".", 1)[0], filename.rsplit(".", 1)[-1]
+        name, ext = filename.rsplit(".", 1)
         input_path = os.path.join(directory_for_problem(submit), 'in')
         output_path = os.path.join(directory, 'out')
         return subprocess.Popen(
