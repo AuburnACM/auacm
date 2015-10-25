@@ -42,8 +42,9 @@ CORRECT_ANSWER = 6
 
 
 def allowed_filetype(filename):
-    return ("." in filename and 
+    return ("." in filename and
             filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS)
+
 
 def directory_for_submission(submission):
     return os.path.join(
@@ -68,7 +69,7 @@ def evaluate(submission, uploaded_file):
     if status == COMPILATION_SUCCESS:
         status = execute_submission(submission, uploaded_file)
     return status
-    
+
 
 def compile_submission(submission, uploaded_file):
     '''Compile the submission.'''
@@ -156,13 +157,13 @@ def execute_submission(submission, uploaded_file):
 
 class JudgementThread(threading.Thread):
     '''Pass judgement on a submission by running it on a thread.
-    
+
     This runs a separate thread containing the submission in a subprocess.
-    
+
     Timeout is tricky to handle -- thread.join(timeout) doesn't appear to
-    work properly inside of Flask.  
+    work properly inside of Flask.
     '''
-    
+
     def __init__(self, submit, uploaded_file, in_file, out_file, limit):
         '''Create the JudgementThread.
 
@@ -184,12 +185,12 @@ class JudgementThread(threading.Thread):
         output_path = os.path.join(directory, 'out')
         if (not os.path.exists(output_path)):
             os.mkdir(output_path)
-        
+
     def run(self):
         '''Execute a subprocess and keep the pointer to that subprocess.'''
         start_time = time.time()
         self.process = self.judge_as_subprocess()
-        #TODO(djshuckerow): Get this thread to join() properly.
+        # TODO(djshuckerow): Get this thread to join() properly.
         while self.process.poll() is None:
             time.sleep(0.1)
             if time.time() > start_time + self.limit:
@@ -202,11 +203,11 @@ class JudgementThread(threading.Thread):
 
     def judge_as_subprocess(self):
         '''Run the program to judge as a subprocess.
-        
+
         This routes the output to /data/submits/job/out. The input is read from
         the location at which it is supposed to be found:
-    
-        <code> 
+
+        <code>
         /data/problems/pid/in(test_num).txt.
         </code>
         '''

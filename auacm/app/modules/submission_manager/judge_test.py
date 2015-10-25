@@ -2,7 +2,9 @@
 
 To run these tests, execute the following command on the app level:
 
+<code>
 ./test.py
+</code>
 
 Interesting fact, Python unit tests are supposed to use camelCase instead of
 snake_case.
@@ -20,23 +22,23 @@ from app.modules.submission_manager import models
 
 class JudgeTest(object):
     '''Mixin class for building tests of the judge in different langauges.
-    
+
     This makes 6 methods mandatory for implementation.  The goal is to
     make it so that we can't add a language without adding unit tests
     to verify the behavior of submissions in that language.
     '''
     def setUp(self):
         '''Prepare the test directory to run a new submit.
-            
+
         1. Reconfigure app to go to the directory app/test_data
         2. Empty the submits directory
-        ''' 
+        '''
         app.config["DATA_FOLDER"] = os.getcwd() + '/judge_tests'
         directory = os.path.join(app.config["DATA_FOLDER"], "submits", "*")
         self._purgeDirectory(directory)
         # TODO(djshuckerow): more things to clean the directory up.
         self.submit, self.submit_file = None, None
-        
+
     def _purgeDirectory(self, directory):
         for f in glob.glob(directory):
             if os.path.isfile(f):
@@ -47,13 +49,13 @@ class JudgeTest(object):
 
     def createMockSubmission(self, problem, filename):
         '''Create a MockSubmission to use for a test run.
-        
-        Creates two local fields, submit and submit_file containing the 
+
+        Creates two local fields, submit and submit_file containing the
         submission and code file to run for this submission.
-        
+
         :param problem: the problem this submission is for.
-        :param filename: the name of the code file located in 
-            app/test_data/<problem>/solutions/ to run. 
+        :param filename: the name of the code file located in
+            app/test_data/<problem>/solutions/ to run.
         :return: None
         '''
         data_folder = app.config["DATA_FOLDER"]
@@ -71,25 +73,25 @@ class JudgeTest(object):
         # Keep track of submit_file so that we can close it.
         self.submit = submit
         self.submit_file = MockUploadFile(file_path)
-    
+
     def tearDown(self):
         if self.submit_file:
             self.submit_file.close()
         directory = os.path.join(app.config["DATA_FOLDER"], "submits", "*")
         self._purgeDirectory(directory)
-        
+
     def testNoCompile(self):
         raise NotImplementedError("Subclasses must implement this test!")
 
     def testCompile(self):
         raise NotImplementedError("Subclasses must implement this test!")
-        
+
     def testRuntimeError(self):
         raise NotImplementedError("Subclasses must implement this test!")
 
     def testTimelimitError(self):
         raise NotImplementedError("Subclasses must implement this test!")
-        
+
     def testWrongAnswer(self):
         raise NotImplementedError("Subclasses must implement this test!")
 
@@ -105,7 +107,7 @@ class JavaTest(JudgeTest, unittest.TestCase):
         self.assertEqual(
             judge.COMPILATION_ERROR,
             judge.evaluate(self.submit, self.submit_file))
-        
+
     def testCompile(self):
         self.createMockSubmission("addnumbers", "CompileSuccess.java")
         directory = judge.directory_for_submission(self.submit)
@@ -121,19 +123,19 @@ class JavaTest(JudgeTest, unittest.TestCase):
         self.assertEqual(
             judge.RUNTIME_ERROR,
             judge.evaluate(self.submit, self.submit_file))
-        
+
     def testTimelimitError(self):
         self.createMockSubmission("addnumbers", "TimelimitError.java")
         self.assertEqual(
             judge.TIMELIMIT_EXCEEDED,
             judge.evaluate(self.submit, self.submit_file))
-    
+
     def testWrongAnswer(self):
         self.createMockSubmission("addnumbers", "WrongAnswer.java")
         self.assertEqual(
             judge.WRONG_ANSWER,
             judge.evaluate(self.submit, self.submit_file))
-    
+
     def testRightAnswer(self):
         self.createMockSubmission("addnumbers", "RightAnswer.java")
         self.assertEqual(
@@ -143,7 +145,7 @@ class JavaTest(JudgeTest, unittest.TestCase):
 
 class PythonTest(JudgeTest, unittest.TestCase):
     '''Tests for .py submissions.'''
-    #TODO(djshuckerow): tests for python2 and python3.
+    # TODO(djshuckerow): tests for python2 and python3.
 
     def testNoCompile(self):
         pass
@@ -156,19 +158,19 @@ class PythonTest(JudgeTest, unittest.TestCase):
         self.assertEqual(
             judge.RUNTIME_ERROR,
             judge.evaluate(self.submit, self.submit_file))
-        
+
     def testTimelimitError(self):
         self.createMockSubmission("addnumbers", "timelimit.py")
         self.assertEqual(
             judge.TIMELIMIT_EXCEEDED,
             judge.evaluate(self.submit, self.submit_file))
-    
+
     def testWrongAnswer(self):
         self.createMockSubmission("addnumbers", "wrong.py")
         self.assertEqual(
             judge.WRONG_ANSWER,
             judge.evaluate(self.submit, self.submit_file))
-    
+
     def testRightAnswer(self):
         self.createMockSubmission("addnumbers", "right.py")
         self.assertEqual(
@@ -218,7 +220,7 @@ class CTest(JudgeTest, unittest.TestCase):
         self.assertEqual(
             judge.CORRECT_ANSWER,
             judge.evaluate(self.submit, self.submit_file))
-            
+
 
 class CppTest(JudgeTest, unittest.TestCase):
     '''Tests for .cpp submissions.'''
@@ -317,11 +319,11 @@ class MockUploadFile(object):
     def save(self, location):
         with open(location, "w") as to_save:
             to_save.write(self.f.read())
-    
+
     def close(self):
         self.f.close()
 
-#TODO(djshuckerow): make sure it's impossible to add a language without tests.
+# TODO(djshuckerow): make sure it's impossible to add a language without tests.
 
 
 if __name__ == "__main__":
