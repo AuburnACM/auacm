@@ -117,7 +117,7 @@ def execute_submission(submission, uploaded_file):
             out_file = "out{0}.txt".format(test_number)
             submission.emit_status("running", test_number)
             max_runtime = problem.time_limit * TIMEOUT_MULTIPLIER[ext]
-            execution = JudgementCmd(
+            execution = JudgementThread(
                 submission, uploaded_file, f, out_file, max_runtime)
             start_time = time.time()
             execution.start()
@@ -154,11 +154,17 @@ def execute_submission(submission, uploaded_file):
     return CORRECT_ANSWER
 
 
-class JudgementCmd(threading.Thread):
-    '''Pass judgement on a submission by running it on a thread.'''
+class JudgementThread(threading.Thread):
+    '''Pass judgement on a submission by running it on a thread.
+    
+    This runs a separate thread containing the submission in a subprocess.
+    
+    Timeout is tricky to handle -- thread.join(timeout) doesn't appear to
+    work properly inside of Flask.  
+    '''
     
     def __init__(self, submit, uploaded_file, in_file, out_file, limit):
-        '''Create the JudgementCommand.
+        '''Create the JudgementThread.
 
         :param submit: the newly created submission
         :param uploaded_file: the file uploaded from flask
