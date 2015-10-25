@@ -2,9 +2,7 @@
 
 To run these tests, execute the following command on the app level:
 
-<code>
-flask/bin/python -m unittest discover -p "*_test.py" 
-</code>
+./test.py
 
 Interesting fact, Python unit tests are supposed to use camelCase instead of
 snake_case.
@@ -259,6 +257,49 @@ class CppTest(JudgeTest, unittest.TestCase):
 
     def testRightAnswer(self):
         self.createMockSubmission("addnumbers", "rightanswer.cpp")
+        self.assertEqual(
+            judge.CORRECT_ANSWER,
+            judge.evaluate(self.submit, self.submit_file))
+
+
+class GoTest(JudgeTest, unittest.TestCase):
+    '''Tests for .go submissions.'''
+
+    def testNoCompile(self):
+        self.createMockSubmission("addnumbers", "compileerror.go")
+        self.assertEqual(
+            judge.COMPILATION_ERROR,
+            judge.evaluate(self.submit, self.submit_file))
+
+    def testCompile(self):
+        self.createMockSubmission("addnumbers", "compilesuccess.go")
+        directory = judge.directory_for_submission(self.submit)
+        os.mkdir(directory)
+        self.submit_file.save(path.join(directory, self.submit_file.filename))
+        self.assertEqual(
+            judge.COMPILATION_SUCCESS,
+            judge.compile_submission(self.submit, self.submit_file))
+
+    def testRuntimeError(self):
+        self.createMockSubmission("addnumbers", "runtimeerror.go")
+        self.assertEqual(
+            judge.RUNTIME_ERROR,
+            judge.evaluate(self.submit, self.submit_file))
+
+    def testTimelimitError(self):
+        self.createMockSubmission("addnumbers", "timelimiterror.go")
+        self.assertEqual(
+            judge.TIMELIMIT_EXCEEDED,
+            judge.evaluate(self.submit, self.submit_file))
+
+    def testWrongAnswer(self):
+        self.createMockSubmission("addnumbers", "wronganswer.go")
+        self.assertEqual(
+            judge.WRONG_ANSWER,
+            judge.evaluate(self.submit, self.submit_file))
+
+    def testRightAnswer(self):
+        self.createMockSubmission("addnumbers", "rightanswer.go")
         self.assertEqual(
             judge.CORRECT_ANSWER,
             judge.evaluate(self.submit, self.submit_file))

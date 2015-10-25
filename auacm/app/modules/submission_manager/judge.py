@@ -17,7 +17,7 @@ COMPILE_COMMAND = {
     "py": None,
     "c": "gcc {0}.c -o {0}",
     "cpp": "g++ {0}.cpp -o {0}",
-    "go": "go build {0}.go"
+    "go": "go build -o {0} {0}.go"
 }
 RUN_COMMAND = {
     "java": "java -cp {0}/ {1}",
