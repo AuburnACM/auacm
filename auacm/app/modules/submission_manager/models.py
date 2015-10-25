@@ -19,6 +19,10 @@ class Submission(Base):
         Base.__init__(self, **kwargs)
 
     def commit_to_session(self):
+        '''Commit this Submission to the database.
+        
+        This is useful for adding a newly-created Submission to the database.
+        '''
         dblock.acquire()
         session.add(self)
         session.flush()
@@ -64,7 +68,7 @@ class Submission(Base):
             self._problem = (
                 session.query(Base.classes.problems)
                     .filter(Base.classes.problems.pid == self.pid)
-                    first())
+                    .first())
         return self._problem
 
 
@@ -85,6 +89,9 @@ class MockSubmission(Base):
         # The MockSubmission will also mock relevant data about the problem.
         self.time_limit = MOCK_PROBLEM_TIMEOUT
         self.job = "mocksubmit"
+
+    def commit_to_session(self):
+        pass
 
     def update_status(self, status):
         self.result = status
