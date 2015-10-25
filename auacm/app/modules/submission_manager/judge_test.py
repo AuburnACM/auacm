@@ -40,7 +40,7 @@ class JudgeTest(object):
 
     def _purgeDirectory(self, directory):
         '''Recursively empty out the contents of a directory. USE WITH CAUTION.
-        
+
         This is currently used to empty out the judge_tests/submits directory
         before and after tests are run.
         '''
@@ -79,6 +79,13 @@ class JudgeTest(object):
         self.submit_file = MockUploadFile(file_path)
 
     def tearDown(self):
+        '''Post-test cleanup method.
+
+        Close our submit_file so that we don't waste resources waiting on
+        the garbage collector.
+
+        Purge the judge_tests/submits directory post-test.
+        '''
         if self.submit_file:
             self.submit_file.close()
         directory = os.path.join(app.config["DATA_FOLDER"], "submits", "*")
@@ -105,6 +112,7 @@ class JudgeTest(object):
 
 class JavaTest(JudgeTest, unittest.TestCase):
     '''Tests for .java submissions.'''
+    # TODO(djshuckerow): Reduce the amount of boilerplate in these tests.
 
     def testNoCompile(self):
         self.createMockSubmission("addnumbers", "CompileError.java")
@@ -315,7 +323,12 @@ class GoTest(JudgeTest, unittest.TestCase):
 
 
 class MockUploadFile(object):
-    '''Mock upload file that has a save method.'''
+    '''Mock upload file that has a save method.
+
+    The judge uses the object this mocks out to save the file it receives from
+    the judge api call.  The file is then saved to the submission directory so
+    that it can be run.
+    '''
     def __init__(self, location):
         self.f = open(location)
         self.filename = os.path.split(location)[1]
