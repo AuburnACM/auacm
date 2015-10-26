@@ -54,7 +54,7 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams', '$win
         function(error) {
             
         });
-    var socket = io.connect('http://' $window.location.host + '/judge')
+    var socket = io.connect('http://' + $window.location.host + '/judge')
     socket.on('connect', function() {
         console.log('connected');
     });
