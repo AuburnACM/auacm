@@ -1,5 +1,6 @@
 <div>
-  <h1>{{ competition.name }}</div>
+  <h1 style="float:left; margin-right: auto; margin-left: 0;">{{ competition.name }}</h1>
+  <h2 style="float:right; margin-right: 0; margin-left: auto;">{{ timeLeft | secondsToDateTime | date:"H:mm:ss" }}</h2>
   <div class="body">
     <table class="table table-bordered">
       <thead>
