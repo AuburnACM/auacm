@@ -1,5 +1,11 @@
 <div class="main-fixed" ng-controller="ProblemsController">
-  <h1>Problems</h1>
+  <div class="row">
+    <h1 class="pull-left">Problems</h1>
+    <button type="button" class="btn btn-default pull-right margin-top"
+            ng-click="createProblem()" ng-show="isAdmin === 1">
+      Create Problem 
+    </button>
+  </div>
   <div class="body">
     <table class="table table-striped">
       <tr>

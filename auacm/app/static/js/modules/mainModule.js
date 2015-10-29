@@ -54,6 +54,11 @@ app.config(function($routeProvider) {
             templateUrl : 'static/html/settings.html',
             controller : 'SettingsController',
             activetab : 'settings'
+        })
+        .when('/problems/create', { // route for problem creation page
+            templateUrl : 'static/html/createProblem.html',
+            controller : 'CreateProblemController',
+            activetab  : 'settings'
         });
 });
 

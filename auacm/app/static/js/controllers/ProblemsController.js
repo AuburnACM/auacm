@@ -1,4 +1,5 @@
-app.controller('ProblemsController', ['$scope', '$filter', function($scope, $filter) {
+app.controller('ProblemsController', ['$scope', '$filter', '$location', 
+        function($scope, $filter, $location) {
     var orderBy = $filter('orderBy');
     $scope.order = function(predicate) {
         $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
@@ -14,5 +15,9 @@ app.controller('ProblemsController', ['$scope', '$filter', function($scope, $fil
                     parseInt(a.difficulty) - parseInt(b.difficulty) : 
                     parseInt(b.difficulty) - parseInt(a.difficulty);
         });
+    }
+
+    $scope.createProblem = function() {
+        $location.path('/problems/create');
     }
 }]);
