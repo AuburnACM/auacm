@@ -64,11 +64,12 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams', '$win
             genScoreboard();
 
             // TODO(brandonlmorris) Add offset to server/client times
-            $scope.TimeLeft = $scope.competition.length;
+            $scope.timeLeft = $scope.competition.length;
+            $scope.competition.length = $scope.competition.length * 1000;
             var thisTime = new Date().getTime();
             var Timer = $interval(function() {
-                $scope.timeLeft = $scope.competition.startTime + $scope.competition.length - thisTime;
-                thisTime++;
+                $scope.timeLeft = ($scope.competition.startTime + $scope.competition.length - thisTime) / 1000;
+                thisTime = new Date().getTime();
                 if ($scope.timeLeft <= 0) {
                     $scope.timeLeft = 0;
                     $interval.cancel(Timer);
