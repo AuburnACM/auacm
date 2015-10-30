@@ -14,6 +14,7 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams', '$win
             $scope.compProblems = response.data.data.compProblems;
             $scope.teams = response.data.data.teams;
             genScoreboard($scope);
+            connectToSocket($window, $scope);
 
             // TODO(brandonlmorris) Add offset to server/client times
             var thisTime = Math.floor(new Date().getTime() / 1000);
@@ -22,7 +23,6 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams', '$win
                 $scope.active = true;
                 $scope.timeLeft = $scope.competition.startTime + $scope.competition.length
                         - thisTime;
-                connectToSocket($window, $scope);
                 var timer = $interval(function() {
                     $scope.timeLeft = $scope.competition.startTime + $scope.competition.length 
                             - thisTime;
@@ -31,7 +31,6 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams', '$win
                         $scope.active = false;
                         $scope.timeLeft = 0;
                         $interval.cancel(timer);
-                        $scope.socket.removeAllListeners();
                     }
                 }, 1000);
             }
@@ -92,14 +91,17 @@ var genScoreboard = function($scope) {
 
 var connectToSocket = function($window, $scope) {
     // Open the socket connection
-    $scope.socket = io.connect('http://' + $window.location.host + '/judge');
+    var socket = io.connect('http://' + $window.location.host + '/judge');
     // Perform live updates to the scoreboard
     var viewed = [];
-    $scope.socket.on('status', function(event) {
+    socket.on('status', function(event) {
         if (viewed.indexOf(event.submissionId) > -1 || event.status == 'running'
-                || $scope.compProblems.indexOf(event.problemId) < 0) {
-            // The scoreboard doesn't care about the problem if it's not done or
-            // if we've already seen it.
+                || $scope.compProblems.indexOf(event.problemId) < 0
+                || event.submitTime > $scope.competition.startTime + $scope.competition.length) {
+            // The scoreboard ignores the problem for any of the following reasons:
+            // The submission has already been handled, the event's status is running,
+            // the competition does not contain this problem, or the problem was accepted
+            // after the contest was over.
             return;
         }
         viewed.push(event.submissionId);
@@ -111,7 +113,7 @@ var connectToSocket = function($window, $scope) {
                 if (problem.status !== 'correct') {
                     if (event.status === 'correct') {
                         problem.problemTime = Math.floor((event.submitTime 
-                                - $scope.competition.startTime) / 1000 / 60)
+                                - $scope.competition.startTime) / 60)
                                 + (problem.submitCount - 1) * 20;
                         problem.status = 'correct';
                     } else {
