@@ -1,5 +1,5 @@
-app.controller('ProblemsController', ['$scope', '$filter', '$location', 
-        function($scope, $filter, $location) {
+app.controller('ProblemsController', ['$scope', '$filter', '$window', 
+        function($scope, $filter, $window) {
     var orderBy = $filter('orderBy');
     $scope.order = function(predicate) {
         $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
@@ -18,6 +18,6 @@ app.controller('ProblemsController', ['$scope', '$filter', '$location',
     }
 
     $scope.createProblem = function() {
-        $location.path('/problems/create');
+        $window.location.href = 'http://' + $window.location.host + '/#/problems/create';
     }
 }]);
