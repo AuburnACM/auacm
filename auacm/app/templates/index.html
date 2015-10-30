@@ -51,19 +51,24 @@
       <div ng-view></div>
   </div>
   
+  <!-- Have to use this `outdated` version of socket.io for now TODO(@brandonlmorris) -->
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+
   <!-- Static dependences for offline development -->
-  <!---->
   <script src="/static/components/angular/angular.js"></script>
   <script src="/static/components/angular-route/angular-route.js"></script>
   <script src="/static/components/angular-sanitize/angular-sanitize.min.js"></script>
   <script src="/static/components/angular-messages/angular-messages.js"></script>
   <script src="/static/components/showdown/dist/showdown.js"></script>
-  <script src="/static/components/angular-ui-bootstrap-complete/ui-bootstrap-tpls.js"></srcipt>
-  <script src="/static/components/socket.io/lib/index.js"></script>
-  <!---->
+  <script src="/static/components/angular-ui-bootstrap-complete/ui-bootstrap-tpls.js"></script>
 
-  <!-- CDN dependencies for production (delete space in next line to uncomment) -->
-  <!--- -> 
+  <!-- TODO(brandonlmorris, williamhester): modify socket code to use latest version of socket.io -->
+  <!-- <script src="/static/components/socket.io/socket.io.js"></script> -->
+  <!-- Have to use this `outdated` version of socket.io for now -->
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+
+  <!-- CDN dependencies for production -->
+  <!--
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular-route.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular-sanitize.min.js"></script>
@@ -71,7 +76,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.3.0/showdown.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.14.2/ui-bootstrap-tpls.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
-  <!---->
+  -->
   
   <!-- Modules -->
   <script src="/static/js/modules/mainModule.js"></script>
