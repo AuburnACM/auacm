@@ -1,7 +1,7 @@
 <div>
   <div class="row">
     <h1 class="pull-left">{{ competition.name }}</h1>
-    <h2 class="pull-right">{{ timeLeft | secondsToDateTime | date:"H:mm:ss" }}</h2>
+    <h2 class="pull-right" ng-show="active">{{ timeLeft | secondsToDateTime | date:"H:mm:ss" }}</h2>
   </div>
   <div class="body">
     <table class="table table-bordered">
