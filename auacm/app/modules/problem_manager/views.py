@@ -1,89 +1,54 @@
 from flask import request
-from flask_restful import Resource
-import models
-import os
+from flask.ext.login import current_user, login_required
+from app import app
+from app.database import Base, session
+from app.util import serve_response, serve_error, serve_info_pdf
+from app.modules.user_manager.models import User
+from os.path import join
+# from sqlalchemy import desc
 
-class Problem(Resource):
+def url_for_problem(problem):
+    return join('problems', str(problem.pid))
 
-    def get(self, id):
-        """ get returns a problem with the following format:
-            \n<code>
-            {
-                'status': 200,
-                'data': {
-                    'id': '1',
-                    'name': 'N Days of Christmas',
-                    'contest': '2013 Southeast Regional',
-                    'difficulty': 'medium'
-                    'descriptionUrl': 'auacm.com/problems/001.pdf'
-                }
-            }</code>
-        """
-        try:
-            problem = models.Problem.load(id)
-        except RequestParseError as rpe:
-            return {'status': 400, 'error': rpe.message}, 400
-        except ProblemNotFoundError as pnfe:
-            return {'status': 404, 'error': pnfe.message}, 404
-        return 
-            {
-                'status': 200, 
-                'data': { 
-                    'id': problem.cid,
-                    'name': problem.name,
-                    'contest': problem.contest,
-                    'difficulty': problem.difficulty,
-                    'descriptionUrl': self.url(cid) 
-                }
-            }, 200
+@app.route('/problems/<pid>')
+@app.route('/problems/<pid>/info.pdf')
+@login_required
+def get_problem_info(pid):
+    return serve_info_pdf(pid)
 
-    def delete(self):
-        """ delete removes a problem from the database of problems.
-        The response will be 
-        <code>
-        {
-            status: 200,
-            success: true
-        }
-        """
-        try:
-            problem = models.Problem.load(id)
-        except ProblemNotFoundError as pnfe:
-            return {'status': 404, 'error': pnfe.message}, 404
-        if problem.delete():
-            return {'status': 200, 'success': True}, 200
-        else:
-            return {'status': 400, 'success': False}, 400
+@app.route('/api/problems')
+@login_required
+def get_problems():
+    problems = list()
+    Submits = Base.classes.submits
+    solved = session.query(Submits).\
+            filter(Submits.username==current_user.username).\
+            filter(Submits.result=="good").\
+            all()
+    solved_set = set()
+    for solve in solved:
+        solved_set.add(solve.pid)
+    
+    for problem in session.query(Base.classes.problems).all():
+        problems.append({
+            'pid': problem.pid,
+            'name': problem.name,
+            'appeared': problem.appeared,
+            'difficulty': problem.difficulty,
+            'compRelease': problem.comp_release,
+            'added': problem.added,
+            'timeLimit': problem.time_limit,
+            'solved': problem.pid in solved_set,
+            'url': url_for_problem(problem)
+        })
+    return serve_response(problems)
 
-    @classmethod
-    def url(cls, id):
-        return os.path.join(request.base_url + 'problem', id, '.pdf')
-
-class ProblemCollection(Resource):
-
-    def get(self):
-        """ get returns a list of problems with the following format:
-            \n<code>
-            {
-                'status': 200,
-                'data':[
-                    'auacm.com/problem/1',
-                    'auacm.com/problem/2'
-                    ...
-                ]
-            }</code>
-        """
-
-    def post(self):
-        """ post allows the posting of a new problem. The body should be formatted
-        as follows:
-        <code>
-        {
-            'name': 'New Problem',
-            'contest': 'Contest name',
-            'difficulty': 'medium'
-        }
-        </code>
-        
-        It returns a <code>Problem</code>
-        """
+@app.route('/api/problems', methods=['POST'])
+@login_required
+def create_problem() :
+    if not current_user.admin == 1:
+        return serve_error('You must be an admin to create problems', 
+            response_code=401)
+    app.logger.info('This happened');
+    app.logger.info(request.form['title'])
+    return serve_response({'success': True})

@@ -23,47 +23,6 @@ def get_login_page():
     return serve_html('login.html')
 
 
-@app.route('/problems/<pid>')
-@app.route('/problems/<pid>/info.pdf')
-@login_required
-def get_problem_info(pid):
-    return serve_info_pdf(pid)
-
-
-# ideally, this would be broken out into a different module, but we can
-# fix that later. For now, this works, and that's all that matters.
-@app.route('/api/problems')
-@login_required
-def get_problems():
-    problems = list()
-    Submits = Base.classes.submits
-    solved = session.query(Submits).\
-            filter(Submits.username==current_user.username).\
-            filter(Submits.result=="good").\
-            all()
-    solved_set = set()
-    for solve in solved:
-        solved_set.add(solve.pid)
-    
-    for problem in session.query(Base.classes.problems).all():
-        problems.append({
-            'pid': problem.pid,
-            'name': problem.name,
-            'appeared': problem.appeared,
-            'difficulty': problem.difficulty,
-            'compRelease': problem.comp_release,
-            'added': problem.added,
-            'timeLimit': problem.time_limit,
-            'solved': problem.pid in solved_set,
-            'url': url_for_problem(problem)
-        })
-    return serve_response(problems)
-    
-
-def url_for_problem(problem):
-    return join('problems', str(problem.pid))
-
-
 @app.route('/api/login', methods=['POST'])
 def log_in():
     username = request.form['username']
