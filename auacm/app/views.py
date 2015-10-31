@@ -4,6 +4,7 @@ from app import app, socketio
 from app.database import Base, session
 from app.util import bcrypt, login_manager, serve_info_pdf, serve_html, serve_response, serve_error, load_user
 from app.modules.user_manager.models import User
+from app.modules.submission_manager.models import Submission
 from os.path import join
 from time import time
 
