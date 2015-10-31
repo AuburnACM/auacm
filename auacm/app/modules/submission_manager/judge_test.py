@@ -79,6 +79,36 @@ class JudgeTest(object):
         self.submit = submit
         self.submit_file = MockUploadFile(file_path)
 
+    def assertEvaluation(self, expected_result):
+        """Assert the behavior of a submission.
+
+        A MockSubmission must first be created with createMockSubmission.
+
+        :param expected_result: the expected result for this submission.
+            Normally one of the constants exposed by the judge module.
+        :return: None
+        """
+        self.assertEqual(
+            expected_result,
+            judge.evaluate(self.submit, self.submit_file))
+
+    def assertCompilation(self, expected_result):
+        """Assert the behavior of a compilation.
+
+        A MockSubmission must first be created with createMockSubmission.
+
+        :param expected_result: the expected result for this submission.
+            Normally one of the constants exposed by the judge module.
+        :return: None
+        """
+        directory = judge.directory_for_submission(self.submit)
+        os.mkdir(directory)
+        self.submit_file.save(
+            os.path.join(directory, self.submit_file.filename))
+        self.assertEqual(
+            expected_result,
+            judge.compile_submission(self.submit, self.submit_file))
+
     def tearDown(self):
         """Post-test cleanup method.
 
@@ -113,49 +143,32 @@ class JudgeTest(object):
 
 class JavaTest(JudgeTest, unittest.TestCase):
     """Tests for .java submissions."""
-    # TODO(djshuckerow): Reduce the amount of boilerplate in these tests.
 
     __test_ext__ = "java"
 
     def testNoCompile(self):
         self.createMockSubmission('addnumbers', 'CompileError.java')
-        self.assertEqual(
-            judge.COMPILATION_ERROR,
-            judge.evaluate(self.submit, self.submit_file))
+        self.assertEvaluation(judge.COMPILATION_ERROR)
 
     def testCompile(self):
         self.createMockSubmission('addnumbers', 'CompileSuccess.java')
-        directory = judge.directory_for_submission(self.submit)
-        os.mkdir(directory)
-        self.submit_file.save(
-            os.path.join(directory, self.submit_file.filename))
-        self.assertEqual(
-            judge.COMPILATION_SUCCESS,
-            judge.compile_submission(self.submit, self.submit_file))
+        self.assertCompilation(judge.COMPILATION_SUCCESS)
 
     def testRuntimeError(self):
         self.createMockSubmission('addnumbers', 'RuntimeError.java')
-        self.assertEqual(
-            judge.RUNTIME_ERROR,
-            judge.evaluate(self.submit, self.submit_file))
+        self.assertEvaluation(judge.RUNTIME_ERROR)
 
     def testTimelimitError(self):
         self.createMockSubmission('addnumbers', 'TimelimitError.java')
-        self.assertEqual(
-            judge.TIMELIMIT_EXCEEDED,
-            judge.evaluate(self.submit, self.submit_file))
+        self.assertEvaluation(judge.TIMELIMIT_EXCEEDED)
 
     def testWrongAnswer(self):
         self.createMockSubmission('addnumbers', 'WrongAnswer.java')
-        self.assertEqual(
-            judge.WRONG_ANSWER,
-            judge.evaluate(self.submit, self.submit_file))
+        self.assertEvaluation(judge.WRONG_ANSWER)
 
     def testRightAnswer(self):
         self.createMockSubmission('addnumbers', 'RightAnswer.java')
-        self.assertEqual(
-            judge.CORRECT_ANSWER,
-            judge.evaluate(self.submit, self.submit_file))
+        self.assertEvaluation(judge.CORRECT_ANSWER)
 
 
 class PythonTest(JudgeTest, unittest.TestCase):
@@ -172,27 +185,19 @@ class PythonTest(JudgeTest, unittest.TestCase):
 
     def testRuntimeError(self):
         self.createMockSubmission('addnumbers', 'runtime.py')
-        self.assertEqual(
-            judge.RUNTIME_ERROR,
-            judge.evaluate(self.submit, self.submit_file))
+        self.assertEvaluation(judge.RUNTIME_ERROR)
 
     def testTimelimitError(self):
         self.createMockSubmission('addnumbers', 'timelimit.py')
-        self.assertEqual(
-            judge.TIMELIMIT_EXCEEDED,
-            judge.evaluate(self.submit, self.submit_file))
+        self.assertEvaluation(judge.TIMELIMIT_EXCEEDED)
 
     def testWrongAnswer(self):
         self.createMockSubmission('addnumbers', 'wrong.py')
-        self.assertEqual(
-            judge.WRONG_ANSWER,
-            judge.evaluate(self.submit, self.submit_file))
+        self.assertEvaluation(judge.WRONG_ANSWER)
 
     def testRightAnswer(self):
         self.createMockSubmission('addnumbers', 'right.py')
-        self.assertEqual(
-            judge.CORRECT_ANSWER,
-            judge.evaluate(self.submit, self.submit_file))
+        self.assertEvaluation(judge.CORRECT_ANSWER)
 
 
 class CTest(JudgeTest, unittest.TestCase):
@@ -202,43 +207,27 @@ class CTest(JudgeTest, unittest.TestCase):
 
     def testNoCompile(self):
         self.createMockSubmission('addnumbers', 'compileerror.c')
-        self.assertEqual(
-            judge.COMPILATION_ERROR,
-            judge.evaluate(self.submit, self.submit_file))
+        self.assertEvaluation(judge.COMPILATION_ERROR)
 
     def testCompile(self):
         self.createMockSubmission('addnumbers', 'compilesuccess.c')
-        directory = judge.directory_for_submission(self.submit)
-        os.mkdir(directory)
-        self.submit_file.save(
-            os.path.join(directory, self.submit_file.filename))
-        self.assertEqual(
-            judge.COMPILATION_SUCCESS,
-            judge.compile_submission(self.submit, self.submit_file))
+        self.assertCompilation(judge.COMPILATION_SUCCESS)
 
     def testRuntimeError(self):
         self.createMockSubmission('addnumbers', 'runtimeerror.c')
-        self.assertEqual(
-            judge.RUNTIME_ERROR,
-            judge.evaluate(self.submit, self.submit_file))
+        self.assertEvaluation(judge.RUNTIME_ERROR)
 
     def testTimelimitError(self):
         self.createMockSubmission('addnumbers', 'timelimiterror.c')
-        self.assertEqual(
-            judge.TIMELIMIT_EXCEEDED,
-            judge.evaluate(self.submit, self.submit_file))
+        self.assertEvaluation(judge.TIMELIMIT_EXCEEDED)
 
     def testWrongAnswer(self):
         self.createMockSubmission('addnumbers', 'wronganswer.c')
-        self.assertEqual(
-            judge.WRONG_ANSWER,
-            judge.evaluate(self.submit, self.submit_file))
+        self.assertEvaluation(judge.WRONG_ANSWER)
 
     def testRightAnswer(self):
         self.createMockSubmission('addnumbers', 'rightanswer.c')
-        self.assertEqual(
-            judge.CORRECT_ANSWER,
-            judge.evaluate(self.submit, self.submit_file))
+        self.assertEvaluation(judge.CORRECT_ANSWER)
 
 
 class CppTest(JudgeTest, unittest.TestCase):
@@ -254,37 +243,23 @@ class CppTest(JudgeTest, unittest.TestCase):
 
     def testCompile(self):
         self.createMockSubmission('addnumbers', 'compilesuccess.cpp')
-        directory = judge.directory_for_submission(self.submit)
-        os.mkdir(directory)
-        self.submit_file.save(
-            os.path.join(directory, self.submit_file.filename))
-        self.assertEqual(
-            judge.COMPILATION_SUCCESS,
-            judge.compile_submission(self.submit, self.submit_file))
+        self.assertCompilation(judge.COMPILATION_SUCCESS)
 
     def testRuntimeError(self):
         self.createMockSubmission('addnumbers', 'runtimeerror.cpp')
-        self.assertEqual(
-            judge.RUNTIME_ERROR,
-            judge.evaluate(self.submit, self.submit_file))
+        self.assertEvaluation(judge.RUNTIME_ERROR)
 
     def testTimelimitError(self):
         self.createMockSubmission('addnumbers', 'timelimiterror.cpp')
-        self.assertEqual(
-            judge.TIMELIMIT_EXCEEDED,
-            judge.evaluate(self.submit, self.submit_file))
+        self.assertEvaluation(judge.TIMELIMIT_EXCEEDED)
 
     def testWrongAnswer(self):
         self.createMockSubmission('addnumbers', 'wronganswer.cpp')
-        self.assertEqual(
-            judge.WRONG_ANSWER,
-            judge.evaluate(self.submit, self.submit_file))
+        self.assertEvaluation(judge.WRONG_ANSWER)
 
     def testRightAnswer(self):
         self.createMockSubmission('addnumbers', 'rightanswer.cpp')
-        self.assertEqual(
-            judge.CORRECT_ANSWER,
-            judge.evaluate(self.submit, self.submit_file))
+        self.assertEvaluation(judge.CORRECT_ANSWER)
 
 
 class GoTest(JudgeTest, unittest.TestCase):
@@ -294,43 +269,27 @@ class GoTest(JudgeTest, unittest.TestCase):
 
     def testNoCompile(self):
         self.createMockSubmission('addnumbers', 'compileerror.go')
-        self.assertEqual(
-            judge.COMPILATION_ERROR,
-            judge.evaluate(self.submit, self.submit_file))
+        self.assertEvaluation(judge.COMPILATION_ERROR)
 
     def testCompile(self):
         self.createMockSubmission('addnumbers', 'compilesuccess.go')
-        directory = judge.directory_for_submission(self.submit)
-        os.mkdir(directory)
-        self.submit_file.save(
-            os.path.join(directory, self.submit_file.filename))
-        self.assertEqual(
-            judge.COMPILATION_SUCCESS,
-            judge.compile_submission(self.submit, self.submit_file))
+        self.assertCompilation(judge.COMPILATION_SUCCESS)
 
     def testRuntimeError(self):
         self.createMockSubmission('addnumbers', 'runtimeerror.go')
-        self.assertEqual(
-            judge.RUNTIME_ERROR,
-            judge.evaluate(self.submit, self.submit_file))
+        self.assertEvaluation(judge.RUNTIME_ERROR)
 
     def testTimelimitError(self):
         self.createMockSubmission('addnumbers', 'timelimiterror.go')
-        self.assertEqual(
-            judge.TIMELIMIT_EXCEEDED,
-            judge.evaluate(self.submit, self.submit_file))
+        self.assertEvaluation(judge.TIMELIMIT_EXCEEDED)
 
     def testWrongAnswer(self):
         self.createMockSubmission('addnumbers', 'wronganswer.go')
-        self.assertEqual(
-            judge.WRONG_ANSWER,
-            judge.evaluate(self.submit, self.submit_file))
+        self.assertEvaluation(judge.WRONG_ANSWER)
 
     def testRightAnswer(self):
         self.createMockSubmission('addnumbers', 'rightanswer.go')
-        self.assertEqual(
-            judge.CORRECT_ANSWER,
-            judge.evaluate(self.submit, self.submit_file))
+        self.assertEvaluation(judge.CORRECT_ANSWER)
 
 
 class MockUploadFile(object):
