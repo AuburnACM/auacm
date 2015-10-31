@@ -27,6 +27,7 @@ class JudgeTest(object):
     make it so that we can't add a language without adding unit tests
     to verify the behavior of submissions in that language.
     """
+
     def setUp(self):
         """Prepare the test directory to run a new submit.
 
@@ -114,6 +115,8 @@ class JavaTest(JudgeTest, unittest.TestCase):
     """Tests for .java submissions."""
     # TODO(djshuckerow): Reduce the amount of boilerplate in these tests.
 
+    __test_ext__ = "java"
+
     def testNoCompile(self):
         self.createMockSubmission('addnumbers', 'CompileError.java')
         self.assertEqual(
@@ -159,6 +162,8 @@ class PythonTest(JudgeTest, unittest.TestCase):
     """Tests for .py submissions."""
     # TODO(djshuckerow): tests for python2 and python3.
 
+    __test_ext__ = "py"
+
     def testNoCompile(self):
         pass
 
@@ -192,6 +197,8 @@ class PythonTest(JudgeTest, unittest.TestCase):
 
 class CTest(JudgeTest, unittest.TestCase):
     """Tests for .c submissions."""
+
+    __test_ext__ = "c"
 
     def testNoCompile(self):
         self.createMockSubmission('addnumbers', 'compileerror.c')
@@ -237,6 +244,8 @@ class CTest(JudgeTest, unittest.TestCase):
 class CppTest(JudgeTest, unittest.TestCase):
     """Tests for .cpp submissions."""
 
+    __test_ext__ = "cpp"
+
     def testNoCompile(self):
         self.createMockSubmission('addnumbers', 'compileerror.cpp')
         self.assertEqual(
@@ -280,6 +289,8 @@ class CppTest(JudgeTest, unittest.TestCase):
 
 class GoTest(JudgeTest, unittest.TestCase):
     """Tests for .go submissions."""
+
+    __test_ext__ = "go"
 
     def testNoCompile(self):
         self.createMockSubmission('addnumbers', 'compileerror.go')
@@ -329,6 +340,7 @@ class MockUploadFile(object):
     the judge api call.  The file is then saved to the submission directory so
     that it can be run.
     """
+
     def __init__(self, location):
         self.f = open(location)
         self.filename = os.path.split(location)[1]
@@ -340,7 +352,26 @@ class MockUploadFile(object):
     def close(self):
         self.f.close()
 
-# TODO(djshuckerow): make sure it's impossible to add a language without tests.
+
+class LanguageTest(unittest.TestCase):
+    """Make sure that we have tests for all the languages we support.
+
+    This test uses a reflection pattern to get all our tests and verify that
+    a test for each language we support is implemented.
+    """
+
+    def testLanguagesAreAllTested(self):
+        found_languages = set()
+        for cls in JudgeTest.__subclasses__():
+            # Inspect all the entities that are not a JudgeTest.
+            if cls is not JudgeTest:
+                if hasattr(cls, "__test_ext__"):
+                    found_languages.add(cls.__test_ext__)
+                else:
+                    self.fail("Class {} must have a field __test_ext__ that "
+                              "corresponds to the file extension under test."
+                              .format(cls.__name__))
+        self.assertEqual(set(judge.ALLOWED_EXTENSIONS), found_languages)
 
 
 if __name__ == '__main__':
