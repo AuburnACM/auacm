@@ -56,7 +56,7 @@ class Submission(Base):
                 'submissionId': self.job,
                 'problemId': self.pid,
                 'username': self.username,
-                'submitTime': self.submit_time * 1000,  # to milliseconds
+                'submitTime': self.submit_time,
                 'testNum': test_num,
                 'status': status
             },

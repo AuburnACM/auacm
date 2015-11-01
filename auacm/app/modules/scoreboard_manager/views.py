@@ -35,7 +35,7 @@ def create_competition_object(competition):
     return {
         'cid' : competition.cid,
         'name' : competition.name,
-        'startTime' : competition.start * 1000,  # to milliseconds
+        'startTime' : competition.start,
         'length' : competition.stop - competition.start
     }
 
