@@ -2,10 +2,12 @@ from flask import request
 from flask.ext.login import current_user, login_required
 from app import app
 from app.database import Base, session
-from app.util import serve_response, serve_error, serve_info_pdf
+from app.util import serve_response, serve_error, serve_info_pdf, login_manager
 from app.modules.user_manager.models import User
+from app.modules.submission_manager.models import Submission
 from os.path import join
 # from sqlalchemy import desc
+
 
 def url_for_problem(problem):
     return join('problems', str(problem.pid))
@@ -20,10 +22,9 @@ def get_problem_info(pid):
 @login_required
 def get_problems():
     problems = list()
-    Submits = Base.classes.submits
-    solved = session.query(Submits).\
-            filter(Submits.username==current_user.username).\
-            filter(Submits.result=="good").\
+    solved = session.query(Submission).\
+            filter(Submission.username==current_user.username).\
+            filter(Submission.result=="good").\
             all()
     solved_set = set()
     for solve in solved:

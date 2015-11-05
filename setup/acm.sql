@@ -19,6 +19,7 @@
 -- Table structure for table `blog_posts`
 --
 
+DROP DATABASE IF EXISTS acm;
 CREATE DATABASE acm;
 USE acm;
 
