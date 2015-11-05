@@ -35,7 +35,7 @@ def submit():
 
     attempt = models.Submission(
         username=current_user.username,
-        pid=request.form['pid'].lower(),
+        pid=request.form['pid'],
         submit_time=int(time.time()),
         auto_id=0,
         file_type=uploaded_file.filename.split('.')[-1].lower(),

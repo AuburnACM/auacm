@@ -12,7 +12,7 @@
         <td><a href="/#/competitions/{{ competition.cid }}">{{ competition.name }}</a></td>
         <td>{{ competition.name }}</td>
         <td>{{ competition.length | secondsToDateTime | date:"h:mm:ss" }}</td>
-        <td>{{ competition.startTime | date:"medium" }}</td>
+        <td>{{ competition.startTime | secondsToDateTime | date:"medium" }}</td>
       </tr>
     </table>
   </div>
@@ -29,7 +29,7 @@
         <td><a href="/#/competitions/{{ competition.cid }}">{{ competition.name }}</a></td>
         <td>{{ competition.name }}</td>
         <td>{{ competition.length | secondsToDateTime | date:"h:mm:ss" }}</td>
-        <td>{{ competition.startTime | date:"medium" }}</td>
+        <td>{{ competition.startTime | secondsToDateTime | date:"medium" }}</td>
       </tr>
     </table>
   </div>
@@ -46,7 +46,7 @@
         <td><a href="/#/competitions/{{ competition.cid }}">{{ competition.name }}</a></td>
         <td>{{ competition.name }}</td>
         <td>{{ competition.length | secondsToDateTime | date:"h:mm:ss" }}</td>
-        <td>{{ competition.startTime | date:"medium" }}</td>
+        <td>{{ competition.startTime | secondsToDateTime | date:"medium" }}</td>
       </tr>
     </table>
   </div>
