@@ -50,6 +50,16 @@ app.config(function($routeProvider) {
             controller : 'ScoreboardController',
             activetab : 'competitions'
         })
+        .when('/competitions/new', {
+            templateUrl: 'static/html/createCompetition.html',
+            controller: 'CreateCompetitionController',
+            activetab: 'competitions'
+        })
+        .when('/competitions/:cid/edit', {
+            templateUrl: 'static/html/createCompetition.html',
+            controller: 'CreateCompetitionController',
+            activetab: 'competitions'
+        })
         .when('/settings', { // route for the settings page
             templateUrl : 'static/html/settings.html',
             controller : 'SettingsController',

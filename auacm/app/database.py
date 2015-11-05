@@ -10,6 +10,6 @@ connection = engine.connect()
 session = Session(engine)
 from app.modules.user_manager.models import User
 from app.modules.submission_manager.models import Submission, MockSubmission
-from app.modules.scoreboard_manager.models import Competition, CompUser, CompProblem
+from app.modules.competition_manager.models import Competition, CompUser, CompProblem
 Base.prepare(engine, reflect=True)
 

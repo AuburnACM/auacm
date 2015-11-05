@@ -12,7 +12,7 @@ from time import time
 
 @app.route('/api/competitions')
 @login_required
-def getCompetitions():
+def get_competitions():
     ongoing = list()
     past = list()
     upcoming = list()
@@ -25,23 +25,42 @@ def getCompetitions():
         else:
             upcoming.append(create_competition_object(competition))
     return serve_response({
-        'ongoing' : ongoing,
-        'past' : past,
-        'upcoming' : upcoming
+        'ongoing': ongoing,
+        'past': past,
+        'upcoming': upcoming
     })
     
 
 def create_competition_object(competition):
     return {
-        'cid' : competition.cid,
-        'name' : competition.name,
-        'startTime' : competition.start,
-        'length' : competition.stop - competition.start
+        'cid': competition.cid,
+        'name': competition.name,
+        'startTime': competition.start,
+        'length': competition.stop - competition.start
     }
+    
+
+@app.route('/api/competitions', methods=['POST'])
+@login_required
+def create_competition():
+    data = request.form
+    if current_user.admin == 0:
+        return serve_error('Only admins can create competitions', 401)
+    if not data['name'] or not data['startTime'] or not data['length']:
+        return serve_error('You must specify name, startTime,' +
+                ' and length attributes')
+    competition = Competition(
+        name=data['name'],
+        start=int(data['startTime']),
+        stop=(int(data['startTime']) + int(data['length']))
+    )
+    competition.commit_to_session()
+    return serve_response(create_competition_object(competition))
 
 
 @app.route('/api/competitions/<int:cid>')
-def getCompetitionData(cid):
+@login_required
+def get_competition_data(cid):
     competition = session.query(Competition).filter(Competition.cid==cid).first()
     if competition is None:
         return serve_error('competition not found', response_code=404)
@@ -84,9 +103,9 @@ def getCompetitionData(cid):
                 submit_count = 1
             submit_count += incorrect+pointless
             team_problems[problem] = {
-                'problemTime' : problem_time,
-                'submitCount' : submit_count,
-                'status' : 'correct' if correct > 0 else 'unattempted' if submit_count == 0 else 'incorrect'
+                'problemTime': problem_time,
+                'submitCount': submit_count,
+                'status': 'correct' if correct > 0 else 'unattempted' if submit_count == 0 else 'incorrect'
             }
         team_row = dict()
         team_row['name'] = team
@@ -95,8 +114,35 @@ def getCompetitionData(cid):
         scoreboard.append(team_row)
         
     return serve_response({
-        'competition' : create_competition_object(competition),
-        'compProblems' : comp_problems,
-        'teams' : scoreboard
+        'competition': create_competition_object(competition),
+        'compProblems': comp_problems,
+        'teams': scoreboard
     })
+
+
+@app.route('/api/competitions/<int:cid>', methods=['POST', 'PUT'])
+@login_required
+def update_competition_data(cid):
+    """ Adds problems to a competition
     
+    Doing a POST request adds that problem to the competition whereas
+    a PUT request will remove all problems that were previously associated
+    with that competition and add all of the ones in the form body.
+    
+    TODO: form validation to make sure that no duplicates are added.
+    """
+    if current_user.admin == 0:
+        # admins only
+        return serve_error('Only admins can modify competitions', 401)
+
+    if request.method == 'PUT':
+        # If the client sends a PUT request, we need to delete all of the old
+        # problems associated with this competition
+        session.query(CompProblem).filter(CompProblem.cid==cid).delete()
+
+    for problem in request.json['problemIds']:
+        session.add(CompProblem(cid=cid, pid=problem))
+
+    session.flush()
+    session.commit()
+    return serve_response('{}')

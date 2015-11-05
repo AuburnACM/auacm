@@ -1,0 +1,46 @@
+<h1>Create Competition</h1>
+<div class="panel panel-default">
+  <h2>Metadata</h2>
+  <div class="panel-body">
+    <form>
+      <div class="form-group">
+        <label for="compName" class="control-label">Competition Name</label>
+        <input class="form-control" id="compName" placeholder="My Competition" ng-model="compName">
+      </div>
+
+      <div class="form-group">
+        <label for="newPassword" class="control-label">New password</label>
+        <input class="form-control" id="newPassword" placeholder="New password" ng-model="newPassword">
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword" class="control-label">Confirm password</label>
+        <input class="form-control" id="confirmPassword" placeholder="Confirm password" ng-model="confirmPassword">
+      </div>
+      
+      <button class="btn btn-default" type="submit" ng-click="createCompetition()">
+        Create Competition
+      </button>
+    </form>
+  </div>
+  <h2>Problems</h2>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th></th> <!-- This is reserved for the add/remove button -->
+        <th>Label</th>
+        <th>Name</th>
+      </tr>
+    </thead>
+    <tr ng-repeat="problem in compProblems">
+      <td>Button goes here</td>
+      <td>{{ problem.label }}</td>
+      <td>{{ problem.name }}</td>
+    </tr>
+    <tr>
+      <td>Button goes here</td>
+      <td>Spinner goes here</td>
+      <td>Name goes here</td>
+    </tr>
+  </table>
+</div>
