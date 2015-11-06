@@ -16,12 +16,18 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `blog_posts`
+-- Current Database: `acm`
 --
 
-DROP DATABASE IF EXISTS acm;
-CREATE DATABASE acm;
-USE acm;
+/*!40000 DROP DATABASE IF EXISTS `acm`*/;
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `acm` /*!40100 DEFAULT CHARACTER SET utf8 */;
+
+USE `acm`;
+
+--
+-- Table structure for table `blog_posts`
+--
 
 DROP TABLE IF EXISTS `blog_posts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -94,7 +100,7 @@ CREATE TABLE `comp_problems` (
 
 LOCK TABLES `comp_problems` WRITE;
 /*!40000 ALTER TABLE `comp_problems` DISABLE KEYS */;
-INSERT INTO `comp_problems` VALUES (1,'WelcomeParty',1),(1,'RoundRobin',2),(1,'MissingPages',3),(1,'Paradox',4),(1,'LetterCubes',5),(1,'DigitSum',6),(1,'CashCow',7),(1,'SortMe',8),(2,'Calculation',9),(2,'MadScientist',10),(2,'Voting',11),(2,'QueenCollision',12),(2,'Mirror',13),(2,'TopThis',14),(2,'QuickSearch',15),(2,'Compression',16),(2,'Egyptian',17),(3,'Islands',18),(3,'VonNeumann',19),(3,'Strahler',20),(3,'Pisano',21),(3,'Deranged',22),(3,'Chomp',23),(3,'TriangleCount',24),(3,'PascalPowers',25),(3,'Contraband',26),(4,'UpDown',27),(4,'Gnome',28),(4,'Dull',29),(4,'BlackVienna',30),(4,'Duplicate',31),(4,'RockPaper',32),(4,'Numerals',33),(4,'CellTowers',34),(4,'Ripoff',35),(5,'GradeSchool',36),(5,'LaserTag',37),(5,'PizzaPricing',38),(5,'Sudominoku',39),(5,'FridgeMagnets',40),(5,'ShutBox',41),(5,'Sokoban',42),(5,'CrashGo',43),(6,'Multiplication',44),(6,'Fun',45),(6,'Lexicography',46),(6,'Leprechaun',47),(6,'WordCloud',48),(6,'MazeMakers',49),(6,'ReverseRot',50),(6,'Shrine',51),(6,'WetTiles',52),(7,'Quicksum',53),(7,'Pachinko',54),(7,'SurprisingStrings',55),(7,'FallingIce',56),(7,'FrugalSearch',57),(7,'Gorelians',58),(7,'RootProblem',59),(8,'Parity',60),(8,'Lampyridae',61),(8,'HexTile',62),(8,'SanMotchi',63),(8,'BulletinBoard',64),(8,'SerialNumbers',65),(8,'LineCircleMaze',66),(8,'Steganography',67);
+INSERT INTO `comp_problems` VALUES (1,'65',1),(1,'49',2),(1,'33',3),(1,'37',4),(1,'27',5),(1,'11',6),(1,'4',7),(1,'55',8),(2,'3',9),(2,'30',10),(2,'64',11),(2,'42',12),(2,'32',13),(2,'60',14),(2,'43',15),(2,'7',16),(2,'14',17),(3,'23',18),(3,'63',19),(3,'57',20),(3,'40',21),(3,'10',22),(3,'6',23),(3,'61',24),(3,'39',25),(3,'8',26),(4,'62',27),(4,'19',28),(4,'12',29),(4,'1',30),(4,'13',31),(4,'47',32),(4,'35',33),(4,'5',34),(4,'46',35),(5,'21',36),(5,'25',37),(5,'41',38),(5,'58',39),(5,'16',40),(5,'53',41),(5,'54',42),(5,'9',43),(6,'34',44),(6,'18',45),(6,'28',46),(6,'26',47),(6,'67',48),(6,'31',49),(6,'45',50),(6,'52',51),(6,'66',52),(7,'44',53),(7,'36',54),(7,'59',55),(7,'15',56),(7,'17',57),(7,'20',58),(7,'48',59),(8,'Parity',60),(8,'24',61),(8,'22',62),(8,'50',63),(8,'2',64),(8,'51',65),(8,'29',66),(8,'56',67);
 /*!40000 ALTER TABLE `comp_problems` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -125,6 +131,34 @@ INSERT INTO `comp_users` VALUES (1,'brian','Broverbey',1),(1,'will','Broverbey',
 UNLOCK TABLES;
 
 --
+-- Table structure for table `problem_data`
+--
+
+DROP TABLE IF EXISTS `problem_data`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `problem_data` (
+  `pid` int(32) DEFAULT NULL,
+  `time_limit` int(11) DEFAULT NULL,
+  `description` text,
+  `input_desc` text,
+  `output_desc` text,
+  KEY `pid` (`pid`),
+  CONSTRAINT `problem_data_ibfk_1` FOREIGN KEY (`pid`) REFERENCES `problems` (`pid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `problem_data`
+--
+
+LOCK TABLES `problem_data` WRITE;
+/*!40000 ALTER TABLE `problem_data` DISABLE KEYS */;
+INSERT INTO `problem_data` VALUES (1,90,NULL,NULL,NULL),(2,90,NULL,NULL,NULL),(3,90,NULL,NULL,NULL),(4,90,NULL,NULL,NULL),(5,90,NULL,NULL,NULL),(6,90,NULL,NULL,NULL),(7,90,NULL,NULL,NULL),(8,90,NULL,NULL,NULL),(9,90,NULL,NULL,NULL),(10,90,NULL,NULL,NULL),(11,90,NULL,NULL,NULL),(12,90,NULL,NULL,NULL),(13,90,NULL,NULL,NULL),(14,90,NULL,NULL,NULL),(15,90,NULL,NULL,NULL),(16,90,NULL,NULL,NULL),(17,90,NULL,NULL,NULL),(18,90,NULL,NULL,NULL),(19,90,NULL,NULL,NULL),(20,90,NULL,NULL,NULL),(21,90,NULL,NULL,NULL),(22,90,NULL,NULL,NULL),(23,90,NULL,NULL,NULL),(24,90,NULL,NULL,NULL),(25,90,NULL,NULL,NULL),(26,90,NULL,NULL,NULL),(27,90,NULL,NULL,NULL),(28,90,NULL,NULL,NULL),(29,90,NULL,NULL,NULL),(30,90,NULL,NULL,NULL),(31,90,NULL,NULL,NULL),(32,90,NULL,NULL,NULL),(33,90,NULL,NULL,NULL),(34,90,NULL,NULL,NULL),(35,90,NULL,NULL,NULL),(36,90,NULL,NULL,NULL),(37,90,NULL,NULL,NULL),(39,90,NULL,NULL,NULL),(40,90,NULL,NULL,NULL),(41,90,NULL,NULL,NULL),(42,90,NULL,NULL,NULL),(43,90,NULL,NULL,NULL),(44,90,NULL,NULL,NULL),(45,90,NULL,NULL,NULL),(46,90,NULL,NULL,NULL),(47,90,NULL,NULL,NULL),(48,90,NULL,NULL,NULL),(49,90,NULL,NULL,NULL),(50,90,NULL,NULL,NULL),(51,90,NULL,NULL,NULL),(52,90,NULL,NULL,NULL),(53,90,NULL,NULL,NULL),(54,90,NULL,NULL,NULL),(55,90,NULL,NULL,NULL),(56,90,NULL,NULL,NULL),(57,90,NULL,NULL,NULL),(58,90,NULL,NULL,NULL),(59,90,NULL,NULL,NULL),(60,90,NULL,NULL,NULL),(61,90,NULL,NULL,NULL),(62,90,NULL,NULL,NULL),(63,90,NULL,NULL,NULL),(64,90,NULL,NULL,NULL),(65,90,NULL,NULL,NULL),(66,90,NULL,NULL,NULL),(67,90,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `problem_data` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `problems`
 --
 
@@ -132,15 +166,17 @@ DROP TABLE IF EXISTS `problems`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `problems` (
-  `pid` varchar(32) NOT NULL,
+  `pid` int(32) NOT NULL AUTO_INCREMENT,
+  `shortname` varchar(32) NOT NULL DEFAULT '',
   `name` varchar(128) NOT NULL,
   `appeared` varchar(128) NOT NULL,
   `difficulty` varchar(8) NOT NULL,
   `added` int(10) unsigned NOT NULL,
-  `comp_release` varchar(32) NOT NULL,
-  `time_limit` int(11) NOT NULL,
-  PRIMARY KEY (`pid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `comp_release` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`pid`),
+  KEY `comp_release` (`comp_release`),
+  CONSTRAINT `problems_ibfk_1` FOREIGN KEY (`comp_release`) REFERENCES `comp_names` (`cid`)
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -149,8 +185,34 @@ CREATE TABLE `problems` (
 
 LOCK TABLES `problems` WRITE;
 /*!40000 ALTER TABLE `problems` DISABLE KEYS */;
-INSERT INTO `problems` VALUES ('BlackVienna','Black Vienna','2009 Mid-Central','100',1425098610,'4',90),('BulletinBoard','Bulletin Board','','',1428127324,'8',90),('Calculation','Judges\' Time Calculation','2010 Mid-Central','18',1423893127,'2',90),('CashCow','Cash Cow','2013 Mid-Central','78',1413007692,'1',90),('CellTowers','Cell Towers','2009 Mid-Central','86',1425098610,'4',90),('Chomp','Chomp','2013 Greater NY','73',1424491042,'3',90),('Compression','Image Compression','2010 Mid-Central','75',1423893123,'2',90),('Contraband','Contraband','2013 Greater NY','88',1424491042,'3',90),('CrashGo','Crash and Go(relians)','2011 Mid-Central','65',1425705642,'5',90),('Deranged','Deranged Exams','2013 Greater NY','59',1424491042,'3',90),('DigitSum','Digit Sum','2013 Mid-Central','28',1413007683,'1',90),('Dull','DuLL','2009 Mid-Central','46',1425098610,'4',90),('Duplicate','Duplicate Removal','2009 Mid-Central','6',1425098610,'4',90),('Egyptian','Egyptian Fractions','2010 Mid-Central','83',1423893127,'2',90),('FallingIce','Falling Ice','2006 Mid-Central','99',1427909367,'7',90),('FridgeMagnets','Refrigerator Magnets','2011 Mid-Central','6',1425705642,'5',90),('FrugalSearch','Frugal Search','2006 Mid-Central','57',1427909367,'7',90),('Fun','Fun House','2014 Mid-Central','34',1426310855,'6',90),('Gnome','Gnome Sequencing','2009 Mid-Central','4',1425098610,'4',90),('Gorelians','Go Go Gorelians','2006 Mid-Central','83',1427909367,'7',90),('GradeSchool','Grade School Multiplication','2011 Mid-Central','44',1425705642,'5',90),('HexTile','Hex Tile Equations','','',1428127324,'8',90),('Islands','Islands in the Data Stream ','2013 Greater NY','6',1424491042,'3',90),('Lampyridae','Lampyridae Teleportae','','',1428127324,'8',90),('LaserTag','Laser Tag','2011 Mid-Central','100',1425705642,'5',90),('Leprechaun','The Leprechaun Hunt','2014 Mid-Central','100',1426310855,'6',90),('LetterCubes','Letter Cubes','2013 Mid-Central','96',1413007659,'1',90),('Lexicography','Lexicography','2014 Mid-Central','82',1426310855,'6',90),('LineCircleMaze','Line & Circle Maze','','',1428127324,'8',90),('MadScientist','Mad Scientist','2010 Mid-Central','13',1423893127,'2',90),('MazeMakers','The Maze Makers','2014 Mid-Central','89',1426310855,'6',90),('Mirror','Mirror, Mirror on the Wall','2010 Mid-Central','5',1423893120,'2',90),('MissingPages','Missing Pages','2013 Mid-Central','9',1413007633,'1',90),('Multiplication','(More) Multiplication','2014 Mid-Central','67',1426310855,'6',90),('Numerals','A to Z Numerals','2009 Mid-Central','100',1425098610,'4',90),('Pachinko','Linear Pachinko','2006 Mid-Central','25',1427909367,'7',90),('Paradox','Probability Paradox','2013 Mid-Central','99',1413007650,'1',90),('Parity','Parity','','',1428127324,'8',90),('PascalPowers','Powers of Pascal','2013 Greater NY','65',1424491042,'3',90),('Pisano','Pisano Periods','2013 Greater NY','53',1424491042,'3',90),('PizzaPricing','Pizza Pricing','2011 Mid-Central','6',1425705642,'5',90),('QueenCollision','Queen Collision','2010 Mid-Central','80',1423893127,'2',90),('QuickSearch','Quick Search','2010 Mid-Central','96',1423893127,'2',90),('Quicksum','Quicksum','2006 Mid-Central','4',1427909367,'7',90),('ReverseRot','Reverse Rot','2014 Mid-Central','5',1426310855,'6',90),('Ripoff','RIPOFF','2009 Mid-Central','86',1425098610,'4',90),('RockPaper','Rock, Paper, Scissors','2009 Mid-Central','5',1425098610,'4',90),('RootProblem','Root of the Problem','2006 Mid-Central','13',1427909367,'7',90),('RoundRobin','Round Robin','2013 Mid-Central','40',1413007622,'1',90),('SanMotchi','The Bridges of San Motchi','','',1428127324,'8',90),('SerialNumbers','Serial Numbers','','',1428127324,'8',90),('Shrine','Shrine Maintenance','2014 Mid-Central','97',1426310855,'6',90),('ShutBox','Shut the Box','2011 Mid-Central','98',1425705642,'5',90),('Sokoban','Sokoban','2011 Mid-Central','60',1425705642,'5',90),('SortMe','Sort Me','2013 Mid-Central','46',1413007714,'1',90),('Steganography','Steganography','','',1428127324,'8',90),('Strahler','Strahler Order','2013 Greater NY','35',1424491042,'3',90),('Sudominoku','Su-domino-ku','2011 Mid-Central','98',1425705642,'5',90),('SurprisingStrings','Surprising Strings','2006 Mid-Central','26',1427909367,'7',90),('TopThis','Top This','2010 Mid-Central','98',1423893127,'2',90),('TriangleCount','Triangle Count Sequences of Polygon Triangulations','2013 Greater NY','67',1424491042,'3',90),('UpDown','Up and Down','2009 Mid-Central','99',1425098610,'4',90),('VonNeumann','Von Neumann\'s Fly','2013 Greater NY','6',1424491042,'3',90),('Voting','Voting','2010 Mid-Central','4',1423893127,'2',90),('WelcomeParty','Welcome Party','2013 Mid-Central','92',1413005101,'1',90),('WetTiles','Wet Tiles','2014 Mid-Central','78',1426310855,'6',90),('WordCloud','Word Cloud','2014 Mid-Central','59',1426310855,'6',90);
+INSERT INTO `problems` VALUES (1,'blackvienna','Black Vienna','2009 Mid-Central','100',1425098610,4),(2,'bulletinboard','Bulletin Board','','',1428127324,8),(3,'calculation','Judges\' Time Calculation','2010 Mid-Central','18',1423893127,2),(4,'cashcow','Cash Cow','2013 Mid-Central','78',1413007692,1),(5,'celltowers','Cell Towers','2009 Mid-Central','86',1425098610,4),(6,'chomp','Chomp','2013 Greater NY','73',1424491042,3),(7,'compression','Image Compression','2010 Mid-Central','75',1423893123,2),(8,'contraband','Contraband','2013 Greater NY','88',1424491042,3),(9,'crashgo','Crash and Go(relians)','2011 Mid-Central','65',1425705642,5),(10,'deranged','Deranged Exams','2013 Greater NY','59',1424491042,3),(11,'digitsum','Digit Sum','2013 Mid-Central','28',1413007683,1),(12,'dull','DuLL','2009 Mid-Central','46',1425098610,4),(13,'duplicate','Duplicate Removal','2009 Mid-Central','6',1425098610,4),(14,'egyptian','Egyptian Fractions','2010 Mid-Central','83',1423893127,2),(15,'fallingice','Falling Ice','2006 Mid-Central','99',1427909367,7),(16,'fridgemagnets','Refrigerator Magnets','2011 Mid-Central','6',1425705642,5),(17,'frugalsearch','Frugal Search','2006 Mid-Central','57',1427909367,7),(18,'fun','Fun House','2014 Mid-Central','34',1426310855,6),(19,'gnome','Gnome Sequencing','2009 Mid-Central','4',1425098610,4),(20,'gorelians','Go Go Gorelians','2006 Mid-Central','83',1427909367,7),(21,'gradeschool','Grade School Multiplication','2011 Mid-Central','44',1425705642,5),(22,'hextile','Hex Tile Equations','','',1428127324,8),(23,'islands','Islands in the Data Stream ','2013 Greater NY','6',1424491042,3),(24,'lampyridae','Lampyridae Teleportae','','',1428127324,8),(25,'lasertag','Laser Tag','2011 Mid-Central','100',1425705642,5),(26,'leprechaun','The Leprechaun Hunt','2014 Mid-Central','100',1426310855,6),(27,'lettercubes','Letter Cubes','2013 Mid-Central','96',1413007659,1),(28,'lexicography','Lexicography','2014 Mid-Central','82',1426310855,6),(29,'linecirclemaze','Line & Circle Maze','','',1428127324,8),(30,'madscientist','Mad Scientist','2010 Mid-Central','13',1423893127,2),(31,'mazemakers','The Maze Makers','2014 Mid-Central','89',1426310855,6),(32,'mirror','Mirror, Mirror on the Wall','2010 Mid-Central','5',1423893120,2),(33,'missingpages','Missing Pages','2013 Mid-Central','9',1413007633,1),(34,'multiplication','(More) Multiplication','2014 Mid-Central','67',1426310855,6),(35,'numerals','A to Z Numerals','2009 Mid-Central','100',1425098610,4),(36,'pachinko','Linear Pachinko','2006 Mid-Central','25',1427909367,7),(37,'paradox','Probability Paradox','2013 Mid-Central','99',1413007650,1),(39,'pascalpowers','Powers of Pascal','2013 Greater NY','65',1424491042,3),(40,'pisano','Pisano Periods','2013 Greater NY','53',1424491042,3),(41,'pizzapricing','Pizza Pricing','2011 Mid-Central','6',1425705642,5),(42,'queencollision','Queen Collision','2010 Mid-Central','80',1423893127,2),(43,'quicksearch','Quick Search','2010 Mid-Central','96',1423893127,2),(44,'quicksum','Quicksum','2006 Mid-Central','4',1427909367,7),(45,'reverserot','Reverse Rot','2014 Mid-Central','5',1426310855,6),(46,'ripoff','RIPOFF','2009 Mid-Central','86',1425098610,4),(47,'rockpaper','Rock, Paper, Scissors','2009 Mid-Central','5',1425098610,4),(48,'rootproblem','Root of the Problem','2006 Mid-Central','13',1427909367,7),(49,'roundrobin','Round Robin','2013 Mid-Central','40',1413007622,1),(50,'sanmotchi','The Bridges of San Motchi','','',1428127324,8),(51,'serialnumbers','Serial Numbers','','',1428127324,8),(52,'shrine','Shrine Maintenance','2014 Mid-Central','97',1426310855,6),(53,'shutbox','Shut the Box','2011 Mid-Central','98',1425705642,5),(54,'sokoban','Sokoban','2011 Mid-Central','60',1425705642,5),(55,'sortme','Sort Me','2013 Mid-Central','46',1413007714,1),(56,'steganography','Steganography','','',1428127324,8),(57,'strahler','Strahler Order','2013 Greater NY','35',1424491042,3),(58,'sudominoku','Su-domino-ku','2011 Mid-Central','98',1425705642,5),(59,'surprisingstrings','Surprising Strings','2006 Mid-Central','26',1427909367,7),(60,'topthis','Top This','2010 Mid-Central','98',1423893127,2),(61,'trianglecount','Triangle Count Sequences of Polygon Triangulations','2013 Greater NY','67',1424491042,3),(62,'updown','Up and Down','2009 Mid-Central','99',1425098610,4),(63,'vonneumann','Von Neumann\'s Fly','2013 Greater NY','6',1424491042,3),(64,'voting','Voting','2010 Mid-Central','4',1423893127,2),(65,'welcomeparty','Welcome Party','2013 Mid-Central','92',1413005101,1),(66,'wettiles','Wet Tiles','2014 Mid-Central','78',1426310855,6),(67,'wordcloud','Word Cloud','2014 Mid-Central','59',1426310855,6);
 /*!40000 ALTER TABLE `problems` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sample_cases`
+--
+
+DROP TABLE IF EXISTS `sample_cases`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sample_cases` (
+  `pid` int(32) DEFAULT NULL,
+  `case_num` int(11) DEFAULT NULL,
+  `input` varchar(255) DEFAULT NULL,
+  `output` varchar(255) DEFAULT NULL,
+  KEY `pid` (`pid`),
+  CONSTRAINT `sample_cases_ibfk_1` FOREIGN KEY (`pid`) REFERENCES `problems` (`pid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sample_cases`
+--
+
+LOCK TABLES `sample_cases` WRITE;
+/*!40000 ALTER TABLE `sample_cases` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sample_cases` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -218,4 +280,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-10-23 13:44:11
+-- Dump completed on 2015-11-06 14:55:56
