@@ -1,8 +1,8 @@
 app.controller('CreateCompetitionController', ['$scope', '$http', '$location',
         '$routeParams',
         function($scope, $http, $location, $routeParams) {
-    if ($routeParams.cid) {
-        // if the CID was specified and is > 0, we need to load the data
+    if ($routeParams.cid != undefined) {
+        // if the CID was specified, we need to load the data
         
     } else {
         
@@ -26,7 +26,8 @@ app.controller('CreateCompetitionController', ['$scope', '$http', '$location',
             $scope.compName = '';
             $scope.compTime = '';
             $scope.compLength = '';
-            $location.path('/competitions/' + response.data.data.cid + '/edit');
+            $scope.compProblems = [];
+            $location.path('/competitions/' + response.data.data.cid);
         }, function(response) {
             $scope.disableForm = false;
             console.log("error");

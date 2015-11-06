@@ -45,12 +45,7 @@ app.config(function($routeProvider) {
             controller : 'CompetitionsController',
             activetab : 'competitions'
         })
-        .when('/competitions/:cid', { // route for the competitions page
-            templateUrl : 'static/html/scoreboard.html',
-            controller : 'ScoreboardController',
-            activetab : 'competitions'
-        })
-        .when('/competitions/new', {
+        .when('/competitions/create', {
             templateUrl: 'static/html/createCompetition.html',
             controller: 'CreateCompetitionController',
             activetab: 'competitions'
@@ -59,6 +54,11 @@ app.config(function($routeProvider) {
             templateUrl: 'static/html/createCompetition.html',
             controller: 'CreateCompetitionController',
             activetab: 'competitions'
+        })
+        .when('/competitions/:cid', { // route for the competitions page
+            templateUrl : 'static/html/scoreboard.html',
+            controller : 'ScoreboardController',
+            activetab : 'competitions'
         })
         .when('/settings', { // route for the settings page
             templateUrl : 'static/html/settings.html',

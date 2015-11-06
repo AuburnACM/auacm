@@ -27,9 +27,9 @@
   <table class="table table-bordered">
     <thead>
       <tr>
-        <th></th> <!-- This is reserved for the add/remove button -->
-        <th>Label</th>
-        <th>Name</th>
+        <th class="col-sm-4"></th> <!-- This is reserved for the add/remove button -->
+        <th class="col-sm-4">Label</th>
+        <th class="col-sm-4">Name</th>
       </tr>
     </thead>
     <tr ng-repeat="problem in compProblems">
@@ -38,9 +38,17 @@
       <td>{{ problem.name }}</td>
     </tr>
     <tr>
-      <td>Button goes here</td>
-      <td>Spinner goes here</td>
-      <td>Name goes here</td>
+      <td>
+        <button type="submit" class="btn btn-success">Add</button>
+      </td>
+      <td>
+        <select id="pidSelector" class="form-control" 
+                    ng-options="prob.pid as prob.name for prob in problems" ng-model="pid">
+        </select>
+      </td>
+      <td>
+        {{ pid }}
+      </td>
     </tr>
   </table>
 </div>

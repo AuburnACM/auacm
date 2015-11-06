@@ -1,4 +1,11 @@
 <div>
+  <div class="row">
+    <h1 class="col-md-10">Competitions</h1>
+    <button type="button" class="btn btn-default col-md-2 margin-top"
+            ng-click="createCompetition()" ng-show="isAdmin === 1">
+      Create competition
+    </button>
+  </div>
   <div ng-show="competitions.ongoing.length > 0">
     <h2>Ongoing</h2>
     <table class="table table-striped">
