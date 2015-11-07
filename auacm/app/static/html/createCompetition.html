@@ -33,21 +33,25 @@
       </tr>
     </thead>
     <tr ng-repeat="problem in compProblems">
-      <td>Button goes here</td>
+      <td>
+        <button type="submit" class="btn btn-danger" ng-click="removeProblem(problem)">Remove</button>
+      </td>
       <td>{{ problem.label }}</td>
       <td>{{ problem.name }}</td>
     </tr>
     <tr>
       <td>
-        <button type="submit" class="btn btn-success">Add</button>
+        <button type="submit" class="btn btn-success" ng-click="addProblem(selected)"
+          ng-disabled="!selected || compProblems.indexOf(selected) >= 0">
+          Add
+        </button>
+      </td>
+      <td>
       </td>
       <td>
         <select id="pidSelector" class="form-control" 
-                    ng-options="prob.pid as prob.name for prob in problems" ng-model="pid">
+                    ng-options="prob as prob.name for prob in problems" ng-model="selected">
         </select>
-      </td>
-      <td>
-        {{ pid }}
       </td>
     </tr>
   </table>

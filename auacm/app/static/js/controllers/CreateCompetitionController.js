@@ -1,12 +1,20 @@
 app.controller('CreateCompetitionController', ['$scope', '$http', '$location',
         '$routeParams',
         function($scope, $http, $location, $routeParams) {
+    $scope.compProblems = [];
     if ($routeParams.cid != undefined) {
         // if the CID was specified, we need to load the data
         
     } else {
         
     }
+    $scope.addProblem = function(problem) {
+        $scope.compProblems.push(problem);
+        console.log($scope.compProblems);
+    };
+    $scope.removeProblem = function(problem) {
+        $scope.compProblems.splice($scope.compProblems.indexOf(problem), 1);
+    };
     $scope.disableForm = false;
     $scope.createCompetition = function() {
         $scope.disableForm = true;
