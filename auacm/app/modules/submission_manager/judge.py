@@ -53,7 +53,7 @@ def directory_for_problem(submission):
     return os.path.join(app.config['DATA_FOLDER'], 'problems', submission.pid)
 
 
-def evaluate(submission, uploaded_file):
+def evaluate(submission, uploaded_file, time_limit):
     """Attempts to compile (if necessary) then execute a given file.
 
     :param submission: the newly created submission
@@ -65,7 +65,7 @@ def evaluate(submission, uploaded_file):
     uploaded_file.save(os.path.join(directory, uploaded_file.filename))
     status = compile_submission(submission, uploaded_file)
     if status == COMPILATION_SUCCESS:
-        status = execute_submission(submission, uploaded_file)
+        status = execute_submission(submission, uploaded_file, time_limit)
     return status
 
 
@@ -89,7 +89,7 @@ def compile_submission(submission, uploaded_file):
         return COMPILATION_ERROR
 
 
-def execute_submission(submission, uploaded_file):
+def execute_submission(submission, uploaded_file, time_limit):
     """Run the submission.
 
     TODO(djshuckerow): This method magically got out-of-hand.  Refactor.
@@ -116,7 +116,7 @@ def execute_submission(submission, uploaded_file):
             test_number = int(fname.split('.')[0].strip('in'))
             out_file = 'out{0}.txt'.format(test_number)
             submission.emit_status('running', test_number)
-            max_runtime = problem.time_limit * TIMEOUT_MULTIPLIER[ext]
+            max_runtime = time_limit * TIMEOUT_MULTIPLIER[ext]
             execution = JudgementThread(
                 submission, uploaded_file, f, out_file, max_runtime)
             start_time = time.time()
