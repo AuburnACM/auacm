@@ -11,6 +11,13 @@ class Problem(Base):
     def __init__(self, **kwargs):
         Base.__init__(self, **kwargs)
 
+    def add_to_db(self):
+        '''Commit this problem to the database as a new problem.'''
+        session.add(self)
+        session.flush()
+        session.commit()
+        session.refresh(self)
+
 
 class  Problem_Data(Base):
     '''Problem Data class that reflects mysql database'''
@@ -19,6 +26,7 @@ class  Problem_Data(Base):
 
     def __init__(self, **kwargs):
         Base.__init__(self, **kwargs)
+
 
 class Sample_Case(Base):
     '''Test case class that reflects the mysql database'''
