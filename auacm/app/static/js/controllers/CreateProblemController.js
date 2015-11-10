@@ -31,6 +31,10 @@ app.controller('CreateProblemController', ['$scope', '$http', '$route',
         // This should be validated much better
         if ($scope.cases[0].input.length !== 0 || $scope.cases[0].output.length !== 0)
             fd.append('cases', angular.toJson($scope.cases));
+        if ($scope.difficulty <= 100 && $scope.difficulty >= 0)
+            fd.append('difficulty', $scope.difficulty);
+        if (typeof $scope.appearedIn != 'undefined')
+            fd.append('appeared_in', $scope.appearedIn);
 
         $http({
             method: 'POST',
@@ -40,6 +44,7 @@ app.controller('CreateProblemController', ['$scope', '$http', '$route',
             data: fd
         }).then(function(response) {
             // TODO(brandonlmorris) - clear the form
+            // TODO(brandonlmorris) - should update the global problems list
             console.log('I think it might have worked');
         }, function(response) {
             console.log('Error uploading new problem');
