@@ -78,18 +78,53 @@ def create_problem():
             response_code=400)
     # TODO(brandonlmorris): Check and handle zip files
 
+    # TODO(brandonlmorris): Insert new problem into database
+    title = request.form['title'][:32]
+    shortname = title.lower().replace(' ', '')
+
+    problem = Problem(
+        name=title,
+        shortname=shortname
+    )
+    pid = problem.commit_to_session()
+
     # Convert the JSON array string to python array of dictionaries
     cases = request.form['cases']
     cases = loads(str(cases))
 
-    # TODO(brandonlmorris): Insert new problem into database
-
-    # problem = Problem()
     return serve_response({
         'success': True,
         'title': request.form['title'],
         'description': request.form['description'],
         'input_description': request.form['input_description'],
         'output_description': request.form['output_description'],
-        'sample_cases': cases
+        'sample_cases': cases,
+        'pid': pid
+    })
+
+@app.route('/api/problems/delete', methods=['POST'])
+@login_required
+def delete_problem():
+    # Admin check
+    if not current_user.admin == 1:
+        return serve_error('You must be an admin to delete a problem',
+            response_code=401)
+
+    if not request.form['pid']:
+        return serve_error('You must specify a problem to delete',
+            response_code=400)
+
+    # TODO(brandonlmorris): Actually delete the thing
+    problem = session.query(Problem).\
+        filter(Problem.pid == request.form['pid'])
+    if not problem.first():
+        return serve_error('Could not find problem with pid ' + 
+            request.form['pid'], response_code=401)
+    problem.delete()
+    session.flush()
+    session.commit()
+
+    return serve_response({
+        'success': True,
+        'deleted_pid': request.form['pid']
     })

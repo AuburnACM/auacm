@@ -18,14 +18,19 @@ app.controller('CreateProblemController', ['$scope', '$http', '$route',
             // return;
         }
 
-        console.log("This is the cases: " + $scope.cases);
-        console.log($scope.cases);
+        // Add defined elements into the formdata header
         var fd = new FormData();
-        fd.append('title', $scope.title);
-        fd.append('description', $scope.description);
-        fd.append('input_description', $scope.inputDescription);
-        fd.append('output_description', $scope.outputDescription);
-        fd.append('cases', angular.toJson($scope.cases));
+        if (typeof $scope.title != 'undefined')
+            fd.append('title', $scope.title);
+        if (typeof $scope.description != 'undefined')
+            fd.append('description', $scope.description);
+        if (typeof $scope.inputDescription != 'undefined')
+            fd.append('input_description', $scope.inputDescription);
+        if (typeof $scope.outputDescription != 'undefined')
+            fd.append('output_description', $scope.outputDescription);
+        // This should be validated much better
+        if ($scope.cases[0].input.length !== 0 || $scope.cases[0].output.length !== 0)
+            fd.append('cases', angular.toJson($scope.cases));
 
         $http({
             method: 'POST',

@@ -1,4 +1,6 @@
 '''Provide model objects for representing problems.'''
+import time
+
 from app.database import Base, session
 
 # Problem = Base.classes.problems
@@ -9,14 +11,15 @@ class Problem(Base):
     __tablename__ = "problems"
 
     def __init__(self, **kwargs):
-        Base.__init__(self, **kwargs)
+        Base.__init__(self, appeared='', difficulty=0, added=time.time(), **kwargs)
 
-    def add_to_db(self):
+    def commit_to_session(self):
         '''Commit this problem to the database as a new problem.'''
         session.add(self)
         session.flush()
         session.commit()
         session.refresh(self)
+        return self.pid
 
 
 class  Problem_Data(Base):

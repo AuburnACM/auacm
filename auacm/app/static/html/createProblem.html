@@ -36,33 +36,35 @@
         </div>
 
         <!-- Sample Input/Output -->
-        <div class='form-group' ng-repeat="case in cases">
+        <div class="form-group" ng-repeat="case in cases">
           <label>Sample Case {{ $index+1 }}</label>
-          <div class='form-inline'>
-            <input type='text' class='form-control'
-              placeholder='Sample input'
-              ng-model='case.input'
-              style="width:40%;">
-            <input type='text' class='form-control'
-              placeholder='Sample output'
-              ng-model='case.output'
-              style="width:40%; margin-left: 10%">
+          <div class="form-inline">
+            <textarea class="form-control"
+              placeholder="Sample input"
+              ng-model="case.input"
+              style="width:40%;"></textarea>
+            <textarea class="form-control"
+              placeholder="Sample output"
+              ng-model="case.output"
+              style="width:40%; margin-left: 10%"></textarea>
           </div>
         </div>
-        <input type='button' class="btn btn-info"
+        <input type="button" class="btn btn-info"
           ng-click="addCase()" value="Add Test Case" style="margin-bottom: 25px">
 
         <!-- Judge Input/Output -->
         <div class="form-group">
           <div class="form-inline">
-            <label for="inputUpload">Judge Input (please zip)</label>
+            <label for="inputUpload">Judge Input</label>
             <input type="file" file-model="inFile" accept=".zip">
+            <p class="help-block">All files should be in an 'in' directory and zipped</p>
           </div>
         </div>
         <div class="form-group">
           <div class="form-inline">
-            <label for="outputUpload">Judge Output (please zip)</label>
+            <label for="outputUpload">Judge Output</label>
             <input type="file" file-model="outFile" accept=".zip">
+            <p class="help-block">All files should be in an 'out' directory and zipped</p>
           </div>
         </div>
 
@@ -70,6 +72,20 @@
         <div class="form-group">
           <label for="judgeSolution">Judge Solution</label>
           <input type="file" file-model="solModel" accept=".c,.cpp,.java.py">
+        </div>
+
+        <!-- Appeared In -->
+        <div class="form-group">
+          <label for="appearedIn">Original Competition (Optional)</label>
+          <input type="text" class="form-control"
+            placeholder="2014 Mid-Central" ng-model="appearedIn">
+        </div>
+
+        <!-- Difficulty -->
+        <div class="form-group">
+          <label for="difficulty">Difficulty (Optional)</label>
+          <input type="text" class="form-control" placeholder="0-100" 
+            ng-model="difficulty">
         </div>
 
         <!-- Submit Button -->
