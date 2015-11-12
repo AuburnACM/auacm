@@ -8,7 +8,6 @@ app.controller('CreateProblemController', ['$scope', '$http', '$route',
     };
 
     $scope.createProblem = function() {
-        // TODO(brandonlmorris): turn the data to JSON and send it to the API
         // Should stop request if any parts of the form are empty
         if ($scope.title === undefined || $scope.description === undefined ||
                 $scope.inputDescription === undefined || 

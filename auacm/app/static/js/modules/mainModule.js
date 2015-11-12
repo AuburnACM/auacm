@@ -59,6 +59,11 @@ app.config(function($routeProvider) {
             templateUrl : 'static/html/createProblem.html',
             controller : 'CreateProblemController',
             activetab  : 'settings'
+        })
+        .when('/problems/:pid', { // route for the problem view page
+            templateUrl : 'static/html/viewProblem.html',
+            controller : 'ViewProblemController',
+            activetab : 'problems'
         });
 });
 

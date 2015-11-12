@@ -12,10 +12,11 @@ from json import loads
 
 
 def url_for_problem(problem):
-    return join('problems', str(problem.shortname))
+    # app.logger.info(join('problems', str()))
+    return join('problems', str(problem.shortname), 'info.pdf')
 
 
-@app.route('/problems/<shortname>')
+# @app.route('/problems/<shortname>')
 @app.route('/problems/<shortname>/info.pdf')
 @login_required
 def get_problem_info(shortname):
@@ -29,32 +30,30 @@ def get_problem_info(shortname):
 @app.route('/api/problems/<shortname>', methods=['GET'])
 @login_required
 def get_problem(shortname):
-    problem = session.query(Problem).\
+    problem = session.query(Problem, Problem_Data).\
+            join(Problem_Data).\
             filter(Problem.shortname == shortname).\
             first()
-    problem_data = session.query(Problem_Data).\
-                    filter(Problem_Data.pid  == problem.pid).\
-                    first()
-    case_results = session.query(Sample_Case).\
-                    filter(Sample_Case.pid == problem.pid).all()
+
     cases = list()
-    for case in case_results:
+    for case in session.query(Sample_Case).\
+                    filter(Sample_Case.pid == problem.Problem.pid).all():
         cases.append({
             'case_num': case.case_num,
             'input': case.input,
             'output': case.output
         })
     return serve_response({
-        'pid': problem.pid,
-        'name': problem.name,
-        'shortname': problem.shortname,
-        'appeared': problem.appeared,
-        'difficulty': problem.difficulty,
-        'added': problem.added,
-        'comp_release': problem.comp_release,
-        'description': problem_data.description,
-        'input_desc': problem_data.input_desc,
-        'output_desc': problem_data.output_desc,
+        'pid': problem.Problem.pid,
+        'name': problem.Problem.name,
+        'shortname': problem.Problem.shortname,
+        'appeared': problem.Problem.appeared,
+        'difficulty': problem.Problem.difficulty,
+        'added': problem.Problem.added,
+        'comp_release': problem.Problem.comp_release,
+        'description': problem.Problem_Data.description,
+        'input_desc': problem.Problem_Data.input_desc,
+        'output_desc': problem.Problem_Data.output_desc,
         'sample_cases': cases
     })
 
@@ -70,17 +69,21 @@ def get_problems():
     for solve in solved:
         solved_set.add(solve.pid)
     
-    for problem in session.query(Problem).all():
+    for problem in session.query(Problem, Problem_Data).\
+            join(Problem_Data).all():
         problems.append({
-            'pid': problem.pid,
-            'name': problem.name,
-            'shortname': problem.shortname,
-            'appeared': problem.appeared,
-            'difficulty': problem.difficulty,
-            'compRelease': problem.comp_release,
-            'added': problem.added,
-            'solved': problem.pid in solved_set,
-            'url': url_for_problem(problem)
+            'pid': problem.Problem.pid,
+            'name': problem.Problem.name,
+            'shortname': problem.Problem.shortname,
+            'appeared': problem.Problem.appeared,
+            'difficulty': problem.Problem.difficulty,
+            'compRelease': problem.Problem.comp_release,
+            'added': problem.Problem.added,
+            'solved': problem.Problem.pid in solved_set,
+            'description': problem.Problem_Data.description,
+            'input_description': problem.Problem_Data.input_desc,
+            'output_description': problem.Problem_Data.output_desc,
+            'url': url_for_problem(problem.Problem)
         })
     return serve_response(problems)
 
