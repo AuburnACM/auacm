@@ -1,21 +1,45 @@
 <div class="body">
-  <div class="container col-md-10 col-md-offset-1" style="margin-top:2%">
+  <div class="container col-md-10 col-md-offset-1" style="margin-top:2%" ng-show="current_prob">
     <div class="row">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <button class="btn btn-default pull-right">Button</button>
-          <h1 class="text-center">{{ title }}</h1>
+          <h1 class="text-center">{{ current_prob.name }}</h1>
         </div>
         <div class="panel-body">
+          <!-- Submit button -->
+          <a href="/#/judge?problem={{ problem.pid }}">
+            <button class="btn btn-success" 
+              style="margin-top:2%; width:10%; margin-left:45%;">Submit</button>
+          </a>
+          <br>
+
           <!-- Problem Description -->
-          <div class="well well-sm">
+          <div style="margin-top:4%;margin-bottom:4%">
             <p class="lead text-center">{{ current_prob.description }}</p>
           </div>
 
           <!-- Input description -->
+          <h2>Input</h2>
+          <p style="font-size:18px;">{{ current_prob.input_desc }}</p>
+
           <!-- Output description -->
+          <h2 style="margin-top:30px">Output</h2>
+          <p style="font-size:18px;">{{ current_prob.output_desc }}</p>
+
           <!-- Sample Input || Sample Output -->
+          <div ng-repeat="case in current_prob.sample_cases" class="clearfix">
+            <h2 style="margin-top:30px;">Sample Case {{ $index+1 }}</h2>
+            <div class="well well-sm pull-left" style="width:48%">
+              <samp>{{ current_prob.sample_cases[$index].input }}</samp>
+            </div>
+            <div class="well well-sm pull-right" style="width:48%">
+              <samp>{{ current_prob.sample_cases[$index].output }}</samp>
+            </div>
+          </div>
+
         </div>
+        <div class="panel-footer"
+          ng-if="current_prob.appeared">From: {{ current_prob.appeared }}</div>
       </div>
     </div>
   </div>

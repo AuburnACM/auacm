@@ -27,13 +27,15 @@ def get_problem_info(shortname):
     return serve_info_pdf(str(pid))
 
 # Get a JSON representation of a problem
-@app.route('/api/problems/<shortname>', methods=['GET'])
+@app.route('/api/problems/<id>', methods=['GET'])
 @login_required
-def get_problem(shortname):
-    problem = session.query(Problem, Problem_Data).\
-            join(Problem_Data).\
-            filter(Problem.shortname == shortname).\
-            first()
+def get_problem(id):
+    problem = session.query(Problem, Problem_Data).join(Problem_Data)
+    try: 
+        id = int(id)     # see if `id` is the pid
+        problem = problem.filter(Problem.pid == id).first()
+    except ValueError:
+        problem = problem.filter(Problem.shortname == id).first()
 
     cases = list()
     for case in session.query(Sample_Case).\
@@ -68,22 +70,18 @@ def get_problems():
     solved_set = set()
     for solve in solved:
         solved_set.add(solve.pid)
-    
-    for problem in session.query(Problem, Problem_Data).\
-            join(Problem_Data).all():
+
+    for problem in session.query(Problem).all():
         problems.append({
-            'pid': problem.Problem.pid,
-            'name': problem.Problem.name,
-            'shortname': problem.Problem.shortname,
-            'appeared': problem.Problem.appeared,
-            'difficulty': problem.Problem.difficulty,
-            'compRelease': problem.Problem.comp_release,
-            'added': problem.Problem.added,
-            'solved': problem.Problem.pid in solved_set,
-            'description': problem.Problem_Data.description,
-            'input_description': problem.Problem_Data.input_desc,
-            'output_description': problem.Problem_Data.output_desc,
-            'url': url_for_problem(problem.Problem)
+            'pid': problem.pid,
+            'name': problem.name,
+            'shortname': problem.shortname,
+            'appeared': problem.appeared,
+            'difficulty': problem.difficulty,
+            'compRelease': problem.comp_release,
+            'added': problem.added,
+            'solved': problem.pid in solved_set,
+            'url': url_for_problem(problem)
         })
     return serve_response(problems)
 

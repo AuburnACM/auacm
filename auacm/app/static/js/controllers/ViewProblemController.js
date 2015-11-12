@@ -1,17 +1,13 @@
-app.controller('ViewProblemController', ['$scope', '$route', '$routeParams',
-        function($scope, $route, $routeParams) {
-    // Is this even necessary? Yes. Yes it is.
+app.controller('ViewProblemController', ['$scope', '$route', '$routeParams', '$http',
+        function($scope, $route, $routeParams, $http) {
     var pid = $routeParams.pid;
 
-    $scope.current_prob = null;
-    // console.log($scope.problems);
-    for (var i = 0; i < $scope.problems.length; i++) {
-        if ($scope.problems[i].pid == pid) {
-            $scope.current_prob = $scope.problems[i];
-            break;
+    $http.get('/api/problems/' + pid)
+        .then(function(response) {
+            $scope.current_prob = response.data.data;
+            console.log($scope.current_prob);
+        }, function(error) {
+            console.log(error.data.status + ": " + error.data.error);
         }
-    }
-
-    $scope.title = $scope.current_prob.name;
-    console.log($scope.current_prob.description);
+    );
 }]);

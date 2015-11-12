@@ -43,5 +43,4 @@ app.controller('MainController', ['$scope', '$http', '$route', '$window',
         });
     };
 
-    
 }]);
