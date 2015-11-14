@@ -31,7 +31,7 @@ def get_problem_info(shortname):
 @login_required
 def get_problem(id):
     problem = session.query(Problem, Problem_Data).join(Problem_Data)
-    try: 
+    try:
         id = int(id)     # see if `id` is the pid
         problem = problem.filter(Problem.pid == id).first()
     except ValueError:
@@ -59,6 +59,8 @@ def get_problem(id):
         'sample_cases': cases
     })
 
+
+# GET basic information about all the problems in the database
 @app.route('/api/problems')
 @login_required
 def get_problems():
@@ -86,12 +88,13 @@ def get_problems():
     return serve_response(problems)
 
 
+# Create a new problem
 @app.route('/api/problems/create', methods=['POST'])
 @login_required
 def create_problem():
     # Admin check
     if not current_user.admin == 1:
-        return serve_error('You must be an admin to create problems', 
+        return serve_error('You must be an admin to create problems',
             response_code=401)
 
     # Ensure all required arguments are defined
@@ -168,6 +171,7 @@ def create_problem():
         'difficulty': problem.difficulty
     })
 
+# Delete a problem from the database
 @app.route('/api/problems/delete', methods=['POST'])
 @login_required
 def delete_problem():
@@ -184,17 +188,20 @@ def delete_problem():
     problem_data = session.query(Problem_Data).\
         filter(Problem_Data.pid == request.form['pid'])
     if not problem_data.first():
-        return serve_error('Could not find problem data with pid ' + 
+        return serve_error('Could not find problem data with pid ' +
             request.form['pid'], response_code=401)
     problem_data.delete()
 
-    # TODO(brandonlmorris):Delete any and all sample cases associated w/ problem
+    # Delete any and all sample cases associated w/ problem
+    for case in session.query(Sample_Case).\
+            filter(Sample_Case.pid == request.form['pid']).all():
+        case.delete()
 
     # Delete from problem table
     problem = session.query(Problem).\
         filter(Problem.pid == request.form['pid'])
     if not problem.first():
-        return serve_error('Could not find problem with pid ' + 
+        return serve_error('Could not find problem with pid ' +
             request.form['pid'], response_code=401)
     problem.delete()
 
@@ -205,4 +212,24 @@ def delete_problem():
     return serve_response({
         'success': True,
         'deleted_pid': request.form['pid']
+    })
+
+# Update a problem in the database
+@app.route('/api/problems/edit', methods=['POST'])
+@login_required
+def update_problem():
+    if not current_user.admin == 1:
+        return serve_error('You must be an admin to update a problem',
+            resonse_code=401)
+
+    if not request.form['pid']:
+        return serve_error('You must specify a problem to update',
+            response_code=400)
+
+    pid = request.form['pid']
+
+    problem = session.query(Problem).filter(Problem.pid==pid)
+
+    return serve_response({
+        'success': True
     })

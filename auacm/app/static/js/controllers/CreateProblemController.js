@@ -1,16 +1,25 @@
-app.controller('CreateProblemController', ['$scope', '$http', '$route', 
+app.controller('CreateProblemController', ['$scope', '$http', '$route',
         function($scope, $http, $route) {
     $scope.cases = [{input:"", output:""}];
+    $scope.oneCase = true;
 
     // Dynamically add new test cases (and form fields)
     $scope.addCase = function() {
         $scope.cases.push({input:"", output:""});
+        $scope.oneCase = false;
+    };
+
+    $scope.deleteCase = function() {
+        $scope.cases.splice($scope.cases.length-1);
+        if ($scope.cases.length === 1) {
+            $scope.oneCase = true;
+        }
     };
 
     $scope.createProblem = function() {
         // Should stop request if any parts of the form are empty
         if ($scope.title === undefined || $scope.description === undefined ||
-                $scope.inputDescription === undefined || 
+                $scope.inputDescription === undefined ||
                 $scope.outputDescription === undefined ||
                 $scope.cases.length === 0) {
             console.log("Error, the form must be completely filled out");
@@ -28,12 +37,18 @@ app.controller('CreateProblemController', ['$scope', '$http', '$route',
         if (typeof $scope.outputDescription != 'undefined')
             fd.append('output_description', $scope.outputDescription);
         // This should be validated much better
-        if ($scope.cases[0].input.length !== 0 || $scope.cases[0].output.length !== 0)
+        if ($scope.cases[0].input.length !== 0 && $scope.cases[0].output.length !== 0)
             fd.append('cases', angular.toJson($scope.cases));
         if ($scope.difficulty <= 100 && $scope.difficulty >= 0)
             fd.append('difficulty', $scope.difficulty);
-        if (typeof $scope.appearedIn != 'undefined')
+        if (typeof $scope.appearedIn !== 'undefined')
             fd.append('appeared_in', $scope.appearedIn);
+        if (typeof $scope.inFile !== 'undefined')
+            fd.append('in_file', $scope.inFile);
+        if (typeof $scope.outFile !== 'undefined')
+            fd.append('out_file', $scope.outFile);
+        if (typeof $scope.solFile !== 'undefined')
+            fd.append('out_file', $scope.solFile);
 
         $http({
             method: 'POST',
@@ -47,7 +62,7 @@ app.controller('CreateProblemController', ['$scope', '$http', '$route',
             console.log('I think it might have worked');
         }, function(response) {
             console.log('Error uploading new problem');
-            console.log(response.data.status + ": " + response.data.error);
+            console.log(response.data.status + ': ' + response.data.error);
         });
     };
 
