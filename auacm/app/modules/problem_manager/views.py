@@ -1,3 +1,6 @@
+import os
+import zipfile
+
 from flask import request
 from flask.ext.login import current_user, login_required
 from app import app
@@ -6,14 +9,13 @@ from app.util import serve_response, serve_error, serve_info_pdf, login_manager
 from app.modules.user_manager.models import User
 from app.modules.submission_manager.models import Submission
 from app.modules.problem_manager.models import Problem, Problem_Data, Sample_Case
-from os.path import join
 from sqlalchemy.orm import load_only
 from json import loads
+from shutil import copy, rmtree
 
 
 def url_for_problem(problem):
-    # app.logger.info(join('problems', str()))
-    return join('problems', str(problem.shortname), 'info.pdf')
+    return os.path.join('problems', str(problem.shortname), 'info.pdf')
 
 
 # @app.route('/problems/<shortname>')
@@ -112,6 +114,15 @@ def create_problem():
     if not 'cases' in request.form:
         return serve_error('You must provide at least one sample case',
             response_code=400)
+    if not 'in_file' in request.files:
+        return serve_error('You must provide a input file',
+            reponse_code=400)
+    if not 'out_file' in request.files:
+        return serve_error('You must provide an output file',
+            response_code=400)
+    if not 'sol_file' in request.files:
+        return serve_error('You must provide a solution file',
+            response_code=400)
 
     # Convert the JSON array string to python array of dictionaries
     cases = request.form['cases']
@@ -120,8 +131,6 @@ def create_problem():
         if not 'input' in case or not 'output' in case:
             return serve_error('Sample case(s) were not formed correctly',
                 response_code=400)
-
-    # TODO(brandonlmorris): Check and handle zip files
 
     # Create the problem and add it to the database
     title = request.form['title'][:32]
@@ -159,13 +168,20 @@ def create_problem():
         sample.commit_to_session()
         case_num += 1
 
+    # Store the judge data
+    directory = os.path.join(app.config['DATA_FOLDER'], 'problems', problem.pid)
+    zipfile.ZipFile(request.files['in_file']).extractall(directory)
+    zipfile.ZipFile(request.files['out_file']).extractall(directory)
+    os.mkdir(os.path.join(directory, 'test'))
+    request.files['sol_file'].save(os.path.join(directory, 'test', request.files['sol_file'].filename))
+
     return serve_response({
         'success': True,
         'name': problem.name,
         'shortname': problem.shortname,
         'description': problem_data.description,
-        'input_description': problem_data.input_desc,
-        'output_description': problem_data.output_desc,
+        'input_desc': problem_data.input_desc,
+        'output_desc': problem_data.output_desc,
         'sample_cases': cases,
         'pid': problem.pid,
         'difficulty': problem.difficulty
@@ -228,8 +244,53 @@ def update_problem():
 
     pid = request.form['pid']
 
-    problem = session.query(Problem).filter(Problem.pid==pid)
+    problem = session.query(Problem).filter(Problem.pid==pid).first()
+    data = session.query(Problem_Data).filter(Problem_Data.pid==pid).first()
+
+    # If sample cases were uploaded, delete cases and go with the new ones
+    if 'cases' in request.form:
+        for old_case in session.query(Sample_Case).\
+                filter(Sample_Case.pid==pid).all():
+            old_case.delete()
+        case_num = 1
+        cases = loads(str(request.form['cases']))
+        for case in cases:
+            Sample_Case(
+                pid=pid,
+                case_num=case_num,
+                input=case['input'],
+                output=case['output']
+            ).commit_to_session()
+            case_num += 1
+
+
+    directory = os.path.join(app.config['DATA_FOLDER'], 'problems', pid)
+    if not os.path.exists(directory):
+        os.mkdir(directory)
+
+    # Add judge data if supplied
+    if 'in_file' in request.files:
+        in_file = zipfile.ZipFile(request.files['in_file'])
+        in_file.extractall(directory)
+
+    if 'out_file' in request.files:
+        out_file = zipfile.ZipFile(request.files['out_file'])
+        out_file.extractall(directory)
+
+    if 'sol_file' in request.files:
+        if os.path.exists(directory + '/test'):
+            rmtree(directory + '/test')
+        os.mkdir(os.path.join(directory, 'test'))
+        request.files['sol_file'].save(os.path.join(directory, 'test', request.files['sol_file'].filename))
+
 
     return serve_response({
-        'success': True
+        'success': True,
+        'pid': problem.pid,
+        'name': problem.name,
+        'shotrname': problem.shortname,
+        'description': data.description,
+        'input_desc': data.input_desc,
+        'output_desc': data.output_desc,
+        'difficulty' : problem.difficulty
     })
