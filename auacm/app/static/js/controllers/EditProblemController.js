@@ -16,7 +16,6 @@ app.controller('EditProblemController', ['$scope', '$route', '$http',
         }
     );
 
-
     $scope.addCase = function() {
         $scope.current_prob.sample_cases.push({input:'', output:''});
         $scope.oneCase = false;
@@ -33,6 +32,7 @@ app.controller('EditProblemController', ['$scope', '$route', '$http',
         // Send the form data to the api
         var fd = new FormData();
         var prob = $scope.current_prob;
+        fd.append('pid', $scope.current_prob.pid);
         if (typeof prob.name !== 'undefined')
             fd.append('name', prob.name);
         if (typeof prob.description !== 'undefined')
@@ -40,8 +40,8 @@ app.controller('EditProblemController', ['$scope', '$route', '$http',
         if (typeof prob.input_desc !== 'undefined')
             fd.append('input_desc', prob.input_desc);
         if (typeof prob.output_desc !== 'undefined')
-            fd.append('input_desc', prob.output_desc);
-        if (prob.cases.input !== 0 && prob.cases.output !== 0)
+            fd.append('output_desc', prob.output_desc);
+        if (prob.sample_cases[0].input.length !== 0 && prob.sample_cases[0].output.length !== 0)
             fd.append('cases', angular.toJson($scope.cases));
         if (prob.difficulty >= 0 && prob.difficulty <= 100)
             fd.append('difficulty', prob.difficulty);
@@ -54,7 +54,7 @@ app.controller('EditProblemController', ['$scope', '$route', '$http',
 
         $http({
             method: 'POST',
-            url: 'api/problems/edit' + pid,
+            url: 'api/problems/edit',
             headers: {'Content-type': undefined},
             transformRequest: angular.identity,
             data: fd
@@ -64,7 +64,7 @@ app.controller('EditProblemController', ['$scope', '$route', '$http',
             console.log('Problem updated');
         }, function(error) {
             console.log('Error updating problem');
-            console.log(error.data.status + '+ ' + error.data.error);
+            console.log(error.data.status + ': ' + error.data.error);
         });
     };
 }]);

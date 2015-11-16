@@ -246,6 +246,23 @@ def update_problem():
 
     problem = session.query(Problem).filter(Problem.pid==pid).first()
     data = session.query(Problem_Data).filter(Problem_Data.pid==pid).first()
+    if 'name' in request.form:
+        problem.name = request.form['name'][:32]
+        problem.shortname = request.form['name'][:32].replace(' ','').lower()
+    if 'description' in request.form:
+        data.description = request.form['description']
+    if 'input_desc' in request.form:
+        data.input_desc = request.form['input_desc']
+    if 'output_desc' in request.form:
+        data.output_desc = request.form['output_desc']
+    if 'appeared_in' in request.form:
+        problem.appeared = request.form['appeared_in']
+    if 'difficulty' in request.form:
+        data.difficulty = request.form['difficulty']
+
+    # Save the changes
+    problem.commit_to_session()
+    data.commit_to_session()
 
     # If sample cases were uploaded, delete cases and go with the new ones
     if 'cases' in request.form:
@@ -262,7 +279,6 @@ def update_problem():
                 output=case['output']
             ).commit_to_session()
             case_num += 1
-
 
     directory = os.path.join(app.config['DATA_FOLDER'], 'problems', pid)
     if not os.path.exists(directory):
