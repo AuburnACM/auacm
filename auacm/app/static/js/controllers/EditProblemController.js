@@ -50,7 +50,7 @@ app.controller('EditProblemController', ['$scope', '$route', '$http',
         if (typeof $scope.outFile !== 'undefined')
             fd.append('out_file', $scope.outFile);
         if (typeof $scope.solFile !== 'undefined')
-            fd.append('sol_file', $scope.outFile);
+            fd.append('sol_file', $scope.solFile);
 
         $http({
             method: 'POST',

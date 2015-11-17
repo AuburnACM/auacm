@@ -48,7 +48,7 @@ app.controller('CreateProblemController', ['$scope', '$http', '$route',
         if (typeof $scope.outFile !== 'undefined')
             fd.append('out_file', $scope.outFile);
         if (typeof $scope.solFile !== 'undefined')
-            fd.append('out_file', $scope.solFile);
+            fd.append('sol_file', $scope.solFile);
 
         $http({
             method: 'POST',
@@ -62,6 +62,7 @@ app.controller('CreateProblemController', ['$scope', '$http', '$route',
             console.log('I think it might have worked');
         }, function(response) {
             console.log('Error uploading new problem');
+            console.log(response);
             console.log(response.data.status + ': ' + response.data.error);
         });
     };

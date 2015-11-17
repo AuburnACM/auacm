@@ -50,7 +50,7 @@ def directory_for_submission(submission):
 
 
 def directory_for_problem(submission):
-    return os.path.join(app.config['DATA_FOLDER'], 'problems', submission.pid)
+    return os.path.join(app.config['DATA_FOLDER'], 'problems', str(submission.pid))
 
 
 def evaluate(submission, uploaded_file, time_limit):

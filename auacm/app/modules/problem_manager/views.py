@@ -140,7 +140,7 @@ def create_problem():
         shortname=shortname
     )
     if 'difficulty' in request.form:
-        problem.diffiulty = request.form['diffiulty']
+        problem.difficulty = request.form['difficulty']
     if 'appeared_in' in request.form:
         problem.appeared = request.form['appeared_in']
     pid = problem.commit_to_session()
@@ -169,7 +169,7 @@ def create_problem():
         case_num += 1
 
     # Store the judge data
-    directory = os.path.join(app.config['DATA_FOLDER'], 'problems', problem.pid)
+    directory = os.path.join(app.config['DATA_FOLDER'], 'problems', str(problem.pid))
     zipfile.ZipFile(request.files['in_file']).extractall(directory)
     zipfile.ZipFile(request.files['out_file']).extractall(directory)
     os.mkdir(os.path.join(directory, 'test'))
