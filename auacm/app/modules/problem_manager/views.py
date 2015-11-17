@@ -1,43 +1,59 @@
+"""Manages problems within the app, including their creation, deletion,
+updating, and retreival.
+
+Functions:
+url_for_problem -- returns the route for the pdf description of a problem
+                   given an arguemtn that has a 'pid' field.
+get_problem     -- returns a JSON representation of an individual problem,
+                   with complete information about its description, input,
+                   output, etc.
+get_problems    -- returns basic information about all problems in the database.
+create_problem  -- adds a new problem to the database and the data folder.
+delete_problem  -- removes a problem from the database and data folder
+update_problem  -- modifies the data/files of a specific problem
+"""
 import os
 import zipfile
 
 from flask import request
 from flask.ext.login import current_user, login_required
 from app import app
-from app.database import Base, session
-from app.util import serve_response, serve_error, serve_info_pdf, login_manager
-from app.modules.user_manager.models import User
+from app.database import session
+from app.util import serve_response, serve_error, serve_info_pdf
 from app.modules.submission_manager.models import Submission
 from app.modules.problem_manager.models import Problem, Problem_Data, Sample_Case
 from sqlalchemy.orm import load_only
 from json import loads
-from shutil import copy, rmtree
+from shutil import rmtree
 
 
 def url_for_problem(problem):
+    """Return the path of the pdf description of a problem"""
     return os.path.join('problems', str(problem.shortname), 'info.pdf')
 
 
-# @app.route('/problems/<shortname>')
+@app.route('/problems/<shortname>')
 @app.route('/problems/<shortname>/info.pdf')
 @login_required
 def get_problem_info(shortname):
+    """Serve the PDF description of a problem"""
     pid = session.query(Problem).\
             options(load_only('pid', 'shortname')).\
-            filter(Problem.shortname==shortname).\
+            filter(Problem.shortname == shortname).\
             first().pid
     return serve_info_pdf(str(pid))
 
-# Get a JSON representation of a problem
-@app.route('/api/problems/<id>', methods=['GET'])
+
+@app.route('/api/problems/<identifier>', methods=['GET'])
 @login_required
-def get_problem(id):
+def get_problem(identifier):
+    """Returns the JSON representation of a specific problem"""
     problem = session.query(Problem, Problem_Data).join(Problem_Data)
     try:
-        id = int(id)     # see if `id` is the pid
-        problem = problem.filter(Problem.pid == id).first()
+        identifier = int(identifier)     # see if `identifier` is the pid
+        problem = problem.filter(Problem.pid == identifier).first()
     except ValueError:
-        problem = problem.filter(Problem.shortname == id).first()
+        problem = problem.filter(Problem.shortname == identifier).first()
 
     cases = list()
     for case in session.query(Sample_Case).\
@@ -66,10 +82,11 @@ def get_problem(id):
 @app.route('/api/problems')
 @login_required
 def get_problems():
+    """Obtain basic information of all the problems in the database"""
     problems = list()
     solved = session.query(Submission).\
-            filter(Submission.username==current_user.username).\
-            filter(Submission.result=="good").\
+            filter(Submission.username == current_user.username).\
+            filter(Submission.result == "good").\
             all()
     solved_set = set()
     for solve in solved:
@@ -94,86 +111,78 @@ def get_problems():
 @app.route('/api/problems/create', methods=['POST'])
 @login_required
 def create_problem():
+    """Add a new problem to the database and data folder"""
     # Admin check
     if not current_user.admin == 1:
         return serve_error('You must be an admin to create problems',
-            response_code=401)
+                           response_code=401)
 
-    # Ensure all required arguments are defined
-    if not 'title' in request.form:
-        return serve_error('You must give a problem title', response_code=400)
-    if not 'description' in request.form:
-        return serve_error('You must give a problem description',
-            response_code=400)
-    if not 'input_description' in request.form:
-        return serve_error('You must give an input description',
-            response_code=400)
-    if not 'output_description' in request.form:
-        return serve_error('You must give an output description',
-            response_code=400)
-    if not 'cases' in request.form:
-        return serve_error('You must provide at least one sample case',
-            response_code=400)
-    if not 'in_file' in request.files:
-        return serve_error('You must provide a input file',
-            reponse_code=400)
-    if not 'out_file' in request.files:
-        return serve_error('You must provide an output file',
-            response_code=400)
-    if not 'sol_file' in request.files:
-        return serve_error('You must provide a solution file',
-            response_code=400)
+    try:
+        # Convert the JSON array string to python array of dictionaries
+        cases = request.form['cases']
+        cases = loads(str(cases))
+        for case in cases:
+            if not 'input' in case or not 'output' in case:
+                return serve_error('Sample case(s) were not formed correctly',
+                                   response_code=400)
 
-    # Convert the JSON array string to python array of dictionaries
-    cases = request.form['cases']
-    cases = loads(str(cases))
-    for case in cases:
-        if not 'input' in case or not 'output' in case:
-            return serve_error('Sample case(s) were not formed correctly',
-                response_code=400)
-
-    # Create the problem and add it to the database
-    title = request.form['title'][:32]
-    shortname = title.lower().replace(' ', '')
-    problem = Problem(
-        name=title,
-        shortname=shortname
-    )
-    if 'difficulty' in request.form:
-        problem.difficulty = request.form['difficulty']
-    if 'appeared_in' in request.form:
-        problem.appeared = request.form['appeared_in']
-    pid = problem.commit_to_session()
-
-    # Create the problem data and add it to the database
-    problem_data = Problem_Data(
-        pid=pid,
-        description=request.form['description'],
-        input_desc=request.form['input_description'],
-        output_desc=request.form['output_description']
-    )
-    if 'time_limit' in request.form:
-        problem_data.time_limit = request.form['time_limit']
-    problem_data.commit_to_session()
-
-    # Add each sample case to the db
-    case_num = 1
-    for case in cases:
-        sample = Sample_Case(
-            pid=pid,
-            case_num=case_num,
-            input=case['input'],
-            output=case['output']
+        # Create the problem
+        title = request.form['title'][:32]
+        shortname = title.lower().replace(' ', '')
+        problem = Problem(
+            name=title,
+            shortname=shortname
         )
-        sample.commit_to_session()
-        case_num += 1
+        if 'difficulty' in request.form:
+            problem.difficulty = request.form['difficulty']
+        if 'appeared_in' in request.form:
+            problem.appeared = request.form['appeared_in']
+
+        # Create the problem data and add it to the database
+        problem_data = Problem_Data(
+            description=request.form['description'],
+            input_desc=request.form['input_description'],
+            output_desc=request.form['output_description']
+        )
+        if 'time_limit' in request.form:
+            problem_data.time_limit = request.form['time_limit']
+
+        # Create list of sample cases
+        case_num = 1
+        sample_cases = list()
+        for case in cases:
+            sample = Sample_Case(
+                case_num=case_num,
+                input=case['input'],
+                output=case['output']
+            )
+            case_num += 1
+            sample_cases.append(sample)
+
+        in_file = zipfile.ZipFile(request.files['in_file'])
+        out_file = zipfile.ZipFile(request.files['out_file'])
+        sol_file = request.files['sol_file']
+
+    # If any required values were missing, serve an error
+    except KeyError as err:
+        return serve_error('Request header not found: ' + err[0],
+                           response_code=400)
 
     # Store the judge data
-    directory = os.path.join(app.config['DATA_FOLDER'], 'problems', str(problem.pid))
-    zipfile.ZipFile(request.files['in_file']).extractall(directory)
-    zipfile.ZipFile(request.files['out_file']).extractall(directory)
+    directory = os.path.join(app.config['DATA_FOLDER'],
+                             'problems', str(problem.pid))
+    in_file.extractall(directory)
+    out_file.extractall(directory)
     os.mkdir(os.path.join(directory, 'test'))
-    request.files['sol_file'].save(os.path.join(directory, 'test', request.files['sol_file'].filename))
+    sol_file.save(os.path.join(directory, 'test', sol_file.filename))
+
+    # Commit everything to the database
+    pid = problem.commit_to_session()
+    problem_data.pid = pid
+    problem_data.commit_to_session()
+    for case in sample_cases:
+        case.pid = pid
+        case.commit_to_session()
 
     return serve_response({
         'success': True,
@@ -191,21 +200,22 @@ def create_problem():
 @app.route('/api/problems/delete', methods=['POST'])
 @login_required
 def delete_problem():
+    """Delete a specified problem in the database and data folder"""
     # Admin check
     if not current_user.admin == 1:
         return serve_error('You must be an admin to delete a problem',
-            response_code=401)
+                           response_code=401)
 
     if not request.form['pid']:
         return serve_error('You must specify a problem to delete',
-            response_code=400)
+                           response_code=400)
 
     # Delete from problem_data table first to satisfy foreign key constraint
     problem_data = session.query(Problem_Data).\
         filter(Problem_Data.pid == request.form['pid'])
     if not problem_data.first():
         return serve_error('Could not find problem data with pid ' +
-            request.form['pid'], response_code=401)
+                           request.form['pid'], response_code=401)
     problem_data.delete()
 
     # Delete any and all sample cases associated w/ problem
@@ -218,12 +228,14 @@ def delete_problem():
         filter(Problem.pid == request.form['pid'])
     if not problem.first():
         return serve_error('Could not find problem with pid ' +
-            request.form['pid'], response_code=401)
+                           request.form['pid'], response_code=401)
     problem.delete()
 
     # Commit changes
     session.flush()
     session.commit()
+
+    # TODO(brandonlmorris) Delete files in data folder
 
     return serve_response({
         'success': True,
@@ -233,22 +245,23 @@ def delete_problem():
 # Update a problem in the database
 @app.route('/api/problems/edit', methods=['POST'])
 @login_required
-def update_problem():
+def update_problem():           # pylint: disable=too-many-branches
+    """Modify a problem in the database and data folder"""
     if not current_user.admin == 1:
         return serve_error('You must be an admin to update a problem',
-            resonse_code=401)
+                           resonse_code=401)
 
     if not request.form['pid']:
         return serve_error('You must specify a problem to update',
-            response_code=400)
+                           response_code=400)
 
     pid = request.form['pid']
 
-    problem = session.query(Problem).filter(Problem.pid==pid).first()
-    data = session.query(Problem_Data).filter(Problem_Data.pid==pid).first()
+    problem = session.query(Problem).filter(Problem.pid == pid).first()
+    data = session.query(Problem_Data).filter(Problem_Data.pid == pid).first()
     if 'name' in request.form:
         problem.name = request.form['name'][:32]
-        problem.shortname = request.form['name'][:32].replace(' ','').lower()
+        problem.shortname = request.form['name'][:32].replace(' ', '').lower()
     if 'description' in request.form:
         data.description = request.form['description']
     if 'input_desc' in request.form:
@@ -267,7 +280,7 @@ def update_problem():
     # If sample cases were uploaded, delete cases and go with the new ones
     if 'cases' in request.form:
         for old_case in session.query(Sample_Case).\
-                filter(Sample_Case.pid==pid).all():
+                filter(Sample_Case.pid == pid).all():
             old_case.delete()
         case_num = 1
         cases = loads(str(request.form['cases']))
@@ -297,7 +310,8 @@ def update_problem():
         if os.path.exists(directory + '/test'):
             rmtree(directory + '/test')
         os.mkdir(os.path.join(directory, 'test'))
-        request.files['sol_file'].save(os.path.join(directory, 'test', request.files['sol_file'].filename))
+        request.files['sol_file'].save(
+            os.path.join(directory, 'test', request.files['sol_file'].filename))
 
 
     return serve_response({
