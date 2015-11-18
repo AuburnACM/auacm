@@ -2,23 +2,30 @@
 <div class="panel panel-default">
   <h2>Metadata</h2>
   <div class="panel-body">
-    <form>
+    <form class="form-horizontal">
       <div class="form-group">
-        <label for="compName" class="control-label">Competition Name</label>
-        <input class="form-control" id="compName" placeholder="My Competition" ng-model="compName">
+        <label for="compName" class="col-sm-2 control-label">Competition Name</label>
+        <div class="col-sm-4 input-group">
+          <input class="form-control" id="compName" placeholder="My Competition" ng-model="compName">
+        </div>
       </div>
-
       <div class="form-group">
-        <label for="newPassword" class="control-label">New password</label>
-        <input class="form-control" id="newPassword" placeholder="New password" ng-model="newPassword">
+        <label for="startTime" class="col-sm-2 control-label">Start Time</label>
+        <div class="col-sm-4 input-group">
+          <input class="form-control" id="startTime" placeholder="My Competition"
+              ng-model="startTime" ng-init="startTime = defaultStartTime()">
+          <div class="input-group-addon">CDT</div>
+        </div>
       </div>
-
       <div class="form-group">
-        <label for="confirmPassword" class="control-label">Confirm password</label>
-        <input class="form-control" id="confirmPassword" placeholder="Confirm password" ng-model="confirmPassword">
+        <label for="compLength" class="col-sm-2 control-label">Competition Length</label>
+        <div class="col-sm-4 input-group">
+          <input class="form-control" id="compLength" placeholder="h:mm"
+              ng-model="compLength" ng-init="compLength = '3:00'">
+          <div class="input-group-addon">h:mm</div>
+        </div>
       </div>
-      
-      <button class="btn btn-default" type="submit" ng-click="createCompetition()">
+      <button class="btn btn-success" type="submit" ng-click="parseDate()">
         Create Competition
       </button>
     </form>
@@ -42,15 +49,15 @@
     <tr>
       <td>
         <button type="submit" class="btn btn-success" ng-click="addProblem(selected)"
-          ng-disabled="!selected || compProblems.indexOf(selected) >= 0">
+            ng-disabled="!selected || compProblems.indexOf(selected) >= 0">
           Add
         </button>
       </td>
       <td>
       </td>
       <td>
-        <select id="pidSelector" class="form-control" 
-                    ng-options="prob as prob.name for prob in problems" ng-model="selected">
+        <select id="pidSelector" class="form-control"
+            ng-options="prob as prob.name for prob in problems" ng-model="selected">
         </select>
       </td>
     </tr>
