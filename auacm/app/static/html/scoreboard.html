@@ -11,7 +11,7 @@
           <th>Team</th>
           <th>Solved</th>
           <th>Time</th>
-          <th ng-repeat="problem in compProblems">{{ problem }}</th>
+          <th ng-repeat="name in problemNames">{{ name }}</th>
         </tr>
       </thead>
       <tr ng-repeat="team in teams | orderBy:['-solved', 'time']">
@@ -19,7 +19,7 @@
         <td>{{ team.name }}</td>
         <td>{{ team.solved }}</td>
         <td>{{ team.time }}</td>
-        <td ng-repeat="(problem, problemData) in team.problemData" 
+        <td ng-repeat="(problem, problemData) in team.problemData"
             ng-class="{'success': problemData.status=='correct', 'danger': problemData.status=='incorrect'}">
             <div ng-hide="problemData.status=='unattempted'">
               {{ problemData.submitCount }}

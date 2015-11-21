@@ -16,7 +16,7 @@ import os
 import zipfile
 
 from flask import request
-from flask.ext.login import current_user, login_required
+from flask.ext.login import current_user, login_required # pylint: disable=no-name-in-module
 from app import app
 from app.database import session
 from app.util import serve_response, serve_error, serve_info_pdf
@@ -29,11 +29,11 @@ from shutil import rmtree
 
 def url_for_problem(problem):
     """Return the path of the pdf description of a problem"""
-    return os.path.join('problems', str(problem.shortname), 'info.pdf')
+    return os.path.join('problems', str(problem.shortname),
+                        'info.pdf')
 
 
-@app.route('/problems/<shortname>')
-@app.route('/problems/<shortname>/info.pdf')
+@app.route('/problems/<shortname>/info.pdf', methods=['GET'])
 @login_required
 def get_problem_info(shortname):
     """Serve the PDF description of a problem"""
@@ -50,19 +50,22 @@ def get_problem(identifier):
     """Returns the JSON representation of a specific problem"""
     problem = session.query(Problem, Problem_Data).join(Problem_Data)
     try:
-        identifier = int(identifier)     # see if `identifier` is the pid
+        identifier = int(identifier) # see if `identifier` is the pid
         problem = problem.filter(Problem.pid == identifier).first()
     except ValueError:
-        problem = problem.filter(Problem.shortname == identifier).first()
+        problem = problem.\
+                  filter(Problem.shortname == identifier).first()
 
     cases = list()
     for case in session.query(Sample_Case).\
-                    filter(Sample_Case.pid == problem.Problem.pid).all():
+                    filter(Sample_Case.pid == problem.Problem.pid).\
+                    all():
         cases.append({
             'case_num': case.case_num,
             'input': case.input,
             'output': case.output
         })
+
     return serve_response({
         'pid': problem.Problem.pid,
         'name': problem.Problem.name,
@@ -78,7 +81,6 @@ def get_problem(identifier):
     })
 
 
-# GET basic information about all the problems in the database
 @app.route('/api/problems')
 @login_required
 def get_problems():
@@ -107,7 +109,6 @@ def get_problems():
     return serve_response(problems)
 
 
-# Create a new problem
 @app.route('/api/problems/create', methods=['POST'])
 @login_required
 def create_problem():
@@ -118,13 +119,14 @@ def create_problem():
                            response_code=401)
 
     try:
-        # Convert the JSON array string to python array of dictionaries
+        # Convert the JSON to python array of dictionaries
         cases = request.form['cases']
         cases = loads(str(cases))
         for case in cases:
             if not 'input' in case or not 'output' in case:
-                return serve_error('Sample case(s) were not formed correctly',
-                                   response_code=400)
+                return serve_error(
+                    'Sample case(s) were not formed correctly',
+                    response_code=400)
 
         # Create the problem
         title = request.form['title'][:32]
@@ -168,14 +170,6 @@ def create_problem():
         return serve_error('Request header not found: ' + err[0],
                            response_code=400)
 
-    # Store the judge data
-    directory = os.path.join(app.config['DATA_FOLDER'],
-                             'problems', str(problem.pid))
-    in_file.extractall(directory)
-    out_file.extractall(directory)
-    os.mkdir(os.path.join(directory, 'test'))
-    sol_file.save(os.path.join(directory, 'test', sol_file.filename))
-
     # Commit everything to the database
     pid = problem.commit_to_session()
     problem_data.pid = pid
@@ -183,6 +177,14 @@ def create_problem():
     for case in sample_cases:
         case.pid = pid
         case.commit_to_session()
+
+    # Store the judge data
+    directory = os.path.join(app.config['DATA_FOLDER'],
+                             'problems', str(problem.pid))
+    in_file.extractall(directory)
+    out_file.extractall(directory)
+    os.mkdir(os.path.join(directory, 'test'))
+    sol_file.save(os.path.join(directory, 'test', sol_file.filename))
 
     return serve_response({
         'success': True,
@@ -221,7 +223,7 @@ def delete_problem():
     # Delete any and all sample cases associated w/ problem
     for case in session.query(Sample_Case).\
             filter(Sample_Case.pid == request.form['pid']).all():
-        case.delete()
+        session.delete(case)
 
     # Delete from problem table
     problem = session.query(Problem).\
@@ -235,7 +237,10 @@ def delete_problem():
     session.flush()
     session.commit()
 
-    # TODO(brandonlmorris) Delete files in data folder
+    # Delete judge data
+    directory = os.path.join(app.config['DATA_FOLDER'],
+                             'problems', str(request.form['pid']))
+    rmtree(directory)
 
     return serve_response({
         'success': True,
@@ -247,15 +252,16 @@ def delete_problem():
 @login_required
 def update_problem():           # pylint: disable=too-many-branches
     """Modify a problem in the database and data folder"""
+    # Admin check
     if not current_user.admin == 1:
         return serve_error('You must be an admin to update a problem',
-                           resonse_code=401)
+                           response_code=401)
 
-    if not request.form['pid']:
+    try:
+        pid = request.form['pid']
+    except KeyError:
         return serve_error('You must specify a problem to update',
                            response_code=400)
-
-    pid = request.form['pid']
 
     problem = session.query(Problem).filter(Problem.pid == pid).first()
     data = session.query(Problem_Data).filter(Problem_Data.pid == pid).first()
@@ -281,9 +287,12 @@ def update_problem():           # pylint: disable=too-many-branches
     if 'cases' in request.form:
         for old_case in session.query(Sample_Case).\
                 filter(Sample_Case.pid == pid).all():
-            old_case.delete()
+            session.delete(old_case)
+            session.flush()
+            session.commit()
         case_num = 1
         cases = loads(str(request.form['cases']))
+        case_lst = list()
         for case in cases:
             Sample_Case(
                 pid=pid,
@@ -291,6 +300,11 @@ def update_problem():           # pylint: disable=too-many-branches
                 input=case['input'],
                 output=case['output']
             ).commit_to_session()
+            case_lst.append({
+                'case_num': case_num,
+                'input': case['input'],
+                'output': case['output']
+            })
             case_num += 1
 
     directory = os.path.join(app.config['DATA_FOLDER'], 'problems', pid)
@@ -322,5 +336,6 @@ def update_problem():           # pylint: disable=too-many-branches
         'description': data.description,
         'input_desc': data.input_desc,
         'output_desc': data.output_desc,
-        'difficulty' : problem.difficulty
+        'difficulty' : problem.difficulty,
+        'cases': case_lst
     })

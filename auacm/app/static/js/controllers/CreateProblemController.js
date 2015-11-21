@@ -2,6 +2,7 @@ app.controller('CreateProblemController', ['$scope', '$http', '$route',
         function($scope, $http, $route) {
     $scope.cases = [{input:"", output:""}];
     $scope.oneCase = true;
+    $scope.success = false;
 
     // Dynamically add new test cases (and form fields)
     $scope.addCase = function() {
@@ -59,7 +60,7 @@ app.controller('CreateProblemController', ['$scope', '$http', '$route',
         }).then(function(response) {
             // TODO(brandonlmorris) - clear the form
             // TODO(brandonlmorris) - should update the global problems list
-            console.log('I think it might have worked');
+            $scope.success = true;
         }, function(response) {
             console.log('Error uploading new problem');
             console.log(response);

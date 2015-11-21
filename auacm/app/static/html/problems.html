@@ -3,7 +3,7 @@
     <h1 class="pull-left">Problems</h1>
     <button type="button" class="btn btn-default pull-right margin-top"
             ng-click="createProblem()" ng-show="isAdmin === 1">
-      Create Problem 
+      Create Problem
     </button>
   </div>
   <div class="body">
@@ -16,7 +16,7 @@
         <th>Judge</th>
       </tr>
       <tr ng-class="{'success': problem.solved}" ng-repeat="problem in problems">
-        <td><a href="{{ problem.url }}">{{ problem.name }}</a></td>
+        <td><a href="/#/problems/{{ problem.shortname }}">{{ problem.name }}</a></td>
         <td>{{ problem.appeared }}</td>
         <td>{{ problem.solvedBy | number }}</td>
         <td>{{ problem.difficulty | number }}</td>
