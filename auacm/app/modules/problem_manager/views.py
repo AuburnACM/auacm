@@ -21,7 +21,7 @@ from app import app
 from app.database import session
 from app.util import serve_response, serve_error, serve_info_pdf
 from app.modules.submission_manager.models import Submission
-from app.modules.problem_manager.models import Problem, Problem_Data, Sample_Case
+from app.modules.problem_manager.models import Problem, ProblemData, SampleCase
 from sqlalchemy.orm import load_only
 from json import loads
 from shutil import rmtree
@@ -48,7 +48,7 @@ def get_problem_info(shortname):
 @login_required
 def get_problem(identifier):
     """Returns the JSON representation of a specific problem"""
-    problem = session.query(Problem, Problem_Data).join(Problem_Data)
+    problem = session.query(Problem, ProblemData).join(ProblemData)
     try:
         identifier = int(identifier) # see if `identifier` is the pid
         problem = problem.filter(Problem.pid == identifier).first()
@@ -57,8 +57,8 @@ def get_problem(identifier):
                   filter(Problem.shortname == identifier).first()
 
     cases = list()
-    for case in session.query(Sample_Case).\
-                    filter(Sample_Case.pid == problem.Problem.pid).\
+    for case in session.query(SampleCase).\
+                    filter(SampleCase.pid == problem.Problem.pid).\
                     all():
         cases.append({
             'case_num': case.case_num,
@@ -74,9 +74,9 @@ def get_problem(identifier):
         'difficulty': problem.Problem.difficulty,
         'added': problem.Problem.added,
         'comp_release': problem.Problem.comp_release,
-        'description': problem.Problem_Data.description,
-        'input_desc': problem.Problem_Data.input_desc,
-        'output_desc': problem.Problem_Data.output_desc,
+        'description': problem.ProblemData.description,
+        'input_desc': problem.ProblemData.input_desc,
+        'output_desc': problem.ProblemData.output_desc,
         'sample_cases': cases
     })
 
@@ -141,7 +141,7 @@ def create_problem():
             problem.appeared = request.form['appeared_in']
 
         # Create the problem data and add it to the database
-        problem_data = Problem_Data(
+        problem_data = ProblemData(
             description=request.form['description'],
             input_desc=request.form['input_description'],
             output_desc=request.form['output_description']
@@ -153,7 +153,7 @@ def create_problem():
         case_num = 1
         sample_cases = list()
         for case in cases:
-            sample = Sample_Case(
+            sample = SampleCase(
                 case_num=case_num,
                 input=case['input'],
                 output=case['output']
@@ -213,16 +213,16 @@ def delete_problem():
                            response_code=400)
 
     # Delete from problem_data table first to satisfy foreign key constraint
-    problem_data = session.query(Problem_Data).\
-        filter(Problem_Data.pid == request.form['pid'])
+    problem_data = session.query(ProblemData).\
+        filter(ProblemData.pid == request.form['pid'])
     if not problem_data.first():
         return serve_error('Could not find problem data with pid ' +
                            request.form['pid'], response_code=401)
     problem_data.delete()
 
     # Delete any and all sample cases associated w/ problem
-    for case in session.query(Sample_Case).\
-            filter(Sample_Case.pid == request.form['pid']).all():
+    for case in session.query(SampleCase).\
+            filter(SampleCase.pid == request.form['pid']).all():
         session.delete(case)
 
     # Delete from problem table
@@ -264,7 +264,7 @@ def update_problem():           # pylint: disable=too-many-branches
                            response_code=400)
 
     problem = session.query(Problem).filter(Problem.pid == pid).first()
-    data = session.query(Problem_Data).filter(Problem_Data.pid == pid).first()
+    data = session.query(ProblemData).filter(ProblemData.pid == pid).first()
     if 'name' in request.form:
         problem.name = request.form['name'][:32]
         problem.shortname = request.form['name'][:32].replace(' ', '').lower()
@@ -285,8 +285,8 @@ def update_problem():           # pylint: disable=too-many-branches
 
     # If sample cases were uploaded, delete cases and go with the new ones
     if 'cases' in request.form:
-        for old_case in session.query(Sample_Case).\
-                filter(Sample_Case.pid == pid).all():
+        for old_case in session.query(SampleCase).\
+                filter(SampleCase.pid == pid).all():
             session.delete(old_case)
             session.flush()
             session.commit()
@@ -294,7 +294,7 @@ def update_problem():           # pylint: disable=too-many-branches
         cases = loads(str(request.form['cases']))
         case_lst = list()
         for case in cases:
-            Sample_Case(
+            SampleCase(
                 pid=pid,
                 case_num=case_num,
                 input=case['input'],

@@ -28,7 +28,7 @@ class Problem(Base):
         return self.pid
 
 
-class  Problem_Data(Base):
+class  ProblemData(Base):
     """Problem Data class that reflects mysql database"""
 
     __tablename__ = 'problem_data'
@@ -44,7 +44,7 @@ class  Problem_Data(Base):
         session.refresh(self)
 
 
-class Sample_Case(Base):
+class SampleCase(Base):
     """Test case class that reflects the mysql database."""
 
     __tablename__ = 'sample_cases'

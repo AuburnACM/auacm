@@ -7,7 +7,7 @@ from app import app, socketio
 from app.util import serve_response, serve_error
 from app.modules.submission_manager import models
 from app.modules.submission_manager import judge
-from app.modules.problem_manager.models import Problem_Data
+from app.modules.problem_manager.models import ProblemData
 from app.database import Base, session
 from sqlalchemy.orm import load_only
 
@@ -37,9 +37,9 @@ def submit():
         return serve_error('the field \'pid\' must be specified', response_code=400)
 
     # Obtain the time limit for the problem
-    time_limit = session.query(Problem_Data).\
+    time_limit = session.query(ProblemData).\
             options(load_only("pid", "time_limit")).\
-            filter(Problem_Data.pid==request.form['pid']).\
+            filter(ProblemData.pid==request.form['pid']).\
             first().time_limit;
 
     attempt = models.Submission(
