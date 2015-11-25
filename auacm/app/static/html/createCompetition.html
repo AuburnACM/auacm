@@ -2,21 +2,30 @@
 <div class="panel panel-default">
   <h2>Metadata</h2>
   <div class="panel-body">
-    <form class="form-horizontal">
+
+    <form name="createCompetitionForm" class="form-horizontal">
+
       <div class="form-group">
         <label for="compName" class="col-sm-2 control-label">Competition Name</label>
         <div class="col-sm-4 input-group">
           <input class="form-control" id="compName" placeholder="My Competition" ng-model="compName">
         </div>
       </div>
+
       <div class="form-group">
         <label for="startTime" class="col-sm-2 control-label">Start Time</label>
         <div class="col-sm-4 input-group">
-          <input class="form-control" id="startTime" placeholder="My Competition"
-              ng-model="startTime" ng-init="startTime = defaultStartTime()">
+          <input class="form-control" id="startTime" name="startTime"
+              placeholder="MM-DD-YYYY HH:mm" ng-model="startTime"
+              ng-init="startTime = defaultStartTime()" date-format-validator>
           <div class="input-group-addon">CDT</div>
         </div>
+        <div ng-if="!createCompetitionForm.startTime.$pristine" ng-messages="createCompetitionForm.startTime.$error">
+          <div class="label label-danger" ng-message="format">Incorrect format</div>
+          <div class="label label-danger" ng-message="tooEarly">Date has passed</div>
+        </div>
       </div>
+
       <div class="form-group">
         <label for="compLength" class="col-sm-2 control-label">Competition Length</label>
         <div class="col-sm-4 input-group">
@@ -24,11 +33,16 @@
               ng-model="compLength" ng-init="compLength = '3:00'">
           <div class="input-group-addon">h:mm</div>
         </div>
+        <div ng-if="!createCompetitionForm.compLength.$pristine" ng-messages="createCompetitionForm.compLength.$error">
+          <div class="label label-danger" ng-message="format">Incorrect format</div>
+        </div>
       </div>
+
       <button class="btn btn-success" type="submit" ng-click="parseDate()">
         Create Competition
       </button>
     </form>
+
   </div>
   <h2>Problems</h2>
   <table class="table table-bordered">
