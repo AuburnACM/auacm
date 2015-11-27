@@ -42,7 +42,7 @@ app.controller('EditProblemController', ['$scope', '$route', '$http',
         if (typeof prob.output_desc !== 'undefined')
             fd.append('output_desc', prob.output_desc);
         if (prob.sample_cases[0].input.length !== 0 && prob.sample_cases[0].output.length !== 0)
-            fd.append('cases', angular.toJson($scope.cases));
+            fd.append('cases', angular.toJson(prob.sample_cases));
         if (prob.difficulty >= 0 && prob.difficulty <= 100)
             fd.append('difficulty', prob.difficulty);
         if (typeof $scope.inFile !== 'undefined')
@@ -53,8 +53,8 @@ app.controller('EditProblemController', ['$scope', '$route', '$http',
             fd.append('sol_file', $scope.solFile);
 
         $http({
-            method: 'POST',
-            url: 'api/problems/edit',
+            method: 'PUT',
+            url: 'api/problems/' + $scope.current_prob.pid,
             headers: {'Content-type': undefined},
             transformRequest: angular.identity,
             data: fd

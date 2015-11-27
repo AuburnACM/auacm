@@ -65,7 +65,7 @@ app.config(function($routeProvider) {
             controller : 'ViewProblemController',
             activetab : 'problems'
         })
-        .when('/problems/edit/:pid', { // route for problem edit page
+        .when('/problems/:pid/edit', { // route for problem edit page
             templateUrl : 'static/html/editProblem.html',
             controller : 'EditProblemController',
             activetab : 'problems'
@@ -90,7 +90,7 @@ app.directive('fileModel', ['$parse', function ($parse) {
         link: function(scope, element, attrs) {
             var model = $parse(attrs.fileModel);
             var modelSetter = model.assign;
-            
+
             element.bind('change', function(){
                 scope.$apply(function(){
                     modelSetter(scope, element[0].files[0]);

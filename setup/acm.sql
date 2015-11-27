@@ -90,7 +90,9 @@ CREATE TABLE `comp_problems` (
   `cid` int(10) unsigned NOT NULL,
   `pid` int(32) DEFAULT NULL,
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `pid` (`pid`),
+  CONSTRAINT `comp_problems_ibfk_1` FOREIGN KEY (`pid`) REFERENCES `problems` (`pid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -233,7 +235,7 @@ CREATE TABLE `submits` (
   `file_type` varchar(4) NOT NULL,
   `result` varchar(8) DEFAULT NULL,
   PRIMARY KEY (`job`)
-) ENGINE=InnoDB AUTO_INCREMENT=2361 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2347 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -282,4 +284,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-16 21:04:03
+-- Dump completed on 2015-11-27 13:56:23

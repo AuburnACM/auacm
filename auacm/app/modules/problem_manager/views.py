@@ -3,7 +3,7 @@ updating, and retreival.
 
 Functions:
 url_for_problem -- returns the route for the pdf description of a problem
-                   given an arguemtn that has a 'pid' field.
+                   given an argument that has a 'pid' field.
 get_problem     -- returns a JSON representation of an individual problem,
                    with complete information about its description, input,
                    output, etc.
@@ -33,6 +33,14 @@ def url_for_problem(problem):
                         'info.pdf')
 
 
+def is_pid(identifier):
+    try:
+        int(identifier)
+        return True
+    except ValueError:
+        return False
+
+
 @app.route('/problems/<shortname>/info.pdf', methods=['GET'])
 @login_required
 def get_problem_info(shortname):
@@ -49,10 +57,9 @@ def get_problem_info(shortname):
 def get_problem(identifier):
     """Returns the JSON representation of a specific problem"""
     problem = session.query(Problem, ProblemData).join(ProblemData)
-    try:
-        identifier = int(identifier) # see if `identifier` is the pid
+    if is_pid(identifier):
         problem = problem.filter(Problem.pid == identifier).first()
-    except ValueError:
+    else:
         problem = problem.\
                   filter(Problem.shortname == identifier).first()
 
@@ -109,7 +116,7 @@ def get_problems():
     return serve_response(problems)
 
 
-@app.route('/api/problems/create', methods=['POST'])
+@app.route('/api/problems/', methods=['POST'])
 @login_required
 def create_problem():
     """Add a new problem to the database and data folder"""
@@ -167,7 +174,7 @@ def create_problem():
 
     # If any required values were missing, serve an error
     except KeyError as err:
-        return serve_error('Request header not found: ' + err[0],
+        return serve_error('Form field not found: ' + err[0],
                            response_code=400)
 
     # Commit everything to the database
@@ -187,7 +194,6 @@ def create_problem():
     sol_file.save(os.path.join(directory, 'test', sol_file.filename))
 
     return serve_response({
-        'success': True,
         'name': problem.name,
         'shortname': problem.shortname,
         'description': problem_data.description,
@@ -199,38 +205,37 @@ def create_problem():
     })
 
 # Delete a problem from the database
-@app.route('/api/problems/delete', methods=['POST'])
+@app.route('/api/problems/<identifier>', methods=['DELETE'])
 @login_required
-def delete_problem():
+def delete_problem(identifier):
     """Delete a specified problem in the database and data folder"""
     # Admin check
     if not current_user.admin == 1:
         return serve_error('You must be an admin to delete a problem',
                            response_code=401)
 
-    if not request.form['pid']:
-        return serve_error('You must specify a problem to delete',
-                           response_code=400)
+    pid, problem = None, session.query(Problem)
+    if is_pid(identifier):
+        pid = identifier
+        problem = problem.filter(Problem.pid == pid).first()
+    else:
+        problem = problem.filter(Problem.shortname == identifier).first()
+        pid = problem.pid
 
     # Delete from problem_data table first to satisfy foreign key constraint
     problem_data = session.query(ProblemData).\
-        filter(ProblemData.pid == request.form['pid'])
+        filter(ProblemData.pid == pid)
     if not problem_data.first():
         return serve_error('Could not find problem data with pid ' +
-                           request.form['pid'], response_code=401)
+                           pid, response_code=401)
     problem_data.delete()
 
     # Delete any and all sample cases associated w/ problem
     for case in session.query(SampleCase).\
-            filter(SampleCase.pid == request.form['pid']).all():
+            filter(SampleCase.pid == pid).all():
         session.delete(case)
 
     # Delete from problem table
-    problem = session.query(Problem).\
-        filter(Problem.pid == request.form['pid'])
-    if not problem.first():
-        return serve_error('Could not find problem with pid ' +
-                           request.form['pid'], response_code=401)
     problem.delete()
 
     # Commit changes
@@ -238,32 +243,31 @@ def delete_problem():
     session.commit()
 
     # Delete judge data
-    directory = os.path.join(app.config['DATA_FOLDER'],
-                             'problems', str(request.form['pid']))
+    directory = os.path.join(app.config['DATA_FOLDER'], 'problems', pid)
     rmtree(directory)
 
     return serve_response({
-        'success': True,
-        'deleted_pid': request.form['pid']
+        'deleted_pid': pid
     })
 
 # Update a problem in the database
-@app.route('/api/problems/edit', methods=['POST'])
+@app.route('/api/problems/<identifier>', methods=['PUT'])
 @login_required
-def update_problem():           # pylint: disable=too-many-branches
+def update_problem(identifier):    # pylint: disable=too-many-branches
     """Modify a problem in the database and data folder"""
     # Admin check
     if not current_user.admin == 1:
         return serve_error('You must be an admin to update a problem',
                            response_code=401)
 
-    try:
-        pid = request.form['pid']
-    except KeyError:
-        return serve_error('You must specify a problem to update',
-                           response_code=400)
+    pid, problem = None, session.query(Problem)
+    if is_pid(identifier):
+        pid = identifier
+        problem = problem.filter(Problem.pid == pid).first()
+    else:
+        problem = problem.filter(Problem.shortname == identifier).first()
+        pid = problem.pid
 
-    problem = session.query(Problem).filter(Problem.pid == pid).first()
     data = session.query(ProblemData).filter(ProblemData.pid == pid).first()
     if 'name' in request.form:
         problem.name = request.form['name'][:32]
@@ -329,7 +333,6 @@ def update_problem():           # pylint: disable=too-many-branches
 
 
     return serve_response({
-        'success': True,
         'pid': problem.pid,
         'name': problem.name,
         'shotrname': problem.shortname,

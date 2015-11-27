@@ -53,7 +53,7 @@ app.controller('CreateProblemController', ['$scope', '$http', '$route',
 
         $http({
             method: 'POST',
-            url: '/api/problems/create',
+            url: '/api/problems/',
             headers: {'Content-type': undefined},
             transformRequest: angular.identity,
             data: fd
