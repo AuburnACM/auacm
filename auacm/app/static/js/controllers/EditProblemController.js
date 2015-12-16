@@ -1,5 +1,6 @@
 app.controller('EditProblemController', ['$scope', '$route', '$http',
-        '$routeParams', function($scope, $route, $http, $routeParams) {
+        '$routeParams', '$window',
+    function($scope, $route, $http, $routeParams, $window) {
     var pid = $routeParams.pid;
     $scope.oneCase = true;
 
@@ -63,9 +64,10 @@ app.controller('EditProblemController', ['$scope', '$route', '$http',
             transformRequest: angular.identity,
             data: fd
         }).then(function(response) {
-            // TODO(brandonlmorris) - clear the form
-            // TODO(brandonlmorris) - should update the global problems list
-            console.log('Problem updated');
+            // Redirect to the new problem page
+            // NOTE: Global problem list in client may be invalid now
+            $window.location.href = 'http://' + $window.location.host +
+                '/#/problems/' + response.data.data.pid;
         }, function(error) {
             console.log('Error updating problem');
             console.log(error.data.status + ': ' + error.data.error);

@@ -1,5 +1,6 @@
-app.controller('CreateProblemController', ['$scope', '$http', '$route',
-        function($scope, $http, $route) {
+// TODO(brandonlmorris): Ditch this. Merge it with EditProblemController
+app.controller('CreateProblemController', ['$scope', '$http', '$route', '$window',
+        function($scope, $http, $route, $window) {
     $scope.cases = [{input:"", output:""}];
     $scope.oneCase = true;
     $scope.success = false;
@@ -28,7 +29,6 @@ app.controller('CreateProblemController', ['$scope', '$http', '$route',
                 $scope.outputDescription === undefined ||
                 $scope.cases.length === 0) {
             console.log("Error, the form must be completely filled out");
-            // return;
         }
 
         // Add defined elements into the formdata header
@@ -62,9 +62,12 @@ app.controller('CreateProblemController', ['$scope', '$http', '$route',
             transformRequest: angular.identity,
             data: fd
         }).then(function(response) {
-            // TODO(brandonlmorris) - clear the form
-            // TODO(brandonlmorris) - should update the global problems list
+            // Redirect to the new problem page
+            // NOTE: Current problem list in client is invalid now
             $scope.success = true;
+            // response.data.pid
+            $window.location.href = 'http://' + $window.location.host +
+                '/#/problems/' + response.data.data.pid;
         }, function(response) {
             console.log('Error uploading new problem');
             console.log(response);
