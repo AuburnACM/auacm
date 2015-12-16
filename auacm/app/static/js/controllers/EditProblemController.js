@@ -17,8 +17,12 @@ app.controller('EditProblemController', ['$scope', '$route', '$http',
     );
 
     $scope.addCase = function() {
-        $scope.current_prob.sample_cases.push({input:'', output:''});
-        $scope.oneCase = false;
+        var len = $scope.current_prob.sample_cases.length;
+        if (!($scope.current_prob.sample_cases[len-1].input.length === 0 &&
+              $scope.current_prob.sample_cases[len-1].output.length === 0)) {
+            $scope.current_prob.sample_cases.push({input:'', output:''});
+            $scope.oneCase = false;
+        }
     };
 
     $scope.deleteCase = function() {

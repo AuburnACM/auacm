@@ -22,7 +22,7 @@
         <!-- Input Description -->
         <div class="form-group">
           <label for="inputDescription">Input Description</label>
-          <textarea class="form-control"
+          <textarea class="form-control" rows="4"
             id="inputDescription" placeholder="n can be between -4 and 10,000"
             ng-model="current_prob.input_desc"></textarea>
         </div>
@@ -30,7 +30,7 @@
         <!-- Output Description -->
         <div class="form-group">
           <label  for="outputDescription">Output Description</label>
-          <textarea class="form-control"
+          <textarea class="form-control" rows="4"
             id="outputDescription" placeholder="Answer should be to 42 decimal places"
             ng-model="current_prob.output_desc"></textarea>
         </div>
@@ -73,7 +73,7 @@
         <!-- Judge Solution -->
         <div class="form-group">
           <label for="judgeSolution">Judge Solution</label>
-          <input type="file" file-model="solFile" accept=".c,.cpp,.java.py">
+          <input type="file" file-model="solFile" accept=".c,.cpp,.java,.py">
         </div>
 
         <!-- Appeared In -->

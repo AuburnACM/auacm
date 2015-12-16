@@ -6,8 +6,12 @@ app.controller('CreateProblemController', ['$scope', '$http', '$route',
 
     // Dynamically add new test cases (and form fields)
     $scope.addCase = function() {
-        $scope.cases.push({input:"", output:""});
-        $scope.oneCase = false;
+        var len = $scope.cases.length;
+        if (!($scope.cases[len-1].input.length === 0 &&
+              $scope.cases[len-1].output.length === 0)) {
+            $scope.cases.push({input:"", output:""});
+            $scope.oneCase = false;
+        }
     };
 
     $scope.deleteCase = function() {
