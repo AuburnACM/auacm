@@ -54,6 +54,21 @@ app.config(function($routeProvider) {
             templateUrl : 'static/html/settings.html',
             controller : 'SettingsController',
             activetab : 'settings'
+        })
+        .when('/problems/create', { // route for problem creation page
+            templateUrl : 'static/html/createProblem.html',
+            controller : 'CreateProblemController',
+            activetab  : 'settings'
+        })
+        .when('/problems/:pid', { // route for the problem view page
+            templateUrl : 'static/html/viewProblem.html',
+            controller : 'ViewProblemController',
+            activetab : 'problems'
+        })
+        .when('/problems/:pid/edit', { // route for problem edit page
+            templateUrl : 'static/html/editProblem.html',
+            controller : 'EditProblemController',
+            activetab : 'problems'
         });
 });
 
@@ -61,7 +76,7 @@ app.filter('secondsToDateTime', [function() {
     return function(seconds) {
         return new Date(1970, 0, 1).setSeconds(seconds);
     };
-}])
+}]);
 
 app.filter('iif', function () {
    return function(input, trueValue, falseValue) {
@@ -75,7 +90,7 @@ app.directive('fileModel', ['$parse', function ($parse) {
         link: function(scope, element, attrs) {
             var model = $parse(attrs.fileModel);
             var modelSetter = model.assign;
-            
+
             element.bind('change', function(){
                 scope.$apply(function(){
                     modelSetter(scope, element[0].files[0]);

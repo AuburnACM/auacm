@@ -5,14 +5,14 @@ public class CreateCompetition {
     public static final int COMPETITION_NAME_INDEX = 0;
 
     public static final String[] USERNAMES = {"mitchp", "brandonm", "brian", "will", "dave", "willa"};
-    public static final String[] PROBLEMS = {"MissingPages", "Islands", "SortMe", "Gnome", "Dull", "Quicksum"};
+    public static final String[] PROBLEMS = {"33", "23", "55", "19", "12", "44"};
 
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
 
         int startTime = (int) (System.currentTimeMillis() / 1000);
         System.out.println("USE acm;");
-        System.out.printf("INSERT INTO comp_names (name, start, stop) VALUES (\'%s\', \'%d\', \'%d\');%n", 
+        System.out.printf("INSERT INTO comp_names (name, start, stop) VALUES (\'%s\', \'%d\', \'%d\');%n",
                 in.nextLine(), startTime, startTime + 5 * 60 * 60);
 
         System.out.printf("SELECT cid FROM comp_names WHERE start=%d;%n", startTime);

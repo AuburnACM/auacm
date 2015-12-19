@@ -29,7 +29,7 @@ def getCompetitions():
         'past' : past,
         'upcoming' : upcoming
     })
-    
+
 
 def create_competition_object(competition):
     return {
@@ -46,23 +46,28 @@ def getCompetitionData(cid):
     if competition is None:
         return serve_error('competition not found', response_code=404)
     comp_users = session.query(CompUser).filter(CompUser.cid==cid).all()
-    comp_problems = [p.pid for p in session.query(CompProblem).filter(CompProblem.cid==cid).all()]
+    comp_problems = list()
+    comp_problem_names = list()
+    for prob in session.query(CompProblem, Problem).join(Problem).\
+            filter(CompProblem.cid == cid).all():
+        comp_problems.append(prob.Problem.pid)
+        comp_problem_names.append(prob.Problem.name)
     comp_problems.sort()
-    
+
     submissions = session.query(Submission)\
             .filter(Submission.submit_time>competition.start,\
                     Submission.submit_time<competition.stop)\
             .order_by(asc(Submission.submit_time))\
             .all()
-    
+
     scoreboard = list()
-    
+
     team_users = dict()
     for user in comp_users:
         if not user.team in team_users:
             team_users[user.team] = list()
         team_users[user.team].append(user.username)
-    
+
     for team in team_users.keys():
         team_problems = dict()
         for problem in comp_problems:
@@ -93,10 +98,10 @@ def getCompetitionData(cid):
         team_row['users'] = team_users[team]
         team_row['problemData'] = team_problems
         scoreboard.append(team_row)
-        
+
     return serve_response({
         'competition' : create_competition_object(competition),
         'compProblems' : comp_problems,
-        'teams' : scoreboard
+        'teams' : scoreboard,
+        'names' : comp_problem_names
     })
-    

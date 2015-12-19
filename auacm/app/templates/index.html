@@ -8,7 +8,8 @@
   <title>ACM Auburn</title>
   
   <!-- Bootstrap stuff -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/components/bootstrap/dist/css/bootstrap.min.css">
+  <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">-->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   
   <link rel="stylesheet" href="/static/css/style.css">
@@ -52,7 +53,8 @@
   </div>
   
   <!-- Have to use this `outdated` version of socket.io for now TODO(@brandonlmorris) -->
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+  <!--<script src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>-->
+  <script src="/static/components/temp_socket.io/socket.io.min.js"></script>
 
   <!-- Static dependences for offline development -->
   <script src="/static/components/angular/angular.js"></script>
@@ -61,11 +63,6 @@
   <script src="/static/components/angular-messages/angular-messages.js"></script>
   <script src="/static/components/showdown/dist/showdown.js"></script>
   <script src="/static/components/angular-ui-bootstrap-complete/ui-bootstrap-tpls.js"></script>
-
-  <!-- TODO(brandonlmorris, williamhester): modify socket code to use latest version of socket.io -->
-  <!-- <script src="/static/components/socket.io/socket.io.js"></script> -->
-  <!-- Have to use this `outdated` version of socket.io for now -->
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
 
   <!-- CDN dependencies for production -->
   <!--
@@ -91,5 +88,8 @@
   <script src="/static/js/controllers/CompetitionsController.js"></script>
   <script src="/static/js/controllers/ScoreboardController.js"></script>
   <script src="/static/js/controllers/SettingsController.js"></script>
+  <script src="/static/js/controllers/CreateProblemController.js"></script>
+  <script src="/static/js/controllers/ViewProblemController.js"></script>
+  <script src="/static/js/controllers/EditProblemController.js"></script>
 
 </body>

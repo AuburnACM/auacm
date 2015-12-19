@@ -7,6 +7,9 @@ from app import app, socketio
 from app.util import serve_response, serve_error
 from app.modules.submission_manager import models
 from app.modules.submission_manager import judge
+from app.modules.problem_manager.models import ProblemData
+from app.database import Base, session
+from sqlalchemy.orm import load_only
 
 
 @socketio.on('connect', namespace="/judge")
@@ -33,6 +36,12 @@ def submit():
     if not request.form['pid']:
         return serve_error('the field \'pid\' must be specified', response_code=400)
 
+    # Obtain the time limit for the problem
+    time_limit = session.query(ProblemData).\
+            options(load_only("pid", "time_limit")).\
+            filter(ProblemData.pid==request.form['pid']).\
+            first().time_limit;
+
     attempt = models.Submission(
         username=current_user.username,
         pid=request.form['pid'],
@@ -42,7 +51,7 @@ def submit():
         result='start')
     attempt.commit_to_session()
     thread = Thread(
-        target=judge.evaluate, args=(attempt, uploaded_file))
+        target=judge.evaluate, args=(attempt, uploaded_file, time_limit))
     thread.daemon = False
     thread.start()
     return serve_response({
