@@ -136,10 +136,10 @@ def create_problem():
                     response_code=400)
 
         # Create the problem
-        title = request.form['title'][:32]
-        shortname = title.lower().replace(' ', '')
+        name = request.form['name'][:32]
+        shortname = name.lower().replace(' ', '')
         problem = Problem(
-            name=title,
+            name=name,
             shortname=shortname
         )
         if 'difficulty' in request.form:
@@ -150,8 +150,8 @@ def create_problem():
         # Create the problem data and add it to the database
         problem_data = ProblemData(
             description=request.form['description'],
-            input_desc=request.form['input_description'],
-            output_desc=request.form['output_description']
+            input_desc=request.form['input_desc'],
+            output_desc=request.form['output_desc']
         )
         if 'time_limit' in request.form:
             problem_data.time_limit = request.form['time_limit']

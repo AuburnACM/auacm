@@ -56,8 +56,8 @@ app.config(function($routeProvider) {
             activetab : 'settings'
         })
         .when('/problems/create', { // route for problem creation page
-            templateUrl : 'static/html/createProblem.html',
-            controller : 'CreateProblemController',
+            templateUrl: 'static/html/editProblem.html',
+            controller : 'EditProblemController',
             activetab  : 'settings'
         })
         .when('/problems/:pid', { // route for the problem view page

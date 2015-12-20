@@ -2,20 +2,27 @@ app.controller('EditProblemController', ['$scope', '$route', '$http',
         '$routeParams', '$window',
     function($scope, $route, $http, $routeParams, $window) {
     var pid = $routeParams.pid;
+    $scope.isCreate = typeof pid === 'undefined';
     $scope.oneCase = true;
 
-    $http.get('/api/problems/' + pid)
-        .then(function(response) {
-            $scope.current_prob = response.data.data;
-            if ($scope.current_prob.sample_cases.length === 0) {
-                $scope.current_prob.sample_cases.push({input:'', output:''});
-            } else {
-                $scope.oneCase = false;
+
+    if (!$scope.isCreate) {
+        $http.get('/api/problems/' + pid)
+            .then(function(response) {
+                $scope.current_prob = response.data.data;
+                if ($scope.current_prob.sample_cases.length === 0) {
+                    $scope.current_prob.sample_cases.push({input:'', output:''});
+                } else {
+                    $scope.oneCase = false;
+                }
+            }, function(error) {
+                console.log(error.data.status + ' ' + error.data.error);
             }
-        }, function(error) {
-            console.log(error.data.status + ' ' + error.data.error);
-        }
-    );
+        );
+    } else {
+        $scope.current_prob = {};
+        $scope.current_prob.sample_cases = [{input:'', output:''}];
+    }
 
     $scope.addCase = function() {
         var len = $scope.current_prob.sample_cases.length;
@@ -58,8 +65,8 @@ app.controller('EditProblemController', ['$scope', '$route', '$http',
             fd.append('sol_file', $scope.solFile);
 
         $http({
-            method: 'PUT',
-            url: 'api/problems/' + $scope.current_prob.pid,
+            method: ($scope.isCreate ? 'POST' : 'PUT'),
+            url: 'api/problems/' + ($scope.isCreate ? '' : $scope.current_prob.pid),
             headers: {'Content-type': undefined},
             transformRequest: angular.identity,
             data: fd
@@ -70,6 +77,7 @@ app.controller('EditProblemController', ['$scope', '$route', '$http',
                 '/#/problems/' + response.data.data.pid;
         }, function(error) {
             console.log('Error updating problem');
+            console.log(response);
             console.log(error.data.status + ': ' + error.data.error);
         });
     };
