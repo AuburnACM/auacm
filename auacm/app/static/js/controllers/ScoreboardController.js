@@ -6,7 +6,6 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
     // Initialize time left in competition to 0
     $scope.timeLeft = 0;
     $scope.active = false;
-    $scope.socket;
 
     var genScoreboard = function() {
         for (var i = 0; i < $scope.teams.length; i++) {
@@ -38,26 +37,26 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
         var prevSolved = $scope.teams[0].solved;
         var prevTime = $scope.teams[0].solved;
         $scope.teams[0].rank = rank;
-        for (var i = 1; i < $scope.teams.length; i++) {
-            var team = $scope.teams[i];
-            if (team.solved < prevSolved) {
+        for (var j = 1; i < $scope.teams.length; i++) {
+            var team1 = $scope.teams[j];
+            if (team1.solved < prevSolved) {
                 rank++;
-                team.rank = rank;
-            } else if (team.solved == prevSolved && team.time > prevTime) {
+                team1.rank = rank;
+            } else if (team1.solved == prevSolved && team1.time > prevTime) {
                 rank++;
-                team.rank = rank;
+                team1.rank = rank;
             } else {
-                team.rank = rank;
+                team1.rank = rank;
             }
-            prevSolved = team.solved;
-            prevTime = team.time;
+            prevSolved = team1.solved;
+            prevTime = team1.time;
         }
 
         // Can break if an $apply is already in progress, need to check first (???)
         if (!$scope.$$phase) {
             $scope.$digest();
         }
-    }
+    };
 
     var connectToSocket = function() {
         // Open the socket connection
@@ -65,11 +64,11 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
         // Perform live updates to the scoreboard
         var viewed = [];
         socket.on('status', function(event) {
-            if (viewed.indexOf(event.submissionId) > -1
-                    || event.status == 'running'
-                    || $scope.compProblems.indexOf(event.problemId) < 0
-                    || event.submitTime > $scope.competition.startTime
-                            + $scope.competition.length) {
+            if (viewed.indexOf(event.submissionId) > -1 ||
+                    event.status == 'running' ||
+                    $scope.compProblems.indexOf(event.problemId) < 0 ||
+                    event.submitTime > $scope.competition.startTime +
+                        $scope.competition.length) {
                 // The scoreboard ignores the problem for any of the following
                 // reasons:
                 // The submission has already been handled,
@@ -86,9 +85,9 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
                     problem.submitCount++;
                     if (problem.status !== 'correct') {
                         if (event.status === 'correct') {
-                            problem.problemTime = Math.floor((event.submitTime
-                                    - $scope.competition.startTime) / 60)
-                                    + (problem.submitCount - 1) * 20;
+                            problem.problemTime = Math.floor((event.submitTime -
+                                $scope.competition.startTime) / 60) +
+                                (problem.submitCount - 1) * 20;
                             problem.status = 'correct';
                         } else {
                             problem.status = 'incorrect';
@@ -99,7 +98,7 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
             // Publish these changes to the scoreboard
             genScoreboard();
         });
-    }
+    };
 
 
     // Generate the scoreboard on load
@@ -114,15 +113,15 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
 
             // TODO(brandonlmorris) Add offset to server/client times
             var thisTime = Math.floor(new Date().getTime() / 1000);
-            if (thisTime < $scope.competition.startTime
-                    + $scope.competition.length) {
+            if (thisTime < $scope.competition.startTime +
+                    $scope.competition.length) {
                 // if the competition is still active
                 $scope.active = true;
-                $scope.timeLeft = $scope.competition.startTime
-                        + $scope.competition.length - thisTime;
+                $scope.timeLeft = $scope.competition.startTime +
+                        $scope.competition.length - thisTime;
                 var timer = $interval(function() {
-                    $scope.timeLeft = $scope.competition.startTime
-                            + $scope.competition.length - thisTime;
+                    $scope.timeLeft = $scope.competition.startTime +
+                            $scope.competition.length - thisTime;
                     thisTime = Math.floor(new Date().getTime() / 1000);
                     if ($scope.timeLeft <= 0) {
                         $scope.active = false;
