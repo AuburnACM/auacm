@@ -53,7 +53,7 @@ def directory_for_problem(submission):
     return os.path.join(app.config['DATA_FOLDER'], 'problems', str(submission.pid))
 
 
-def evaluate(submission, uploaded_file, time_limit):
+def evaluate(submission, uploaded_file, time_limit=10):
     """Attempts to compile (if necessary) then execute a given file.
 
     :param submission: the newly created submission

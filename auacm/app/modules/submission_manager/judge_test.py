@@ -102,7 +102,7 @@ class JudgeTest(object):
         :return: None
         """
         directory = judge.directory_for_submission(self.submit)
-        os.mkdir(directory)
+        os.makedirs(directory)
         self.submit_file.save(
             os.path.join(directory, self.submit_file.filename))
         self.assertEqual(
