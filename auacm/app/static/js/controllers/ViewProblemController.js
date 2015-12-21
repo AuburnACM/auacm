@@ -1,8 +1,8 @@
 app.controller('ViewProblemController', ['$scope', '$route', '$routeParams', '$http',
         function($scope, $route, $routeParams, $http) {
-    var pid = $routeParams.pid;
+    $scope.pid = $routeParams.pid;
 
-    $http.get('/api/problems/' + pid)
+    $http.get('/api/problems/' + $scope.pid)
         .then(function(response) {
             $scope.current_prob = response.data.data;
         }, function(error) {
