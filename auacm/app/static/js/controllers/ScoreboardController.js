@@ -13,10 +13,10 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
             var team = $scope.teams[i];
             var solved = 0;
             var time = 0;
-            for (var problem in team.problemData) {
-                if (team.problemData[problem].status == 'correct') {
+            for (var problemName in team.problemData) {
+                if (team.problemData[problemName].status === 'correct') {
                     solved++;
-                    time += team.problemData[problem].problemTime;
+                    time += team.problemData[problemName].problemTime;
                 }
             }
             team.solved = solved;
@@ -37,7 +37,7 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
         var prevSolved = $scope.teams[0].solved;
         var prevTime = $scope.teams[0].solved;
         $scope.teams[0].rank = rank;
-        for (var j = 1; i < $scope.teams.length; i++) {
+        for (var j = 1; j < $scope.teams.length; j++) {
             var team1 = $scope.teams[j];
             if (team1.solved < prevSolved) {
                 rank++;
