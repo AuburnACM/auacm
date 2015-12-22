@@ -11,7 +11,7 @@
           <th>Team</th>
           <th>Solved</th>
           <th>Time</th>
-          <th ng-repeat="name in problemNames"><a href="/#/problems/{{ problemData[name].shortname }}">{{ name }}</a></th>
+          <th ng-repeat="name in problemNames"><a href="/#/problems/{{ compProblems[name].shortname }}">{{ name }}</a></th>
         </tr>
       </thead>
       <tr ng-repeat="team in teams | orderBy:['-solved', 'time']">
