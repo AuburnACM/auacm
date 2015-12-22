@@ -19,25 +19,16 @@ def get_competitions():
     current_time = int(time())
     for competition in session.query(Competition).all():
         if competition.stop < current_time:
-            past.append(create_competition_object(competition))
+            past.append(competition.to_dict())
         elif competition.start < current_time:
-            ongoing.append(create_competition_object(competition))
+            ongoing.append(competition.to_dict())
         else:
-            upcoming.append(create_competition_object(competition))
+            upcoming.append(competition.to_dict())
     return serve_response({
         'ongoing': ongoing,
         'past': past,
         'upcoming': upcoming
     })
-
-
-def create_competition_object(competition):
-    return {
-        'cid': competition.cid,
-        'name': competition.name,
-        'startTime': competition.start,
-        'length': competition.stop - competition.start
-    }
 
 
 @app.route('/api/competitions/<int:cid>')
@@ -71,15 +62,15 @@ def get_competition_data(cid):
             team_users[user.team] = list()
         team_users[user.team].append(user.username)
 
-    for team in team_users.keys():
+    for team in team_users:
         team_problems = dict()
-        for name in comp_problems.keys():
+        for name in comp_problems:
             problem = comp_problems[name]
             correct = 0
             incorrect = 0
             pointless = 0
             for s in submissions:
-                if not s.pid == problem['pid'] or not s.username in team_users[team]:
+                if not s.pid == problem['pid'] or s.username not in team_users[team]:
                     continue
                 elif correct > 0:
                     pointless += 1
@@ -104,7 +95,7 @@ def get_competition_data(cid):
         scoreboard.append(team_row)
 
     return serve_response({
-        'competition': create_competition_object(competition),
+        'competition': competition.to_dict(),
         'compProblems': comp_problems,
         'teams': scoreboard
     })

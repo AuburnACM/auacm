@@ -8,9 +8,10 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
     $scope.active = false;
 
     var genScoreboard = function() {
-        for (var i = 0; i < $scope.teams.length; i++) {
+        var team, i;
+        for (i = 0; i < $scope.teams.length; i++) {
             // Compute how many problems each team has solved and their time
-            var team = $scope.teams[i];
+            team = $scope.teams[i];
             var solved = 0;
             var time = 0;
             for (var problemName in team.problemData) {
@@ -37,19 +38,19 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
         var prevSolved = $scope.teams[0].solved;
         var prevTime = $scope.teams[0].solved;
         $scope.teams[0].rank = rank;
-        for (var j = 1; j < $scope.teams.length; j++) {
-            var team1 = $scope.teams[j];
-            if (team1.solved < prevSolved) {
+        for (i = 1; i < $scope.teams.length; i++) {
+            team = $scope.teams[i];
+            if (team.solved < prevSolved) {
                 rank++;
-                team1.rank = rank;
-            } else if (team1.solved == prevSolved && team1.time > prevTime) {
+                team.rank = rank;
+            } else if (team.solved == prevSolved && team.time > prevTime) {
                 rank++;
-                team1.rank = rank;
+                team.rank = rank;
             } else {
-                team1.rank = rank;
+                team.rank = rank;
             }
-            prevSolved = team1.solved;
-            prevTime = team1.time;
+            prevSolved = team.solved;
+            prevTime = team.time;
         }
 
         // Can break if an $apply is already in progress, need to check first (???)

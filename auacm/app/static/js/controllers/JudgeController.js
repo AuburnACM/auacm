@@ -29,7 +29,7 @@ app.controller('JudgeController', ['$scope', '$http', '$routeParams', '$window',
             submission.testNum = 0;
             $scope.submitted.push(submission);
         }, function(response) {
-            console.log("error");
+            console.error(response);
         });
     };
     var socket = io.connect('http://' + $window.location.host + '/judge');
