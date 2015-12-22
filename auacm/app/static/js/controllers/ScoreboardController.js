@@ -107,7 +107,7 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
         .then(function(response) {
             $scope.competition = response.data.data.competition;
             $scope.compProblems = response.data.data.compProblems;
-            $scope.problemNames = response.data.data.names;
+            $scope.problemNames = Object.keys(compProblems).sort();
             $scope.teams = response.data.data.teams;
             genScoreboard();
             connectToSocket();
