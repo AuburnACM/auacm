@@ -11,7 +11,7 @@
           <th>Team</th>
           <th>Solved</th>
           <th>Time</th>
-          <th ng-repeat="name in problemNames">{{ name }}</th>
+          <th ng-repeat="name in problemNames"><a href="/#/problems/{{ compProblems[name].shortname }}">{{ name }}</a></th>
         </tr>
       </thead>
       <tr ng-repeat="team in teams | orderBy:['-solved', 'time']">
@@ -19,13 +19,15 @@
         <td>{{ team.name }}</td>
         <td>{{ team.solved }}</td>
         <td>{{ team.time }}</td>
-        <td ng-repeat="(problem, problemData) in team.problemData"
-            ng-class="{'success': problemData.status=='correct', 'danger': problemData.status=='incorrect'}">
-            <div ng-hide="problemData.status=='unattempted'">
-              {{ problemData.submitCount }}
+        <td ng-repeat="name in problemNames"
+            ng-class="{'success': team.problemData[compProblems[name].pid].status === 'correct',
+                    'danger': team.problemData[compProblems[name].pid].status === 'incorrect'}">
+            <div ng-hide="team.problemData[compProblems[name].pid].status === 'unattempted'">
+              {{ team.problemData[compProblems[name].pid].submitCount }}
             <br>
             <small>
-              {{ problemData.status == "incorrect" | iif : "--" : problemData.problemTime }}</small>
+              {{ team.problemData[compProblems[name].pid].status == "incorrect" | iif : "--" :
+              team.problemData[compProblems[name].pid].problemTime }}</small>
             </div>
         </td>
       </tr>

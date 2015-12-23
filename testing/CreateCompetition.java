@@ -4,9 +4,6 @@ public class CreateCompetition {
 
     public static final int COMPETITION_NAME_INDEX = 0;
 
-    public static final String[] USERNAMES = {"mitchp", "brandonm", "brian", "will", "dave", "willa"};
-    public static final String[] PROBLEMS = {"33", "23", "55", "19", "12", "44"};
-
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
 
