@@ -20,14 +20,14 @@
         <td>{{ team.solved }}</td>
         <td>{{ team.time }}</td>
         <td ng-repeat="name in problemNames"
-            ng-class="{'success': team.problemData[name].status=='correct',
-                    'danger': team.problemData[name].status=='incorrect'}">
-            <div ng-hide="team.problemData[name].status=='unattempted'">
-              {{ team.problemData[name].submitCount }}
+            ng-class="{'success': team.problemData[compProblems[name].pid].status === 'correct',
+                    'danger': team.problemData[compProblems[name].pid].status === 'incorrect'}">
+            <div ng-hide="team.problemData[compProblems[name].pid].status === 'unattempted'">
+              {{ team.problemData[compProblems[name].pid].submitCount }}
             <br>
             <small>
-              {{ team.problemData[name].status == "incorrect" | iif : "--" :
-              team.problemData[name].problemTime }}</small>
+              {{ team.problemData[compProblems[name].pid].status == "incorrect" | iif : "--" :
+              team.problemData[compProblems[name].pid].problemTime }}</small>
             </div>
         </td>
       </tr>

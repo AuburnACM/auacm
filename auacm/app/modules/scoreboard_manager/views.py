@@ -83,7 +83,8 @@ def get_competition_data(cid):
             if correct > 0:
                 submit_count = 1
             submit_count += incorrect + pointless
-            team_problems[name] = {
+            team_problems[comp_problems[name]['pid']] = {
+                'label': name,
                 'problemTime': problem_time,
                 'submitCount': submit_count,
                 'status': 'correct' if correct > 0 else 'unattempted' if submit_count == 0 else 'incorrect'

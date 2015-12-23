@@ -59,6 +59,15 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
         }
     };
 
+    var problemIsInComp = function(problemId) {
+        for (var problem in $scope.compProblems) {
+            if (problemId === $scope.compProblems[problem].pid) {
+                return true;
+            }
+        }
+        return false;
+    };
+
     var connectToSocket = function() {
         // Open the socket connection
         var socket = io.connect('http://' + $window.location.host + '/judge');
@@ -67,7 +76,7 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
         socket.on('status', function(event) {
             if (viewed.indexOf(event.submissionId) > -1 ||
                     event.status == 'running' ||
-                    $scope.compProblems.indexOf(event.problemId) < 0 ||
+                    !problemIsInComp(event.problemId) ||
                     event.submitTime > $scope.competition.startTime +
                         $scope.competition.length) {
                 // The scoreboard ignores the problem for any of the following
