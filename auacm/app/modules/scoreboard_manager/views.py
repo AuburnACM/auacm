@@ -12,51 +12,45 @@ from time import time
 
 @app.route('/api/competitions')
 @login_required
-def getCompetitions():
+def get_competitions():
     ongoing = list()
     past = list()
     upcoming = list()
     current_time = int(time())
     for competition in session.query(Competition).all():
         if competition.stop < current_time:
-            past.append(create_competition_object(competition))
+            past.append(competition.to_dict())
         elif competition.start < current_time:
-            ongoing.append(create_competition_object(competition))
+            ongoing.append(competition.to_dict())
         else:
-            upcoming.append(create_competition_object(competition))
+            upcoming.append(competition.to_dict())
     return serve_response({
-        'ongoing' : ongoing,
-        'past' : past,
-        'upcoming' : upcoming
+        'ongoing': ongoing,
+        'past': past,
+        'upcoming': upcoming
     })
 
 
-def create_competition_object(competition):
-    return {
-        'cid' : competition.cid,
-        'name' : competition.name,
-        'startTime' : competition.start,
-        'length' : competition.stop - competition.start
-    }
-
-
 @app.route('/api/competitions/<int:cid>')
-def getCompetitionData(cid):
-    competition = session.query(Competition).filter(Competition.cid==cid).first()
+def get_competition_data(cid):
+    competition = session.query(Competition).filter(Competition.cid == cid).\
+            first()
     if competition is None:
         return serve_error('competition not found', response_code=404)
-    comp_users = session.query(CompUser).filter(CompUser.cid==cid).all()
-    comp_problems = list()
-    comp_problem_names = list()
+    comp_users = session.query(CompUser).filter(CompUser.cid == cid).all()
+
+    comp_problems = dict()
     for prob in session.query(CompProblem, Problem).join(Problem).\
             filter(CompProblem.cid == cid).all():
-        comp_problems.append(prob.Problem.pid)
-        comp_problem_names.append(prob.Problem.name)
-    comp_problems.sort()
+        comp_problems[prob.CompProblem.label] = {
+            'pid': prob.Problem.pid,
+            'name': prob.Problem.name,
+            'shortname': prob.Problem.shortname
+        }
 
     submissions = session.query(Submission)\
-            .filter(Submission.submit_time>competition.start,\
-                    Submission.submit_time<competition.stop)\
+            .filter(Submission.submit_time > competition.start,\
+                    Submission.submit_time < competition.stop)\
             .order_by(asc(Submission.submit_time))\
             .all()
 
@@ -68,14 +62,15 @@ def getCompetitionData(cid):
             team_users[user.team] = list()
         team_users[user.team].append(user.username)
 
-    for team in team_users.keys():
+    for team in team_users:
         team_problems = dict()
-        for problem in comp_problems:
+        for name in comp_problems:
+            problem = comp_problems[name]
             correct = 0
             incorrect = 0
             pointless = 0
             for s in submissions:
-                if not s.pid == problem or not s.username in team_users[team]:
+                if not s.pid == problem['pid'] or s.username not in team_users[team]:
                     continue
                 elif correct > 0:
                     pointless += 1
@@ -83,15 +78,16 @@ def getCompetitionData(cid):
                     correct = s.submit_time - competition.start
                 else:
                     incorrect += 1
-            problem_time = incorrect*20+correct/60
+            problem_time = incorrect * 20 + correct / 60
             submit_count = 0
-            if (correct > 0):
+            if correct > 0:
                 submit_count = 1
-            submit_count += incorrect+pointless
-            team_problems[problem] = {
-                'problemTime' : problem_time,
-                'submitCount' : submit_count,
-                'status' : 'correct' if correct > 0 else 'unattempted' if submit_count == 0 else 'incorrect'
+            submit_count += incorrect + pointless
+            team_problems[comp_problems[name]['pid']] = {
+                'label': name,
+                'problemTime': problem_time,
+                'submitCount': submit_count,
+                'status': 'correct' if correct > 0 else 'unattempted' if submit_count == 0 else 'incorrect'
             }
         team_row = dict()
         team_row['name'] = team
@@ -100,8 +96,7 @@ def getCompetitionData(cid):
         scoreboard.append(team_row)
 
     return serve_response({
-        'competition' : create_competition_object(competition),
-        'compProblems' : comp_problems,
-        'teams' : scoreboard,
-        'names' : comp_problem_names
+        'competition': competition.to_dict(),
+        'compProblems': comp_problems,
+        'teams': scoreboard
     })
