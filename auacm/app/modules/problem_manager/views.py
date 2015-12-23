@@ -15,8 +15,9 @@ update_problem  -- modifies the data/files of a specific problem
 import os
 import zipfile
 
+# pylint: disable=no-name-in-module, f0401
 from flask import request
-from flask.ext.login import current_user, login_required # pylint: disable=no-name-in-module
+from flask.ext.login import current_user, login_required
 from app import app
 from app.database import session
 from app.util import serve_response, serve_error, serve_info_pdf
