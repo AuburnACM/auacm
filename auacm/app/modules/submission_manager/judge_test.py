@@ -90,7 +90,7 @@ class JudgeTest(object):
         """
         self.assertEqual(
             expected_result,
-            judge.evaluate(self.submit, self.submit_file))
+            judge.evaluate(self.submit, self.submit_file, 1))
 
     def assertCompilation(self, expected_result):
         """Assert the behavior of a compilation.
