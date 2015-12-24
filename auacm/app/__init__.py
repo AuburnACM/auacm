@@ -1,10 +1,9 @@
 from flask import Flask, Response
-from flask.ext.socketio import SocketIO 
+from flask.ext.socketio import SocketIO
 from threading import Thread
 import time
 
-
-# flask setup
+# Create the God-object `app` to be used everywhere
 app = Flask(__name__)
 app.config.from_pyfile('config.py') # not sure if this works
 

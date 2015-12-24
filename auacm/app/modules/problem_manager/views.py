@@ -131,7 +131,7 @@ def create_problem():
         cases = request.form['cases']
         cases = loads(str(cases))
         for case in cases:
-            if not 'input' in case or not 'output' in case:
+            if 'input' not in case or 'output' not in case:
                 return serve_error(
                     'Sample case(s) were not formed correctly',
                     response_code=400)
