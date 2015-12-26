@@ -3,6 +3,7 @@ import threading
 
 from app import socketio
 from app.database import Base, session
+from app.modules.problem_manager.models import Problem
 
 dblock = threading.Lock()
 
@@ -66,8 +67,8 @@ class Submission(Base):
         '''Find the problem that this submit is associated with.'''
         if self._problem is None:
             self._problem = (
-                session.query(Base.classes.problems)
-                    .filter(Base.classes.problems.pid == self.pid)
+                session.query(Problem)
+                    .filter(Problem.pid == self.pid)
                     .first())
         return self._problem
 

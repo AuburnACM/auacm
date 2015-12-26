@@ -11,5 +11,5 @@ session = Session(engine)
 from app.modules.user_manager.models import User
 from app.modules.submission_manager.models import Submission, MockSubmission
 from app.modules.competition_manager.models import Competition, CompUser, CompProblem
+from app.modules.problem_manager.models import Problem, ProblemData, SampleCase
 Base.prepare(engine, reflect=True)
-

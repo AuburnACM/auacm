@@ -17,3 +17,4 @@ from app import views
 from app.modules.submission_manager import views
 from app.modules.competition_manager import views
 from app.modules.blog_manager import views
+from app.modules.problem_manager import views

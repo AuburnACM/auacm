@@ -6,6 +6,7 @@ app.controller('MainController', ['$scope', '$http', '$route', '$window',
     $scope.isAdmin = false;
 
     $scope.$route = $route;
+
     // Make a /api/me request and set the current user
     $http.get('/api/me')
         .then(function(response) {
@@ -25,6 +26,7 @@ app.controller('MainController', ['$scope', '$http', '$route', '$window',
         function(error) {
 
         });
+
     $http.get('/api/blog')
         .then(function(response) {
             $scope.blogPosts = response.data.data;
@@ -32,11 +34,13 @@ app.controller('MainController', ['$scope', '$http', '$route', '$window',
         function(error) {
             
         });
+
     $scope.signOut = function() {
         $http.get('/api/logout').then(function(response) {
                 $window.location.href = 'http://' + $window.location.host + '/login';
         }, function(response) {
             console.log("error");
         });
-    }
+    };
+
 }]);
