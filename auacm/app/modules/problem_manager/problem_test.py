@@ -6,6 +6,9 @@ To run these tests, execute the following at the app level:
 ./test.py
 </code>
 
+These tests assume that the login functionality works, and depends on having
+access to the test database.
+
 Interesting fact, Benjamin Franklin was the oldest signer of the Declaration
 of Independence at 70 years old.
 """
@@ -24,7 +27,7 @@ from app.database import test_session
 
 # Test data to work with
 test_problem = {
-    'pid': 1000,
+    'pid': 9999,
     'name': 'This is a test',
     'shortname': 'thisisatest',
     'appeared': 'Not a real Competition',
@@ -32,30 +35,28 @@ test_problem = {
     'added': 1,
     'comp_release': 1
 }
-
 test_problem_data = {
-    'pid': 1000,
+    'pid': 9999,
     'description': 'This is a test problem. There is no need for alarm.',
     'input_desc': 'Some values and stuff',
     'output_desc': 'Other things. Like the right answer.',
     'time_limit': 90
 }
 test_cases = [{
-    'pid': 1000,
+    'pid': 9999,
     'case_num': 1,
     'input': '1 1',
     'output': '2'
 }, {
-    'pid': 1000,
+    'pid': 9999,
     'case_num': 2,
     'input': '2 2',
     'output': '4'
 }]
 
 
-# Helper methods to log in/out of the web app
+# Helper methods to log in/out of the web app (tests assume they work)
 def _login():
-    print('logging in...')
     username = app.config['TEST_USERNAME']
     password = app.config['TEST_PASSWORD']
     rv = json.loads(test_app.post(
@@ -64,7 +65,6 @@ def _login():
     assert 200 == rv['status']
 
 def _logout():
-    print('logging out...')
     rv = json.loads(test_app.get('/api/logout').data)
     assert 200 == rv['status']
 
@@ -89,10 +89,23 @@ class ProblemGetTests(unittest.TestCase):
         # Log in
         _login()
 
-    # TODO: Test get_problems (all problems)
     def testGetAll(self):
         """Should get basic info about all the problems"""
-        self.assertFalse('Please log in' in test_app.get('/api/problems').data)
+        rv = json.loads(test_app.get('/api/problems').data)
+        self.assertEqual(200, rv['status'])
+        self.assertFalse('Please log in' in str(rv))
+
+        found = None
+        for prob in rv['data']:
+            if prob['pid'] == test_problem['pid']:
+                found = prob
+
+        self.assertTrue(len(rv['data']) > 0)
+        self.assertFalse(found is None)
+
+        # All the original values should be maintained
+        for k in test_problem:
+            self.assertEqual(str(test_problem[k]), str(found[k]))
 
     def tearDown(self):
         """Manually remove test problem from the test database"""
@@ -101,6 +114,8 @@ class ProblemGetTests(unittest.TestCase):
         test_session.delete(self.pd)
         test_session.delete(self.p)
         test_session.commit()
+
+        # Log out of this session too
         _logout()
 
 

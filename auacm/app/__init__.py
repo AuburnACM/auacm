@@ -3,7 +3,7 @@ from flask.ext.socketio import SocketIO
 from threading import Thread
 import time
 
-# Create the God-object `app` to be used everywhere
+# Create the God-objects to be used everywhere
 app = Flask(__name__)
 app.config.from_pyfile('config.py') # not sure if this works
 test_app = app.test_client()
