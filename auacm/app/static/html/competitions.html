@@ -17,7 +17,7 @@
       </tr>
       <tr ng-repeat="competition in competitions.ongoing">
         <td><a href="/#/competitions/{{ competition.cid }}">{{ competition.name }}</a></td>
-        <td>{{ competition.name }}</td>
+        <td>{{ getRemainingTime(competition) | secondsToDateTime | date:"h:mm:ss" }}</td>
         <td>{{ competition.length | secondsToDateTime | date:"h:mm:ss" }}</td>
         <td>{{ competition.startTime | secondsToDateTime | date:"medium" }}</td>
       </tr>
@@ -28,13 +28,11 @@
     <table class="table table-striped">
       <tr>
         <th>Name</th>
-        <th>Remaining</th>
         <th>Length</th>
         <th>Start Time</th>
       </tr>
       <tr ng-repeat="competition in competitions.upcoming">
         <td><a href="/#/competitions/{{ competition.cid }}">{{ competition.name }}</a></td>
-        <td>{{ competition.name }}</td>
         <td>{{ competition.length | secondsToDateTime | date:"h:mm:ss" }}</td>
         <td>{{ competition.startTime | secondsToDateTime | date:"medium" }}</td>
       </tr>
@@ -45,13 +43,11 @@
     <table class="table table-striped">
       <tr>
         <th>Name</th>
-        <th>Remaining</th>
         <th>Length</th>
         <th>Start Time</th>
       </tr>
       <tr ng-repeat="competition in competitions.past">
         <td><a href="/#/competitions/{{ competition.cid }}">{{ competition.name }}</a></td>
-        <td>{{ competition.name }}</td>
         <td>{{ competition.length | secondsToDateTime | date:"h:mm:ss" }}</td>
         <td>{{ competition.startTime | secondsToDateTime | date:"medium" }}</td>
       </tr>
