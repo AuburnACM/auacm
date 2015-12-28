@@ -38,21 +38,23 @@ def create_competition():
     data = request.form
     if current_user.admin == 0:
         return serve_error('Only admins can create competitions', 401)
-    if not data['name'] or not data['start_time'] or not data['length'] or\
-            not data['problems']:
-        return serve_error('You must specify name, startTime,' +
-                ' and length attributes')
-    competition = Competition(
-        name=data['name'],
-        start=int(data['start_time']),
-        stop=(int(data['start_time']) + int(data['length']))
-    )
-    competition.commit_to_session()
 
-    comp_problems = loads(data['problems'])
+    try:
+        competition = Competition(
+            name=data['name'],
+            start=int(data['start_time']),
+            stop=(int(data['start_time']) + int(data['length']))
+        )
+        competition.commit_to_session()
+
+        comp_problems = loads(data['problems'])
+    except KeyError as err:
+        return serve_error('You must specify name, startTime, length, and'
+                ' problem attributes. ' + err[0] + ' not found.',
+                response_code=400)
     for problem in comp_problems:
         session.add(CompProblem(
-            label=problem['label'],
+            label=problem['label'][:2],
             cid=competition.cid,
             pid=problem['pid']
         ))
@@ -78,24 +80,26 @@ def update_competition_data(cid):
         return serve_error('Only admins can modify competitions', 401)
 
     data = request.form
-    if not data['name'] or not data['start_time'] or not data['length'] or\
-            not data['problems']:
-        return serve_error('You must specify name, startTime,' +
-                ' and length attributes')
 
-    competition = session.query(Competition).filter(Competition.cid == cid)\
-            .first()
+    try:
+        competition = session.query(Competition).filter(Competition.cid == cid)\
+                .first()
 
-    competition.name = data['name']
-    competition.start=int(data['start_time'])
-    competition.stop=(int(data['start_time']) + int(data['length']))
-    competition.commit_to_session()
+        competition.name = data['name']
+        competition.start=int(data['start_time'])
+        competition.stop=(int(data['start_time']) + int(data['length']))
+        competition.commit_to_session()
 
-    # If the client sends a PUT request, we need to delete all of the old
-    # problems associated with this competition
-    session.query(CompProblem).filter(CompProblem.cid == cid).delete()
+        # If the client sends a PUT request, we need to delete all of the old
+        # problems associated with this competition
+        session.query(CompProblem).filter(CompProblem.cid == cid).delete()
 
-    comp_problems = loads(data['problems'])
+        comp_problems = loads(data['problems'])
+    except KeyError as err:
+        return serve_error('You must specify name, startTime, length, and'
+                ' and problem attributes. ' + err[0] + ' not found.',
+                response_code=400)
+
     for problem in comp_problems:
         session.add(CompProblem(
             label=problem['label'],

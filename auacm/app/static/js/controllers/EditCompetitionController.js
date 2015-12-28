@@ -1,4 +1,4 @@
-app.controller('CreateCompetitionController', ['$scope', '$http', '$location',
+app.controller('EditCompetitionController', ['$scope', '$http', '$location',
         '$routeParams', function($scope, $http, $location, $routeParams) {
     $scope.compProblems = [];
     var competition;
