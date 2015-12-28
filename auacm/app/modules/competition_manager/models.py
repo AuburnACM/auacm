@@ -30,3 +30,14 @@ class CompProblem(Base):
 
 class CompUser(Base):
     __tablename__ = 'comp_users'
+
+    def commit_to_session(self):
+        """Commit this CompUser to the database.
+
+        This is useful for adding a newly-created CompUser to the database.
+        """
+        session.add(self)
+        session.flush()
+        session.commit()
+        session.refresh(self)
+        self._problem = None

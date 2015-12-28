@@ -177,3 +177,31 @@ def get_competition_data(cid):
         'compProblems': comp_problems,
         'teams': scoreboard
     })
+
+
+@app.route('/api/competitions/<int:cid>/register', methods=['POST'])
+@login_required
+def register_for_competition(cid):
+    """ Called when a user wants to register for a competition.
+
+    All the user has to do is submit a post to this url with no form data.
+    From their logged-in status, we'll go ahead and add them to the competiton
+    as an individual (team name is default their display name).
+    """
+    if session.query(Competition).filter(Competition.cid == cid).first() \
+            is None:
+        return serve_error('Competition does not exist', response_code=404)
+
+    if session.query(CompUser).filter(CompUser.cid == cid,\
+            CompUser.username == current_user.username).first()\
+            is not None:
+        return serve_error('User already registered for competition',
+                response_code=400)
+
+    CompUser(
+        cid=cid,
+        username=current_user.username,
+        team=current_user.display
+    ).commit_to_session()
+
+    return serve_response({})
