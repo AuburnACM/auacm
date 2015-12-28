@@ -19,8 +19,7 @@ import zipfile
 from flask import request
 from flask.ext.login import current_user, login_required
 from app import app
-# from app.database import session
-import app.database as database     # Tryin' somethin' funky here
+import app.database as database
 from app.util import serve_response, serve_error, serve_info_pdf
 from app.modules.submission_manager.models import Submission
 from app.modules.problem_manager.models import Problem, ProblemData, SampleCase

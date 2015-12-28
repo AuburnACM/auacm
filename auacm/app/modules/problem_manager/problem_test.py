@@ -15,12 +15,13 @@ of Independence at 70 years old.
 
 import unittest
 import json
+import copy
 
 from app import app, test_app
 from models import Problem, ProblemData, SampleCase
 from app.database import test_session
 
-# TODO: Test get_problem (detailed info)
+# TODO: Test invalid requests to problem(s)
 # TODO: Test create_problem (and all of its subtests)
 # TODO: Test delete_problem
 # TODO: Test updating a problem
@@ -91,10 +92,13 @@ class ProblemGetTests(unittest.TestCase):
 
     def testGetAll(self):
         """Should get basic info about all the problems"""
-        rv = json.loads(test_app.get('/api/problems').data)
-        self.assertEqual(200, rv['status'])
+        # Check that the request went through
+        resp = test_app.get('/api/problems')
+        self.assertEqual(200, resp.status_code)
+        rv = json.loads(resp.data)
         self.assertFalse('Please log in' in str(rv))
 
+        # Find the test problem in the list returned
         found = None
         for prob in rv['data']:
             if prob['pid'] == test_problem['pid']:
@@ -106,6 +110,25 @@ class ProblemGetTests(unittest.TestCase):
         # All the original values should be maintained
         for k in test_problem:
             self.assertEqual(str(test_problem[k]), str(found[k]))
+
+    def testGetOne(self):
+        """Should get detailed info about one specific problem"""
+        resp = test_app.get('/api/problems/' + str(test_problem['pid']))
+        self.assertEqual(200, resp.status_code)
+
+        rv = json.loads(resp.data)
+        self.assertFalse('Please log in' in str(rv))
+
+        # Time limit doesn't get returned from the API, so take it out of our
+        # validation
+        data_validate = copy.deepcopy(test_problem_data)
+        data_validate.pop('time_limit')
+
+        prob = rv['data']
+        for key in test_problem:
+            self.assertEqual(str(test_problem[key]), str(prob[key]))
+        for key in data_validate:
+            self.assertEqual(str(test_problem_data[key]), str(prob[key]))
 
     def tearDown(self):
         """Manually remove test problem from the test database"""
