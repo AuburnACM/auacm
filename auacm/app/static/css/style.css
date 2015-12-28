@@ -5,3 +5,7 @@ body {
 .margin-top {
     margin-top : 25px;
 }
+
+.muted-link {
+    color: #767676;
+}

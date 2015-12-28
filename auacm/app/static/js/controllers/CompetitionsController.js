@@ -8,6 +8,10 @@ app.controller('CompetitionsController', ['$scope', '$http', '$location',
         return competition.startTime + competition.length - (Date.now() / 1000);
     };
 
+    $scope.editCompetition = function(argument) {
+        $location.path('/competitions/' + competition.cid + '/edit');
+    };
+
     $http.get('/api/competitions')
         .then(function(response) {
             $scope.competitions = response.data.data;
