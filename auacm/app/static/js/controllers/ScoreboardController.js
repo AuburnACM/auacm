@@ -125,7 +125,10 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
 
             // TODO(brandonlmorris) Add offset to server/client times
             var thisTime = Math.floor(new Date().getTime() / 1000);
-            if (thisTime < $scope.competition.startTime +
+            if (thisTime < $scope.competition.startTime) {
+                $scope.active = true;
+                $scope.timeLeft = $scope.competition.length;
+            } else if (thisTime < $scope.competition.startTime +
                     $scope.competition.length) {
                 // if the competition is still active
                 $scope.active = true;
