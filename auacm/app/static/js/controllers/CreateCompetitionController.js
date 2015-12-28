@@ -1,12 +1,51 @@
 app.controller('CreateCompetitionController', ['$scope', '$http', '$location',
         '$routeParams', function($scope, $http, $location, $routeParams) {
     $scope.compProblems = [];
+    var competition;
 
     if ($routeParams.cid !== undefined) {
         // if the CID was specified, we need to load the data
+        $scope.title = 'Edit Competition';
+        $http.get('/api/competitions/' + $routeParams.cid)
+            .then(function(response) {
+                competition = response.data.data.competition;
 
+                var date = new Date(competition.startTime * 1000);
+                var startTime = '';
+                startTime += (date.getMonth() + 1) + '-' + date.getDate() +
+                        '-' + date.getFullYear();
+                startTime += ' ' + date.getHours() + ':';
+                if (date.getMinutes() < 10) {
+                    startTime += '0';
+                }
+                startTime += date.getMinutes();
+
+                $scope.compName = competition.name;
+                $scope.startTime = startTime;
+                $scope.compLength = (competition.length / 3600) + ':';
+                if (competition.length % 60 < 10) {
+                    $scope.compLength += '0';
+                }
+                $scope.compLength += competition.length % 60;
+
+                var compProblems = response.data.data.compProblems;
+                // linear search to find the problems that are in the
+                //     competition.
+                for (var label in compProblems) {
+                    for (var i = 0; i < $scope.problems.length; i++) {
+                        if ($scope.problems[i].pid ===
+                                compProblems[label].pid) {
+                            $scope.addProblem($scope.problems[i]);
+                            break;
+                        }
+                    }
+                }
+            },
+            function(error) {
+
+            });
     } else {
-
+        $scope.title = 'Create Competition';
     }
 
     $scope.defaultStartTime = function() {
@@ -65,10 +104,10 @@ app.controller('CreateCompetitionController', ['$scope', '$http', '$location',
             'length': getLengthSeconds(),
             'problems': angular.toJson(problems)
         };
-        console.log(request);
         $http({
-            method: 'POST',
-            url: '/api/competitions',
+            method: competition === undefined ? 'POST' : 'PUT',
+            url: competition === undefined ? '/api/competitions' :
+                    '/api/competitions/' + competition.cid,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             transformRequest: function(obj) {
                     var str = [];

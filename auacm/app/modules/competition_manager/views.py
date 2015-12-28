@@ -62,6 +62,52 @@ def create_competition():
     return serve_response(competition.to_dict())
 
 
+@app.route('/api/competitions/<int:cid>', methods=['PUT'])
+@login_required
+def update_competition_data(cid):
+    """ Adds problems to a competition
+
+    Doing a POST request adds that problem to the competition whereas
+    a PUT request will remove all problems that were previously associated
+    with that competition and add all of the ones in the form body.
+
+    TODO: form validation to make sure that no duplicates are added.
+    """
+    if current_user.admin == 0:
+        # admins only
+        return serve_error('Only admins can modify competitions', 401)
+
+    data = request.form
+    if not data['name'] or not data['start_time'] or not data['length'] or\
+            not data['problems']:
+        return serve_error('You must specify name, startTime,' +
+                ' and length attributes')
+
+    competition = session.query(Competition).filter(Competition.cid == cid)\
+            .first()
+
+    competition.name = data['name']
+    competition.start=int(data['start_time'])
+    competition.stop=(int(data['start_time']) + int(data['length']))
+    competition.commit_to_session()
+
+    # If the client sends a PUT request, we need to delete all of the old
+    # problems associated with this competition
+    session.query(CompProblem).filter(CompProblem.cid == cid).delete()
+
+    comp_problems = loads(data['problems'])
+    for problem in comp_problems:
+        session.add(CompProblem(
+            label=problem['label'],
+            cid=competition.cid,
+            pid=problem['pid']
+        ))
+
+    session.flush()
+    session.commit()
+    return serve_response(competition.to_dict())
+
+
 @app.route('/api/competitions/<int:cid>')
 def get_competition_data(cid):
     competition = session.query(Competition).filter(Competition.cid == cid).\
@@ -126,38 +172,6 @@ def get_competition_data(cid):
         team_row['problemData'] = team_problems
         scoreboard.append(team_row)
 
-    return serve_response({
-        'competition': competition.to_dict(),
-        'compProblems': comp_problems,
-        'teams': scoreboard
-    })
-
-
-@app.route('/api/competitions/<int:cid>', methods=['POST', 'PUT'])
-@login_required
-def update_competition_data(cid):
-    """ Adds problems to a competition
-
-    Doing a POST request adds that problem to the competition whereas
-    a PUT request will remove all problems that were previously associated
-    with that competition and add all of the ones in the form body.
-
-    TODO: form validation to make sure that no duplicates are added.
-    """
-    if current_user.admin == 0:
-        # admins only
-        return serve_error('Only admins can modify competitions', 401)
-
-    if request.method == 'PUT':
-        # If the client sends a PUT request, we need to delete all of the old
-        # problems associated with this competition
-        session.query(CompProblem).filter(CompProblem.cid==cid).delete()
-
-    for problem in request.json['problemIds']:
-        session.add(CompProblem(cid=cid, pid=problem))
-
-    session.flush()
-    session.commit()
     return serve_response({
         'competition': competition.to_dict(),
         'compProblems': comp_problems,
