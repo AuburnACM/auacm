@@ -18,13 +18,27 @@ def get_competitions():
     past = list()
     upcoming = list()
     current_time = int(time())
+
+    registered_rows = session.query(CompUser).filter(
+            CompUser.username == current_user.username).all()
+    registered = set()
+    for row in registered_rows:
+        print row.username, row.team, row.cid
+        registered.add(row.cid)
+
     for competition in session.query(Competition).all():
         if competition.stop < current_time:
-            past.append(competition.to_dict())
+            past.append(competition.to_dict(
+                user_registered=competition.cid in registered
+            ))
         elif competition.start < current_time:
-            ongoing.append(competition.to_dict())
+            ongoing.append(competition.to_dict(
+                user_registered=competition.cid in registered
+            ))
         else:
-            upcoming.append(competition.to_dict())
+            upcoming.append(competition.to_dict(
+                user_registered=competition.cid in registered
+            ))
     return serve_response({
         'ongoing': ongoing,
         'past': past,
@@ -45,7 +59,8 @@ def create_competition():
     competition = Competition(
         name=data['name'],
         start=int(data['start_time']),
-        stop=(int(data['start_time']) + int(data['length']))
+        stop=(int(data['start_time']) + int(data['length'])),
+        closed=0
     )
     competition.commit_to_session()
 
@@ -87,8 +102,9 @@ def update_competition_data(cid):
             .first()
 
     competition.name = data['name']
-    competition.start=int(data['start_time'])
-    competition.stop=(int(data['start_time']) + int(data['length']))
+    competition.start = int(data['start_time'])
+    competition.stop = (int(data['start_time']) + int(data['length']))
+    competition.closed = 0
     competition.commit_to_session()
 
     # If the client sends a PUT request, we need to delete all of the old
@@ -192,16 +208,56 @@ def register_for_competition(cid):
             is None:
         return serve_error('Competition does not exist', response_code=404)
 
-    if session.query(CompUser).filter(CompUser.cid == cid,\
-            CompUser.username == current_user.username).first()\
-            is not None:
-        return serve_error('User already registered for competition',
-                response_code=400)
+    if current_user.admin == 1 and 'users' in request.data:
+        registrants = loads(request.data['users'])
+    else:
+        registrants = list()
+        registrants.append(current_user.username)
 
-    CompUser(
-        cid=cid,
-        username=current_user.username,
-        team=current_user.display
-    ).commit_to_session()
+    for user in registrants:
+        if session.query(CompUser).filter(CompUser.cid == cid,\
+            CompUser.username == user).first()\
+            is not None:
+            return serve_error('User ' + user + ' already registered for '
+                    'competition', response_code=400)
+
+    for user in registrants:
+        session.add(CompUser(
+            cid=cid,
+            username=current_user.username,
+            team=current_user.display
+        ))
+    session.flush()
+    session.commit()
+
+    return serve_response({})
+
+
+@app.route('/api/competitions/<int:cid>/unregister', methods=['POST'])
+@login_required
+def unregister_for_competition(cid):
+    """ Called when a user wants to register for a competition.
+
+    All the user has to do is submit a post to this url with no form data.
+    From their logged-in status, we'll go ahead and add them to the competiton
+    as an individual (team name is default their display name).
+    """
+    if session.query(Competition).filter(Competition.cid == cid).first() \
+            is None:
+        return serve_error('Competition does not exist', response_code=404)
+
+    if False and current_user.admin == 1 and 'users' in request.data:
+        registrants = loads(request.data['users'])
+    else:
+        registrants = list()
+        registrants.append(current_user.username)
+
+    for user in registrants:
+        session.query(CompUser)\
+                .filter(CompUser.username == user,
+                CompUser.cid == cid)\
+                .delete()
+    session.flush()
+    session.commit()
 
     return serve_response({})

@@ -4,12 +4,14 @@ from app.database import Base, session
 class Competition(Base):
     __tablename__ = 'comp_names'
 
-    def to_dict(self):
+    def to_dict(self, user_registered=False):
         return {
             'cid': self.cid,
             'name': self.name,
             'startTime': self.start,
-            'length': self.stop - self.start
+            'length': self.stop - self.start,
+            'closed': self.closed == 1,
+            'registered': user_registered
         }
 
     def commit_to_session(self):
