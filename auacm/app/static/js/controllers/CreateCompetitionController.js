@@ -25,7 +25,7 @@ app.controller('CreateCompetitionController', ['$scope', '$http', '$location',
     };
     $scope.disableForm = false;
 
-    var parseDate = function() {
+    var getStartTimeSeconds = function() {
         // get the string from scope and split it into its parts
         var parts = $scope.startTime.split(' ');
 
@@ -45,11 +45,30 @@ app.controller('CreateCompetitionController', ['$scope', '$http', '$location',
                 1000; // to seconds instead of milliseconds.
     };
 
+    var getLengthSeconds = function() {
+        var parts = $scope.compLength.split(':');
+        return parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60;
+    };
+
     $scope.createCompetition = function() {
         $scope.disableForm = true;
+        var problems = [];
+        for (var i = 0; i < $scope.compProblems.length; i++) {
+            problems.push({
+                'label': String.fromCharCode("A".charCodeAt(0) + i),
+                'pid': $scope.compProblems[i].pid
+            });
+        }
+        var request = {
+            'name': $scope.compName,
+            'start_time': getStartTimeSeconds(),
+            'length': getLengthSeconds(),
+            'problems': angular.toJson(problems)
+        };
+        console.log(request);
         $http({
             method: 'POST',
-            url: '/api/competitions/',
+            url: '/api/competitions',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             transformRequest: function(obj) {
                     var str = [];
@@ -68,7 +87,7 @@ app.controller('CreateCompetitionController', ['$scope', '$http', '$location',
             $location.path('/competitions/' + response.data.data.cid);
         }, function(response) {
             $scope.disableForm = false;
-            console.log("error");
+            console.error(response);
         });
     };
 }]);
@@ -131,6 +150,10 @@ app.directive('contestLengthValidator', [function() {
             function setIncorrectFormat(bool) {
                 ngModel.$setValidity('format', !bool);
             }
+            function setTimeTooShort(hours, minutes) {
+                ngModel.$setValidity('length', (hours === 0 && minutes > 0) ||
+                        (hours > 0 && minutes >= 0));
+            }
 
             ngModel.$parsers.push(function(value) {
                 // get the string from scope and split it into its parts
@@ -144,8 +167,18 @@ app.directive('contestLengthValidator', [function() {
                 setIncorrectFormat(isNaN(parseInt(parts[0])) ||
                         isNaN(parseInt(parts[1])));
 
+                var hours = parseInt(parts[0]);
+                var minutes = parseInt(parts[1]);
+                setTimeTooShort(hours, minutes);
+
                 return value;
             });
         }
+    };
+}]);
+
+app.filter('indexToCharCode', [function() {
+    return function(index) {
+        return String.fromCharCode("A".charCodeAt(0) + index);
     };
 }]);

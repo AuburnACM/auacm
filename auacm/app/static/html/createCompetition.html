@@ -1,4 +1,12 @@
-<h1>Create Competition</h1>
+
+<div class="row">
+  <h1 class="pull-left">Create Competition</h1>
+  <button type="button" class="btn btn-success pull-right margin-top col-md-2"
+          ng-click="createCompetition()" ng-show="isAdmin === 1">
+    Save
+  </button>
+</div>
+
 <div class="panel panel-default">
   <h2>Metadata</h2>
   <div class="panel-body">
@@ -29,18 +37,16 @@
       <div class="form-group">
         <label for="compLength" class="col-sm-2 control-label">Competition Length</label>
         <div class="col-sm-4 input-group">
-          <input class="form-control" id="compLength" placeholder="h:mm"
-              ng-model="compLength" ng-init="compLength = '3:00'">
+          <input class="form-control" id="compLength" name="compLength"
+              placeholder="h:mm" ng-model="compLength"
+              ng-init="compLength = '3:00'" contest-length-validator>
           <div class="input-group-addon">h:mm</div>
         </div>
         <div ng-if="!createCompetitionForm.compLength.$pristine" ng-messages="createCompetitionForm.compLength.$error">
           <div class="label label-danger" ng-message="format">Incorrect format</div>
+          <div class="label label-danger" ng-message="length">Competition too short</div>
         </div>
       </div>
-
-      <button class="btn btn-success" type="submit" ng-click="parseDate()">
-        Create Competition
-      </button>
     </form>
 
   </div>
@@ -57,7 +63,7 @@
       <td>
         <button type="submit" class="btn btn-danger" ng-click="removeProblem(problem)">Remove</button>
       </td>
-      <td>{{ problem.label }}</td>
+      <td ng-model="problem.label">{{ $index | indexToCharCode }}</td>
       <td>{{ problem.name }}</td>
     </tr>
     <tr>
@@ -76,4 +82,5 @@
       </td>
     </tr>
   </table>
+
 </div>

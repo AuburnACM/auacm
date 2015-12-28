@@ -8,6 +8,7 @@ from app.modules.submission_manager.models import Submission
 from app.modules.problem_manager.models import Problem
 from sqlalchemy import asc
 from time import time
+from json import loads
 
 
 @app.route('/api/competitions')
@@ -37,15 +38,27 @@ def create_competition():
     data = request.form
     if current_user.admin == 0:
         return serve_error('Only admins can create competitions', 401)
-    if not data['name'] or not data['startTime'] or not data['length']:
+    if not data['name'] or not data['start_time'] or not data['length'] or\
+            not data['problems']:
         return serve_error('You must specify name, startTime,' +
                 ' and length attributes')
     competition = Competition(
         name=data['name'],
-        start=int(data['startTime']),
-        stop=(int(data['startTime']) + int(data['length']))
+        start=int(data['start_time']),
+        stop=(int(data['start_time']) + int(data['length']))
     )
     competition.commit_to_session()
+
+    comp_problems = loads(data['problems'])
+    for problem in comp_problems:
+        session.add(CompProblem(
+            label=problem['label'],
+            cid=competition.cid,
+            pid=problem['pid']
+        ))
+    session.flush()
+    session.commit()
+
     return serve_response(competition.to_dict())
 
 

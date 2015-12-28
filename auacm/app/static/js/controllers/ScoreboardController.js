@@ -33,24 +33,26 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
             }
         });
 
-        // Calculate rank for each team.
-        var rank = 1;
-        var prevSolved = $scope.teams[0].solved;
-        var prevTime = $scope.teams[0].solved;
-        $scope.teams[0].rank = rank;
-        for (i = 1; i < $scope.teams.length; i++) {
-            team = $scope.teams[i];
-            if (team.solved < prevSolved) {
-                rank++;
-                team.rank = rank;
-            } else if (team.solved == prevSolved && team.time > prevTime) {
-                rank++;
-                team.rank = rank;
-            } else {
-                team.rank = rank;
+        if ($scope.teams.length > 0) {
+            // Calculate rank for each team.
+            var rank = 1;
+            var prevSolved = $scope.teams[0].solved;
+            var prevTime = $scope.teams[0].solved;
+            $scope.teams[0].rank = rank;
+            for (i = 1; i < $scope.teams.length; i++) {
+                team = $scope.teams[i];
+                if (team.solved < prevSolved) {
+                    rank++;
+                    team.rank = rank;
+                } else if (team.solved == prevSolved && team.time > prevTime) {
+                    rank++;
+                    team.rank = rank;
+                } else {
+                    team.rank = rank;
+                }
+                prevSolved = team.solved;
+                prevTime = team.time;
             }
-            prevSolved = team.solved;
-            prevTime = team.time;
         }
 
         // Can break if an $apply is already in progress, need to check first (???)
