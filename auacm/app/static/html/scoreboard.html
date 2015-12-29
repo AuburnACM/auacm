@@ -1,10 +1,18 @@
 <div>
   <div class="row">
-    <h1 class="pull-left">{{ competition.name }}
-      <small ng-if="isAdmin">–
-        <a href="/#/competitions/{{ competition.cid }}/edit" class="muted-link">Edit</a>
-      </small>
-    </h1>
+    <h1 class="pull-left">{{ competition.name }}</h1>
+    <div ng-if="isAdmin" class="dropdown pull-left margin-top margin-left">
+      <button class="btn btn-default dropdown-toggle" type="button"
+          id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
+          aria-expanded="true">
+        Manage
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+        <li><a href="/#/competitions/{{ cid }}/edit">Edit</a></li>
+        <li><a href="/#/competitions/{{ cid }}/teams">Teams</a></li>
+      </ul>
+    </div>
     <h2 class="pull-right" ng-show="active">{{ timeLeft | secondsToDateTime | date:"H:mm:ss" }}</h2>
   </div>
   <div class="body">

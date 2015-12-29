@@ -6,6 +6,10 @@ body {
     margin-top : 25px;
 }
 
+.margin-left {
+    margin-left: 10px;
+}
+
 .muted-link {
     color: #767676;
 }
