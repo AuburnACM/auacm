@@ -1,5 +1,5 @@
-app.controller('TeamController', ['$scope', '$http', '$location',
-        '$routeParams', function($scope, $http, $location, $routeParams) {
+app.controller('TeamController', ['$scope', '$http', '$location', '$window',
+        '$routeParams', function($scope, $http, $location, $window, $routeParams) {
     $scope.individuals = [];
     $scope.teams = {};
     $http.get('/api/competitions/' + $routeParams.cid + '/teams')
@@ -34,7 +34,18 @@ app.controller('TeamController', ['$scope', '$http', '$location',
         delete $scope.teams[name];
     };
 
-    window.addTeam = function(teamName) {
-        $scope.teams[teamName] = [];
-    };
+    var socket = io.connect('http://' + $window.location.host + '/register');
+    socket.on('connect', function() {
+        console.log('Connected');
+    });
+    socket.on('new_user', function(event) {
+        console.log('got new user', event);
+        if ($routeParams.cid == event.cid) {
+            $scope.individuals.push(event.user);
+
+            if (!$scope.$$phase) {
+                $scope.$digest();
+            }
+        }
+    });
 }]);

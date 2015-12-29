@@ -1,6 +1,6 @@
 from flask import request
 from flask.ext.login import current_user, login_required
-from app import app
+from app import app, socketio
 from app.database import session
 from app.util import serve_response, serve_error
 from .models import Competition, CompProblem, CompUser
@@ -10,6 +10,11 @@ from app.modules.user_manager.models import User
 from sqlalchemy import asc
 from time import time
 from json import loads
+
+
+@socketio.on('connect', namespace='/register')
+def on_connection():
+    pass
 
 
 @app.route('/api/competitions')
@@ -222,12 +227,21 @@ def register_for_competition(cid):
             return serve_error('User ' + user + ' already registered for '
                     'competition', response_code=400)
 
-    for user in registrants:
+    for username in registrants:
+        user = session.query(User).filter(User.username == user).first()
         session.add(CompUser(
             cid=cid,
-            username=current_user.username,
-            team=current_user.display
+            username=user.username,
+            team=user.display
         ))
+        socketio.emit('new_user', {
+            'cid': cid,
+            'user': {
+                'display': user.display,
+                'username': user.username
+            }
+        },
+        namespace='/register')
     session.flush()
     session.commit()
 
