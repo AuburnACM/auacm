@@ -3,7 +3,7 @@
 To run these tests, execute the following at the app level:
 
 <code>
-./test.py
+./test.py problem
 </code>
 
 These tests assume that the login functionality works, and depends on having
@@ -25,8 +25,7 @@ session = database.test_session
 
 
 # TODO: Test invalid requests to problem(s)
-# TODO: Test create_problem (and all of its subtests)
-# TODO: Test delete_problem
+# TODO: Problem subtests (different arguments, etc)
 
 # Test data to work with
 test_problem = {
@@ -143,6 +142,7 @@ class ProblemGetTests(unittest.TestCase):
         # Log out of this session too
         _logout()
 
+
 class ProblemEditTests(unittest.TestCase):
     """Tests functionality for editing an existing problem"""
 
@@ -186,6 +186,8 @@ class ProblemEditTests(unittest.TestCase):
         _logout()
 
 class ProblemDeleteTests(unittest.TestCase):
+    """Tests deleting a problem via the API"""
+
     def setUp(self):
         """Add the problem to be deleted to the database"""
         session.add(Problem(**test_problem))

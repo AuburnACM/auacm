@@ -3,9 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.automap import automap_base
 
-from app import app
-
-# Use the test DB if specified, otherwise the default
+# Create global database variables
 Base = automap_base()
 engine = create_engine('mysql+pymysql://acm@localhost/acm?charset=utf8')
 connection = engine.connect()
