@@ -33,11 +33,38 @@ app.controller('TeamController', ['$scope', '$http', '$location', '$window',
         }
         delete $scope.teams[name];
     };
+    $scope.save = function() {
+        var i;
+        var teams = {};
+        for (var team in $scope.teams) {
+            var usernames = [];
+            teams[team] = [];
+            for (i = 0; i < $scope.teams[team].length; i++) {
+                teams[team].push($scope.teams[team][i].username);
+            }
+        }
+        for (i = 0; i < $scope.individuals.length; i++) {
+            teams[$scope.individuals[i].display] =
+                    [$scope.individuals[i].username];
+        }
+        console.log(teams);
+        var fd = new FormData();
+        fd.append('teams', angular.toJson(teams));
+        $http({
+            method: 'PUT',
+            url: '/api/competitions/' + $routeParams.cid + '/teams',
+            headers: {'Content-Type': undefined},
+            transformRequest: angular.identity,
+            data: fd
+        }).then(function(response) {
+            console.log('success');
+        }, function(response) {
+            console.error(response);
+        });
+    };
 
     var socket = io.connect('http://' + $window.location.host + '/register');
-    socket.on('connect', function() {
-        console.log('Connected');
-    });
+    socket.on('connect', function() {});
     socket.on('new_user', function(event) {
         console.log('got new user', event);
         if ($routeParams.cid == event.cid) {

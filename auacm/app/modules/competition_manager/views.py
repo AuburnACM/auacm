@@ -277,7 +277,8 @@ def unregister_for_competition(cid):
 
     return serve_response({})
 
-@app.route('/api/competitions/<int:cid>/teams')
+
+@app.route('/api/competitions/<int:cid>/teams', methods=['GET'])
 @login_required
 def get_competition_teams(cid):
     comp_users = session.query(CompUser, User).join(User,
@@ -294,3 +295,34 @@ def get_competition_teams(cid):
         })
 
     return serve_response(teams)
+
+
+@app.route('/api/competitions/<int:cid>/teams', methods=['PUT'])
+@login_required
+def put_competition_teams(cid):
+    if current_user.admin == 0:
+        return serve_error('You must be an admin to update teams',
+                response_code=401)
+
+    print 'request.form = ', request.form
+    try:
+        teams = loads(request.form['teams'])
+    except KeyError as err:
+        return serve_error('You must include the parameter \'teams\'.',
+                response_code=400)
+
+    # Delete all of the old CompUser rows for this competition
+    session.query(CompUser).filter(CompUser.cid == cid).delete()
+
+    for team in teams:
+        for user in teams[team]:
+            session.add(CompUser(
+                cid=cid,
+                username=user,
+                team=team
+            ))
+
+    session.flush()
+    session.commit()
+
+    return serve_response({})
