@@ -9,3 +9,20 @@ body {
 .muted-link {
     color: #767676;
 }
+
+.grid-padding {
+    margin: 10px;
+}
+
+.gridded {
+    display: block;
+}
+
+.movable {
+    cursor: move;
+}
+
+.dndPlaceholder {
+    background: #FFF;
+    min-height: 60px;
+}

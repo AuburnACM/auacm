@@ -6,6 +6,7 @@ from app.util import serve_response, serve_error
 from .models import Competition, CompProblem, CompUser
 from app.modules.submission_manager.models import Submission
 from app.modules.problem_manager.models import Problem
+from app.modules.user_manager.models import User
 from sqlalchemy import asc
 from time import time
 from json import loads
@@ -261,3 +262,21 @@ def unregister_for_competition(cid):
     session.commit()
 
     return serve_response({})
+
+@app.route('/api/competitions/<int:cid>/teams')
+@login_required
+def get_competition_teams(cid):
+    comp_users = session.query(CompUser, User).join(User,
+            User.username == CompUser.username).filter(CompUser.cid == cid)\
+            .all()
+
+    teams = dict()
+    for user in comp_users:
+        if user.CompUser.team not in teams:
+            teams[user.CompUser.team] = list()
+        teams[user.CompUser.team].append({
+            'username': user.User.username,
+            'display': user.User.display
+        })
+
+    return serve_response(teams)

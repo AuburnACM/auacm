@@ -4,7 +4,8 @@
 var app = angular.module('mainModule',[
     'ngRoute',
     'ui.bootstrap',
-    'ngMessages'
+    'ngMessages',
+    'dndLists'
 ]);
 
 // configure our routes
@@ -59,6 +60,11 @@ app.config(function($routeProvider) {
             templateUrl : 'static/html/scoreboard.html',
             controller : 'ScoreboardController',
             activetab : 'competitions'
+        })
+        .when('/competitions/:cid/teams', {
+            templateUrl: 'static/html/teams.html',
+            controller: 'TeamController',
+            activetab: 'competitions'
         })
         .when('/settings', { // route for the settings page
             templateUrl : 'static/html/settings.html',
