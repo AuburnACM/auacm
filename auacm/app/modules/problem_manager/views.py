@@ -285,10 +285,11 @@ def update_problem(identifier):    # pylint: disable=too-many-branches
         data.difficulty = request.form['difficulty']
 
     # Save the changes
-    problem.commit_to_session()
-    data.commit_to_session()
+    problem.commit_to_session(database.session)
+    data.commit_to_session(database.session)
 
     # If sample cases were uploaded, delete cases and go with the new ones
+    case_lst = list()
     if 'cases' in request.form:
         for old_case in database.session.query(SampleCase).\
                 filter(SampleCase.pid == pid).all():
@@ -297,7 +298,6 @@ def update_problem(identifier):    # pylint: disable=too-many-branches
             database.session.commit()
         case_num = 1
         cases = loads(str(request.form['cases']))
-        case_lst = list()
         for case in cases:
             SampleCase(
                 pid=pid,

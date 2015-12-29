@@ -32,7 +32,7 @@ class Problem(Base):
 
         Base.__init__(self, **defaults)
 
-    def commit_to_session(self):
+    def commit_to_session(self, session):
         """Commit this problem to the database as a new problem."""
         session.add(self)
         session.flush()
@@ -72,7 +72,7 @@ class  ProblemData(Base):
         defaults.update(kwargs)
         Base.__init__(self, **defaults)
 
-    def commit_to_session(self):
+    def commit_to_session(self, session=session):
         """Commit this problem data object to the database."""
         session.add(self)
         session.flush()
@@ -95,7 +95,7 @@ class SampleCase(Base):
     def __init__(self, **kwargs):
         Base.__init__(self, **kwargs)
 
-    def commit_to_session(self):
+    def commit_to_session(self, session=session):
         """Commit this sample case to the database."""
         session.add(self)
         session.flush()

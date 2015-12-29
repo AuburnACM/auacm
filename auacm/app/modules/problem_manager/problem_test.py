@@ -19,12 +19,14 @@ import copy
 
 from app import app, test_app
 from models import Problem, ProblemData, SampleCase
-from app.database import test_session
+import app.database as database
+
+session = database.test_session
+
 
 # TODO: Test invalid requests to problem(s)
 # TODO: Test create_problem (and all of its subtests)
 # TODO: Test delete_problem
-# TODO: Test updating a problem
 
 # Test data to work with
 test_problem = {
@@ -82,10 +84,10 @@ class ProblemGetTests(unittest.TestCase):
             self.cases.append(SampleCase(**c))
 
         # Ship it off to the db
-        test_session.add(self.p)
-        test_session.add(self.pd)
-        for c in self.cases: test_session.add(c)
-        test_session.commit()
+        session.add(self.p)
+        session.add(self.pd)
+        for c in self.cases: session.add(c)
+        session.commit()
 
         # Log in
         _login()
@@ -133,10 +135,52 @@ class ProblemGetTests(unittest.TestCase):
     def tearDown(self):
         """Manually remove test problem from the test database"""
         for c in self.cases:
-            test_session.delete(c)
-        test_session.delete(self.pd)
-        test_session.delete(self.p)
-        test_session.commit()
+            session.delete(c)
+        session.delete(self.pd)
+        session.delete(self.p)
+        session.commit()
+
+        # Log out of this session too
+        _logout()
+
+class ProblemEditTests(unittest.TestCase):
+    """Tests functionality for editing an existing problem"""
+
+    def setUp(self):
+        """Prepare test database for tests"""
+        self.p = Problem(**test_problem)
+        self.pd = ProblemData(**test_problem_data)
+        self.cases = list()
+        for c in test_cases:
+            self.cases.append(SampleCase(**c))
+
+        # Ship it off to the db
+        session.add(self.p)
+        session.add(self.pd)
+        for c in self.cases: session.add(c)
+        session.commit()
+
+        # Log in
+        _login()
+
+    def testProblemEdit(self):
+        new_name = 'A Different Test Problem'
+        resp = test_app.put(
+            '/api/problems/' + str(test_problem['pid']),
+            data={'name':new_name})
+        self.assertEqual(200, resp.status_code)
+
+        rv = json.loads(resp.data)
+        prob = rv['data']
+        self.assertEqual(new_name, prob['name'])
+
+    def tearDown(self):
+        """Tie up loose ends from test"""
+        for c in self.cases:
+            session.delete(c)
+        session.delete(self.pd)
+        session.delete(self.p)
+        session.commit()
 
         # Log out of this session too
         _logout()
