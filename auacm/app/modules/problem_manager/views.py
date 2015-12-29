@@ -229,7 +229,7 @@ def delete_problem(identifier):
     if not problem_data.first():
         return serve_error('Could not find problem data with pid ' +
                            pid, response_code=401)
-    problem_data.delete()
+    database.session.delete(problem_data.first())
 
     # Delete any and all sample cases associated w/ problem
     for case in database.session.query(SampleCase).\
@@ -237,7 +237,7 @@ def delete_problem(identifier):
         database.session.delete(case)
 
     # Delete from problem table
-    problem.delete()
+    database.session.delete(problem)
 
     # Commit changes
     database.session.flush()

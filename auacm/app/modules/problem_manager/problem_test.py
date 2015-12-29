@@ -185,6 +185,46 @@ class ProblemEditTests(unittest.TestCase):
         # Log out of this session too
         _logout()
 
+class ProblemDeleteTests(unittest.TestCase):
+    def setUp(self):
+        """Add the problem to be deleted to the database"""
+        session.add(Problem(**test_problem))
+        session.add(ProblemData(**test_problem_data))
+        for c in test_cases:
+            session.add(SampleCase(**c))
+        session.commit()
+
+        # Log in as well
+        _login()
+
+    def testDeleteProblem(self):
+        resp = test_app.delete('api/problems/' + str(test_problem['pid']))
+        self.assertEqual(200, resp.status_code)
+        rv = json.loads(resp.data)
+        self.assertEqual(str(test_problem['pid']), (rv['data']['deleted_pid']))
+
+        # Ensure problem was removed from the database
+        prob = session.query(Problem).\
+            filter(Problem.pid == test_problem['pid']).first()
+        self.assertIsNone(prob)
+
+    def tearDown(self):
+        """Delete the test problem only if unsuccessful"""
+        prob = session.query(Problem).\
+            filter(Problem.pid == test_problem['pid']).first()
+        if prob is not None:
+            prob_data = session.query(ProblemData).\
+                filter(ProblemData.pid == test_problem['pid']).first()
+            cases = session.query(SampleCase).\
+                filter(SampleCase.pid == test_problem['pid']).all()
+            session.delete(prob_data)
+            for c in cases: session.delete(c)
+            session.delete(prob)
+            session.commit()
+
+        # Log out as well
+        _logout()
+
 
 if __name__ == '__main__':
     unittest.main()
