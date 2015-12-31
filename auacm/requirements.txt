@@ -3,12 +3,10 @@ cffi==1.2.1
 Flask==0.10.1
 Flask-Bcrypt==0.7.1
 Flask-Login==0.3.0
-Flask-SocketIO==0.6.0
+Flask-SocketIO==1.2
 Flask-Sockets==0.1
 Flask-SQLAlchemy==2.0
 gevent==1.0.2
-gevent-socketio==0.3.6
-gevent-websocket==0.9.5
 greenlet==0.4.9
 gunicorn==19.3.0
 itsdangerous==0.24

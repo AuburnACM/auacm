@@ -108,5 +108,4 @@ app.directive('markdown', function () {
             element.html(converter.makeHtml(scope.$eval(attrs.markdown)  || ''));
         }
     };
-
 });
