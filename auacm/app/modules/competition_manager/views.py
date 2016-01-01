@@ -29,7 +29,6 @@ def get_competitions():
             CompUser.username == current_user.username).all()
     registered = set()
     for row in registered_rows:
-        print row.username, row.team, row.cid
         registered.add(row.cid)
 
     for competition in session.query(Competition).all():
@@ -304,7 +303,6 @@ def put_competition_teams(cid):
         return serve_error('You must be an admin to update teams',
                 response_code=401)
 
-    print 'request.form = ', request.form
     try:
         teams = loads(request.form['teams'])
     except KeyError as err:
