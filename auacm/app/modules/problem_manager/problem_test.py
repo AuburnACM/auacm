@@ -21,7 +21,7 @@ from app import app, test_app
 from models import Problem, ProblemData, SampleCase
 import app.database as database
 
-session = database.test_session
+session = database.session
 
 
 # TODO: Test invalid requests to problem(s)

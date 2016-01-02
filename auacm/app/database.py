@@ -9,12 +9,6 @@ engine = create_engine('mysql+pymysql://acm@localhost/acm?charset=utf8')
 connection = engine.connect()
 session = Session(engine)
 
-# Set up the test database connection
-test_engine = create_engine(
-    'mysql+pymysql://root@localhost/acm_test?charset=utf8')
-test_connection = test_engine.connect()
-test_session = Session(test_engine)
-
 # Import all the ORM classes
 from app.modules.user_manager.models import User
 from app.modules.submission_manager.models import Submission, MockSubmission

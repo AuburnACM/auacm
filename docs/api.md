@@ -6,11 +6,10 @@ method arguments and return values.
 
 ### Table of Contents
 
-1. Problem Management
-2. Competition Management
-3. Submission Management
-4. Submission Management
-5. Blog Management
+1. [Problem Management](#problem-management)
+2. [Competition Management](#submission-management)
+3. [Submission Management](#submission-management)
+4. [Blog Management](#submission-management)
 
 ---
 
@@ -19,7 +18,7 @@ method arguments and return values.
 ### Create a New Problem
 ***This method requires being logged in as an administrator***
 
-__URL:__ `/api/problems/``
+__URL:__ `/api/problems/`
 
 __Method:__ `POST`
 
