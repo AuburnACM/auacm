@@ -8,6 +8,7 @@ from app.modules.submission_manager.models import Submission
 from app.modules.problem_manager.models import Problem
 from sqlalchemy import asc
 from time import time
+from json import loads
 
 
 @app.route('/api/competitions')
@@ -29,6 +30,86 @@ def get_competitions():
         'past': past,
         'upcoming': upcoming
     })
+
+
+@app.route('/api/competitions', methods=['POST'])
+@login_required
+def create_competition():
+    data = request.form
+    if current_user.admin == 0:
+        return serve_error('Only admins can create competitions', 401)
+
+    try:
+        competition = Competition(
+            name=data['name'],
+            start=int(data['start_time']),
+            stop=(int(data['start_time']) + int(data['length']))
+        )
+        competition.commit_to_session()
+
+        comp_problems = loads(data['problems'])
+    except KeyError as err:
+        return serve_error('You must specify name, startTime, length, and'
+                ' problem attributes. ' + err[0] + ' not found.',
+                response_code=400)
+    for problem in comp_problems:
+        session.add(CompProblem(
+            label=problem['label'][:2],
+            cid=competition.cid,
+            pid=problem['pid']
+        ))
+    session.flush()
+    session.commit()
+
+    return serve_response(competition.to_dict())
+
+
+@app.route('/api/competitions/<int:cid>', methods=['PUT'])
+@login_required
+def update_competition_data(cid):
+    """ Adds problems to a competition
+
+    Doing a POST request adds that problem to the competition whereas
+    a PUT request will remove all problems that were previously associated
+    with that competition and add all of the ones in the form body.
+
+    TODO: form validation to make sure that no duplicates are added.
+    """
+    if current_user.admin == 0:
+        # admins only
+        return serve_error('Only admins can modify competitions', 401)
+
+    data = request.form
+
+    try:
+        competition = session.query(Competition).filter(Competition.cid == cid)\
+                .first()
+
+        competition.name = data['name']
+        competition.start=int(data['start_time'])
+        competition.stop=(int(data['start_time']) + int(data['length']))
+        competition.commit_to_session()
+
+        # If the client sends a PUT request, we need to delete all of the old
+        # problems associated with this competition
+        session.query(CompProblem).filter(CompProblem.cid == cid).delete()
+
+        comp_problems = loads(data['problems'])
+    except KeyError as err:
+        return serve_error('You must specify name, startTime, length, and'
+                ' and problem attributes. ' + err[0] + ' not found.',
+                response_code=400)
+
+    for problem in comp_problems:
+        session.add(CompProblem(
+            label=problem['label'],
+            cid=competition.cid,
+            pid=problem['pid']
+        ))
+
+    session.flush()
+    session.commit()
+    return serve_response(competition.to_dict())
 
 
 @app.route('/api/competitions/<int:cid>')

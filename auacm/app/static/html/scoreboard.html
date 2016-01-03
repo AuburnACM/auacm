@@ -1,6 +1,10 @@
 <div>
   <div class="row">
-    <h1 class="pull-left">{{ competition.name }}</h1>
+    <h1 class="pull-left">{{ competition.name }}
+      <small ng-if="isAdmin">–
+        <a href="/#/competitions/{{ competition.cid }}/edit" class="muted-link">Edit</a>
+      </small>
+    </h1>
     <h2 class="pull-right" ng-show="active">{{ timeLeft | secondsToDateTime | date:"H:mm:ss" }}</h2>
   </div>
   <div class="body">
