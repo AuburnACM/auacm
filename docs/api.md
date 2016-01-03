@@ -106,7 +106,7 @@ of all the problems.
 ## Edit an Existing Problem
 ***This method requires being signed in as an administrator***
 
-__URL:__ `/api/problems/{identifier}/edit`
+__URL:__ `/api/problems/{identifier}`
 
 _Note:_ {identifier} can be the numeric problem ID or the alphanumeric
 "shortname"

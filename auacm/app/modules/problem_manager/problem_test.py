@@ -19,6 +19,7 @@ import copy
 
 from app import app, test_app
 from models import Problem, ProblemData, SampleCase
+from pymysql.err import IntegrityError
 import app.database as database
 
 session = database.session
@@ -70,6 +71,28 @@ def _logout():
     rv = json.loads(test_app.get('/api/logout').data)
     assert 200 == rv['status']
 
+def _reinsert_test_problem(test_prob, test_prob_data, test_cases):
+    # Find the problem
+    cases = session.query(SampleCase).\
+        filter(SampleCase.pid == test_problem['pid']).all()
+    data = session.query(ProblemData).\
+        filter(ProblemData.pid == test_problem['pid']).first()
+    problem = session.query(Problem).\
+        filter(Problem.pid == test_problem['pid']).first()
+
+    # Remove it (if it was actually in there)
+    for case in cases:
+        session.delete(case)
+    if data: session.delete(data)
+    if problem: session.delete(problem)
+    session.commit()
+
+    # Put in the fresh test problem
+    session.add(test_prob)
+    session.add(test_prob_data)
+    for c in test_cases:
+        session.add(c)
+    session.commit()
 
 class ProblemGetTests(unittest.TestCase):
     """Tests functionality for GET-ing problems from the API"""
@@ -83,10 +106,14 @@ class ProblemGetTests(unittest.TestCase):
             self.cases.append(SampleCase(**c))
 
         # Ship it off to the db
-        session.add(self.p)
-        session.add(self.pd)
-        for c in self.cases: session.add(c)
-        session.commit()
+        try:
+            session.add(self.p)
+            session.add(self.pd)
+            for c in self.cases: session.add(c)
+            session.commit()
+        except:
+            session.rollback()
+            _reinsert_test_problem(self.p, self.pd, self.cases)
 
         # Log in
         _login()
@@ -155,10 +182,14 @@ class ProblemEditTests(unittest.TestCase):
             self.cases.append(SampleCase(**c))
 
         # Ship it off to the db
-        session.add(self.p)
-        session.add(self.pd)
-        for c in self.cases: session.add(c)
-        session.commit()
+        try:
+            session.add(self.p)
+            session.add(self.pd)
+            for c in self.cases: session.add(c)
+            session.commit()
+        except:
+            session.rollback()
+            _reinsert_test_problem()
 
         # Log in
         _login()
@@ -190,11 +221,20 @@ class ProblemDeleteTests(unittest.TestCase):
 
     def setUp(self):
         """Add the problem to be deleted to the database"""
-        session.add(Problem(**test_problem))
-        session.add(ProblemData(**test_problem_data))
+        self.p = Problem(**test_problem)
+        session.add(self.p)
+        self.pd = ProblemData(**test_problem_data)
+        session.add(self.pd)
+        self.cases = list()
         for c in test_cases:
-            session.add(SampleCase(**c))
-        session.commit()
+            self.cases.append(SampleCase(**c))
+            session.add(self.cases[len(self.cases)-1])
+
+        try:
+            session.commit()
+        except:
+            session.rollback()
+            _reinsert_test_problem(self.p, self.pd, self.cases)
 
         # Log in as well
         _login()
