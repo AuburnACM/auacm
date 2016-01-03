@@ -1,4 +1,4 @@
-'''Utility functions and objects for the auacm server.'''
+"""Utility functions and objects for the auacm server."""
 
 from flask import send_from_directory, jsonify
 from flask.ext.login import LoginManager
@@ -11,7 +11,6 @@ from os.path import join
 # bcrypt setup
 bcrypt = Bcrypt(app)
 
-
 # login session setup
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -21,12 +20,12 @@ def load_user(user_id):
     '''Log a user into the app.'''
     return session.query(User).filter(User.username==user_id).first()
 
-# functions for serving responses 
+# Functions for serving responses
 def serve_html(filename):
     '''Serve static HTML pages.'''
     return send_from_directory(app.static_folder+"/html/", filename)
 
- 
+
 def serve_info_pdf(pid):
     '''Serve static PDFs.'''
     return send_from_directory(join(app.config['DATA_FOLDER'], 'problems', pid), 'info.pdf')

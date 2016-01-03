@@ -21,7 +21,7 @@ class Submission(Base):
 
     def commit_to_session(self):
         '''Commit this Submission to the database.
-        
+
         This is useful for adding a newly-created Submission to the database.
         '''
         dblock.acquire()
