@@ -15,10 +15,11 @@ update_problem  -- modifies the data/files of a specific problem
 import os
 import zipfile
 
+# pylint: disable=no-name-in-module, f0401
 from flask import request
-from flask.ext.login import current_user, login_required # pylint: disable=no-name-in-module
+from flask.ext.login import current_user, login_required
 from app import app
-from app.database import session
+import app.database as database
 from app.util import serve_response, serve_error, serve_info_pdf
 from app.modules.submission_manager.models import Submission
 from app.modules.problem_manager.models import Problem, ProblemData, SampleCase
@@ -45,7 +46,7 @@ def is_pid(identifier):
 @login_required
 def get_problem_info(shortname):
     """Serve the PDF description of a problem"""
-    pid = session.query(Problem).\
+    pid = database.session.query(Problem).\
             options(load_only('pid', 'shortname')).\
             filter(Problem.shortname == shortname).\
             first().pid
@@ -56,7 +57,7 @@ def get_problem_info(shortname):
 @login_required
 def get_problem(identifier):
     """Returns the JSON representation of a specific problem"""
-    problem = session.query(Problem, ProblemData).join(ProblemData)
+    problem = database.session.query(Problem, ProblemData).join(ProblemData)
     if is_pid(identifier):
         problem = problem.filter(Problem.pid == identifier).first()
     else:
@@ -64,7 +65,7 @@ def get_problem(identifier):
                   filter(Problem.shortname == identifier).first()
 
     cases = list()
-    for case in session.query(SampleCase).\
+    for case in database.session.query(SampleCase).\
                     filter(SampleCase.pid == problem.Problem.pid).\
                     all():
         cases.append({
@@ -93,7 +94,7 @@ def get_problem(identifier):
 def get_problems():
     """Obtain basic information of all the problems in the database"""
     problems = list()
-    solved = session.query(Submission).\
+    solved = database.session.query(Submission).\
             filter(Submission.username == current_user.username).\
             filter(Submission.result == "good").\
             all()
@@ -101,14 +102,14 @@ def get_problems():
     for solve in solved:
         solved_set.add(solve.pid)
 
-    for problem in session.query(Problem).all():
+    for problem in database.session.query(Problem).all():
         problems.append({
             'pid': problem.pid,
             'name': problem.name,
             'shortname': problem.shortname,
             'appeared': problem.appeared,
             'difficulty': problem.difficulty,
-            'compRelease': problem.comp_release,
+            'comp_release': problem.comp_release,
             'added': problem.added,
             'solved': problem.pid in solved_set,
             'url': url_for_problem(problem)
@@ -130,7 +131,7 @@ def create_problem():
         cases = request.form['cases']
         cases = loads(str(cases))
         for case in cases:
-            if not 'input' in case or not 'output' in case:
+            if 'input' not in case or 'output' not in case:
                 return serve_error(
                     'Sample case(s) were not formed correctly',
                     response_code=400)
@@ -214,7 +215,7 @@ def delete_problem(identifier):
         return serve_error('You must be an admin to delete a problem',
                            response_code=401)
 
-    pid, problem = None, session.query(Problem)
+    pid, problem = None, database.session.query(Problem)
     if is_pid(identifier):
         pid = identifier
         problem = problem.filter(Problem.pid == pid).first()
@@ -223,24 +224,24 @@ def delete_problem(identifier):
         pid = problem.pid
 
     # Delete from problem_data table first to satisfy foreign key constraint
-    problem_data = session.query(ProblemData).\
+    problem_data = database.session.query(ProblemData).\
         filter(ProblemData.pid == pid)
     if not problem_data.first():
         return serve_error('Could not find problem data with pid ' +
                            pid, response_code=401)
-    problem_data.delete()
+    database.session.delete(problem_data.first())
 
     # Delete any and all sample cases associated w/ problem
-    for case in session.query(SampleCase).\
+    for case in database.session.query(SampleCase).\
             filter(SampleCase.pid == pid).all():
-        session.delete(case)
+        database.session.delete(case)
 
     # Delete from problem table
-    problem.delete()
+    database.session.delete(problem)
 
     # Commit changes
-    session.flush()
-    session.commit()
+    database.session.flush()
+    database.session.commit()
 
     # Delete judge data
     directory = os.path.join(app.config['DATA_FOLDER'], 'problems', pid)
@@ -260,7 +261,7 @@ def update_problem(identifier):    # pylint: disable=too-many-branches
         return serve_error('You must be an admin to update a problem',
                            response_code=401)
 
-    pid, problem = None, session.query(Problem)
+    pid, problem = None, database.session.query(Problem)
     if is_pid(identifier):
         pid = identifier
         problem = problem.filter(Problem.pid == pid).first()
@@ -268,7 +269,7 @@ def update_problem(identifier):    # pylint: disable=too-many-branches
         problem = problem.filter(Problem.shortname == identifier).first()
         pid = problem.pid
 
-    data = session.query(ProblemData).filter(ProblemData.pid == pid).first()
+    data = database.session.query(ProblemData).filter(ProblemData.pid == pid).first()
     if 'name' in request.form:
         problem.name = request.form['name'][:32]
         problem.shortname = request.form['name'][:32].replace(' ', '').lower()
@@ -284,19 +285,19 @@ def update_problem(identifier):    # pylint: disable=too-many-branches
         data.difficulty = request.form['difficulty']
 
     # Save the changes
-    problem.commit_to_session()
-    data.commit_to_session()
+    problem.commit_to_session(database.session)
+    data.commit_to_session(database.session)
 
     # If sample cases were uploaded, delete cases and go with the new ones
+    case_lst = list()
     if 'cases' in request.form:
-        for old_case in session.query(SampleCase).\
+        for old_case in database.session.query(SampleCase).\
                 filter(SampleCase.pid == pid).all():
-            session.delete(old_case)
-            session.flush()
-            session.commit()
+            database.session.delete(old_case)
+            database.session.flush()
+            database.session.commit()
         case_num = 1
         cases = loads(str(request.form['cases']))
-        case_lst = list()
         for case in cases:
             SampleCase(
                 pid=pid,

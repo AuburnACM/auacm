@@ -36,7 +36,7 @@ def create_blog_post():
     if not current_user.admin == 1:
         return serve_error('You must be an admin to submit blog posts', response_code=401)
     if not request.form['title'] or not request.form['subtitle'] or not request.form['body']:
-        return serve_error('Must include title, subtitle, and body with request', 
+        return serve_error('Must include title, subtitle, and body with request',
                            response_code=400)
     post = BlogPost(title=request.form['title'],
                     subtitle=request.form['subtitle'],

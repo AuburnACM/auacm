@@ -8,7 +8,11 @@
 </div>
 
 <div class="panel panel-default">
-  <h2>Metadata</h2>
+  <div class="panel-heading">
+    <div class="panel-title">
+      Metadata
+    </div>
+  </div>
   <div class="panel-body">
 
     <form name="createCompetitionForm" class="form-horizontal">
@@ -26,7 +30,7 @@
           <input class="form-control" id="startTime" name="startTime"
               placeholder="MM-DD-YYYY HH:mm" ng-model="startTime"
               ng-init="startTime = defaultStartTime()" date-format-validator>
-          <div class="input-group-addon">CDT</div>
+          <div class="input-group-addon">24h CDT</div>
         </div>
         <div ng-if="!createCompetitionForm.startTime.$pristine" ng-messages="createCompetitionForm.startTime.$error">
           <div class="label label-danger" ng-message="format">Incorrect format</div>
@@ -50,37 +54,44 @@
     </form>
 
   </div>
-  <h2>Problems</h2>
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th class="col-sm-4"></th> <!-- This is reserved for the add/remove button -->
-        <th class="col-sm-4">Label</th>
-        <th class="col-sm-4">Name</th>
+</div>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="panel-title">
+      Problems
+    </div>
+  </div>
+  <div class="panel-body">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th class="col-sm-4">Label</th>
+          <th class="col-sm-4">Name</th>
+          <th class="col-sm-4"></th> <!-- This is reserved for the add/remove button -->
+        </tr>
+      </thead>
+      <tr ng-repeat="problem in compProblems">
+        <td ng-model="problem.label"><b>{{ $index | indexToCharCode }}</b></td>
+        <td>{{ problem.name }}</td>
+        <td>
+          <button type="submit" class="btn btn-danger" ng-click="removeProblem(problem)">Remove</button>
+        </td>
       </tr>
-    </thead>
-    <tr ng-repeat="problem in compProblems">
-      <td>
-        <button type="submit" class="btn btn-danger" ng-click="removeProblem(problem)">Remove</button>
-      </td>
-      <td ng-model="problem.label">{{ $index | indexToCharCode }}</td>
-      <td>{{ problem.name }}</td>
-    </tr>
-    <tr>
-      <td>
-        <button type="submit" class="btn btn-success" ng-click="addProblem(selected)"
-            ng-disabled="!selected || compProblems.indexOf(selected) >= 0">
-          Add
-        </button>
-      </td>
-      <td>
-      </td>
-      <td>
-        <select id="pidSelector" class="form-control"
-            ng-options="prob as prob.name for prob in problems" ng-model="selected">
-        </select>
-      </td>
-    </tr>
-  </table>
-
+      <tr>
+        <td>
+        </td>
+        <td>
+          <select id="pidSelector" class="form-control"
+              ng-options="prob as prob.name for prob in problems" ng-model="selected">
+          </select>
+        </td>
+        <td>
+          <button type="submit" class="btn btn-success" ng-click="addProblem(selected)"
+              ng-disabled="!selected || compProblems.indexOf(selected) >= 0">
+            Add
+          </button>
+        </td>
+      </tr>
+    </table>
+  </div>
 </div>

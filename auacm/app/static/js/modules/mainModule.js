@@ -47,13 +47,13 @@ app.config(function($routeProvider) {
             activetab : 'competitions'
         })
         .when('/competitions/create', {
-            templateUrl: 'static/html/createCompetition.html',
-            controller: 'CreateCompetitionController',
+            templateUrl: 'static/html/editCompetition.html',
+            controller: 'EditCompetitionController',
             activetab: 'competitions'
         })
         .when('/competitions/:cid/edit', {
-            templateUrl: 'static/html/createCompetition.html',
-            controller: 'CreateCompetitionController',
+            templateUrl: 'static/html/editCompetition.html',
+            controller: 'EditCompetitionController',
             activetab: 'competitions'
         })
         .when('/competitions/:cid', { // route for the competitions page
