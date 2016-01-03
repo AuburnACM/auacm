@@ -90,7 +90,7 @@ class JudgeTest(object):
         """
         self.assertEqual(
             expected_result,
-            judge.evaluate(self.submit, self.submit_file))
+            judge.evaluate(self.submit, self.submit_file, 1))
 
     def assertCompilation(self, expected_result):
         """Assert the behavior of a compilation.
@@ -102,7 +102,7 @@ class JudgeTest(object):
         :return: None
         """
         directory = judge.directory_for_submission(self.submit)
-        os.mkdir(directory)
+        os.makedirs(directory)
         self.submit_file.save(
             os.path.join(directory, self.submit_file.filename))
         self.assertEqual(

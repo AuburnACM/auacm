@@ -88,8 +88,7 @@ def log_out():
 @login_required
 def get_me():
     return serve_response({
-        'username'   : current_user.username, 
+        'username'   : current_user.username,
         'displayName': current_user.display,
         'isAdmin'    : current_user.admin
     })
-
