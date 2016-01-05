@@ -211,7 +211,14 @@ def register_for_competition(cid):
 
     All the user has to do is submit a post to this url with no form data.
     From their logged-in status, we'll go ahead and add them to the competiton
-    as an individual (team name is default their display name).
+    as an individual (team name is default their display name). A 400 error will
+    be returned if the user is already registered for the competition.
+
+    If the user that is submitting this is an admin, they can optionally
+    supply a json array of usernames to register for the competition. Specifying
+    this will not register the admin, but it will register all users that are
+    listed. A 400 error will be returned if any of the users are already
+    registered for the competition.
     """
     if session.query(Competition).filter(Competition.cid == cid).first() \
             is None:
@@ -224,9 +231,8 @@ def register_for_competition(cid):
         registrants.append(current_user.username)
 
     for user in registrants:
-        if session.query(CompUser).filter(CompUser.cid == cid,\
-            CompUser.username == user).first()\
-            is not None:
+        if session.query(CompUser).filter(CompUser.cid == cid,
+            CompUser.username == user).first() is not None:
             return serve_error('User ' + user + ' already registered for '
                     'competition', response_code=400)
 
@@ -257,24 +263,26 @@ def unregister_for_competition(cid):
     """ Called when a user wants to register for a competition.
 
     All the user has to do is submit a post to this url with no form data.
-    From their logged-in status, we'll go ahead and add them to the competiton
-    as an individual (team name is default their display name).
+    From their logged-in status, we'll go ahead and remove them from the
+    competiton.
+
+    Similar to the <code>/register</code> endpoint, an admin can post a list of
+    users to unregister from the competition.
     """
     if session.query(Competition).filter(Competition.cid == cid).first() \
             is None:
         return serve_error('Competition does not exist', response_code=404)
 
-    if False and current_user.admin == 1 and 'users' in request.data:
+    if current_user.admin == 1 and 'users' in request.data:
         registrants = loads(request.data['users'])
     else:
         registrants = list()
         registrants.append(current_user.username)
 
     for user in registrants:
-        session.query(CompUser)\
-                .filter(CompUser.username == user,
-                CompUser.cid == cid)\
-                .delete()
+        (session.query(CompUser)
+                .filter(CompUser.username == user, CompUser.cid == cid)
+                .delete())
     session.flush()
     session.commit()
 
@@ -284,6 +292,10 @@ def unregister_for_competition(cid):
 @app.route('/api/competitions/<int:cid>/teams', methods=['GET'])
 @login_required
 def get_competition_teams(cid):
+    """ Get all of the teams in a competition.
+
+    Returns all of the teams, their users, and those users' display names.
+    """
     comp_users = session.query(CompUser, User).join(User,
             User.username == CompUser.username).filter(CompUser.cid == cid)\
             .all()
@@ -303,6 +315,14 @@ def get_competition_teams(cid):
 @app.route('/api/competitions/<int:cid>/teams', methods=['PUT'])
 @login_required
 def put_competition_teams(cid):
+    """ Update the teams for a competition
+
+    If a user is an admin, they can update the competition's users, doing a PUT.
+    This will take the JSON data in the 'teams' part of the request form and
+    store it to the database. Any teams or users not included int the JSON data
+    will not be a part of the competition and will have to re-register; however
+    it should not be used for the solely purpose of de-registering participants.
+    """
     if current_user.admin == 0:
         return serve_error('You must be an admin to update teams',
                 response_code=401)
