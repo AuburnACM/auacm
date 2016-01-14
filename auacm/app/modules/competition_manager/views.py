@@ -70,7 +70,8 @@ def create_competition():
                 ' problem attributes. ' + err[0] + ' not found.',
                 response_code=400)
     except ValueError:
-        return serve_error('JSON data for \'problems\' not properly formatted')
+        return serve_error('JSON data for \'problems\' not properly formatted',
+                response_code=400)
 
     for problem in comp_problems:
         session.add(CompProblem(
@@ -121,7 +122,8 @@ def update_competition_data(cid):
                 ' and problem attributes. ' + err[0] + ' not found.',
                 response_code=400)
     except ValueError:
-        return serve_error('JSON data for \'problems\' not properly formatted')
+        return serve_error('JSON data for \'problems\' not properly formatted',
+                response_code=400)
 
     for problem in comp_problems:
         session.add(CompProblem(
@@ -230,7 +232,8 @@ def register_for_competition(cid):
         try:
             registrants = loads(request.data['users'])
         except ValueError:
-            return serve_error('JSON data for \'users\' not properly formatted')
+            return serve_error('JSON data for \'users\' not properly formatted',
+                    response_code=400)
     else:
         registrants = [current_user.username]
 
@@ -281,7 +284,8 @@ def unregister_for_competition(cid):
         try:
             registrants = loads(request.data['users'])
         except ValueError:
-            return serve_error('JSON data for \'users\' not properly formatted')
+            return serve_error('JSON data for \'users\' not properly formatted',
+                    response_code=400)
     else:
         registrants = [current_user.username]
 
@@ -339,7 +343,8 @@ def put_competition_teams(cid):
         return serve_error('You must include the parameter \'teams\'.',
                 response_code=400)
     except ValueError:
-        return serve_error('JSON data for \'teams\' not properly formatted')
+        return serve_error('JSON data for \'teams\' not properly formatted',
+                response_code=400)
 
     # Delete all of the old CompUser rows for this competition
     session.query(CompUser).filter(CompUser.cid == cid).delete()
