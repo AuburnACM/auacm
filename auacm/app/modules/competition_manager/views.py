@@ -109,7 +109,7 @@ def update_competition_data(cid):
         competition.name = data['name']
         competition.start=int(data['start_time'])
         competition.stop=(int(data['start_time']) + int(data['length']))
-        competition.closed = 0
+        competition.closed = 0 if bool(data['closed']) else 0
         competition.commit_to_session()
 
         # If the client sends a PUT request, we need to delete all of the old
