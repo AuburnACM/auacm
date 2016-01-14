@@ -34,16 +34,13 @@ def get_competitions():
     for competition in session.query(Competition).all():
         if competition.stop < current_time:
             past.append(competition.to_dict(
-                user_registered=competition.cid in registered
-            ))
+                user_registered=competition.cid in registered))
         elif competition.start < current_time:
             ongoing.append(competition.to_dict(
-                user_registered=competition.cid in registered
-            ))
+                user_registered=competition.cid in registered))
         else:
             upcoming.append(competition.to_dict(
-                user_registered=competition.cid in registered
-            ))
+                user_registered=competition.cid in registered))
     return serve_response({
         'ongoing': ongoing,
         'past': past,
@@ -62,7 +59,8 @@ def create_competition():
         competition = Competition(
             name=data['name'],
             start=int(data['start_time']),
-            stop=(int(data['start_time']) + int(data['length']))
+            stop=(int(data['start_time']) + int(data['length'])),
+            closed=1 if bool(data['closed']) else 0
         )
         competition.commit_to_session()
 
@@ -71,6 +69,8 @@ def create_competition():
         return serve_error('You must specify name, startTime, length, and'
                 ' problem attributes. ' + err[0] + ' not found.',
                 response_code=400)
+    except ValueError:
+        return serve_error('JSON data for \'problems\' not properly formatted')
 
     for problem in comp_problems:
         session.add(CompProblem(
@@ -120,6 +120,8 @@ def update_competition_data(cid):
         return serve_error('You must specify name, startTime, length, and'
                 ' and problem attributes. ' + err[0] + ' not found.',
                 response_code=400)
+    except ValueError:
+        return serve_error('JSON data for \'problems\' not properly formatted')
 
     for problem in comp_problems:
         session.add(CompProblem(
@@ -225,10 +227,12 @@ def register_for_competition(cid):
         return serve_error('Competition does not exist', response_code=404)
 
     if current_user.admin == 1 and 'users' in request.data:
-        registrants = loads(request.data['users'])
+        try:
+            registrants = loads(request.data['users'])
+        except ValueError:
+            return serve_error('JSON data for \'users\' not properly formatted')
     else:
-        registrants = list()
-        registrants.append(current_user.username)
+        registrants = [current_user.username]
 
     for user in registrants:
         if session.query(CompUser).filter(CompUser.cid == cid,
@@ -260,7 +264,7 @@ def register_for_competition(cid):
 @app.route('/api/competitions/<int:cid>/unregister', methods=['POST'])
 @login_required
 def unregister_for_competition(cid):
-    """ Called when a user wants to register for a competition.
+    """ Called when a user wants to unregister for a competition.
 
     All the user has to do is submit a post to this url with no form data.
     From their logged-in status, we'll go ahead and remove them from the
@@ -274,10 +278,12 @@ def unregister_for_competition(cid):
         return serve_error('Competition does not exist', response_code=404)
 
     if current_user.admin == 1 and 'users' in request.data:
-        registrants = loads(request.data['users'])
+        try:
+            registrants = loads(request.data['users'])
+        except ValueError:
+            return serve_error('JSON data for \'users\' not properly formatted')
     else:
-        registrants = list()
-        registrants.append(current_user.username)
+        registrants = [current_user.username]
 
     for user in registrants:
         (session.query(CompUser)
@@ -319,7 +325,7 @@ def put_competition_teams(cid):
 
     If a user is an admin, they can update the competition's users, doing a PUT.
     This will take the JSON data in the 'teams' part of the request form and
-    store it to the database. Any teams or users not included int the JSON data
+    store it to the database. Any teams or users not included in the JSON data
     will not be a part of the competition and will have to re-register; however
     it should not be used for the solely purpose of de-registering participants.
     """
@@ -332,6 +338,8 @@ def put_competition_teams(cid):
     except KeyError as err:
         return serve_error('You must include the parameter \'teams\'.',
                 response_code=400)
+    except ValueError:
+        return serve_error('JSON data for \'teams\' not properly formatted')
 
     # Delete all of the old CompUser rows for this competition
     session.query(CompUser).filter(CompUser.cid == cid).delete()
