@@ -6,6 +6,33 @@ body {
     margin-top : 25px;
 }
 
+.margin-left {
+    margin-left: 10px;
+}
+
 .muted-link {
     color: #767676;
+}
+
+.grid-padding {
+    margin: 10px;
+}
+
+.gridded {
+    display: block;
+}
+
+.movable {
+    cursor: move;
+}
+
+/* appears below where the new element is hovering */
+.dndPlaceholder {
+    background: #FFF;
+    min-height: 60px;
+}
+
+/* used to hide the element that is currently being dragged */
+.dndDraggingSource {
+    display: none;
 }

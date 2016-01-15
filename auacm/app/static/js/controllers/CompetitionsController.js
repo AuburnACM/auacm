@@ -12,6 +12,19 @@ app.controller('CompetitionsController', ['$scope', '$http', '$location',
         $location.path('/competitions/' + competition.cid + '/edit');
     };
 
+    $scope.register = function(competition) {
+        $http({
+            method: 'POST',
+            url: '/api/competitions/' + competition.cid + '/register',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            data: undefined
+        }).then(function(response) {
+            competition.registered = true;
+        }, function(response) {
+            console.error(response);
+        });
+    };
+
     $http.get('/api/competitions')
         .then(function(response) {
             $scope.competitions = response.data.data;

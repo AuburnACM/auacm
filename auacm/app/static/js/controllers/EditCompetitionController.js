@@ -102,7 +102,8 @@ app.controller('EditCompetitionController', ['$scope', '$http', '$location',
             'name': $scope.compName,
             'start_time': getStartTimeSeconds(),
             'length': getLengthSeconds(),
-            'problems': angular.toJson(problems)
+            'problems': angular.toJson(problems),
+            'closed': $scope.competitionClosed
         };
         $http({
             method: competition === undefined ? 'POST' : 'PUT',

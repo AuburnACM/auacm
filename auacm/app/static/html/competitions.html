@@ -14,12 +14,19 @@
         <th>Remaining</th>
         <th>Length</th>
         <th>Start Time</th>
+        <th>Register</th>
       </tr>
       <tr ng-repeat="competition in competitions.ongoing">
         <td><a href="/#/competitions/{{ competition.cid }}">{{ competition.name }}</a></td>
         <td>{{ getRemainingTime(competition) | secondsToDateTime | date:"h:mm:ss" }}</td>
         <td>{{ competition.length | secondsToDateTime | date:"h:mm:ss" }}</td>
         <td>{{ competition.startTime | secondsToDateTime | date:"medium" }}</td>
+        <td>
+          <div ng-if="competition.registered">Registered</div>
+          <a ng-if="!competition.registered && (isAdmin || !competition.closed)"
+              href="" ng-click="register(competition)">Register</a>
+          <div ng-if="!competition.registered && !isAdmin && competition.closed">Closed</div>
+        </td>
       </tr>
     </table>
   </div>
@@ -30,11 +37,18 @@
         <th>Name</th>
         <th>Length</th>
         <th>Start Time</th>
+        <th>Register</th>
       </tr>
       <tr ng-repeat="competition in competitions.upcoming">
         <td><a href="/#/competitions/{{ competition.cid }}">{{ competition.name }}</a></td>
         <td>{{ competition.length | secondsToDateTime | date:"h:mm:ss" }}</td>
         <td>{{ competition.startTime | secondsToDateTime | date:"medium" }}</td>
+        <td>
+          <div ng-if="competition.registered">Registered</div>
+          <a ng-if="!competition.registered && (isAdmin || !competition.closed)"
+              href="" ng-click="register(competition)">Register</a>
+          <div ng-if="!competition.registered && !isAdmin && competition.closed">Closed</div>
+        </td>
       </tr>
     </table>
   </div>

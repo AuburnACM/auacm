@@ -2,7 +2,7 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
         '$window', '$interval',
         function($scope, $http, $routeParams, $window, $interval) {
     // Store competition ID
-    var cid = $routeParams.cid;
+    $scope.cid = $routeParams.cid;
     // Initialize time left in competition to 0
     $scope.timeLeft = 0;
     $scope.active = false;
@@ -114,7 +114,7 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
 
 
     // Generate the scoreboard on load
-    $http.get('/api/competitions/' + cid)
+    $http.get('/api/competitions/' + $scope.cid)
         .then(function(response) {
             $scope.competition = response.data.data.competition;
             $scope.compProblems = response.data.data.compProblems;
