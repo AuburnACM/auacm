@@ -129,7 +129,7 @@ def create_problem():
     try:
         # Convert the JSON to python array of dictionaries
         cases = request.form['cases']
-        cases = loads(str(cases))
+        cases = loads(cases)
         for case in cases:
             if 'input' not in case or 'output' not in case:
                 return serve_error(
@@ -297,7 +297,7 @@ def update_problem(identifier):    # pylint: disable=too-many-branches
             database.session.flush()
             database.session.commit()
         case_num = 1
-        cases = loads(str(request.form['cases']))
+        cases = loads(request.form['cases'])
         for case in cases:
             SampleCase(
                 pid=pid,

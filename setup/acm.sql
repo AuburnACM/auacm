@@ -203,8 +203,8 @@ DROP TABLE IF EXISTS `sample_cases`;
 CREATE TABLE `sample_cases` (
   `pid` int(32) NOT NULL DEFAULT '0',
   `case_num` int(11) NOT NULL DEFAULT '0',
-  `input` varchar(255) DEFAULT NULL,
-  `output` varchar(255) DEFAULT NULL,
+  `input` text,
+  `output` text,
   PRIMARY KEY (`pid`,`case_num`),
   CONSTRAINT `sample_cases_ibfk_1` FOREIGN KEY (`pid`) REFERENCES `problems` (`pid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
