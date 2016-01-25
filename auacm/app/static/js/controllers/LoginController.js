@@ -1,4 +1,4 @@
-app.controller('LoginController', ['$scope', '$http', '$window', 
+app.controller('LoginController', ['$scope', '$http', '$window',
         function($scope, $http, $window) {
             $scope.logIn = function() {
                 // Here, we have the username and password, accessible by
@@ -20,9 +20,9 @@ app.controller('LoginController', ['$scope', '$http', '$window',
                     },
                     data: request
                 }).then(function(response) {
-                        $window.location.href = 'http://' + $window.location.host + '/#/';
+                        window.location.href = 'http://' + $window.location.host + '/#/';
                 }, function(response) {
                         console.log("error");
                 });
-            }
+            };
 }]);
