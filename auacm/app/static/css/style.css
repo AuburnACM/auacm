@@ -36,3 +36,18 @@ body {
 .dndDraggingSource {
     display: none;
 }
+
+.problemBody {
+    font-size: 16px;
+}
+
+.markdown-body {
+
+}
+
+.underlineHeader {
+    padding-bottom: 0.3em;
+    font-size: 1.75em;
+    line-height: 1.225;
+    border-bottom: 1px solid #eee;
+}
