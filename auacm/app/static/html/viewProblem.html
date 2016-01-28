@@ -4,7 +4,11 @@
       <div class="panel panel-default">
         <div class="panel-heading">
           <div class="row">
-            <h1 class="panel-title col-md-10" style="font-size:32px;">{{ current_prob.name }}</h1>
+            <h1 class="panel-title col-md-10" style="font-size:32px;">
+              <a href="/problems/{{ current_prob.shortname }}/info.pdf">
+                {{ current_prob.name }}
+              </a>
+            </h1>
 
             <!-- Show the button for submission if the user is not an admin -->
             <div class="col-md-2">
@@ -38,8 +42,8 @@
           <p class="problemBody" markdown="current_prob.input_desc"></p>
 
           <!-- Output description -->
-          <h2 class="underlineHeader" style="margin-top:30px">Output</h2>
-          <p style="problemBody" markdown="current_prob.output_desc"></p>
+          <h2 class="underlineHeader">Output</h2>
+          <p class="problemBody" markdown="current_prob.output_desc"></p>
 
           <!-- Sample Input || Sample Output -->
           <div ng-repeat="case in current_prob.sample_cases" class="clearfix">
