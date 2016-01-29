@@ -118,6 +118,7 @@ app.directive('fileModel', ['$parse', function ($parse) {
 
 app.directive('markdown', function () {
     var converter = new showdown.Converter();
+    converter.setOption('tables', 'true');
     return {
         restrict: 'A',
         link: function ($scope, element, attrs) {
