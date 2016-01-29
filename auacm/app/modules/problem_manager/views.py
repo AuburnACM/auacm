@@ -282,7 +282,7 @@ def update_problem(identifier):    # pylint: disable=too-many-branches
     if 'appeared_in' in request.form:
         problem.appeared = request.form['appeared_in']
     if 'difficulty' in request.form:
-        data.difficulty = request.form['difficulty']
+        problem.difficulty = request.form['difficulty']
 
     # Save the changes
     problem.commit_to_session(database.session)
