@@ -118,11 +118,13 @@ app.directive('fileModel', ['$parse', function ($parse) {
 
 app.directive('markdown', function () {
     var converter = new showdown.Converter();
+    converter.setOption('tables', 'true');
     return {
         restrict: 'A',
-        link: function (scope, element, attrs) {
-            element.html(converter.makeHtml(scope.$eval(attrs.markdown)  || ''));
+        link: function ($scope, element, attrs) {
+            $scope.$watch(attrs.markdown, function(newValue) {
+                element.html(converter.makeHtml(newValue));
+            });
         }
     };
-
 });

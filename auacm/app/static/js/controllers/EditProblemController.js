@@ -63,6 +63,8 @@ app.controller('EditProblemController', ['$scope', '$route', '$http',
             fd.append('out_file', $scope.outFile);
         if (typeof $scope.solFile !== 'undefined')
             fd.append('sol_file', $scope.solFile);
+        if (typeof prob.appeared !== 'undefined')
+            fd.append('appeared_in', prob.appeared);
 
         $http({
             method: ($scope.isCreate ? 'POST' : 'PUT'),
