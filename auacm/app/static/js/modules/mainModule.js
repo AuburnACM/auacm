@@ -90,6 +90,12 @@ app.config(function($routeProvider) {
 
 app.filter('secondsToDateTime', [function() {
     return function(seconds) {
+        return new Date(seconds * 1000);
+    };
+}]);
+
+app.filter('secondsToHours', [function() {
+    return function(seconds) {
         return new Date(1970, 0, 1).setSeconds(seconds);
     };
 }]);

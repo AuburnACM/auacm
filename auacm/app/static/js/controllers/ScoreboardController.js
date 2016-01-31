@@ -6,6 +6,7 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
     // Initialize time left in competition to 0
     $scope.timeLeft = 0;
     $scope.active = false;
+    $scope.ended = true;
 
     var genScoreboard = function() {
         var team, i;
@@ -123,27 +124,39 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
             genScoreboard();
             connectToSocket();
 
+
             // TODO(brandonlmorris) Add offset to server/client times
-            var thisTime = Math.floor(new Date().getTime() / 1000);
-            if (thisTime < $scope.competition.startTime) {
-                $scope.active = true;
-                $scope.timeLeft = $scope.competition.length;
-            } else if (thisTime < $scope.competition.startTime +
+            var clientTime = Math.floor(new Date().getTime() / 1000);
+            if (clientTime < $scope.competition.startTime +
                     $scope.competition.length) {
-                // if the competition is still active
-                $scope.active = true;
-                $scope.timeLeft = $scope.competition.startTime +
-                        $scope.competition.length - thisTime;
+                // only start the timer if the competition is still going or
+                // it hasn't yet started
+                $scope.ended = false;
+                $scope.active = false;
                 var timer = $interval(function() {
-                    $scope.timeLeft = $scope.competition.startTime +
-                            $scope.competition.length - thisTime;
-                    thisTime = Math.floor(new Date().getTime() / 1000);
+
+                    var timeToEnd = $scope.competition.startTime +
+                            $scope.competition.length - clientTime;
+                    // Compute the remaining time as the minimum of the time
+                    // until the compeition is over and the length of the
+                    // competition.
+                    $scope.timeLeft = Math.min(timeToEnd,
+                            $scope.competition.length);
+
+                    if ($scope.timeLeft < $scope.competition.length) {
+                        $scope.active = true;
+                    }
+
+                    clientTime = Math.floor(new Date().getTime() / 1000);
                     if ($scope.timeLeft <= 0) {
                         $scope.active = false;
+                        $scope.ended = true;
                         $scope.timeLeft = 0;
                         $interval.cancel(timer);
                     }
                 }, 1000);
+            } else {
+                $scope.ended = true;
             }
 
         },

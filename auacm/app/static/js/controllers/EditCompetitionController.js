@@ -10,7 +10,9 @@ app.controller('EditCompetitionController', ['$scope', '$http', '$location',
             .then(function(response) {
                 competition = response.data.data.competition;
 
-                var date = new Date(competition.startTime * 1000);
+                var offset = Date.now().getTimezoneOffset() / 1000;
+                console.log(offset);
+                var date = new Date(competition.startTime * 1000 + offset);
                 var startTime = '';
                 startTime += (date.getMonth() + 1) + '-' + date.getDate() +
                         '-' + date.getFullYear();
