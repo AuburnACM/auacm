@@ -2,7 +2,7 @@ from flask import request
 from flask.ext.login import current_user, login_required
 from app import app
 from app.database import session
-from app.util import serve_response, serve_error
+from app.util import serve_response, serve_error, admin_required
 from .models import BlogPost
 from app.modules.user_manager.models import User
 from sqlalchemy import desc
@@ -31,10 +31,8 @@ def get_blog_posts():
     return serve_response(postList)
 
 @app.route('/api/blog/', methods=["POST"])
-@login_required
+@admin_required
 def create_blog_post():
-    if not current_user.admin == 1:
-        return serve_error('You must be an admin to submit blog posts', response_code=401)
     if not request.form['title'] or not request.form['subtitle'] or not request.form['body']:
         return serve_error('Must include title, subtitle, and body with request',
                            response_code=400)

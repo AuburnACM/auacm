@@ -1,4 +1,4 @@
-app.controller('MainController', ['$scope', '$http', '$route', '$window', 
+app.controller('MainController', ['$scope', '$http', '$route', '$window',
         function($scope, $http, $route, $window) {
     // Intialize user fields
     $scope.username = 'placeholder';
@@ -32,12 +32,12 @@ app.controller('MainController', ['$scope', '$http', '$route', '$window',
             $scope.blogPosts = response.data.data;
         },
         function(error) {
-            
+
         });
 
     $scope.signOut = function() {
         $http.get('/api/logout').then(function(response) {
-                $window.location.href = 'http://' + $window.location.host + '/login';
+            $window.location.href = 'http://' + $window.location.host + '/';
         }, function(response) {
             console.log("error");
         });

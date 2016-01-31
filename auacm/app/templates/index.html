@@ -34,7 +34,8 @@
           <li ng-class="{active: $route.current.activetab == 'competitions'}"><a href="/#/competitions">Competitions</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <li class="dropdown" ng-class="{ open : dd1 }" ng-init="dd1 = false" ng-click="dd1 = !dd1" iub-dropdown>
+          <li ng-if="username && username !== 'placeholder'" class="dropdown" ng-class="{ open : dd1 }"
+              ng-init="dd1 = false" ng-click="dd1 = !dd1" iub-dropdown>
             <a href="" class="dropdown-toggle" uib-dropdown-toggle>
               {{ username }}<span class="caret"></span>
             </a>
@@ -42,6 +43,15 @@
               <li><a href="/#/settings">Settings</a></li>
               <li><a ng-click="signOut()" href="#">Sign out</a></li>
             </ul>
+          </li>
+          <li ng-if="!username || username === 'placeholder'" class="dropdown" ng-class="{ open: dd1 }"
+              ng-init="dd1 = false" ng-click="dd1 = !dd1" iub-dropdown>
+            <a href="" class="dropdown-toggle" uib-dropdown-toggle>
+              Log in<span class="caret"></span>
+            </a>
+            <div class="dropdown-menu" dropdown-menu>
+              <button>Test</button>
+            </div>
           </li>
         </ul>
       </div>
