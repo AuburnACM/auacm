@@ -91,13 +91,15 @@ def get_problem(identifier):
 def get_problems():
     """Obtain basic information of all the problems in the database"""
     problems = list()
-    solved = database.session.query(Submission).\
-            filter(Submission.username == current_user.username).\
-            filter(Submission.result == "good").\
-            all()
     solved_set = set()
-    for solve in solved:
-        solved_set.add(solve.pid)
+
+    if not current_user.is_anonymous:
+        solved = database.session.query(Submission).\
+                filter(Submission.username == current_user.username).\
+                filter(Submission.result == "good").\
+                all()
+        for solve in solved:
+            solved_set.add(solve.pid)
 
     for problem in database.session.query(Problem).all():
         problems.append({

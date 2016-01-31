@@ -13,14 +13,14 @@
         <th><a href="" ng-click="order('appeared')" id="appeared">Appeared In</a></th>
         <th><a href="" ng-click="order('solvedBy')" id="solved">Solved By</a></th>
         <th><a href="" ng-click="integerOrder('difficulty')" id="difficulty">Difficulty</a></th>
-        <th>Judge</th>
+        <th ng-if="loggedIn">Judge</th>
       </tr>
       <tr ng-class="{'success': problem.solved}" ng-repeat="problem in problems">
         <td><a href="/#/problems/{{ problem.shortname }}">{{ problem.name }}</a></td>
         <td>{{ problem.appeared }}</td>
         <td>{{ problem.solvedBy | number }}</td>
         <td>{{ problem.difficulty | number }}</td>
-        <td><a href="/#/judge?problem={{ problem.pid }}">Submit</td>
+        <td ng-if="loggedIn"><a href="/#/judge?problem={{ problem.pid }}">Submit</td>
       </tr>
     </table>
   </div>

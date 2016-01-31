@@ -13,9 +13,11 @@
         </div>
         <div class="form-group">
           <label for="fileUpload" class="col-sm-2 control-label">Source code</label>
-          <input type="file" accept=".java,.py,.c,.cpp,.c++,.go" file-model="file"/>
+          <input type="file" accept=".java,.py,.c,.cpp,.c++,.go" file-model="file"
+              ng-disabled="!loggedIn"/>
         </div>
-        <button type="submit" class="btn btn-default col-sm-offset-2 col-sm-2" ng-click="submit()">Submit</button>
+        <button type="submit" class="btn btn-default col-sm-offset-2 col-sm-2"
+            ng-click="submit()" ng-disabled="!loggedIn">Submit</button>
       </form>
     </div>
   </div>

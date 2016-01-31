@@ -30,27 +30,47 @@
         <ul class="nav navbar-nav navbar-left">
           <li ng-class="{active: $route.current.activetab == 'blog'}"><a href="/#/">Blog</a></li>
           <li ng-class="{active: $route.current.activetab == 'problems'}"><a href="/#/problems">Problems</a></li>
-          <li ng-class="{active: $route.current.activetab == 'judge'}"><a href="/#/judge">Judge</a></li>
+          <li ng-if="loggedIn" ng-class="{active: $route.current.activetab == 'judge'}"><a href="/#/judge">Judge</a></li>
           <li ng-class="{active: $route.current.activetab == 'competitions'}"><a href="/#/competitions">Competitions</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <li ng-if="username && username !== 'placeholder'" class="dropdown" ng-class="{ open : dd1 }"
-              ng-init="dd1 = false" ng-click="dd1 = !dd1" iub-dropdown>
+
+          <!-- Show user options to the user -->
+          <li ng-if="loggedIn" class="dropdown" ng-class="{ open : dd1 }"
+              ng-init="dd1 = false" ng-click="dd1 = !dd1" uib-dropdown>
             <a href="" class="dropdown-toggle" uib-dropdown-toggle>
               {{ username }}<span class="caret"></span>
             </a>
             <ul class="dropdown-menu" dropdown-menu>
               <li><a href="/#/settings">Settings</a></li>
-              <li><a ng-click="signOut()" href="#">Sign out</a></li>
+              <li><a ng-click="logOut()" href="">Sign out</a></li>
             </ul>
           </li>
-          <li ng-if="!username || username === 'placeholder'" class="dropdown" ng-class="{ open: dd1 }"
-              ng-init="dd1 = false" ng-click="dd1 = !dd1" iub-dropdown>
-            <a href="" class="dropdown-toggle" uib-dropdown-toggle>
+
+          <!-- Show login form to the logged-out user -->
+          <li ng-if="!loggedIn" class="dropdown" ng-class="{ open: dd1 }"
+              ng-init="dd1 = false" ng-click="dd1 = !dd1" uib-dropdown>
+            <a href="" class="dropdown-toggle" D-dropdown-toggle>
               Log in<span class="caret"></span>
             </a>
-            <div class="dropdown-menu" dropdown-menu>
-              <button>Test</button>
+            <div class="dropdown-menu login-dropdown" dropdown-menu>
+              <form name="createUserForm" novalidate ng-submit="createUser(createUserForm)">
+                <!-- Username -->
+                <div class="form-group">
+                  <label for="newUserName" class="control-label">Username</label>
+                  <input class="form-control" name="newusername" id="newUserName"
+                      type="text" placeholder="willdawg" ng-model="$parent.username">
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                  <label for="newUserPassword" class="control-label">Password</label>
+                  <input class="form-control" id="newUserPassword" type="password"
+                      placeholder="Password" ng-model="$parent.password" name="password">
+                </div>
+              </form>
+
+              <button class="btn btn-success" style="width:100%;" ng-click="logIn()">Log in</button>
             </div>
           </li>
         </ul>

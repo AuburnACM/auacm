@@ -23,12 +23,13 @@ def get_competitions():
     past = list()
     upcoming = list()
     current_time = int(time())
-
-    registered_rows = session.query(CompUser).filter(
-            CompUser.username == current_user.username).all()
     registered = set()
-    for row in registered_rows:
-        registered.add(row.cid)
+
+    if not current_user.is_anonymous:
+        registered_rows = session.query(CompUser).filter(
+                CompUser.username == current_user.username).all()
+        for row in registered_rows:
+            registered.add(row.cid)
 
     for competition in session.query(Competition).all():
         if competition.stop < current_time:
