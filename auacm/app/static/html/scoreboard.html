@@ -1,7 +1,7 @@
 <div>
   <div class="row">
     <h1 class="pull-left">{{ competition.name }}</h1>
-    <div ng-if="isAdmin && (active || !over)" class="dropdown pull-left margin-top margin-left">
+    <div ng-if="isAdmin && !ended" class="dropdown pull-left margin-top margin-left">
       <button class="btn btn-default dropdown-toggle" type="button"
           id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
           aria-expanded="true">
