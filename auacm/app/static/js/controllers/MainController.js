@@ -1,23 +1,35 @@
 app.controller('MainController', ['$scope', '$http', '$route', '$window',
         function($scope, $http, $route, $window) {
     // Intialize user fields
-    $scope.displayName = 'placeholder';
     $scope.isAdmin = false;
-    $scope.loggedIn = false;
-
     $scope.$route = $route;
+    $scope.isOpen = false;
+
+    var closeDropdown = function() {
+        $scope.isOpen = false;
+    };
 
     // Make a /api/me request and set the current user
-    $http.get('/api/me')
-        .then(function(response) {
-            $scope.username = response.data.data.username;
-            $scope.displayName = response.data.data.displayName;
-            $scope.isAdmin = response.data.data.isAdmin;
-            $scope.loggedIn = true;
-        },
-        function(error) {
-            console.log("Error getting current user in MainController");
-        });
+    $scope.$watch('loggedIn', function(newVal, oldVal) {
+        if (newVal) {
+            $http.get('/api/me')
+                .then(function(response) {
+                    $scope.username = response.data.data.username;
+                    $scope.displayName = response.data.data.displayName;
+                    $scope.isAdmin = response.data.data.isAdmin;
+                    $scope.loggedIn = true;
+                },
+                function(error) {
+                    console.log("Error getting current user in MainController");
+                });
+        } else {
+            $scope.username = ''; // clear the username field
+            $scope.password = ''; // clear the password field
+            $scope.displayName = 'Log in';
+            $scope.isAdmin = false;
+            $scope.loggedIn = false;
+        }
+    });
 
     // Get the problems to display
     var getProblems = function() {
@@ -56,7 +68,6 @@ app.controller('MainController', ['$scope', '$http', '$route', '$window',
             'username': $scope.username,
             'password': $scope.password
         };
-        console.log(request);
         $http({
             method: 'POST',
             url: '/api/login',
@@ -70,9 +81,11 @@ app.controller('MainController', ['$scope', '$http', '$route', '$window',
             data: request
         }).then(function(response) {
             $scope.loggedIn = true;
+            $scope.failedLogin = false;
             getProblems();
+            closeDropdown();
         }, function(response) {
-            console.log("error");
+            $scope.failedLogin = true;
         });
     };
 }]);

@@ -14,7 +14,11 @@ monkey.patch_all()
 @app.route('/')
 @app.route('/index')
 def get_home():
-    return render_template('index.html', username="{{ displayName }} ")
+    logged_in = not current_user.is_anonymous
+    display_name = (current_user.display if logged_in else 'Log in')
+    logged_in_string = 'true' if logged_in else 'false'
+    return render_template('index.html', display_name=display_name,
+            logged_in=logged_in_string)
 
 
 @app.route('/api/login', methods=['POST'])
@@ -77,7 +81,7 @@ def log_out():
 @login_required
 def get_me():
     return serve_response({
-        'username'   : current_user.username,
+        'username': current_user.username,
         'displayName': current_user.display,
-        'isAdmin'    : current_user.admin
+        'isAdmin': current_user.admin
     })

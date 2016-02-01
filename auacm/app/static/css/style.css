@@ -54,5 +54,15 @@ body {
 
 .login-dropdown {
     padding: 10px;
-    width: 240px;
+    width: 280px;
+}
+
+.ng-cloak {
+  display: none !important;
+}
+
+.failed-login {
+    font-size: 14px;
+    font-weight: 700;
+    color: #d9534f;
 }

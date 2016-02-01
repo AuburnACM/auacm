@@ -33,33 +33,34 @@
           <li ng-if="loggedIn" ng-class="{active: $route.current.activetab == 'judge'}"><a href="/#/judge">Judge</a></li>
           <li ng-class="{active: $route.current.activetab == 'competitions'}"><a href="/#/competitions">Competitions</a></li>
         </ul>
-        <ul class="nav navbar-nav navbar-right">
+        <ul class="nav navbar-nav navbar-right ng-cloak">
 
           <!-- Show user options to the user -->
-          <li ng-if="loggedIn" class="dropdown" ng-class="{ open : dd1 }"
-              ng-init="dd1 = false" ng-click="dd1 = !dd1" uib-dropdown>
-            <a href="" class="dropdown-toggle" uib-dropdown-toggle>
-              {{ username }}<span class="caret"></span>
+          <li class="dropdown" is-open="isOpen" uib-dropdown>
+            <a href="" class="dropdown-toggle"
+                ng-init="displayName = '{{ display_name }}'; loggedIn = {{ logged_in }}"
+                uib-dropdown-toggle>
+                {% raw %}{{ displayName }}{% endraw %}<span class="caret"></span>
             </a>
-            <ul class="dropdown-menu" dropdown-menu>
+
+            <!-- If the user is logged in, show their options -->
+            <ul ng-if="loggedIn" class="dropdown-menu" uib-dropdown-menu>
               <li><a href="/#/settings">Settings</a></li>
               <li><a ng-click="logOut()" href="">Sign out</a></li>
             </ul>
-          </li>
 
-          <!-- Show login form to the logged-out user -->
-          <li ng-if="!loggedIn" class="dropdown" ng-class="{ open: dd1 }"
-              ng-init="dd1 = false" ng-click="dd1 = !dd1" uib-dropdown>
-            <a href="" class="dropdown-toggle" D-dropdown-toggle>
-              Log in<span class="caret"></span>
-            </a>
-            <div class="dropdown-menu login-dropdown" dropdown-menu>
-              <form name="createUserForm" novalidate ng-submit="createUser(createUserForm)">
+            <!-- If the user isn't logged in, show them the login form -->
+            <div ng-if="!loggedIn" ng-click="$event.stopPropagation()" class="dropdown-menu login-dropdown" uib-dropdown-menu>
+              <p ng-init="failedLogin = false" ng-if="failedLogin" class="failed-login">
+                Incorrect username or password
+              </p>
+
+              <form name="logInForm" novalidate ng-submit="logIn()">
                 <!-- Username -->
                 <div class="form-group">
                   <label for="newUserName" class="control-label">Username</label>
-                  <input class="form-control" name="newusername" id="newUserName"
-                      type="text" placeholder="willdawg" ng-model="$parent.username">
+                  <input class="form-control" name="username" id="username"
+                      type="text" placeholder="Username" ng-model="$parent.username">
                 </div>
 
                 <!-- Password -->
@@ -68,6 +69,8 @@
                   <input class="form-control" id="newUserPassword" type="password"
                       placeholder="Password" ng-model="$parent.password" name="password">
                 </div>
+
+                <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
               </form>
 
               <button class="btn btn-success" style="width:100%;" ng-click="logIn()">Log in</button>
@@ -92,7 +95,7 @@
   <script src="/static/components/angular-sanitize/angular-sanitize.min.js"></script>
   <script src="/static/components/angular-messages/angular-messages.js"></script>
   <script src="/static/components/showdown/dist/showdown.js"></script>
-  <script src="/static/components/angular-ui-bootstrap-complete/ui-bootstrap-tpls.js"></script>
+  <script src="/static/components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
   <script src="/static/components/angular-drag-and-drop-lists/angular-drag-and-drop-lists.js"></script>
 
   <!-- CDN dependencies for production -->
@@ -102,7 +105,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular-sanitize.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular-messages.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.3.0/showdown.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.14.2/ui-bootstrap-tpls.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.1.1/ui-bootstrap.min.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
   -->
 
