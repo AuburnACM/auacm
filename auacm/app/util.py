@@ -1,12 +1,14 @@
 """Utility functions and objects for the auacm server."""
 
 from flask import send_from_directory, jsonify
-from flask.ext.login import LoginManager
+from flask.ext.login import LoginManager, current_user
 from flask.ext.bcrypt import Bcrypt
 from app import app
 from app.database import session
 from app.modules.user_manager.models import User
 from os.path import join
+from functools import wraps
+
 
 # bcrypt setup
 bcrypt = Bcrypt(app)
@@ -39,3 +41,13 @@ def serve_response(response, response_code=200):
 def serve_error(error, response_code):
     '''Serve an error in response to a request.'''
     return jsonify({'status': response_code, 'error': error}), response_code
+
+def admin_required(function):
+    @wraps(function)
+    def wrap(*args, **kwargs):
+        if current_user.is_anonymous or current_user.admin == 0:
+            return serve_error('You need to be an admin to do that.',
+                    response_code=401)
+        else:
+            return function(*args, **kwargs)
+    return wrap

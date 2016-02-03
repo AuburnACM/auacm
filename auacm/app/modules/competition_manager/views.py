@@ -2,7 +2,7 @@ from flask import request
 from flask.ext.login import current_user, login_required
 from app import app, socketio
 from app.database import session
-from app.util import serve_response, serve_error
+from app.util import serve_response, serve_error, admin_required
 from .models import Competition, CompProblem, CompUser
 from app.modules.submission_manager.models import Submission
 from app.modules.problem_manager.models import Problem
@@ -18,18 +18,18 @@ def on_connection():
 
 
 @app.route('/api/competitions')
-@login_required
 def get_competitions():
     ongoing = list()
     past = list()
     upcoming = list()
     current_time = int(time())
-
-    registered_rows = session.query(CompUser).filter(
-            CompUser.username == current_user.username).all()
     registered = set()
-    for row in registered_rows:
-        registered.add(row.cid)
+
+    if not current_user.is_anonymous:
+        registered_rows = session.query(CompUser).filter(
+                CompUser.username == current_user.username).all()
+        for row in registered_rows:
+            registered.add(row.cid)
 
     for competition in session.query(Competition).all():
         if competition.stop < current_time:
@@ -49,12 +49,9 @@ def get_competitions():
 
 
 @app.route('/api/competitions', methods=['POST'])
-@login_required
+@admin_required
 def create_competition():
     data = request.form
-    if current_user.admin == 0:
-        return serve_error('Only admins can create competitions', 401)
-
     try:
         competition = Competition(
             name=data['name'],
@@ -86,7 +83,7 @@ def create_competition():
 
 
 @app.route('/api/competitions/<int:cid>', methods=['PUT'])
-@login_required
+@admin_required
 def update_competition_data(cid):
     """ Adds problems to a competition
 
@@ -96,9 +93,6 @@ def update_competition_data(cid):
 
     TODO: form validation to make sure that no duplicates are added.
     """
-    if current_user.admin == 0:
-        # admins only
-        return serve_error('Only admins can modify competitions', 401)
 
     data = request.form
 
@@ -300,7 +294,7 @@ def unregister_for_competition(cid):
 
 
 @app.route('/api/competitions/<int:cid>/teams', methods=['GET'])
-@login_required
+@admin_required
 def get_competition_teams(cid):
     """ Get all of the teams in a competition.
 
@@ -323,7 +317,7 @@ def get_competition_teams(cid):
 
 
 @app.route('/api/competitions/<int:cid>/teams', methods=['PUT'])
-@login_required
+@admin_required
 def put_competition_teams(cid):
     """ Update the teams for a competition
 
@@ -333,10 +327,6 @@ def put_competition_teams(cid):
     will not be a part of the competition and will have to re-register; however
     it should not be used for the solely purpose of de-registering participants.
     """
-    if current_user.admin == 0:
-        return serve_error('You must be an admin to update teams',
-                response_code=401)
-
     try:
         teams = loads(request.form['teams'])
     except KeyError as err:

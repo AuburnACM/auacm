@@ -2,7 +2,7 @@ from flask import render_template, request
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app
 from app.database import Base, session
-from app.util import bcrypt, login_manager, serve_info_pdf, serve_html, serve_response, serve_error, load_user
+from app.util import bcrypt, login_manager, serve_info_pdf, serve_html, serve_response, serve_error, load_user, admin_required
 from app.modules.user_manager.models import User
 from app.modules.submission_manager.models import Submission
 from os.path import join
@@ -13,15 +13,12 @@ monkey.patch_all()
 
 @app.route('/')
 @app.route('/index')
-@login_required
-def get_problems_page():
-    return render_template('index.html', username=current_user.display)
-
-
-@app.route('/login')
-@login_manager.unauthorized_handler
-def get_login_page():
-    return serve_html('login.html')
+def get_home():
+    logged_in = not current_user.is_anonymous
+    display_name = (current_user.display if logged_in else 'Log in')
+    logged_in_string = 'true' if logged_in else 'false'
+    return render_template('index.html', display_name=display_name,
+            logged_in=logged_in_string)
 
 
 @app.route('/api/login', methods=['POST'])
@@ -39,12 +36,8 @@ def log_in():
 
 
 @app.route('/api/create_user', methods=['POST'])
-@login_required
+@admin_required
 def create_user():
-    # Verify that the poster is an admin
-    if current_user.admin == 0:
-        return server_error('Must be admin to create users', 401)
-
     # Get form contents
     username = request.form['username']
     password = request.form['password']
@@ -88,7 +81,7 @@ def log_out():
 @login_required
 def get_me():
     return serve_response({
-        'username'   : current_user.username,
+        'username': current_user.username,
         'displayName': current_user.display,
-        'isAdmin'    : current_user.admin
+        'isAdmin': current_user.admin
     })
