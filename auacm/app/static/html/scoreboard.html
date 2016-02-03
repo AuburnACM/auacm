@@ -1,7 +1,7 @@
 <div>
   <div class="row">
     <h1 class="pull-left">{{ competition.name }}</h1>
-    <div ng-if="isAdmin && active" class="dropdown pull-left margin-top margin-left">
+    <div ng-if="isAdmin && !ended" class="dropdown pull-left margin-top margin-left">
       <button class="btn btn-default dropdown-toggle" type="button"
           id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
           aria-expanded="true">
@@ -13,7 +13,7 @@
         <li><a href="/#/competitions/{{ cid }}/teams">Teams</a></li>
       </ul>
     </div>
-    <h2 class="pull-right" ng-show="active">{{ timeLeft | secondsToDateTime | date:"H:mm:ss" }}</h2>
+    <h2 class="pull-right" ng-show="active || !ended">{{ timeLeft | secondsToHours | date:"H:mm:ss" }}</h2>
   </div>
   <div class="body">
     <table class="table table-bordered">
@@ -23,7 +23,7 @@
           <th>Team</th>
           <th>Solved</th>
           <th>Time</th>
-          <th ng-repeat="name in problemNames"><a href="/#/problems/{{ compProblems[name].shortname }}">{{ name }}</a></th>
+          <th ng-if="active || ended" ng-repeat="name in problemNames"><a href="/#/problems/{{ compProblems[name].shortname }}">{{ name }}</a></th>
         </tr>
       </thead>
       <tr ng-repeat="team in teams | orderBy:['-solved', 'time']">
@@ -31,7 +31,7 @@
         <td>{{ team.name }}</td>
         <td>{{ team.solved }}</td>
         <td>{{ team.time }}</td>
-        <td ng-repeat="name in problemNames"
+        <td ng-if="active || ended" ng-repeat="name in problemNames"
             ng-class="{'success': team.problemData[compProblems[name].pid].status === 'correct',
                     'danger': team.problemData[compProblems[name].pid].status === 'incorrect'}">
             <div ng-hide="team.problemData[compProblems[name].pid].status === 'unattempted'">
