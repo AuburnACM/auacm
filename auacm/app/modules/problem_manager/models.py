@@ -32,7 +32,7 @@ class Problem(Base):
 
         Base.__init__(self, **defaults)
 
-    def commit_to_session(self, session):
+    def commit_to_session(self, session=session):
         """Commit this problem to the database as a new problem."""
         session.add(self)
         session.flush()

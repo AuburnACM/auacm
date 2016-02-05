@@ -6,15 +6,18 @@
         <div class="form-group">
           <label for="pidSelector" class="col-sm-2 control-label">Problem</label>
           <div class="col-sm-6">
-            <select id="pidSelector" class="col-sm-2 form-control" 
-                    ng-options="problem.pid as problem.name for problem in problems" ng-model="pid"></select>
+            <select id="pidSelector" class="col-sm-2 form-control"
+                    ng-options="problem.pid as problem.name for problem in problems"
+                    ng-model="pid"></select>
           </div>
         </div>
         <div class="form-group">
           <label for="fileUpload" class="col-sm-2 control-label">Source code</label>
-          <input type="file" accept=".java,.py,.c,.cpp,.c++,.go" file-model="file"/>
+          <input type="file" accept=".java,.py,.c,.cpp,.c++,.go" file-model="file"
+              ng-disabled="!loggedIn"/>
         </div>
-        <button type="submit" class="btn btn-default col-sm-offset-2 col-sm-2" ng-click="submit()">Submit</button>
+        <button type="submit" class="btn btn-default col-sm-offset-2 col-sm-2"
+            ng-click="submit()" ng-disabled="!loggedIn">Submit</button>
       </form>
     </div>
   </div>
@@ -26,7 +29,7 @@
         <th>Submitted File</th>
         <th>Status</th>
       </tr>
-      <tr ng-repeat="submission in submitted" 
+      <tr ng-repeat="submission in submitted"
           ng-class="{ success: submission.status=='correct', danger: submission.status=='incorrect' }">
         <td>{{ submission.problem }}</td>
         <td>{{ submission.fileName }}</td>

@@ -20,7 +20,7 @@ from flask import request
 from flask.ext.login import current_user, login_required
 from app import app
 import app.database as database
-from app.util import serve_response, serve_error, serve_info_pdf
+from app.util import serve_response, serve_error, serve_info_pdf, admin_required
 from app.modules.submission_manager.models import Submission
 from app.modules.problem_manager.models import Problem, ProblemData, SampleCase
 from sqlalchemy.orm import load_only
@@ -43,7 +43,6 @@ def is_pid(identifier):
 
 
 @app.route('/problems/<shortname>/info.pdf', methods=['GET'])
-@login_required
 def get_problem_info(shortname):
     """Serve the PDF description of a problem"""
     pid = database.session.query(Problem).\
@@ -54,7 +53,6 @@ def get_problem_info(shortname):
 
 
 @app.route('/api/problems/<identifier>', methods=['GET'])
-@login_required
 def get_problem(identifier):
     """Returns the JSON representation of a specific problem"""
     problem = database.session.query(Problem, ProblemData).join(ProblemData)
@@ -90,17 +88,18 @@ def get_problem(identifier):
 
 
 @app.route('/api/problems')
-@login_required
 def get_problems():
     """Obtain basic information of all the problems in the database"""
     problems = list()
-    solved = database.session.query(Submission).\
-            filter(Submission.username == current_user.username).\
-            filter(Submission.result == "good").\
-            all()
     solved_set = set()
-    for solve in solved:
-        solved_set.add(solve.pid)
+
+    if not current_user.is_anonymous:
+        solved = database.session.query(Submission).\
+                filter(Submission.username == current_user.username).\
+                filter(Submission.result == "good").\
+                all()
+        for solve in solved:
+            solved_set.add(solve.pid)
 
     for problem in database.session.query(Problem).all():
         problems.append({
@@ -118,18 +117,13 @@ def get_problems():
 
 
 @app.route('/api/problems/', methods=['POST'])
-@login_required
+@admin_required
 def create_problem():
     """Add a new problem to the database and data folder"""
-    # Admin check
-    if not current_user.admin == 1:
-        return serve_error('You must be an admin to create problems',
-                           response_code=401)
-
     try:
         # Convert the JSON to python array of dictionaries
         cases = request.form['cases']
-        cases = loads(str(cases))
+        cases = loads(cases)
         for case in cases:
             if 'input' not in case or 'output' not in case:
                 return serve_error(
@@ -207,14 +201,9 @@ def create_problem():
 
 # Delete a problem from the database
 @app.route('/api/problems/<identifier>', methods=['DELETE'])
-@login_required
+@admin_required
 def delete_problem(identifier):
     """Delete a specified problem in the database and data folder"""
-    # Admin check
-    if not current_user.admin == 1:
-        return serve_error('You must be an admin to delete a problem',
-                           response_code=401)
-
     pid, problem = None, database.session.query(Problem)
     if is_pid(identifier):
         pid = identifier
@@ -253,14 +242,9 @@ def delete_problem(identifier):
 
 # Update a problem in the database
 @app.route('/api/problems/<identifier>', methods=['PUT'])
-@login_required
+@admin_required
 def update_problem(identifier):    # pylint: disable=too-many-branches
     """Modify a problem in the database and data folder"""
-    # Admin check
-    if not current_user.admin == 1:
-        return serve_error('You must be an admin to update a problem',
-                           response_code=401)
-
     pid, problem = None, database.session.query(Problem)
     if is_pid(identifier):
         pid = identifier
@@ -282,7 +266,7 @@ def update_problem(identifier):    # pylint: disable=too-many-branches
     if 'appeared_in' in request.form:
         problem.appeared = request.form['appeared_in']
     if 'difficulty' in request.form:
-        data.difficulty = request.form['difficulty']
+        problem.difficulty = request.form['difficulty']
 
     # Save the changes
     problem.commit_to_session(database.session)
@@ -297,7 +281,7 @@ def update_problem(identifier):    # pylint: disable=too-many-branches
             database.session.flush()
             database.session.commit()
         case_num = 1
-        cases = loads(str(request.form['cases']))
+        cases = loads(request.form['cases'])
         for case in cases:
             SampleCase(
                 pid=pid,

@@ -1,10 +1,11 @@
-'use strict';
+(function() {'use strict';}());
 
 // Declare app level module which depends on views, and components
 var app = angular.module('mainModule',[
     'ngRoute',
     'ui.bootstrap',
-    'ngMessages'
+    'ngMessages',
+    'dndLists'
 ]);
 
 // configure our routes
@@ -45,10 +46,25 @@ app.config(function($routeProvider) {
             controller : 'CompetitionsController',
             activetab : 'competitions'
         })
+        .when('/competitions/create', {
+            templateUrl: 'static/html/editCompetition.html',
+            controller: 'EditCompetitionController',
+            activetab: 'competitions'
+        })
+        .when('/competitions/:cid/edit', {
+            templateUrl: 'static/html/editCompetition.html',
+            controller: 'EditCompetitionController',
+            activetab: 'competitions'
+        })
         .when('/competitions/:cid', { // route for the competitions page
             templateUrl : 'static/html/scoreboard.html',
             controller : 'ScoreboardController',
             activetab : 'competitions'
+        })
+        .when('/competitions/:cid/teams', {
+            templateUrl: 'static/html/teams.html',
+            controller: 'TeamController',
+            activetab: 'competitions'
         })
         .when('/settings', { // route for the settings page
             templateUrl : 'static/html/settings.html',
@@ -73,6 +89,12 @@ app.config(function($routeProvider) {
 });
 
 app.filter('secondsToDateTime', [function() {
+    return function(seconds) {
+        return new Date(seconds * 1000);
+    };
+}]);
+
+app.filter('secondsToHours', [function() {
     return function(seconds) {
         return new Date(1970, 0, 1).setSeconds(seconds);
     };
@@ -102,10 +124,13 @@ app.directive('fileModel', ['$parse', function ($parse) {
 
 app.directive('markdown', function () {
     var converter = new showdown.Converter();
+    converter.setOption('tables', 'true');
     return {
         restrict: 'A',
-        link: function (scope, element, attrs) {
-            element.html(converter.makeHtml(scope.$eval(attrs.markdown)  || ''));
+        link: function ($scope, element, attrs) {
+            $scope.$watch(attrs.markdown, function(newValue) {
+                element.html(converter.makeHtml(newValue));
+            });
         }
     };
 });

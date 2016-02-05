@@ -19,6 +19,7 @@ Usage:
 This will take all files that include *_test.py and run them.
 '''
 import unittest
+import sqlalchemy
 from sys import argv
 
 
@@ -30,7 +31,10 @@ import app
 import app.database as db
 
 # Switch the database session variable to point to the test database
-db.session = db.test_session
+test_engine = sqlalchemy.create_engine(
+    'mysql+pymysql://root@localhost/acm_test?charset=utf8')
+test_conn = test_engine.connect()
+db.session = sqlalchemy.orm.Session(test_engine)
 
 
 if __name__ == "__main__":
