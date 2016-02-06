@@ -1,6 +1,7 @@
 app.controller('JudgeController', ['$scope', '$http', '$routeParams', '$window',
         function($scope, $http, $routeParams, $window) {
     $scope.pid = parseInt($routeParams.problem);
+    // console.log($scope.pid);
     $scope.submitted = [];
     $scope.submit = function() {
         var fd = new FormData();
@@ -47,7 +48,9 @@ app.controller('JudgeController', ['$scope', '$http', '$routeParams', '$window',
             }
         }
     });
-    $scope.problems.sort(function(a, b) {
-        return a.name > b.name ? 1 : (a.name < b.name ? -1 : 0);
-    });
+    if ($scope.problems) {
+        $scope.problems.sort(function(a, b) {
+            return a.name > b.name ? 1 : (a.name < b.name ? -1 : 0);
+        });
+    }
 }]);

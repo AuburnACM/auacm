@@ -113,6 +113,8 @@ def get_problems():
             'solved': problem.pid in solved_set,
             'url': url_for_problem(problem)
         })
+
+    problems.sort(key=lambda x: x['name'])
     return serve_response(problems)
 
 
