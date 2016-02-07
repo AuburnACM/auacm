@@ -42,12 +42,17 @@ def submit():
             filter(ProblemData.pid==request.form['pid']).\
             first().time_limit;
 
+
+    ext = uploaded_file.filename.split('.')[-1].lower()
+    if 'python' in request.form:
+        ext = request.form['python']
+
     attempt = models.Submission(
         username=current_user.username,
         pid=request.form['pid'],
         submit_time=int(time.time()),
         auto_id=0,
-        file_type=uploaded_file.filename.split('.')[-1].lower(),
+        file_type=ext,
         result='start')
     attempt.commit_to_session()
     thread = Thread(
