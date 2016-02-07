@@ -1,12 +1,14 @@
-import itertools
 import os
 import os.path
 import shlex
 import subprocess
-import threading
 import time
 
-from app import app, socketio
+# Need to specifically monkey_patch threading since we couldn't at server start
+import eventlet
+threading = eventlet.import_patched('threading')
+
+from app import app
 
 
 ALLOWED_EXTENSIONS = ['java', 'c', 'cpp', 'py', 'go']
@@ -60,9 +62,9 @@ def evaluate(submission, uploaded_file, time_limit=10):
     :param uploaded_file: the uploaded file
     :return: the status of the submission (one of the status constants above)
     """
-    # directory = directory_for_submission(submission)
-    # os.mkdir(directory)
-    # uploaded_file.save(os.path.join(directory, uploaded_file.filename))
+    directory = directory_for_submission(submission)
+    os.mkdir(directory)
+    uploaded_file.save(os.path.join(directory, uploaded_file.filename))
     status = compile_submission(submission, uploaded_file)
     if status == COMPILATION_SUCCESS:
         status = execute_submission(submission, uploaded_file, time_limit)

@@ -18,14 +18,11 @@ Usage:
 
 This will take all files that include *_test.py and run them.
 '''
+import eventlet
+eventlet.monkey_patch(time=True, os=True)
 import unittest
 import sqlalchemy
 from sys import argv
-
-
-# Get a KeyError after custom tests without this. Full explanaition on SO
-# https://stackoverflow.com/questions/8774958/keyerror-in-module-threading-after-a-successful-py-test-run
-from gevent import monkey; monkey.patch_thread()
 
 import app
 import app.database as db

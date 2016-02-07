@@ -1,6 +1,5 @@
 from flask import Flask, Response
 from flask.ext.socketio import SocketIO
-from threading import Thread
 import time
 
 # Create the God-objects to be used everywhere
