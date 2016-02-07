@@ -155,7 +155,6 @@ def execute_submission(submission, uploaded_file, time_limit):
 
     # The answer is correct if all the tests complete without any failure.
     submission.update_status('good')
-    # FIXME: This never makes it's way to the client
     submission.emit_status('correct', test_number)
     return CORRECT_ANSWER
 

@@ -51,8 +51,6 @@ class Submission(Base):
         :param status: the status of the submission
         :return: None
         '''
-        # FIXME: This never gets received by the client ???
-        # Maybe because in different thread?
         socketio.emit(
             'status',
             {
