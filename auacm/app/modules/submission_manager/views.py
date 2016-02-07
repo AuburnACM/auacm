@@ -1,5 +1,8 @@
 import time
-from threading import Thread
+import os
+
+import eventlet
+threading = eventlet.import_patched('threading')
 
 from flask import request
 from flask.ext.login import current_user, login_required
@@ -50,7 +53,7 @@ def submit():
         file_type=uploaded_file.filename.split('.')[-1].lower(),
         result='start')
     attempt.commit_to_session()
-    thread = Thread(
+    thread = threading.Thread(
         target=judge.evaluate, args=(attempt, uploaded_file, time_limit))
     thread.daemon = False
     thread.start()

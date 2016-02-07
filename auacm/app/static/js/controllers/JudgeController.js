@@ -2,6 +2,7 @@ app.controller('JudgeController', ['$scope', '$http', '$routeParams', '$window',
         function($scope, $http, $routeParams, $window) {
     $scope.pid = parseInt($routeParams.problem);
     $scope.submitted = [];
+
     $scope.submit = function() {
         var fd = new FormData();
         fd.append('pid', $scope.pid);
@@ -32,10 +33,12 @@ app.controller('JudgeController', ['$scope', '$http', '$routeParams', '$window',
             console.error(response);
         });
     };
+
     var socket = io.connect('http://' + $window.location.host + '/judge');
     socket.on('connect', function() {
         console.log('connected');
     });
+
     socket.on('status', function(event) {
         for (var i = 0; i < $scope.submitted.length; i++) {
             if (event.submissionId === $scope.submitted[i].submissionId) {
@@ -47,6 +50,7 @@ app.controller('JudgeController', ['$scope', '$http', '$routeParams', '$window',
             }
         }
     });
+
     $scope.problems.sort(function(a, b) {
         return a.name > b.name ? 1 : (a.name < b.name ? -1 : 0);
     });

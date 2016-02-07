@@ -178,7 +178,7 @@ def get_competition_data(cid):
                     correct = s.submit_time - competition.start
                 else:
                     incorrect += 1
-            problem_time = incorrect * 20 + correct / 60
+            problem_time = incorrect * 20 + correct // 60
             submit_count = 0
             if correct > 0:
                 submit_count = 1

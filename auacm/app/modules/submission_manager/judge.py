@@ -1,10 +1,12 @@
-import itertools
 import os
 import os.path
 import shlex
 import subprocess
-import threading
 import time
+
+# Need to specifically monkey_patch threading since we couldn't at server start
+import eventlet
+threading = eventlet.import_patched('threading')
 
 from app import app
 
@@ -145,8 +147,7 @@ def execute_submission(submission, uploaded_file, time_limit):
                     submission.emit_status('incorrect', test_number)
                     return WRONG_ANSWER
 
-                # Use itertools.izip instead of zip to save memory.
-                for gl, sl in itertools.izip(correct_lines, submission_lines):
+                for gl, sl in zip(correct_lines, submission_lines):
                     if gl.rstrip('\r\n') != sl.rstrip('\r\n'):
                         submission.update_status('wrong')
                         submission.emit_status('incorrect', test_number)
