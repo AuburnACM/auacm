@@ -18,7 +18,7 @@ import json
 import copy
 
 from app import app, test_app
-from models import Problem, ProblemData, SampleCase
+from app.modules.problem_manager.models import Problem, ProblemData, SampleCase
 from pymysql.err import IntegrityError
 import app.database as database
 
@@ -64,11 +64,11 @@ def _login():
     password = app.config['TEST_PASSWORD']
     rv = json.loads(test_app.post(
         '/api/login',
-        data=dict(username=username, password=password)).data)
+        data=dict(username=username, password=password)).data.decode())
     assert 200 == rv['status']
 
 def _logout():
-    rv = json.loads(test_app.get('/api/logout').data)
+    rv = json.loads(test_app.get('/api/logout').data.decode())
     assert 200 == rv['status']
 
 def _reinsert_test_problem(test_prob, test_prob_data, test_cases):
@@ -123,7 +123,7 @@ class ProblemGetTests(unittest.TestCase):
         # Check that the request went through
         resp = test_app.get('/api/problems')
         self.assertEqual(200, resp.status_code)
-        rv = json.loads(resp.data)
+        rv = json.loads(resp.data.decode())
         self.assertFalse('Please log in' in str(rv))
 
         # Find the test problem in the list returned
@@ -144,7 +144,7 @@ class ProblemGetTests(unittest.TestCase):
         resp = test_app.get('/api/problems/' + str(test_problem['pid']))
         self.assertEqual(200, resp.status_code)
 
-        rv = json.loads(resp.data)
+        rv = json.loads(resp.data.decode())
         self.assertFalse('Please log in' in str(rv))
 
         # Time limit doesn't get returned from the API, so take it out of our
@@ -189,7 +189,7 @@ class ProblemEditTests(unittest.TestCase):
             session.commit()
         except:
             session.rollback()
-            _reinsert_test_problem()
+            _reinsert_test_problem(self.p, self.pd, self.cases)
 
         # Log in
         _login()
@@ -201,7 +201,7 @@ class ProblemEditTests(unittest.TestCase):
             data={'name':new_name})
         self.assertEqual(200, resp.status_code)
 
-        rv = json.loads(resp.data)
+        rv = json.loads(resp.data.decode())
         prob = rv['data']
         self.assertEqual(new_name, prob['name'])
 
@@ -242,7 +242,7 @@ class ProblemDeleteTests(unittest.TestCase):
     def testDeleteProblem(self):
         resp = test_app.delete('api/problems/' + str(test_problem['pid']))
         self.assertEqual(200, resp.status_code)
-        rv = json.loads(resp.data)
+        rv = json.loads(resp.data.decode())
         self.assertEqual(str(test_problem['pid']), (rv['data']['deleted_pid']))
 
         # Ensure problem was removed from the database

@@ -8,9 +8,6 @@ from app.modules.submission_manager.models import Submission
 from os.path import join
 from time import time
 
-from gevent import monkey
-monkey.patch_all()
-
 @app.route('/')
 @app.route('/index')
 def get_home():
