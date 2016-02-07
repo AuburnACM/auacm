@@ -15,6 +15,7 @@ ALLOWED_EXTENSIONS = ['java', 'c', 'cpp', 'py', 'go']
 COMPILE_COMMAND = {
     'java': 'javac {0}.java',
     'py': None,
+    'py3': None,
     'c': 'gcc {0}.c -o {0}',
     'cpp': 'g++ {0}.cpp -o {0}',
     'go': 'go build -o {0} {0}.go'
@@ -22,6 +23,7 @@ COMPILE_COMMAND = {
 RUN_COMMAND = {
     'java': 'java -cp {0}/ {1}',
     'py': 'python {0}/{1}.py',
+    'py3': 'python3 {0}/{1}.py',
     'c': '{0}/{1}',
     'cpp': '{0}/{1}',
     'go': '{0}/{1}'
@@ -29,6 +31,7 @@ RUN_COMMAND = {
 TIMEOUT_MULTIPLIER = {
     'java': 1.5,
     'py': 2,
+    'py3': 2,
     'c': 1,
     'cpp': 1,
     'go': 1
@@ -77,10 +80,10 @@ def compile_submission(submission, uploaded_file):
     filename = uploaded_file.filename
     name, ext = filename.rsplit('.', 1)
     # Don't compile file types that we can't compile.
-    if COMPILE_COMMAND[ext] is None:
+    if COMPILE_COMMAND[submission.file_type] is None:
         return COMPILATION_SUCCESS
     result = subprocess.call(
-        shlex.split(COMPILE_COMMAND[ext].format(os.path.join(directory, name))),
+        shlex.split(COMPILE_COMMAND[submission.file_type].format(os.path.join(directory, name))),
         stderr=open(os.path.join(directory, 'error.txt'), 'w')
     )
     if result == 0:
@@ -118,7 +121,7 @@ def execute_submission(submission, uploaded_file, time_limit):
             test_number = int(fname.split('.')[0].strip('in'))
             out_file = 'out{0}.txt'.format(test_number)
             submission.emit_status('running', test_number)
-            max_runtime = time_limit * TIMEOUT_MULTIPLIER[ext]
+            max_runtime = time_limit * TIMEOUT_MULTIPLIER[submission.file_type]
             execution = JudgementThread(
                 submission, uploaded_file, f, out_file, max_runtime)
             start_time = time.time()
@@ -219,11 +222,11 @@ class JudgementThread(threading.Thread):
         in_file, out_file = self.in_file, self.out_file
         directory = directory_for_submission(submit)
         filename = uploaded_file.filename
-        name, ext = filename.rsplit('.', 1)
+        name, _ = filename.rsplit('.', 1)
         input_path = os.path.join(directory_for_problem(submit), 'in')
         output_path = os.path.join(directory, 'out')
         return subprocess.Popen(
-            shlex.split(RUN_COMMAND[ext].format(directory, name, ext)),
+            shlex.split(RUN_COMMAND[self.submit.file_type].format(directory, name)),
             stdin=open(os.path.join(input_path, in_file)),
             stdout=open(os.path.join(output_path, out_file), 'w'),
             stderr=open(os.path.join(directory, 'error.txt'), 'w'))

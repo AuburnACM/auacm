@@ -2,11 +2,15 @@ app.controller('JudgeController', ['$scope', '$http', '$routeParams', '$window',
         function($scope, $http, $routeParams, $window) {
     $scope.pid = parseInt($routeParams.problem);
     $scope.submitted = [];
+    $scope.python = {version: 'py'};
 
     $scope.submit = function() {
         var fd = new FormData();
         fd.append('pid', $scope.pid);
         fd.append('file', $scope.file);
+        if ($scope.file.name.endsWith('.py')) {
+            fd.append('python', $scope.python.version);
+        }
         var submission = {};
         var name;
         for (var i = 0; i < $scope.problems.length; i++) {
@@ -51,7 +55,9 @@ app.controller('JudgeController', ['$scope', '$http', '$routeParams', '$window',
         }
     });
 
-    $scope.problems.sort(function(a, b) {
-        return a.name > b.name ? 1 : (a.name < b.name ? -1 : 0);
-    });
+    if ($scope.problems) {
+        $scope.problems.sort(function(a, b) {
+            return a.name > b.name ? 1 : (a.name < b.name ? -1 : 0);
+        });
+    }
 }]);
