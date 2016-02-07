@@ -6,7 +6,7 @@ import subprocess
 import threading
 import time
 
-from app import app
+from app import app, socketio
 
 
 ALLOWED_EXTENSIONS = ['java', 'c', 'cpp', 'py', 'go']
@@ -60,9 +60,9 @@ def evaluate(submission, uploaded_file, time_limit=10):
     :param uploaded_file: the uploaded file
     :return: the status of the submission (one of the status constants above)
     """
-    directory = directory_for_submission(submission)
-    os.mkdir(directory)
-    uploaded_file.save(os.path.join(directory, uploaded_file.filename))
+    # directory = directory_for_submission(submission)
+    # os.mkdir(directory)
+    # uploaded_file.save(os.path.join(directory, uploaded_file.filename))
     status = compile_submission(submission, uploaded_file)
     if status == COMPILATION_SUCCESS:
         status = execute_submission(submission, uploaded_file, time_limit)
@@ -145,8 +145,7 @@ def execute_submission(submission, uploaded_file, time_limit):
                     submission.emit_status('incorrect', test_number)
                     return WRONG_ANSWER
 
-                # Use itertools.izip instead of zip to save memory.
-                for gl, sl in itertools.izip(correct_lines, submission_lines):
+                for gl, sl in zip(correct_lines, submission_lines):
                     if gl.rstrip('\r\n') != sl.rstrip('\r\n'):
                         submission.update_status('wrong')
                         submission.emit_status('incorrect', test_number)
@@ -154,6 +153,7 @@ def execute_submission(submission, uploaded_file, time_limit):
 
     # The answer is correct if all the tests complete without any failure.
     submission.update_status('good')
+    # FIXME: This never makes it's way to the client
     submission.emit_status('correct', test_number)
     return CORRECT_ANSWER
 

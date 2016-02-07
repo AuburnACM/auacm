@@ -1,4 +1,5 @@
 import time
+import os
 from threading import Thread
 
 from flask import request
@@ -50,6 +51,10 @@ def submit():
         file_type=uploaded_file.filename.split('.')[-1].lower(),
         result='start')
     attempt.commit_to_session()
+    directory = _directory_for_submission(attempt)
+    os.mkdir(directory)
+    uploaded_file.save(os.path.join(directory, uploaded_file.filename))
+    # TODO: Change to an eventlet thread
     thread = Thread(
         target=judge.evaluate, args=(attempt, uploaded_file, time_limit))
     thread.daemon = False
@@ -57,3 +62,7 @@ def submit():
     return serve_response({
         'submissionId': attempt.job
     })
+
+def _directory_for_submission(submission):
+    return os.path.join(
+            app.config['DATA_FOLDER'], 'submits', str(submission.job))

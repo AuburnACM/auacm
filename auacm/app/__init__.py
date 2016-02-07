@@ -9,7 +9,7 @@ app.config.from_pyfile('config.py') # not sure if this works
 test_app = app.test_client()
 
 # websockets setup
-socketio = SocketIO(app)
+socketio = SocketIO(app, logger=True)
 
 # Initialize handler functions.
 from app import util
