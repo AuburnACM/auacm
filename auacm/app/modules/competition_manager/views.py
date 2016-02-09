@@ -152,7 +152,7 @@ def get_competition_data(cid):
 
     scoreboard = list()
 
-    _users = dict()
+    team_users = dict()
     for user in comp_users:
         if not user.team in team_users:
             team_users[user.team] = list()
