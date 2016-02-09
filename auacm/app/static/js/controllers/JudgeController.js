@@ -38,12 +38,9 @@ app.controller('JudgeController', ['$scope', '$http', '$routeParams', '$window',
         });
     };
 
-    var socket = io.connect('http://' + $window.location.host + '/judge');
-    socket.on('connect', function() {
-        console.log('connected');
-    });
-
+    var socket = new Socket('ws://' + $window.location.host + '/websocket');
     socket.on('status', function(event) {
+        console.log(event);
         for (var i = 0; i < $scope.submitted.length; i++) {
             if (event.submissionId === $scope.submitted[i].submissionId) {
                 var submitted = $scope.submitted[i];

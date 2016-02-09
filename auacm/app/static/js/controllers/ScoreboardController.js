@@ -73,7 +73,7 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
 
     var connectToSocket = function() {
         // Open the socket connection
-        var socket = io.connect('http://' + $window.location.host + '/judge');
+        var socket =  new Socket('ws://' + $window.location.host + '/websocket');
         // Perform live updates to the scoreboard
         var viewed = [];
         socket.on('status', function(event) {

@@ -3,10 +3,7 @@ import os.path
 import shlex
 import subprocess
 import time
-
-# Need to specifically monkey_patch threading since we couldn't at server start
-import eventlet
-threading = eventlet.import_patched('threading')
+import threading
 
 from app import app
 
@@ -65,9 +62,6 @@ def evaluate(submission, uploaded_file, time_limit=10):
     :param uploaded_file: the uploaded file
     :return: the status of the submission (one of the status constants above)
     """
-    directory = directory_for_submission(submission)
-    os.mkdir(directory)
-    uploaded_file.save(os.path.join(directory, uploaded_file.filename))
     status = compile_submission(submission, uploaded_file)
     if status == COMPILATION_SUCCESS:
         status = execute_submission(submission, uploaded_file, time_limit)
@@ -78,7 +72,7 @@ def compile_submission(submission, uploaded_file):
     """Compile the submission."""
     directory = directory_for_submission(submission)
     filename = uploaded_file.filename
-    name, ext = filename.rsplit('.', 1)
+    name, _ = filename.rsplit('.', 1)
     # Don't compile file types that we can't compile.
     if COMPILE_COMMAND[submission.file_type] is None:
         return COMPILATION_SUCCESS
@@ -105,11 +99,8 @@ def execute_submission(submission, uploaded_file, time_limit):
         4. compares the output against correct test output
     """
     # Initial setup
-    problem = submission.get_problem()
     problem_directory = directory_for_problem(submission)
     submission_directory = directory_for_submission(submission)
-    filename = uploaded_file.filename
-    name, ext = filename.rsplit('.', 1)
     input_path = os.path.join(problem_directory, 'in')
     output_path = os.path.join(problem_directory, 'out')
 

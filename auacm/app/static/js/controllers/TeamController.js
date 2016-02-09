@@ -80,8 +80,7 @@ app.controller('TeamController', ['$scope', '$http', '$location', '$window',
         });
     };
 
-    var socket = io.connect('http://' + $window.location.host + '/register');
-    socket.on('connect', function() {});
+    var socket = new Socket('ws://' + $window.location.host + '/websocket');
     socket.on('new_user', function(event) {
         if ($routeParams.cid == event.cid) {
             $scope.individuals.push(event.user);

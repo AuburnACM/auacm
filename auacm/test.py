@@ -18,8 +18,6 @@ Usage:
 
 This will take all files that include *_test.py and run them.
 '''
-import eventlet
-eventlet.monkey_patch(time=True, os=True)
 import unittest
 import sqlalchemy
 from sys import argv
