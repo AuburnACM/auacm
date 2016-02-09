@@ -1,5 +1,4 @@
 from flask import Flask, Response
-from app.modules.flasknado.flasknado import make_flasknado
 import time
 
 # Create the God-objects to be used everywhere
