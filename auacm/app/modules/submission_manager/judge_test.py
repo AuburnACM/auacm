@@ -75,6 +75,9 @@ class JudgeTest(object):
         )
         file_path = os.path.join(
             data_folder, 'problems', problem, 'solutions', filename)
+        submit_directory = os.path.join(app.config['DATA_FOLDER'], 'submits', str(submit.job))
+        if not os.path.exists(submit_directory):
+            os.mkdir(submit_directory)
         # Keep track of submit_file so that we can close it.
         self.submit = submit
         self.submit_file = MockUploadFile(file_path)
@@ -88,6 +91,9 @@ class JudgeTest(object):
             Normally one of the constants exposed by the judge module.
         :return: None
         """
+        directory = judge.directory_for_submission(self.submit)
+        self.submit_file.save(
+                os.path.join(directory, self.submit_file.filename))
         self.assertEqual(
             expected_result,
             judge.evaluate(self.submit, self.submit_file, 1))
@@ -102,7 +108,6 @@ class JudgeTest(object):
         :return: None
         """
         directory = judge.directory_for_submission(self.submit)
-        os.makedirs(directory)
         self.submit_file.save(
             os.path.join(directory, self.submit_file.filename))
         self.assertEqual(
