@@ -1,10 +1,16 @@
 <div class="main-fixed" ng-controller="ProblemsController">
   <div class="row">
     <h1 class="pull-left">Problems</h1>
-    <button type="button" class="btn btn-default pull-right margin-top"
-            ng-click="createProblem()" ng-show="isAdmin === 1">
-      Create Problem
-    </button>
+    <form class="form-inline pull-right margin-top">
+      <div class="input-group">
+        <div class="input-group-addon"><i class="fa fa-search"></i></div>
+        <input type="text" ng-model="searchFilter" placeholder="Search" class="form-control">
+      </div>
+      <button type="button" class="btn btn-default"
+              ng-click="createProblem()" ng-show="isAdmin === 1">
+        Create Problem
+      </button>
+    </form>
   </div>
   <div class="body">
     <table class="table table-striped">
@@ -15,7 +21,7 @@
         <th><a href="" ng-click="integerOrder('difficulty')" id="difficulty">Difficulty</a></th>
         <th ng-if="loggedIn">Judge</th>
       </tr>
-      <tr ng-class="{'success': problem.solved}" ng-repeat="problem in problems">
+      <tr ng-class="{'success': problem.solved}" ng-repeat="problem in problems | filter:searchFilter">
         <td><a href="/#/problems/{{ problem.shortname }}">{{ problem.name }}</a></td>
         <td>{{ problem.appeared }}</td>
         <td>{{ problem.solvedBy | number }}</td>
