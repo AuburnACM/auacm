@@ -51,7 +51,6 @@ class Submission(Base):
         :param status: the status of the submission
         :return: None
         '''
-        print(status)
         Flasknado.emit('status', {
                 'submissionId': self.job,
                 'problemId': self.pid,
