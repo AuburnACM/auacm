@@ -64,7 +64,6 @@ app.controller('TeamController', ['$scope', '$http', '$location', '$window',
             teams[$scope.individuals[i].display] =
                     [$scope.individuals[i].username];
         }
-        console.log(teams);
         var fd = new FormData();
         fd.append('teams', angular.toJson(teams));
         $http({
@@ -80,8 +79,7 @@ app.controller('TeamController', ['$scope', '$http', '$location', '$window',
         });
     };
 
-    var socket = new Socket('ws://' + $window.location.host + '/websocket');
-    socket.on('new_user', function(event) {
+    $scope.socket.on('new_user', function(event) {
         if ($routeParams.cid == event.cid) {
             $scope.individuals.push(event.user);
 

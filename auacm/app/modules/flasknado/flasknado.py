@@ -32,7 +32,6 @@ class Flasknado(WebSocketHandler):
             })
 
     def open(self):
-        print('opening connection')
         Flasknado.clients.append(self)
 
     def on_close(self):
