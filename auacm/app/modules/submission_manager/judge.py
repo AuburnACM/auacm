@@ -19,7 +19,7 @@ COMPILE_COMMAND = {
 }
 RUN_COMMAND = {
     'java': 'java -cp {0}/ {1}',
-    'py': 'python {0}/{1}.py',
+    'py': 'python2.7 {0}/{1}.py',
     'py3': 'python3 {0}/{1}.py',
     'c': '{0}/{1}',
     'cpp': '{0}/{1}',
