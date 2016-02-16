@@ -1,9 +1,9 @@
 '''Provide a model object for handling submits.'''
 import threading
 
-from app import socketio
 from app.database import Base, session
 from app.modules.problem_manager.models import Problem
+from app.modules.flasknado.flasknado import Flasknado
 
 dblock = threading.Lock()
 
@@ -51,17 +51,14 @@ class Submission(Base):
         :param status: the status of the submission
         :return: None
         '''
-        socketio.emit(
-            'status',
-            {
+        Flasknado.emit('status', {
                 'submissionId': self.job,
                 'problemId': self.pid,
                 'username': self.username,
                 'submitTime': self.submit_time,
                 'testNum': test_num,
                 'status': status
-            },
-            namespace='/judge')
+            })
 
     def get_problem(self):
         '''Find the problem that this submit is associated with.'''

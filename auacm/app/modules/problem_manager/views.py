@@ -17,7 +17,7 @@ import zipfile
 
 # pylint: disable=no-name-in-module, f0401
 from flask import request
-from flask.ext.login import current_user, login_required
+from flask.ext.login import current_user
 from app import app
 import app.database as database
 from app.util import serve_response, serve_error, serve_info_pdf, admin_required

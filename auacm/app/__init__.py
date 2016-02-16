@@ -1,14 +1,10 @@
 from flask import Flask, Response
-from flask.ext.socketio import SocketIO
 import time
 
 # Create the God-objects to be used everywhere
 app = Flask(__name__)
-app.config.from_pyfile('config.py') # not sure if this works
+app.config.from_pyfile('config.py')
 test_app = app.test_client()
-
-# websockets setup
-socketio = SocketIO(app, logger=True)
 
 # Initialize handler functions.
 from app import util

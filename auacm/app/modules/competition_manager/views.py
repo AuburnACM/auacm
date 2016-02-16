@@ -1,8 +1,9 @@
 from flask import request
 from flask.ext.login import current_user, login_required
-from app import app, socketio
+from app import app
 from app.database import session
 from app.util import serve_response, serve_error, admin_required
+from app.modules.flasknado.flasknado import Flasknado
 from .models import Competition, CompProblem, CompUser
 from app.modules.submission_manager.models import Submission
 from app.modules.problem_manager.models import Problem
@@ -10,11 +11,6 @@ from app.modules.user_manager.models import User
 from sqlalchemy import asc
 from time import time
 from json import loads
-
-
-@socketio.on('connect', namespace='/register')
-def on_connection():
-    pass
 
 
 @app.route('/api/competitions')
@@ -222,9 +218,9 @@ def register_for_competition(cid):
             is None:
         return serve_error('Competition does not exist', response_code=404)
 
-    if current_user.admin == 1 and 'users' in request.data:
+    if current_user.admin == 1 and 'users' in request.form:
         try:
-            registrants = loads(request.data['users'])
+            registrants = loads(request.form['users'])
         except ValueError:
             return serve_error('JSON data for \'users\' not properly formatted',
                     response_code=400)
@@ -244,14 +240,13 @@ def register_for_competition(cid):
             username=user.username,
             team=user.display
         ))
-        socketio.emit('new_user', {
+        Flasknado.emit('new_user', {
             'cid': cid,
             'user': {
                 'display': user.display,
                 'username': user.username
             }
-        },
-        namespace='/register')
+        })
     session.flush()
     session.commit()
 
@@ -274,9 +269,9 @@ def unregister_for_competition(cid):
             is None:
         return serve_error('Competition does not exist', response_code=404)
 
-    if current_user.admin == 1 and 'users' in request.data:
+    if current_user.admin == 1 and 'users' in request.form:
         try:
-            registrants = loads(request.data['users'])
+            registrants = loads(request.form['users'])
         except ValueError:
             return serve_error('JSON data for \'users\' not properly formatted',
                     response_code=400)

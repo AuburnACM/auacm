@@ -88,4 +88,6 @@ app.controller('MainController', ['$scope', '$http', '$route', '$window',
             $scope.failedLogin = true;
         });
     };
+
+    $scope.socket = new Socket('ws://' + $window.location.host + '/websocket');
 }]);
