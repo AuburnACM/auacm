@@ -1,5 +1,5 @@
 function Socket(url) {
-    ws = new WebSocket(url);
+    var ws = new WebSocket(url);
     this.events = {};
     var parent = this;
     this.on = function(event, func) {
