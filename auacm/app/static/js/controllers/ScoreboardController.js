@@ -7,6 +7,12 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
     $scope.timeLeft = 0;
     $scope.active = false;
     $scope.ended = true;
+    var offset = 0;
+
+    $scope.socket.on('system_time', function(event) {
+        // The server is *ahead* of the client by offset milliseconds
+        offset = -Date.now() + event.milliseconds;
+    });
 
     var genScoreboard = function() {
         var team, i;
@@ -72,11 +78,9 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
     };
 
     var connectToSocket = function() {
-        // Open the socket connection
-        var socket =  new Socket('ws://' + $window.location.host + '/websocket');
         // Perform live updates to the scoreboard
         var viewed = [];
-        socket.on('status', function(event) {
+        $scope.socket.on('status', function(event) {
             if (viewed.indexOf(event.submissionId) > -1 ||
                     event.status == 'running' ||
                     !problemIsInComp(event.problemId) ||
@@ -124,9 +128,7 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
             genScoreboard();
             connectToSocket();
 
-
-            // TODO(brandonlmorris) Add offset to server/client times
-            var clientTime = Math.floor(new Date().getTime() / 1000);
+            var clientTime = Math.floor((Date.now() + offset) / 1000);
             if (clientTime < $scope.competition.startTime +
                     $scope.competition.length) {
                 // only start the timer if the competition is still going or
@@ -147,7 +149,7 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
                         $scope.active = true;
                     }
 
-                    clientTime = Math.floor(new Date().getTime() / 1000);
+                    clientTime = Math.floor((Date.now() + offset) / 1000);
                     if ($scope.timeLeft <= 0) {
                         $scope.active = false;
                         $scope.ended = true;
