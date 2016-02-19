@@ -7,6 +7,7 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
     $scope.timeLeft = 0;
     $scope.active = false;
     $scope.ended = true;
+    $scope.timeUntil = 0;
     var offset = 0;
 
     $scope.socket.on('system_time', function(event) {
@@ -147,6 +148,9 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
 
                     if ($scope.timeLeft < $scope.competition.length) {
                         $scope.active = true;
+                    } else {
+                        $scope.timeUntil = $scope.competition.startTime -
+                            clientTime;
                     }
 
                     clientTime = Math.floor((Date.now() + offset) / 1000);
