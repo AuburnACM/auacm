@@ -1,4 +1,6 @@
 from tornado.websocket import WebSocketHandler
+from json import loads
+from time import time
 
 def make_flasknado():
     """ Creates a new class instance of Flasknado
@@ -24,12 +26,16 @@ class Flasknado(WebSocketHandler):
     clients = []  # initialize the list of clients to an empty list
 
     @classmethod
+    def wrap(self, event_type, data):
+        return {
+            'eventType': event_type,
+            'data': data
+        }
+
+    @classmethod
     def emit(self, event_type, data):
         for client in self.clients:
-            client.write_message({
-                'eventType': event_type,
-                'data': data
-            })
+            client.write_message(self.wrap(event_type, data))
 
     def open(self):
         Flasknado.clients.append(self)
@@ -38,7 +44,11 @@ class Flasknado(WebSocketHandler):
         Flasknado.clients.remove(self)
 
     def on_message(self, message):
-        pass
+        data = loads(message)
+        if data['eventType'] == 'system_time':
+            self.write_message(self.wrap('system_time', {
+                'milliseconds': int(time() * 1000)
+            }))
 
     def data_received(self, data):
         pass
