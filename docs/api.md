@@ -113,7 +113,7 @@ _Note:_ {identifier} can be the numeric problem ID or the alphanumeric
 
 __Method:__ `PUT`
 
-__Form Data:__
+__Form Data__
 
 | Title | Required | Form Name | Description |
 | --- | --- | --- | --- |
@@ -217,6 +217,8 @@ Creates a competition and returns the new competition as a JSON object. The
 JSON follows the normal formatting for competitions, outlined above. Below is
 a table of the form arguments for creating the competition.
 
+__Form Data__
+
 | Title | Required | Form Name | Description |
 | --- | --- | --- | --- |
 | Name | Required | `name` | Name of the competition |
@@ -310,6 +312,7 @@ competition. Any teams or users not included in the JSON data will not be a part
 of the competition and will have to re-register, though this should not be used
 for the sole purpose of unregistering participants.
 
+__Form Data__
 
 | Title | Required | Form Name | Description |
 | --- | --- | --- | --- |
@@ -322,7 +325,26 @@ to an array of the participants (see above for example).
 
 ## Submission Management
 
-TODO: Write the docs
+### Submit a Solution
+
+__URL:__ `/api/submit`
+
+__Method:__ `POST`
+
+Submit a solution to server for evaluation. Note that the results of the
+submission are sent back via websockets, and at the time of this writing cannot
+be obtained from the API. The submission id is returned from the API upon
+success.
+
+__Form Data__
+
+| Title | Required | Form Name | Description |
+| --- | --- | --- | --- |
+| Solution File | Required | `file` | The program file that contains the submission |
+| Problem ID | Required | `pid` | The integer ID of the problem for this submission |
+| Python Version | Optional | `python` | Specify the version of Python: `py` for Python 2.7 and `py3` for Python 3 |
+
+
 
 ---
 
