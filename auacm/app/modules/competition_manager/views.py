@@ -191,9 +191,6 @@ def get_competition_data(cid):
         team_row['problemData'] = team_problems
         scoreboard.append(team_row)
 
-    # Send the system time to the client
-    Flasknado.emit('system_time', {'milliseconds': int(time() * 1000)})
-
     return serve_response({
         'competition': competition.to_dict(),
         'compProblems': comp_problems,
@@ -349,3 +346,9 @@ def put_competition_teams(cid):
     session.commit()
 
     return serve_response({})
+
+# Register a socket callback to send the server time
+@Flasknado.on('system_time')
+def send_system_time(connection):
+    Flasknado.send(connection, 'system_time',
+                   {'milliseconds': int(time() * 1000)})

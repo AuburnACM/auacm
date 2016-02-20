@@ -10,10 +10,12 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
     $scope.timeUntil = 0;
     var offset = 0;
 
+    // Create an offset from the user time and the server time
     $scope.socket.on('system_time', function(event) {
         // The server is *ahead* of the client by offset milliseconds
         offset = -Date.now() + event.milliseconds;
     });
+    $scope.socket.send('system_time');
 
     var genScoreboard = function() {
         var team, i;
