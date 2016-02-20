@@ -288,7 +288,7 @@ The format of the JSON is as follows:
     "username": "will"
   },
   {
-    "Display: "Jeff Overbey",
+    "display: "Jeff Overbey",
     "username": "jeffo"
   }
 ],
@@ -350,6 +350,43 @@ __Form Data__
 
 ## Blog Management
 
-TODO: Write the docs
+### Get All Blog Posts
+
+__URL:__ `/api/blog`
+
+__Method:__ `GET`
+
+Returns all the blog posts as JSON objects, in reverse chronological order.
+
+The JSON structure of a blog post is as follows
+
+```json
+{
+  "title": "A Blog Post",
+  "subtitle": "This title is a little smaller",
+  "postTime": 1456009720,
+  "body": "This is a blog post. It has words and things. _It_ `also` **has** ***markdown***.",
+  "author" : {
+    "username": "hermancain",
+    "display": "2012!"
+  }
+}
+```
+
+### Create a New Blog Post
+
+__URL:__ `/api/blog`
+
+__Method:__ `POST`
+
+Creates a new blog post fromt the given form data.
+
+__Form Data__
+
+| Title | Required | Form Name | Description |
+| --- | --- | --- | --- |
+| Title | Required | `title` | Title of the blog post |
+| Subtitle | Required | `subtitle` | Subtitle of the blog post |
+| Body | Required | `body` | Body of the blog post |
 
 ---
