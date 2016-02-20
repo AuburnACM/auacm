@@ -166,7 +166,6 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
             } else {
                 $scope.ended = true;
             }
-
         },
         function(error) {
 
