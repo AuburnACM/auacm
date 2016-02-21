@@ -161,16 +161,13 @@ class Judge:
                 out_file = 'out{0}.txt'.format(test_number)
 
                 process = self.create_process(f, out_file)
-                start_time = self.judge_process(process, max_runtime)
-
-                # Check the execution for timeouts and runtime errors.
-                if time.time() >= start_time + max_runtime:
-                    try:
-                        process.kill()
-                    except:
-                        pass
+                try:
+                    process.communicate(timeout=max_runtime)
+                except subprocess.TimeoutExpired:
+                    process.kill()
                     return TIMELIMIT_EXCEEDED, test_number
-                elif process.poll() != 0:
+
+                if process.poll() != 0:
                     return RUNTIME_ERROR, test_number
 
                 result_path = os.path.join(self.directory_for_problem, 'out')
@@ -215,27 +212,3 @@ class Judge:
             stderr=open(os.path.join(directory, 'error.txt'), 'w'))
 
         return process
-
-
-    @classmethod
-    def judge_process(cls, process, limit):
-        """Run the process and make sure that it doesn't run for too long. In
-        the event that it runs for more than its allotted time limit, execution
-        will stop and the process will be killed.
-
-        :param process: the process to be executed
-        :param limit: the most time that the process can execute for
-        :return: the time that the process started
-        """
-        # Actually run the process and time it
-        start_time = time.time()
-        while process.poll() is None:
-            time.sleep(0.1)  # wait for 1/10 of a second to check on the problem.
-            if time.time() > start_time + limit:
-                # The try is to avoid a race condition where the process
-                # finishes between the if and the kill statements.
-                try:
-                    process.kill()
-                except:
-                    pass
-        return start_time
