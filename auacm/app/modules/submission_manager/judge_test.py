@@ -94,9 +94,10 @@ class JudgeTest(object):
         directory = self.judge.directory_for_submission
         self.submit_file.save(
                 os.path.join(directory, self.submit_file.filename))
+        result, _ = self.judge.run()
         self.assertEqual(
             expected_result,
-            self.judge.run())
+            result)
 
     def assertCompilation(self, expected_result):
         """Assert the behavior of a compilation.
@@ -112,7 +113,7 @@ class JudgeTest(object):
             os.path.join(directory, self.submit_file.filename))
         self.assertEqual(
             expected_result,
-            self.judge.compile_submission())
+            self.judge._compile_submission())
 
     def tearDown(self):
         """Post-test cleanup method.
@@ -242,9 +243,10 @@ class CppTest(JudgeTest, unittest.TestCase):
 
     def testNoCompile(self):
         self.createMockSubmission('addnumbers', 'compileerror.cpp')
+        result, _ = self.judge.run()
         self.assertEqual(
             judge.COMPILATION_ERROR,
-            self.judge.run())
+            result)
 
     def testCompile(self):
         self.createMockSubmission('addnumbers', 'compilesuccess.cpp')

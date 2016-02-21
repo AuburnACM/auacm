@@ -3,7 +3,6 @@ import threading
 
 from app.database import Base, session
 from app.modules.problem_manager.models import Problem
-from app.modules.flasknado.flasknado import Flasknado
 
 dblock = threading.Lock()
 
@@ -44,22 +43,6 @@ class Submission(Base):
         session.commit()
         dblock.release()
 
-    def emit_status(self, status, test_num):
-        '''Shares status with the clientvia a web socket.
-
-        :param self: the newly created submission
-        :param status: the status of the submission
-        :return: None
-        '''
-        Flasknado.emit('status', {
-                'submissionId': self.job,
-                'problemId': self.pid,
-                'username': self.username,
-                'submitTime': self.submit_time,
-                'testNum': test_num,
-                'status': status
-            })
-
     def get_problem(self):
         '''Find the problem that this submit is associated with.'''
         if self._problem is None:
@@ -93,9 +76,6 @@ class MockSubmission(Base):
 
     def update_status(self, status):
         self.result = status
-
-    def emit_status(self, status, test_num):
-        pass
 
     def get_problem(self):
         '''MockSubmission contains everything relevant to its problem.'''
