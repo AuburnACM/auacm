@@ -34,9 +34,9 @@ __Form Data:__
 | Time Limit | Optional | `time_limit` | Max execution time (in seconds) |
 | Difficulty | Optional | `difficulty` | 0-100 difficulty rating |
 | Appeared In | Optional | `appeared_in` | String name of original competition |
-| Input Files | __Required__ | 'in_file' | Zipped (.zip) directory of all input files |
-| Output Files | __Required__ | 'out_file' | Zipped (.zip) directory of all output files |
-| Solution File | __Required__ | 'sol_file' | Solution program (not zipped) |
+| Input Files | __Required__ | `in_file` | Zipped (.zip) directory of all input files |
+| Output Files | __Required__ | `out_file` | Zipped (.zip) directory of all output files |
+| Solution File | __Required__ | `sol_file` | Solution program (not zipped) |
 
 For __Sample Cases__, must be a string JSON array of mappings `input` and `output`.
 For example,
@@ -59,7 +59,7 @@ code 400. If successful, the API will return a JSON object representation of
 the newly created problem.
 
 
-## Get Data on a Problem
+### Get Data on a Problem
 
 __URL:__ `/api/problems/{identifier}`
 
@@ -82,7 +82,7 @@ Specifically, the method returns
   * __Sample Cases Array__
 
 
-## Get Data on all problems
+### Get Data on all problems
 
 __URL:__ `/api/problems/`
 
@@ -103,7 +103,7 @@ Specifically, the method returns
 
 of all the problems.
 
-## Edit an Existing Problem
+### Edit an Existing Problem
 ***This method requires being signed in as an administrator***
 
 __URL:__ `/api/problems/{identifier}`
@@ -113,7 +113,7 @@ _Note:_ {identifier} can be the numeric problem ID or the alphanumeric
 
 __Method:__ `PUT`
 
-__Form Data:__
+__Form Data__
 
 | Title | Required | Form Name | Description |
 | --- | --- | --- | --- |
@@ -133,7 +133,7 @@ ___Note:___ Any form data parameters not given will remain unaffected by the req
 __Returns:__ A JSON object of the detailed information of the newly-edited problem.
 
 
-## Delete a Problem
+### Delete a Problem
 ***This method requires being signed in as an administrator***
 
 __URL:__ `/api/problems/{identifier}`
@@ -151,20 +151,277 @@ successfully deleted problem (`deleted_pid`)
 
 ---
 
-# Competition Management
+## Competition Management
 
-TODO: Write the docs
+Competitions are always represented in JSON with the following format:
+
+  * __cid:__ The integer competition ID
+  * __closed:__ `true` if administrators are the only users that can register
+   participants, `false` otherwise
+  * __length:__ The length of the competition, in seconds
+  * __name:__ The string name of this competition
+  * __registered:__ `true` if the current user is registered for this
+   comptition, `false` otherwise
+  * __startTime:__ The time the competition starts, in seconds since the Unix
+   epoch
+  * __compProblems:__ An array of all the problems in the competition
+
+
+The `compProblems` object is formatted as follows:
+
+```json
+"compProblems": {
+  "A": {
+    "name": "Islands in the Data Stream ",
+    "pid": 23,
+    "shortname": "islands"
+  },
+  "B": {
+    "name": "Von Neumann's Fly",
+    "pid": 63,
+    "shortname": "vonneumann"
+  }
+}
+```
+
+The API will also accept a Web Socket message `system_time` with no data. The
+API will reply with another Web Socket message with the same name and the
+server's system time in milliseconds since the Unix epoch, exampled below:
+
+```json
+{
+  "milliseconds": 1456071193888
+}
+```
+
+### Get Data on all Competitions
+
+__URL:__ `/api/competitions`
+
+__Method:__ `GET`
+
+Returns a JSON object of all competitions, broken up into three categories:
+__ongoing__ (in progress), __past__, and __upcoming__. Each one of these objects
+contains an array of all the competitions in that category, if any.
+
+
+### Get Data on a Specific Competition
+
+__URL:__ `/api/competitions/{competition_id}`
+
+__Method:__ `GET`
+
+Returns a JSON object of the competition with the ID matching `{competition_id}`
+in the route.
+
+
+### Create a Competition
+***This method requires being signed in as an administrator***
+
+__URL:__ `/api/competitions`
+
+__Method:__ `POST`
+
+Creates a competition and returns the new competition as a JSON object. The
+JSON follows the normal formatting for competitions, outlined above. Below is
+a table of the form arguments for creating the competition.
+
+__Form Data__
+
+| Title | Required | Form Name | Description |
+| --- | --- | --- | --- |
+| Name | Required | `name` | Name of the competition |
+| Start Time | Required | `start_time` | The start time of the competition, in seconds since the Unix epoch |
+| Length | Required | `length` | The length of the competition, in seconds |
+| Closed | Required | `closed` | `true` if the competition is closed, `false` otherwise |
+| Problems | Required | `problems` | A JSON object of the problems in the competitions (see format below) |
+
+The structure of the `problems` is identical to the `compProblems` object
+demonstrated at the top of this heading.
+
+
+### Edit an Existing Competition
+***This method required being signed in as an administrator***
+
+__URL:__ `/api/competitions/{competition_id}`
+
+__Method:__ `PUT`
+
+Change an existing competition, identified by `competition_id`. Nothing gets
+returned upon success.
+
+Form fields are identical to creating a new competition (see above).
+
+
+### Register a User for a Competition
+
+__URL:__ `/api/competitions/{competition_id}/register`
+
+__Method:__ `POST`
+
+Registers the current user for a competition. No form data is required to self-
+register, though if the current user is an admin, a JSON array of usernames
+can be supplied. All users in the array will be registered, but the admin will
+not (unless also included in the array).
+
+An error will be returned upon trying to register a user who is already
+registered. Otherwise, no response is returned.
+
+__Web Sockets:__ A message `new_user` will be sent to every connected client
+when a new user is registered with the following data:
+
+```json
+{
+  "cid": 12,
+  "user": {
+    "display": "Yeezus",
+    "username": "kanyew"
+  }
+}
+```
+  
+
+### Unregister a User for a Competition
+
+__URL:__ `/api/competitions/{competition_id}/unregister`
+
+__Method:__ `POST`
+
+Unregisters the current user for a competition. No form data is required to
+self-unregister, though if the current user is an admin, a JSON array of
+usernames can be supplied. All users in the array will be registered, but the
+admin will not (unless also included in the array).
+
+### Get All Teams in an Competition
+***This method requires being signed in as an administrator***
+
+__URL:__ `/api/competitions/{competition_id}/teams`
+
+__Method:__ `GET`
+
+Returns all of the teams in a competition.
+
+The format of the JSON is as follows:
+
+```json
+"Team Awesome": [
+  {
+    "display": "Hester",
+    "username": "will"
+  },
+  {
+    "display: "Jeff Overbey",
+    "username": "jeffo"
+  }
+],
+"Bernie Sanders": [
+  {
+    "display": "The 99 Percent",
+    "username": "feelthebern"
+  }
+]
+```
+
+### Edit the Teams for a Competition
+***This method requires being signed in as an administrator***
+
+__URL:__ `/api/competitions/{competition_id}/teams`
+
+__Method:__ `PUT`
+
+Take the JSON object in the form and use it to arrange the participants in a
+competition. Any teams or users not included in the JSON data will not be a part
+of the competition and will have to re-register, though this should not be used
+for the sole purpose of unregistering participants.
+
+__Form Data__
+
+| Title | Required | Form Name | Description |
+| --- | --- | --- | --- |
+| Teams | Required | `teams` | A JSON object of the arrangment of teams |
+
+The JSON object should be formatted as an array of teams, each team mapped
+to an array of the participants (see above for example).
 
 ---
 
-# Submission Management
+## Submission Management
 
-TODO: Write the docs
+### Submit a Solution
+
+__URL:__ `/api/submit`
+
+__Method:__ `POST`
+
+Submit a solution to server for evaluation. Note that the results of the
+submission are sent back via websockets, and at the time of this writing cannot
+be obtained from the API. The submission id is returned from the API upon
+success.
+
+__Form Data__
+
+| Title | Required | Form Name | Description |
+| --- | --- | --- | --- |
+| Solution File | Required | `file` | The program file that contains the submission |
+| Problem ID | Required | `pid` | The integer ID of the problem for this submission |
+| Python Version | Optional | `python` | Specify the version of Python: `py` for Python 2.7 and `py3` for Python 3 |
+
+After the submission, the API will send out several Web Socket messages to all
+connected clients regarding the execution status of the submission. All these
+messages will be named `status` and have the following form:
+
+```json
+{
+  "submissionId": 2339,
+   "problemId": 12,
+   "username": "brandonm",
+   "submitTime": 1456071193,
+   "testNum": 17,
+   "status": "compile"/"start"/"runtime"/"timeout"/"wrong"/"good"
+}
+```
 
 ---
 
-# Blog Management
+## Blog Management
 
-TODO: Write the docs
+### Get All Blog Posts
+
+__URL:__ `/api/blog`
+
+__Method:__ `GET`
+
+Returns all the blog posts as JSON objects, in reverse chronological order.
+
+The JSON structure of a blog post is as follows
+
+```json
+{
+  "title": "A Blog Post",
+  "subtitle": "This title is a little smaller",
+  "postTime": 1456009720,
+  "body": "This is a blog post. It has words and things. _It_ `also` **has** ***markdown***.",
+  "author" : {
+    "username": "hermancain",
+    "display": "2012!"
+  }
+}
+```
+
+### Create a New Blog Post
+
+__URL:__ `/api/blog`
+
+__Method:__ `POST`
+
+Creates a new blog post fromt the given form data.
+
+__Form Data__
+
+| Title | Required | Form Name | Description |
+| --- | --- | --- | --- |
+| Title | Required | `title` | Title of the blog post |
+| Subtitle | Required | `subtitle` | Subtitle of the blog post |
+| Body | Required | `body` | Body of the blog post |
 
 ---
