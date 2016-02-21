@@ -306,7 +306,7 @@ The format of the JSON is as follows:
 ```json
 "Team Awesome": [
   {
-    "display": "Hester"
+    "display": "Hester",
     "username": "will"
   },
   {
@@ -377,7 +377,7 @@ messages will be named `status` and have the following form:
    "username": "brandonm",
    "submitTime": 1456071193,
    "testNum": 17,
-   "status": "compile"/"start"/"runtime"/"timeout"/"wrong"/"good
+   "status": "compile"/"start"/"runtime"/"timeout"/"wrong"/"good"
 }
 ```
 
