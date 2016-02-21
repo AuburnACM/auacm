@@ -12,7 +12,6 @@ snake_case.
 import glob
 import os
 import os.path
-import sys
 import unittest
 
 from app import app
@@ -64,7 +63,7 @@ class JudgeTest(object):
         :return: None
         """
         data_folder = app.config['DATA_FOLDER']
-        name, ext = filename.rsplit('.', 1)
+        _, ext = filename.rsplit('.', 1)
         submit = models.MockSubmission(
             username='Test User',
             pid=problem,
@@ -81,6 +80,7 @@ class JudgeTest(object):
         # Keep track of submit_file so that we can close it.
         self.submit = submit
         self.submit_file = MockUploadFile(file_path)
+        self.judge = judge.Judge(self.submit, self.submit_file, 1)
 
     def assertEvaluation(self, expected_result):
         """Assert the behavior of a submission.
@@ -91,12 +91,13 @@ class JudgeTest(object):
             Normally one of the constants exposed by the judge module.
         :return: None
         """
-        directory = judge.directory_for_submission(self.submit)
         self.submit_file.save(
-                os.path.join(directory, self.submit_file.filename))
+                os.path.join(self.judge.submission_path,
+                        self.submit_file.filename))
+        result, _ = self.judge.run()
         self.assertEqual(
             expected_result,
-            judge.evaluate(self.submit, self.submit_file, 1))
+            result)
 
     def assertCompilation(self, expected_result):
         """Assert the behavior of a compilation.
@@ -107,12 +108,11 @@ class JudgeTest(object):
             Normally one of the constants exposed by the judge module.
         :return: None
         """
-        directory = judge.directory_for_submission(self.submit)
         self.submit_file.save(
-            os.path.join(directory, self.submit_file.filename))
+            os.path.join(self.judge.submission_path, self.submit_file.filename))
         self.assertEqual(
             expected_result,
-            judge.compile_submission(self.submit, self.submit_file))
+            self.judge._compile_submission())
 
     def tearDown(self):
         """Post-test cleanup method.
@@ -242,9 +242,10 @@ class CppTest(JudgeTest, unittest.TestCase):
 
     def testNoCompile(self):
         self.createMockSubmission('addnumbers', 'compileerror.cpp')
+        result, _ = self.judge.run()
         self.assertEqual(
             judge.COMPILATION_ERROR,
-            judge.evaluate(self.submit, self.submit_file))
+            result)
 
     def testCompile(self):
         self.createMockSubmission('addnumbers', 'compilesuccess.cpp')

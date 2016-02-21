@@ -10,7 +10,6 @@ from app.modules.submission_manager import judge
 from app.modules.problem_manager.models import ProblemData
 from app.database import session
 from sqlalchemy.orm import load_only
-import threading
 
 
 def directory_for_submission(submission):
@@ -44,7 +43,7 @@ def submit():
     time_limit = session.query(ProblemData).\
             options(load_only("pid", "time_limit")).\
             filter(ProblemData.pid==request.form['pid']).\
-            first().time_limit;
+            first().time_limit
 
 
     ext = uploaded_file.filename.split('.')[-1].lower()
@@ -65,10 +64,7 @@ def submit():
     os.mkdir(directory)
     uploaded_file.save(os.path.join(directory, uploaded_file.filename))
 
-    thread = threading.Thread(
-        target=judge.evaluate, args=(attempt, uploaded_file, time_limit))
-    thread.daemon = False
-    thread.start()
+    judge.Judge(attempt, uploaded_file, time_limit).run_threaded()
 
     return serve_response({
         'submissionId': attempt.job
