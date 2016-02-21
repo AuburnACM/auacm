@@ -1,8 +1,9 @@
+"""User-related routes and methods"""
+
 from flask import request
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app
-from app.database import session
-from app.util import bcrypt, login_manager, serve_info_pdf, serve_html, serve_response, serve_error, load_user, admin_required
+from app.util import bcrypt, login_manager, serve_response, serve_error, load_user, admin_required
 from app.modules.user_manager.models import User
 
 @app.route('/api/login', methods=['POST'])
@@ -34,9 +35,7 @@ def create_user():
     if user is None:
         hashed = bcrypt.generate_password_hash(password)
         user = User(username=username, passw=hashed, display=display, admin=0)
-        session.add(user)
-        session.flush()
-        session.commit()
+        user.commit_to_session()
         return serve_response({})
     return serve_error('username already exists', 401)
 
@@ -50,9 +49,7 @@ def change_password():
     if bcrypt.check_password_hash(current_user.passw, oldPassword):
         hashed = bcrypt.generate_password_hash(newPassword)
         current_user.passw = hashed
-        session.add(current_user)
-        session.flush()
-        session.commit()
+        current_user.commit_to_session()
         return serve_response({})
     return serve_error('old password does not match', 401)
 
