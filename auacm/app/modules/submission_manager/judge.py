@@ -2,7 +2,6 @@ import os
 import os.path
 import shlex
 import subprocess
-import time
 import threading
 
 from app import app
@@ -74,7 +73,7 @@ class Judge:
 
     def run_threaded(self):
         """Runs the Judgement on a new thread"""
-        thread = threading.Thread(target=self.run, args=(self))
+        thread = threading.Thread(target=self.run)
         thread.daemon = False
         thread.start()
 

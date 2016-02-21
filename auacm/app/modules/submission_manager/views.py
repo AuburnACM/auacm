@@ -6,11 +6,10 @@ from flask.ext.login import current_user, login_required
 from app import app
 from app.util import serve_response, serve_error
 from app.modules.submission_manager import models
-from app.modules.submission_manager.judge import Judge
+from app.modules.submission_manager import judge
 from app.modules.problem_manager.models import ProblemData
 from app.database import session
 from sqlalchemy.orm import load_only
-import threading
 
 
 def directory_for_submission(submission):
@@ -65,7 +64,7 @@ def submit():
     os.mkdir(directory)
     uploaded_file.save(os.path.join(directory, uploaded_file.filename))
 
-    Judge(attempt, uploaded_file, time_limit).run_threaded()
+    judge.Judge(attempt, uploaded_file, time_limit).run_threaded()
 
     return serve_response({
         'submissionId': attempt.job
