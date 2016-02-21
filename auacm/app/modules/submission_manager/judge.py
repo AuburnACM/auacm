@@ -36,7 +36,7 @@ TIMEOUT_MULTIPLIER = {
 }
 DB_STATUS = ['', 'compile', 'start', 'runtime', 'timeout', 'wrong', 'good']
 EVENT_STATUS = ['', 'compile', 'running', 'runtime', 'timeout', 'incorrect',
-        'correct']
+                'correct']
 COMPILATION_ERROR = 1
 COMPILATION_SUCCESS = 2
 RUNTIME_ERROR = 3
@@ -46,10 +46,15 @@ CORRECT_ANSWER = 6
 
 
 def allowed_filetype(filename):
+    """Check to see if the filename is an allowed type or not"""
     return ('.' in filename and
             filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS)
 
 class Judge:
+    """A container for a judging instance. It contains the submission, the
+    source code that goes along with the submission, and the time limit of the
+    problem.
+    """
 
     def __init__(self, submission, uploaded_file, time_limit):
         """Create a new Judgement instance.
@@ -118,7 +123,7 @@ class Judge:
 
         result = subprocess.call(
             shlex.split(COMPILE_COMMAND[self.submission.file_type]
-                    .format(os.path.join(directory, name))),
+                        .format(os.path.join(directory, name))),
             stderr=open(os.path.join(directory, 'error.txt'), 'w')
         )
 
@@ -138,15 +143,13 @@ class Judge:
             4. compares the output against correct test output
         """
         # Initial setup
-        problem_directory = self.directory_for_problem
-        submission_directory = self.directory_for_submission
-        input_path = os.path.join(problem_directory, 'in')
-        output_path = os.path.join(problem_directory, 'out')
+        input_path = os.path.join(self.directory_for_problem, 'in')
+        output_path = os.path.join(self.directory_for_submission, 'out')
         max_runtime = self.time_limit * TIMEOUT_MULTIPLIER[self.submission.file_type]
 
         # Final setup.
-        output_path = os.path.join(submission_directory, 'out')
-        if (not os.path.exists(output_path)):
+        output_path = os.path.join(self.directory_for_submission, 'out')
+        if not os.path.exists(output_path):
             os.mkdir(output_path)
 
         # Iterate over all the input files.
@@ -170,7 +173,7 @@ class Judge:
                 elif process.poll() != 0:
                     return RUNTIME_ERROR, test_number
 
-                result_path = os.path.join(problem_directory, 'out')
+                result_path = os.path.join(self.directory_for_problem, 'out')
 
                 # The execution is completed.  Check its correctness.
                 with open(os.path.join(output_path, out_file)) as correct_result, \
@@ -214,7 +217,8 @@ class Judge:
         return process
 
 
-    def judge_process(self, process, limit):
+    @classmethod
+    def judge_process(cls, process, limit):
         """Run the process and make sure that it doesn't run for too long. In
         the event that it runs for more than its allotted time limit, execution
         will stop and the process will be killed.
