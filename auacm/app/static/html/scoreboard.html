@@ -1,20 +1,28 @@
 <div>
   <div class="row">
     <h1 class="pull-left">{{ competition.name }}</h1>
-    <div ng-if="isAdmin && !ended" class="dropdown pull-left margin-top margin-left">
+    <div ng-if="isAdmin && !ended" class="dropdown pull-left margin-top margin-left" uib-dropdown>
       <button class="btn btn-default dropdown-toggle" type="button"
           id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
-          aria-expanded="true">
+          aria-expanded="true" uib-dropdown-toggle>
         Manage
         <span class="caret"></span>
       </button>
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" uib-dropdown-menu>
         <li><a href="/#/competitions/{{ cid }}/edit">Edit</a></li>
         <li><a href="/#/competitions/{{ cid }}/teams">Teams</a></li>
       </ul>
     </div>
     <h2 class="pull-right" ng-show="active || !ended">{{ timeLeft | secondsToHours | date:"H:mm:ss" }}</h2>
   </div>
+
+  <!-- Countdown to competition start -->
+  <div class="row ng-cloak" ng-show="timeUntil > 0">
+    <div class="col-md-4 col-md-offset-4 text-center bg-info">
+      <h3>Time Until Start: {{ timeUntil | secondsToHours | date:"H:mm:ss" }}</h3>
+    </div>
+  </div>
+
   <div class="body">
     <table class="table table-bordered">
       <thead>
