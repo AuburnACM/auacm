@@ -91,9 +91,9 @@ class JudgeTest(object):
             Normally one of the constants exposed by the judge module.
         :return: None
         """
-        directory = self.judge.directory_for_submission
         self.submit_file.save(
-                os.path.join(directory, self.submit_file.filename))
+                os.path.join(self.judge.submission_path,
+                        self.submit_file.filename))
         result, _ = self.judge.run()
         self.assertEqual(
             expected_result,
@@ -108,9 +108,8 @@ class JudgeTest(object):
             Normally one of the constants exposed by the judge module.
         :return: None
         """
-        directory = self.judge.directory_for_submission
         self.submit_file.save(
-            os.path.join(directory, self.submit_file.filename))
+            os.path.join(self.judge.submission_path, self.submit_file.filename))
         self.assertEqual(
             expected_result,
             self.judge._compile_submission())
