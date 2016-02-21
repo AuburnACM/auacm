@@ -184,6 +184,15 @@ The `compProblems` object is formatted as follows:
 }
 ```
 
+The API will also accept a Web Socket message `system_time` with no data. The
+API will reply with another Web Socket message with the same name and the
+server's system time in milliseconds since the Unix epoch, exampled below:
+
+```json
+{
+  "milliseconds": 1456071193888
+}
+```
 
 ### Get Data on all Competitions
 
@@ -258,6 +267,19 @@ not (unless also included in the array).
 An error will be returned upon trying to register a user who is already
 registered. Otherwise, no response is returned.
 
+__Web Sockets:__ A message `new_user` will be sent to every connected client
+when a new user is registered with the following data:
+
+```json
+{
+  "cid": 12,
+  "user": {
+    "display": "Yeezus",
+    "username": "kanyew"
+  }
+}
+```
+  
 
 ### Unregister a User for a Competition
 
@@ -344,7 +366,20 @@ __Form Data__
 | Problem ID | Required | `pid` | The integer ID of the problem for this submission |
 | Python Version | Optional | `python` | Specify the version of Python: `py` for Python 2.7 and `py3` for Python 3 |
 
+After the submission, the API will send out several Web Socket messages to all
+connected clients regarding the execution status of the submission. All these
+messages will be named `status` and have the following form:
 
+```json
+{
+  "submissionId": 2339,
+   "problemId": 12,
+   "username": "brandonm",
+   "submitTime": 1456071193,
+   "testNum": 17,
+   "status": "compile"/"start"/"runtime"/"timeout"/"wrong"/"good
+}
+```
 
 ---
 
