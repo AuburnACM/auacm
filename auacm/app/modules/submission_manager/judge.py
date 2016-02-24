@@ -6,7 +6,6 @@ import threading
 import time
 
 from app import app
-from app.modules.flasknado.flasknado import Flasknado
 
 
 ALLOWED_EXTENSIONS = ['java', 'c', 'cpp', 'py', 'go']
@@ -47,6 +46,7 @@ def allowed_filetype(filename):
     return ('.' in filename and
             filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS)
 
+
 class Judge:
     """A container for a judging instance. It contains the submission, the
     source code that goes along with the submission, and the time limit of the
@@ -69,19 +69,16 @@ class Judge:
         self.pid = pid
         self.uploaded_file = uploaded_file
         self.file_type = uploaded_file.filename.rsplit('.')[1].lower()
+        self.time_limit = (time_limit * TIMEOUT_MULTIPLIER[self.file_type])
+        self.on_status = on_status
         problem_path = os.path.join(
             app.config['DATA_FOLDER'], 'problems', str(self.pid))
         self.submission_path = submission_path
-
         self.prob_input_path = os.path.join(problem_path, 'in')
         self.prob_output_path = os.path.join(problem_path, 'out')
         self.sub_output_path = os.path.join(self.submission_path, 'out')
-
         if not os.path.exists(self.sub_output_path):
             os.mkdir(self.sub_output_path)
-
-        self.time_limit = (time_limit * TIMEOUT_MULTIPLIER[self.file_type])
-        self.on_status = on_status
 
 
     def run_threaded(self):
@@ -130,6 +127,8 @@ class Judge:
     def _compile_submission(self):
         """Compile the submission if it needs compilation. A programming
         language that does not need compilation will return COMPILATION_SUCCESS.
+
+        :return: either COMPILATION_SUCCESS or COMPILATION_ERROR
         """
         directory = self.submission_path
         filename = self.uploaded_file.filename
@@ -159,6 +158,10 @@ class Judge:
             2. runs the submission with each input file
             3. checks the performance of the submission for errors
             4. compares the output against correct test output
+
+        :return: a tuple containing a status code, the highest test number
+                completed, and the most time that any one of the tests took to
+                run
         """
         max_time = 0
         # Iterate over all the input files.
