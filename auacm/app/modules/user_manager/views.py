@@ -4,7 +4,11 @@ from flask import request
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app
 from app.util import bcrypt, login_manager, serve_response, serve_error, load_user, admin_required
+from sqlalchemy.orm import load_only
 from app.modules.user_manager.models import User
+from app.modules.submission_manager.models import Submission
+import app.database as database
+
 
 @app.route('/api/login', methods=['POST'])
 def log_in():
@@ -71,3 +75,35 @@ def get_me():
         'displayName': current_user.display,
         'isAdmin': current_user.admin
     })
+
+
+@app.route('/api/ranking')
+def get_ranking():
+    """Return the users in order of how many problems are solved."""
+    # TODO(brandonlmorris): Create DB table to optimize ranking calculation
+    ranks = dict()
+    submits_q = (database.session.query(Submission)
+                 .options(load_only('pid', 'username', 'result')))
+
+    users = [(user.username, user.display)
+             for user in database.session.query(User).all()]
+
+    for user in users:
+        solved = set([s.pid for s in submits_q.filter(Submission.username == user[0]).all()])
+
+        # Only add a user if they've solved at least 1 problem
+        if solved:
+            ranks[user] = len(solved)
+
+    users, rank = list(), 0
+    for user, display in sorted(ranks, key=ranks.__getitem__)[::-1]:
+        if user == 'tester': continue
+        rank += 1
+        users.append({
+            'username': user,
+            'displayName': display,
+            'rank': rank,
+            'solved': ranks[(user, display)]
+        })
+    return serve_response(users)
+

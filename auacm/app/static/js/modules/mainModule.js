@@ -85,6 +85,11 @@ app.config(function($routeProvider) {
             templateUrl : 'static/html/editProblem.html',
             controller : 'EditProblemController',
             activetab : 'problems'
+        })
+        .when('/ranking', { // route for ranking page
+            templateUrl : 'static/html/ranking.html',
+            controller : 'RankingController',
+            activetab: 'ranking'
         });
 });
 
