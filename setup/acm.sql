@@ -163,6 +163,30 @@ INSERT INTO `problem_data` VALUES (1,90,'This problem is based on the game of Bl
 UNLOCK TABLES;
 
 --
+-- Table structure for table `problem_solved`
+--
+
+DROP TABLE IF EXISTS `problem_solved`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `problem_solved` (
+  `username` varchar(32) NOT NULL DEFAULT '',
+  `pid` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`username`,`pid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Maps users to problems solved';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `problem_solved`
+--
+
+LOCK TABLES `problem_solved` WRITE;
+/*!40000 ALTER TABLE `problem_solved` DISABLE KEYS */;
+INSERT INTO `problem_solved` VALUES ('alexeipillen',55),('brandonm',3),('brandonm',4),('brandonm',7),('brandonm',11),('brandonm',12),('brandonm',13),('brandonm',16),('brandonm',18),('brandonm',19),('brandonm',21),('brandonm',23),('brandonm',30),('brandonm',32),('brandonm',33),('brandonm',36),('brandonm',40),('brandonm',41),('brandonm',42),('brandonm',44),('brandonm',45),('brandonm',47),('brandonm',48),('brandonm',49),('brandonm',54),('brandonm',55),('brandonm',57),('brandonm',59),('brandonm',63),('brandonm',64),('brian',3),('brian',4),('brian',7),('brian',9),('brian',11),('brian',12),('brian',13),('brian',16),('brian',17),('brian',18),('brian',19),('brian',21),('brian',23),('brian',28),('brian',30),('brian',31),('brian',32),('brian',33),('brian',34),('brian',36),('brian',40),('brian',41),('brian',42),('brian',44),('brian',45),('brian',46),('brian',47),('brian',48),('brian',49),('brian',54),('brian',55),('brian',57),('brian',58),('brian',59),('brian',63),('brian',64),('brian',67),('caioalves',3),('caioalves',7),('caioalves',13),('caioalves',16),('caioalves',19),('caioalves',21),('caioalves',30),('caioalves',32),('caioalves',33),('caioalves',36),('caioalves',41),('caioalves',42),('caioalves',44),('caioalves',47),('caioalves',48),('caioalves',59),('caioalves',64),('carlosdrury',13),('carlosdrury',19),('carlosdrury',44),('carlosdrury',47),('carlosdrury',59),('carlosdrury',64),('chrisb',11),('chrisb',33),('chrisb',49),('dave',3),('dave',4),('dave',7),('dave',9),('dave',10),('dave',11),('dave',14),('dave',16),('dave',17),('dave',18),('dave',20),('dave',21),('dave',23),('dave',30),('dave',32),('dave',33),('dave',34),('dave',36),('dave',39),('dave',40),('dave',41),('dave',42),('dave',44),('dave',45),('dave',48),('dave',49),('dave',54),('dave',55),('dave',57),('dave',59),('dave',61),('dave',63),('dave',64),('dave',66),('dave',67),('dillon',3),('dillon',4),('dillon',7),('dillon',9),('dillon',11),('dillon',12),('dillon',13),('dillon',14),('dillon',16),('dillon',17),('dillon',19),('dillon',21),('dillon',23),('dillon',30),('dillon',32),('dillon',33),('dillon',36),('dillon',40),('dillon',41),('dillon',42),('dillon',44),('dillon',47),('dillon',48),('dillon',49),('dillon',54),('dillon',55),('dillon',57),('dillon',59),('dillon',63),('dillon',64),('drew',7),('drew',11),('drew',12),('drew',13),('drew',18),('drew',19),('drew',23),('drew',30),('drew',32),('drew',33),('drew',36),('drew',40),('drew',42),('drew',44),('drew',45),('drew',46),('drew',47),('drew',48),('drew',49),('drew',55),('drew',57),('drew',59),('drew',63),('drew',64),('jacob',11),('jacob',13),('jacob',19),('jacob',23),('jacob',32),('jacob',33),('jacob',44),('jacob',47),('jacob',49),('jacob',55),('jacob',64),('jeffw',3),('jeffw',13),('jeffw',19),('jeffw',23),('jeffw',30),('jeffw',32),('jeffw',33),('jeffw',41),('jeffw',45),('jeffw',47),('jeffw',49),('jeffw',55),('jeffw',64),('jeromys',3),('jeromys',7),('jeromys',11),('jeromys',13),('jeromys',16),('jeromys',18),('jeromys',19),('jeromys',21),('jeromys',23),('jeromys',30),('jeromys',32),('jeromys',33),('jeromys',41),('jeromys',45),('jeromys',47),('jeromys',54),('jeromys',55),('jeromys',57),('jeromys',63),('jeromys',64),('jeromys',67),('john_mac',3),('john_mac',13),('john_mac',18),('john_mac',19),('john_mac',23),('john_mac',30),('john_mac',32),('john_mac',33),('john_mac',36),('john_mac',40),('john_mac',44),('john_mac',47),('john_mac',48),('john_mac',59),('john_mac',63),('john_mac',64),('justinm',3),('justinm',4),('justinm',7),('justinm',11),('justinm',12),('justinm',13),('justinm',17),('justinm',19),('justinm',23),('justinm',30),('justinm',32),('justinm',33),('justinm',36),('justinm',42),('justinm',44),('justinm',47),('justinm',48),('justinm',49),('justinm',55),('justinm',57),('justinm',59),('justinm',64),('kaitlync',11),('kaitlync',33),('lucyr',16),('lucyr',18),('lucyr',19),('lucyr',36),('lucyr',41),('lucyr',44),('lucyr',47),('lucyr',48),('lucyr',59),('lucyr',64),('merediths',3),('merediths',11),('merediths',17),('merediths',30),('merediths',32),('merediths',33),('merediths',36),('merediths',44),('merediths',48),('merediths',59),('merediths',64),('mitchj',57),('mitchp',3),('mitchp',4),('mitchp',5),('mitchp',7),('mitchp',10),('mitchp',11),('mitchp',12),('mitchp',13),('mitchp',14),('mitchp',16),('mitchp',17),('mitchp',18),('mitchp',19),('mitchp',20),('mitchp',21),('mitchp',23),('mitchp',27),('mitchp',28),('mitchp',30),('mitchp',31),('mitchp',32),('mitchp',33),('mitchp',34),('mitchp',36),('mitchp',39),('mitchp',40),('mitchp',41),('mitchp',42),('mitchp',44),('mitchp',45),('mitchp',46),('mitchp',47),('mitchp',48),('mitchp',49),('mitchp',54),('mitchp',55),('mitchp',57),('mitchp',59),('mitchp',61),('mitchp',63),('mitchp',64),('mitchp',66),('mitchp',67),('quinn',11),('quinn',19),('quinn',30),('quinn',32),('quinn',33),('quinn',55),('quinn',64),('remydf',3),('remydf',7),('remydf',11),('remydf',12),('remydf',13),('remydf',14),('remydf',16),('remydf',17),('remydf',18),('remydf',19),('remydf',20),('remydf',21),('remydf',23),('remydf',30),('remydf',32),('remydf',33),('remydf',34),('remydf',36),('remydf',40),('remydf',41),('remydf',42),('remydf',44),('remydf',45),('remydf',46),('remydf',47),('remydf',48),('remydf',49),('remydf',55),('remydf',57),('remydf',59),('remydf',63),('remydf',64),('remydf',66),('remydf',67),('sam',11),('sam',33),('sam',49),('sam',64),('waynenolen',13),('waynenolen',19),('waynenolen',23),('waynenolen',30),('waynenolen',32),('waynenolen',40),('waynenolen',47),('waynenolen',63),('waynenolen',64),('will',3),('will',5),('will',7),('will',12),('will',13),('will',17),('will',18),('will',19),('will',23),('will',30),('will',32),('will',36),('will',44),('will',45),('will',47),('will',48),('will',49),('will',55),('will',57),('will',59),('will',63),('will',64),('will',67),('willa',3),('willa',4),('willa',11),('willa',12),('willa',13),('willa',14),('willa',16),('willa',17),('willa',18),('willa',19),('willa',23),('willa',30),('willa',32),('willa',33),('willa',36),('willa',40),('willa',41),('willa',42),('willa',44),('willa',45),('willa',47),('willa',48),('willa',49),('willa',55),('willa',57),('willa',59),('willa',63),('willa',64);
+/*!40000 ALTER TABLE `problem_solved` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `problems`
 --
 
@@ -286,4 +310,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-12-28 12:54:44
+-- Dump completed on 2016-02-24 21:21:45
