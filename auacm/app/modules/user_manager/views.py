@@ -4,10 +4,10 @@ from flask import request
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app
 from app.util import bcrypt, login_manager, serve_response, serve_error, load_user, admin_required
-from sqlalchemy.orm import load_only
 from app.modules.user_manager.models import User
 from app.modules.submission_manager.models import Submission, ProblemSolved
 import app.database as database
+from time import time
 
 
 @app.route('/api/login', methods=['POST'])
@@ -77,14 +77,34 @@ def get_me():
     })
 
 
-@app.route('/api/ranking')
-def get_ranking():
-    """Return the users in order of how many problems are solved."""
+@app.route('/api/ranking', methods=['GET'])
+@app.route('/api/ranking/<timeframe>', methods=['GET'])
+def get_ranking(timeframe='all'):
+    """
+    Return the users in order of how many problems are solved in the time frame
+    """
+    now = int(time())
+    frame_lengths = {
+        'all': lambda x: True,
+        'day': lambda x: now - x < 60 * 60 * 24,                 # 24 hours
+        'week': lambda x: now - x < (60 * 60 * 24) * 7,          # 7 days
+        'month': lambda x: now - x < (60 * 60 * 24) * 7 * 4,     # 4 weeks
+        'year': lambda x: now  - x < (60 * 60 * 24) * 7 * 52,    # 52 weeks
+    }
+    if timeframe not in frame_lengths.keys():
+        timeframe = 'all'
+
+
     ranks = list()
     for username, display in [(u.username, u.display) for u in
                               database.session.query(User).all()]:
-        num_solved = (len(database.session.query(ProblemSolved)
-                      .filter(ProblemSolved.username == username).all()))
+        solves = (database.session.query(ProblemSolved)
+                  .filter(ProblemSolved.username == username).all())
+
+        # Only count solves if they meet the time criteria
+        num_solved = len([s for s in solves
+                          if frame_lengths[timeframe](s.submit_time)])
+
         # Don't add users that haven't solved at least one problem
         if num_solved > 0:
             ranks.append({

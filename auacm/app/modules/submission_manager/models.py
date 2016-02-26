@@ -43,8 +43,9 @@ class Submission(Base):
         # Add to problem_solved if solved for first time
         if status == 'good' and not (session.query(ProblemSolved)
                 .filter(ProblemSolved.pid == self.pid)
-                .filter(ProblemSolved.username == self.username)):
-            session.add(ProblemSolved(username=self.username, pid=self.pid))
+                .filter(ProblemSolved.username == self.username).all()):
+            session.add(ProblemSolved(username=self.username, pid=self.pid,
+                                      submit_time=self.submit_time))
 
         session.flush()
         session.commit()
