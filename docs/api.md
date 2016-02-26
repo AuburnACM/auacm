@@ -509,3 +509,36 @@ __Form Data__
 
 The API will serve a `401` response if the `oldPassword` field does not match
 the current password of the current user.
+
+### Get a Ranking of all Users
+
+__URL:__ `/api/ranking[/{timeframe}]`
+
+__Method:__ `GET`
+
+Obtain a JSON array of all users who have solved at least one problem, ranked
+in order of number of problems solved (within a time frame if provided).
+
+The time frame portion of the route is optional. Acceptable arguments are:
+`day`, `week`, `month`, `year`, and `all` (default). If one of the values is
+selected, only solution submitted (the first time) within the time frame since
+the request is made will be used for ranking.
+
+The request will return a JSON array in the following format:
+
+```json
+[{
+      "displayName": "Mitch Loser Price",
+      "rank": 1,
+      "solved": 10000,
+      "username": "mitchp"
+    },
+    {
+      "displayName": "Brian Newb Pwn3r Da Roach",
+      "rank": 2,
+      "solved": 6,
+      "username": "brian"
+    },
+    ...
+}]
+```

@@ -1,5 +1,5 @@
-app.controller('MainController', ['$scope', '$http', '$route', '$window',
-        function($scope, $http, $route, $window) {
+app.controller('MainController', ['$scope', '$rootScope', '$http', '$route',
+        '$window', function($scope, $rootScope, $http, $route, $window) {
     // Intialize user fields
     $scope.isAdmin = false;
     $scope.$route = $route;
@@ -90,4 +90,5 @@ app.controller('MainController', ['$scope', '$http', '$route', '$window',
     };
 
     $scope.socket = new Socket('ws://' + $window.location.host + '/websocket');
+    $rootScope.bernitize = '';
 }]);
