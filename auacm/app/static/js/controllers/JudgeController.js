@@ -5,6 +5,12 @@ app.controller('JudgeController', ['$scope', '$rootScope', '$http',
     $scope.submitted = [];
     $scope.python = {version: 'py'};
 
+    // Map problem ID's to the name for easy retrieval
+    var pidToName = new Map();
+    for (var i = 0; i < $scope.problems.length; i++) {
+        pidToName[$scope.problems[i].pid] = $scope.problems[i].name;
+    }
+
     $scope.submit = function() {
         if ($scope.file.name.toLowerCase().includes('bern')) {
             $rootScope.bernitize = 'bernitdown';
@@ -36,7 +42,10 @@ app.controller('JudgeController', ['$scope', '$rootScope', '$http',
             submission.submissionId = response.data.data.submissionId;
             submission.status = 'compiling';
             submission.testNum = 0;
-            $scope.submitted.push(submission);
+            $scope.submitted.unshift(submission);
+            if ($scope.submitted.length > 10) {
+                $scope.submitted.pop();
+            }
         }, function(response) {
             console.error(response);
         });
@@ -54,9 +63,37 @@ app.controller('JudgeController', ['$scope', '$rootScope', '$http',
         }
     });
 
+    // Get the recent submission for this user
+    var getSubmits = function() {
+        // FIXME: Sometimes current user is undefined
+        if ($scope.username !== undefined) {
+            $http.get('/api/submit/user/' + $scope.username + '/10')
+                .then(function (response) {
+                    $scope.submitted = response.data.data;
+
+                    // Do a smidge of parsing
+                    for (var i = 0; i < $scope.submitted.length; i++) {
+                        var current = $scope.submitted[i];
+
+                        current.problem = pidToName[current.pid];
+                        current.submissionId = current.job_id;
+                        if (current.status == 'good') {
+                            current.status = 'correct';
+                        } else if (current.status == 'wrong') {
+                            current.status = 'incorrect';
+                        }
+                    }
+                }, function (error) {
+                    console.error(error);
+                });
+        }
+    };
+    getSubmits();
+
     if ($scope.problems) {
         $scope.problems.sort(function(a, b) {
             return a.name > b.name ? 1 : (a.name < b.name ? -1 : 0);
         });
     }
+
 }]);
