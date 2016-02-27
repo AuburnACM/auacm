@@ -69,3 +69,44 @@ def submit():
     return serve_response({
         'submissionId': attempt.job
     })
+
+
+@app.route('/api/submit/job/<int:job_id>')
+def get_submit(job_id):
+    """Get the current status of a submission based on it's id"""
+    submit = (session.query(models.Submission)
+              .filter(models.Submission.job == job_id).first())
+
+    if not submit:
+        return serve_error('Submission with job id ' + str(job_id) +
+                           ' not found', 401)
+
+    return serve_response(submit.to_dict())
+
+
+@app.route('/api/submit/user/<username>')
+@app.route('/api/submit/user/<username>/<int:limit>')
+def get_submit_for_user(username, limit=100):
+    """
+    Return a number of submit for a user, chronologically (most recent first)
+
+    :param username: The user to collect submits for ('all' will return from
+                     all users).
+    :param limit:    The number of submits to pull, max 100
+    """
+    limit = min(limit, 100)
+
+    submits = (session.query(models.Submission)
+               .order_by(models.Submission.submit_time.desc()))
+
+    # Filter by user if provided
+    if username != 'all':
+        submits = submits.filter(models.Submission.username == username)
+
+    result = submits.limit(limit).all()
+
+    if not result:
+        return serve_error('No submissions found for username ' +
+                           str(username), 401)
+
+    return serve_response([s.to_dict() for s in result])
