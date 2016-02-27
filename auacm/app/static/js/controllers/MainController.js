@@ -65,7 +65,7 @@ app.controller('MainController', ['$scope', '$rootScope', '$http', '$route',
         //     $scope.username and $scope.password. We need to call
         //     the backend to log in.
         var request = {
-            'username': $scope.username,
+            'username': $scope.loginUsername,
             'password': $scope.password
         };
         $http({

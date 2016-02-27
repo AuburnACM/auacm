@@ -73,7 +73,7 @@ def submit():
 
 @app.route('/api/submit/job/<int:job_id>')
 def get_submit(job_id):
-    """Get the current status of a submission based on it's id"""
+    """Get the current status of a submission based on its id"""
     submit = (session.query(models.Submission)
               .filter(models.Submission.job == job_id).first())
 

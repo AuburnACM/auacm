@@ -102,6 +102,15 @@ app.controller('JudgeController', ['$scope', '$rootScope', '$http',
     };
     getSubmits();
 
+    // Reset recent submits upon logging in or out
+    $scope.$watch('loggedIn', function(newValue, oldValue) {
+        if (newValue) {
+            getSubmits();
+        } else {
+            $scope.submitted = [];
+        }
+    });
+
     if ($scope.problems) {
         $scope.problems.sort(function(a, b) {
             return a.name > b.name ? 1 : (a.name < b.name ? -1 : 0);
