@@ -39,6 +39,14 @@ class Submission(Base):
         '''
         self.result = status
         dblock.acquire()
+
+        # Add to problem_solved if solved for first time
+        if status == 'good' and not (session.query(ProblemSolved)
+                .filter(ProblemSolved.pid == self.pid)
+                .filter(ProblemSolved.username == self.username).all()):
+            session.add(ProblemSolved(username=self.username, pid=self.pid,
+                                      submit_time=self.submit_time))
+
         session.flush()
         session.commit()
         dblock.release()
@@ -51,6 +59,14 @@ class Submission(Base):
                     .filter(Problem.pid == self.pid)
                     .first())
         return self._problem
+
+class ProblemSolved(Base):
+    """Reflects problem_solved table of the database"""
+
+    def __init__(self, *args, **kwargs):
+        Base.__init__(self, **kwargs)
+
+    __tablename__ = 'problem_solved'
 
 
 MOCK_PROBLEM_TIMEOUT = 1

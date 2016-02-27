@@ -66,3 +66,7 @@ body {
     font-weight: 700;
     color: #d9534f;
 }
+
+.bernitdown {
+    background: url(../img/logo.jpg) repeat;
+}

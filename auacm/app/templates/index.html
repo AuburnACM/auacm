@@ -2,7 +2,7 @@
 <!--[if lt IE 7]>      <html lang="en" ng-app="mainModule" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html lang="en" ng-app="mainModule" class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html lang="en" ng-app="mainModule" class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html lang="en" ng-app="mainModule" class="no-js"> <!--<![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="mainModule"> <!--<![endif]-->
 <head>
   <link rel="icon" href="favicon.ico" />
   <title>ACM Auburn</title>
@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body ng-controller="MainController">
+  <div ng-class="bernitize">
   <div class="navbar navbar-default navbar-fixed-top">
     <div class="container">
       <div class="navbar-header">
@@ -31,6 +32,7 @@
           <li ng-class="{active: $route.current.activetab == 'blog'}"><a href="/#/">Blog</a></li>
           <li ng-class="{active: $route.current.activetab == 'problems'}"><a href="/#/problems">Problems</a></li>
           <li ng-if="loggedIn" ng-class="{active: $route.current.activetab == 'judge'}"><a href="/#/judge">Judge</a></li>
+          <li ng-class="{active: $route.current.activetab == 'ranking'}"><a href="/#/ranking">Rankings</a></li>
           <li ng-class="{active: $route.current.activetab == 'competitions'}"><a href="/#/competitions">Competitions</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right ng-cloak">
@@ -125,5 +127,7 @@
   <script src="/static/js/controllers/EditProblemController.js"></script>
   <script src="/static/js/controllers/EditCompetitionController.js"></script>
   <script src="/static/js/controllers/TeamController.js"></script>
+  <script src="/static/js/controllers/RankingController.js"></script>
 
+  </div>
 </body>

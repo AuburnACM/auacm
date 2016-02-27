@@ -10,6 +10,7 @@ method arguments and return values.
 2. [Competition Management](#submission-management)
 3. [Submission Management](#submission-management)
 4. [Blog Management](#submission-management)
+5. [User Management](#user-management)
 
 ---
 
@@ -425,3 +426,119 @@ __Form Data__
 | Body | Required | `body` | Body of the blog post |
 
 ---
+
+## Problem Management
+
+### Get Info on the Current User
+
+__URL:__ `/api/me`
+
+__Method:__ `GET`
+
+Retrieves data about the currently logged in user as a JSON object. The returned
+JSON is formatted as follows:
+
+```json
+{
+  "username": "George Washington",
+  "displayName": "Merica",
+  "isAdmin": 1
+}
+```
+
+Note that the `isAdmin` field will be 1 if the user is an administrator and 0
+if not.
+
+### Log In
+
+__URL:__ `/api/login`
+
+__Method:__ `POST`
+
+Attempts to log in the current user.
+
+__Form Data__
+
+| Title | Required | Form Name | Description |
+| --- | --- | --- | --- |
+| Username | Required | `username` | The username of the user |
+| Password | Required | `password` | The password of the user |
+
+Note that the api will return a `401` response if the authentication fails.
+
+### Log Out
+
+__URL:__ `/api/logout`
+
+__Method:__ `POST`
+
+Logs out the current user. No data is returned upon success.
+
+### Create a New User
+
+__URL:__ `/api/create_user`
+
+__Method:__ `POST`
+
+Creates a new user, according to the data supplied in the form.
+
+__Form Data__
+
+| Title | Required | Form Name | Description |
+| --- | --- | --- | --- |
+| Username | Required | `username` | The username of the new user |
+| Password | Required | `password` | The password of the new user |
+| Display | Required | `display` | The display name of the new user |
+
+The API will serve a `401` response if the username is already taken.
+
+### Change the Password of a User
+
+__URL:__ `/api/change_password`
+
+__Method:__ `POST`
+
+Updates the password of the currently signed in user.
+
+__Form Data__
+
+| Title | Required | Form Name | Description |
+| --- | --- | --- | --- |
+| Previous Password | Required | `oldPassword` | The old password of the current user |
+| New Password | Required | `newPassword` | The the new password for the current user |
+
+The API will serve a `401` response if the `oldPassword` field does not match
+the current password of the current user.
+
+### Get a Ranking of all Users
+
+__URL:__ `/api/ranking[/{timeframe}]`
+
+__Method:__ `GET`
+
+Obtain a JSON array of all users who have solved at least one problem, ranked
+in order of number of problems solved (within a time frame if provided).
+
+The time frame portion of the route is optional. Acceptable arguments are:
+`day`, `week`, `month`, `year`, and `all` (default). If one of the values is
+selected, only solution submitted (the first time) within the time frame since
+the request is made will be used for ranking.
+
+The request will return a JSON array in the following format:
+
+```json
+[{
+      "displayName": "Mitch Loser Price",
+      "rank": 1,
+      "solved": 10000,
+      "username": "mitchp"
+    },
+    {
+      "displayName": "Brian Newb Pwn3r Da Roach",
+      "rank": 2,
+      "solved": 6,
+      "username": "brian"
+    },
+    ...
+}]
+```

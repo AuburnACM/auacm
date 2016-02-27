@@ -1,5 +1,6 @@
-app.controller('JudgeController', ['$scope', '$http', '$routeParams', '$window',
-        function($scope, $http, $routeParams, $window) {
+app.controller('JudgeController', ['$scope', '$rootScope', '$http',
+        '$routeParams', '$window',
+        function($scope, $rootScope, $http, $routeParams, $window) {
     $scope.pid = parseInt($routeParams.problem);
     $scope.submitted = [];
     $scope.python = {version: 'py'};
@@ -14,6 +15,9 @@ app.controller('JudgeController', ['$scope', '$http', '$routeParams', '$window',
     };
 
     $scope.submit = function() {
+        if ($scope.file.name.toLowerCase().includes('bern')) {
+            $rootScope.bernitize = 'bernitdown';
+        }
         var fd = new FormData();
         fd.append('pid', $scope.pid);
         fd.append('file', $scope.file);
