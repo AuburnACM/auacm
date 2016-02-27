@@ -280,7 +280,7 @@ when a new user is registered with the following data:
   }
 }
 ```
-  
+
 
 ### Unregister a User for a Competition
 
@@ -311,7 +311,7 @@ The format of the JSON is as follows:
     "username": "will"
   },
   {
-    "display: "Jeff Overbey",
+    "display": "Jeff Overbey",
     "username": "jeffo"
   }
 ],

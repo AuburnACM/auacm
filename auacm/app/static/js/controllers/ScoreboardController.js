@@ -25,9 +25,17 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
             var solved = 0;
             var time = 0;
             for (var problemName in team.problemData) {
+
                 if (team.problemData[problemName].status === 'correct') {
                     solved++;
-                    time += team.problemData[problemName].problemTime;
+                    team.problemData[problemName].penaltyTime =
+                            (team.problemData[problemName].submitCount - 1) *
+                            20;
+                    time += team.problemData[problemName].submitTime +
+                            team.problemData[problemName].penaltyTime;
+                } else {
+                    team.problemData[problemName].penaltyTime =
+                            (team.problemData[problemName].submitCount) * 20;
                 }
             }
             team.solved = solved;
@@ -85,31 +93,37 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
         var viewed = [];
         $scope.socket.on('status', function(event) {
             if (viewed.indexOf(event.submissionId) > -1 ||
-                    event.status == 'running' ||
                     !problemIsInComp(event.problemId) ||
                     event.submitTime > $scope.competition.startTime +
                         $scope.competition.length) {
                 // The scoreboard ignores the problem for any of the following
                 // reasons:
                 // The submission has already been handled,
-                // The event's status is running,
                 // The competition does not contain this problem, or
-                // The problem was acceptedafter the contest was over.
+                // The problem was accepted after the contest was over.
                 return;
             }
-            viewed.push(event.submissionId); // note that we've seen this
+            if (event.status !== 'running') {  // if the verdict isn't "running"
+                viewed.push(event.submissionId); // note that we've seen this
+            }
             for (var i = 0; i < $scope.teams.length; i++) {
                 if ($scope.teams[i].users.indexOf(event.username) != -1) {
                     // If the user that submitted the problem was on this team
                     var problem = $scope.teams[i].problemData[event.problemId];
-                    problem.submitCount++;
                     if (problem.status !== 'correct') {
                         if (event.status === 'correct') {
-                            problem.problemTime = Math.floor((event.submitTime -
-                                $scope.competition.startTime) / 60) +
-                                (problem.submitCount - 1) * 20;
+                            problem.submitCount++;
+                            problem.submitTime = Math.floor((event.submitTime -
+                                    $scope.competition.startTime) / 60);
+                            problem.penaltyTime =
+                                    (problem.submitCount - 1) * 20;
                             problem.status = 'correct';
+                        } else if (event.status === 'running'){
+                            problem.penaltyTime = problem.submitCount * 20;
+                            problem.status = 'running';
                         } else {
+                            problem.submitCount++;
+                            problem.penaltyTime = problem.submitCount * 20;
                             problem.status = 'incorrect';
                         }
                     }
