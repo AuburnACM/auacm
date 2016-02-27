@@ -28,13 +28,13 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
 
                 if (team.problemData[problemName].status === 'correct') {
                     solved++;
-                    time += team.problemData[problemName].submitTime
-                         + (team.problemData[problemName].submitCount - 1) * 20;
                     team.problemData[problemName].penaltyTime =
-                      (team.problemData[problemName].submitCount - 1) * 20;
+                        (team.problemData[problemName].submitCount - 1) * 20;
+                    time += team.problemData[problemName].submitTime
+                        + team.problemData[problemName].penaltyTime;
                 } else {
-                  team.problemData[problemName].penaltyTime =
-                    (team.problemData[problemName].submitCount) * 20;
+                    team.problemData[problemName].penaltyTime =
+                        (team.problemData[problemName].submitCount) * 20;
                 }
             }
             team.solved = solved;
@@ -115,7 +115,7 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
                             problem.submitTime = Math.floor((event.submitTime -
                                 $scope.competition.startTime) / 60);
                             problem.penaltyTime =
-                              (problem.submitCount - 1) * 20;
+                                (problem.submitCount - 1) * 20;
                             problem.status = 'correct';
                         } else if (event.status === 'running'){
                             problem.penaltyTime = problem.submitCount * 20;

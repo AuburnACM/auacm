@@ -168,7 +168,7 @@ def get_competition_data(cid):
                 if not s.pid == problem['pid'] or s.username not in team_users[team]:
                     continue
                 elif correct > 0:
-                    break;
+                    break
                 elif s.result == 'good':
                     correct = s.submit_time - competition.start
                 else:
