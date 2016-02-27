@@ -30,8 +30,8 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
                     solved++;
                     team.problemData[problemName].penaltyTime =
                         (team.problemData[problemName].submitCount - 1) * 20;
-                    time += team.problemData[problemName].submitTime
-                        + team.problemData[problemName].penaltyTime;
+                    time += team.problemData[problemName].submitTime +
+                        team.problemData[problemName].penaltyTime;
                 } else {
                     team.problemData[problemName].penaltyTime =
                         (team.problemData[problemName].submitCount) * 20;
