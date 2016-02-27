@@ -41,12 +41,14 @@
         <td>{{ team.time }}</td>
         <td ng-if="active || ended" ng-repeat="name in problemNames"
             ng-class="{'success': team.problemData[compProblems[name].pid].status === 'correct',
-                    'danger': team.problemData[compProblems[name].pid].status === 'incorrect'}">
+                    'danger': team.problemData[compProblems[name].pid].status === 'incorrect',
+                     'info': team.problemData[compProblems[name].pid].status === 'running'}">
             <div ng-hide="team.problemData[compProblems[name].pid].status === 'unattempted'">
               {{ team.problemData[compProblems[name].pid].submitCount }}
             <br>
             <small>
-              {{ team.problemData[compProblems[name].pid].status == "incorrect" | iif : "--" :
+              {{ team.problemData[compProblems[name].pid].status == "incorrect"
+                || team.problemData[compProblems[name].pid].status == "running" | iif : "--" :
               team.problemData[compProblems[name].pid].problemTime }}</small>
             </div>
         </td>
