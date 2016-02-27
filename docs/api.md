@@ -382,6 +382,38 @@ messages will be named `status` and have the following form:
 }
 ```
 
+### Get a Submission Status by Job Id
+
+__URL:__ `/api/submit/job/{job_id}`
+
+__Method:__ `GET`
+
+Return a JSON representation of a submission identified by the job id (integer).
+If no submission can be found with that job id, a 401 error response is
+returned. The structure of the JSON object is as follows:
+
+```json
+{
+  "job_id": 20013,
+  "pid": 17,
+  "username": "bernitup",
+  "file_type": "java",
+  "status": "timeout"
+}
+```
+
+### Get a Number of Submission of a User
+
+__URL:__ `/api/submit/user/{username}[/{limit_number}]`
+
+__Method:__ `GET`
+
+Returns a JSON array of submissions for a particular user. If the `username` is
+'all', then submissions for all users will be returned. The optional
+`limit_number` will limit the number of returned submissions, the maximum and
+default being 100. Submissions are returned chronologically, with most recent
+first. The JSON array will be of the form described in the previous section.
+
 ---
 
 ## Blog Management
