@@ -25,9 +25,16 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
             var solved = 0;
             var time = 0;
             for (var problemName in team.problemData) {
+
                 if (team.problemData[problemName].status === 'correct') {
                     solved++;
-                    time += team.problemData[problemName].problemTime;
+                    time += team.problemData[problemName].submitTime
+                         + (team.problemData[problemName].submitCount - 1) * 20;
+                    team.problemData[problemName].penaltyTime =
+                      (team.problemData[problemName].submitCount - 1) * 20;
+                } else {
+                  team.problemData[problemName].penaltyTime =
+                    (team.problemData[problemName].submitCount) * 20;
                 }
             }
             team.solved = solved;
@@ -105,14 +112,17 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
                     if (problem.status !== 'correct') {
                         if (event.status === 'correct') {
                             problem.submitCount++;
-                            problem.problemTime = Math.floor((event.submitTime -
-                                $scope.competition.startTime) / 60) +
-                                (problem.submitCount - 1) * 20;
+                            problem.submitTime = Math.floor((event.submitTime -
+                                $scope.competition.startTime) / 60);
+                            problem.penaltyTime =
+                              (problem.submitCount - 1) * 20;
                             problem.status = 'correct';
                         } else if (event.status === 'running'){
+                            problem.penaltyTime = problem.submitCount * 20;
                             problem.status = 'running';
                         } else {
                             problem.submitCount++;
+                            problem.penaltyTime = problem.submitCount * 20;
                             problem.status = 'incorrect';
                         }
                     }

@@ -164,24 +164,23 @@ def get_competition_data(cid):
             problem = comp_problems[name]
             correct = 0
             incorrect = 0
-            pointless = 0
             for s in submissions:
                 if not s.pid == problem['pid'] or s.username not in team_users[team]:
                     continue
                 elif correct > 0:
-                    pointless += 1
+                    break;
                 elif s.result == 'good':
                     correct = s.submit_time - competition.start
                 else:
                     incorrect += 1
-            problem_time = incorrect * 20 + correct // 60
+            submit_time = correct // 60
             submit_count = 0
             if correct > 0:
                 submit_count = 1
-            submit_count += incorrect + pointless
+            submit_count += incorrect
             team_problems[comp_problems[name]['pid']] = {
                 'label': name,
-                'problemTime': problem_time,
+                'submitTime': submit_time,
                 'submitCount': submit_count,
                 'status': 'correct' if correct > 0 else 'unattempted' if submit_count == 0 else 'incorrect'
             }

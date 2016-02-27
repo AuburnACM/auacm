@@ -45,11 +45,14 @@
                      'info': team.problemData[compProblems[name].pid].status === 'running'}">
             <div ng-hide="team.problemData[compProblems[name].pid].status === 'unattempted'">
               {{ team.problemData[compProblems[name].pid].submitCount }}
-            <br>
-            <small>
-              {{ team.problemData[compProblems[name].pid].status == "incorrect"
-                || team.problemData[compProblems[name].pid].status == "running" | iif : "--" :
-              team.problemData[compProblems[name].pid].problemTime }}</small>
+              <br>
+              <small>
+                {{ team.problemData[compProblems[name].pid].status == "incorrect"
+                  || team.problemData[compProblems[name].pid].status == "running" | iif : "--" :
+                  team.problemData[compProblems[name].pid].submitTime }} {{
+                    team.problemData[compProblems[name].pid].penaltyTime > 0 | iif : " (+"
+                    + team.problemData[compProblems[name].pid].penaltyTime + ")" : "" }}
+              </small>
             </div>
         </td>
       </tr>
