@@ -5,6 +5,15 @@ app.controller('JudgeController', ['$scope', '$rootScope', '$http',
     $scope.submitted = [];
     $scope.python = {version: 'py'};
 
+    var statusName = {
+        compile: 'Compilation Error',
+        runtime: 'Runtime Error',
+        running: 'Running',
+        timeout: 'Time Limit Exceeded',
+        incorrect: 'Incorrect',
+        correct: 'Correct'
+    };
+
     // Map problem ID's to the name for easy retrieval
     var pidToName = new Map();
     for (var i = 0; i < $scope.problems.length; i++) {
@@ -32,6 +41,7 @@ app.controller('JudgeController', ['$scope', '$rootScope', '$http',
         submission.problem = name;
         submission.fileName = $scope.file.name;
         submission.status = 'uploading';
+        submission.statusDescription = 'Uploading';
         $http({
             method: 'POST',
             url: '/api/submit',
@@ -42,6 +52,7 @@ app.controller('JudgeController', ['$scope', '$rootScope', '$http',
             submission.submissionId = response.data.data.submissionId;
             submission.status = 'compiling';
             submission.testNum = 0;
+            submission.statusDescription = 'Compiling';
             $scope.submitted.unshift(submission);
             if ($scope.submitted.length > 10) {
                 $scope.submitted.pop();
@@ -57,6 +68,7 @@ app.controller('JudgeController', ['$scope', '$rootScope', '$http',
                 var submitted = $scope.submitted[i];
                 submitted.status = event.status;
                 submitted.testNum = event.testNum;
+                submitted.statusDescription = statusName[submitted.status];
                 $scope.$apply();
                 break;
             }
