@@ -29,12 +29,13 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
                 if (team.problemData[problemName].status === 'correct') {
                     solved++;
                     team.problemData[problemName].penaltyTime =
-                        (team.problemData[problemName].submitCount - 1) * 20;
+                            (team.problemData[problemName].submitCount - 1) *
+                            20;
                     time += team.problemData[problemName].submitTime +
-                        team.problemData[problemName].penaltyTime;
+                            team.problemData[problemName].penaltyTime;
                 } else {
                     team.problemData[problemName].penaltyTime =
-                        (team.problemData[problemName].submitCount) * 20;
+                            (team.problemData[problemName].submitCount) * 20;
                 }
             }
             team.solved = solved;
@@ -103,7 +104,7 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
                 return;
             }
             if (event.status !== 'running') {  // if the verdict isn't "running"
-              viewed.push(event.submissionId); // note that we've seen this
+                viewed.push(event.submissionId); // note that we've seen this
             }
             for (var i = 0; i < $scope.teams.length; i++) {
                 if ($scope.teams[i].users.indexOf(event.username) != -1) {
@@ -113,9 +114,9 @@ app.controller('ScoreboardController', ['$scope', '$http', '$routeParams',
                         if (event.status === 'correct') {
                             problem.submitCount++;
                             problem.submitTime = Math.floor((event.submitTime -
-                                $scope.competition.startTime) / 60);
+                                    $scope.competition.startTime) / 60);
                             problem.penaltyTime =
-                                (problem.submitCount - 1) * 20;
+                                    (problem.submitCount - 1) * 20;
                             problem.status = 'correct';
                         } else if (event.status === 'running'){
                             problem.penaltyTime = problem.submitCount * 20;
