@@ -77,9 +77,10 @@ app.controller('JudgeController', ['$scope', '$rootScope', '$http',
 
     // Get the recent submission for this user
     var getSubmits = function() {
-        // FIXME: Sometimes current user is undefined
+        // FIXME: Sometimes current user is undefined. Happens if this is
+        // executed before the call to `/api/me` completes.
         if ($scope.username !== undefined) {
-            $http.get('/api/submit/user/' + $scope.username + '/10')
+            $http.get('/api/submit?user=' + $scope.username + '&limit=10')
                 .then(function (response) {
                     $scope.submitted = response.data.data;
 
@@ -98,6 +99,8 @@ app.controller('JudgeController', ['$scope', '$rootScope', '$http',
                 }, function (error) {
                     console.error(error);
                 });
+        } else {
+            console.error('Username is not defined');
         }
     };
     getSubmits();

@@ -382,15 +382,24 @@ messages will be named `status` and have the following form:
 }
 ```
 
-### Get a Submission Status by Job Id
+### Get one or more Submissions
 
-__URL:__ `/api/submit/job/{job_id}`
+__URL:__ `/api/submit`
 
 __Method:__ `GET`
 
-Return a JSON representation of a submission identified by the job id (integer).
-If no submission can be found with that job id, a 401 error response is
-returned. The structure of the JSON object is as follows:
+Return a JSON representation of one or more submissions. The URL can take three
+optional query string arguments: `username`, `limit` and `id`.
+
+- `id`: Will return the one submission that has this job id, if such exists
+- `username`: Will only return submissions made by this user. If left blank,
+submissions from all users will be returned.
+- `limit`: limits the number of submissions returned (default and max is 100)
+ 
+If `id` is supplied, the other two are ignored. If no matching submission can
+be found, a 401 error response is returned.
+
+The structure of the JSON object is as follows:
 
 ```json
 {
@@ -401,6 +410,26 @@ returned. The structure of the JSON object is as follows:
   "status": "timeout"
 }
 ```
+
+Submissions are always returned chronologically from when the submission was
+made. The most recent submissions will appear first.
+
+__Examples__
+
+* `/api/submit?username=moon_yu` will return up to 100 of the most recent
+submissions made by the user `moon_yu`
+
+* `/api/submit?username=tswizzle&limit=6` will return up to 6 of the most recent
+submissions made by the user `tswizzle`
+
+* `/api/submit?id=2255` will return the submission with the id `2255` is it
+exists
+
+* `/api/submit?limit=7&username=jeffo&id=7` will return the submission with the
+`id` of `7` (the other two parameters are ignored).
+
+* `/api/submit` will return up to 100 of the most recent submissions, regardless
+of the user
 
 ### Get a Number of Submission of a User
 
