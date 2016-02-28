@@ -69,3 +69,46 @@ def submit():
     return serve_response({
         'submissionId': attempt.job
     })
+
+
+@app.route('/api/submit')
+def get_submits():
+    """
+    Return one or more submissions. Can be filtered by user or id, and limited
+    to a specific number. Parameters are given in the query string of the
+    request. Note that if ID is supplied, the other two parameters will be
+    ignored.
+
+    :param username: The user to collect submits for (leaving blank will return
+                     submissions from all users).
+    :param limit:    The number of submits to pull, max 100
+    """
+
+    # Default and max limit is 100
+    limit = min(int(request.args.get('limit') or 100), 100)
+
+    submits = (session.query(models.Submission)
+               .order_by(models.Submission.submit_time.desc()))
+
+    # Filter by user if provided
+    if request.args.get('username'):
+        submits = submits.filter(
+                models.Submission.username == request.args.get('username'))
+
+    result = submits.limit(limit).all()
+
+    if not result:
+        return serve_error('No submissions found', 401)
+
+    return serve_response([s.to_dict() for s in result])
+
+
+@app.route('/api/submit/<int:job_id>')
+def get_submit_for_id(job_id):
+    """Return the submission with this id"""
+    submit = (session.query(models.Submission)
+              .filter(models.Submission.job == job_id).first())
+    if not submit:
+        return serve_error('Submission with id ' + str(job_id) +
+                           ' not found', 401)
+    return serve_response(submit.to_dict())

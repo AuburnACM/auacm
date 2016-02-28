@@ -6,13 +6,19 @@ app.controller('JudgeController', ['$scope', '$rootScope', '$http',
     $scope.python = {version: 'py'};
 
     var statusName = {
-      compile: 'Compilation Error',
-      runtime: 'Runtime Error',
-      running: 'Running',
-      timeout: 'Time Limit Exceeded',
-      incorrect: 'Incorrect',
-      correct: 'Correct'
+        compile: 'Compilation Error',
+        runtime: 'Runtime Error',
+        running: 'Running',
+        timeout: 'Time Limit Exceeded',
+        incorrect: 'Incorrect',
+        correct: 'Correct'
     };
+
+    // Map problem ID's to the name for easy retrieval
+    var pidToName = new Map();
+    for (var i = 0; i < $scope.problems.length; i++) {
+        pidToName[$scope.problems[i].pid] = $scope.problems[i].name;
+    }
 
     $scope.submit = function() {
         if ($scope.file.name.toLowerCase().includes('bern')) {
@@ -47,7 +53,10 @@ app.controller('JudgeController', ['$scope', '$rootScope', '$http',
             submission.status = 'compiling';
             submission.testNum = 0;
             submission.statusDescription = 'Compiling';
-            $scope.submitted.push(submission);
+            $scope.submitted.unshift(submission);
+            if ($scope.submitted.length > 10) {
+                $scope.submitted.pop();
+            }
         }, function(response) {
             console.error(response);
         });
@@ -66,9 +75,49 @@ app.controller('JudgeController', ['$scope', '$rootScope', '$http',
         }
     });
 
+    // Get the recent submission for this user
+    var getSubmits = function() {
+        // FIXME: Sometimes current user is undefined. Happens if this is
+        // executed before the call to `/api/me` completes.
+        if ($scope.username !== undefined) {
+            $http.get('/api/submit?user=' + $scope.username + '&limit=10')
+                .then(function (response) {
+                    $scope.submitted = response.data.data;
+
+                    // Do a smidge of parsing
+                    for (var i = 0; i < $scope.submitted.length; i++) {
+                        var current = $scope.submitted[i];
+
+                        current.problem = pidToName[current.pid];
+                        current.submissionId = current.job_id;
+                        if (current.status == 'good') {
+                            current.status = 'correct';
+                        } else if (current.status == 'wrong') {
+                            current.status = 'incorrect';
+                        }
+                    }
+                }, function (error) {
+                    console.error(error);
+                });
+        } else {
+            console.error('Username is not defined');
+        }
+    };
+    getSubmits();
+
+    // Reset recent submits upon logging in or out
+    $scope.$watch('loggedIn', function(newValue, oldValue) {
+        if (newValue) {
+            getSubmits();
+        } else {
+            $scope.submitted = [];
+        }
+    });
+
     if ($scope.problems) {
         $scope.problems.sort(function(a, b) {
             return a.name > b.name ? 1 : (a.name < b.name ? -1 : 0);
         });
     }
+
 }]);
