@@ -9,6 +9,7 @@ test_app = app.test_client()
 # Initialize handler functions.
 from app import util
 from app import views
+from app.modules.user_manager import views
 from app.modules.submission_manager import views
 from app.modules.competition_manager import views
 from app.modules.blog_manager import views

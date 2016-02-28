@@ -40,10 +40,12 @@
         <th>Status</th>
       </tr>
       <tr ng-repeat="submission in submitted"
-          ng-class="{ success: submission.status=='correct', danger: submission.status=='incorrect' }">
+          ng-class="{ success: submission.status=='correct', danger: submission.status=='incorrect'
+                      || submission.status=='runtime' || submission.status=='compile'
+                      || submission.status=='timeout'}">
         <td>{{ submission.problem }}</td>
         <td>{{ submission.fileName }}</td>
-        <td>{{ submission.status }}</td>
+        <td>{{ submission.statusDescription }}</td>
       </tr>
     </table>
   </div>
