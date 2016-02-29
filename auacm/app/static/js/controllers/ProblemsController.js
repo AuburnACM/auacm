@@ -16,8 +16,4 @@ app.controller('ProblemsController', ['$scope', '$filter', '$window',
                     parseInt(b.difficulty) - parseInt(a.difficulty);
         });
     };
-
-    $scope.createProblem = function() {
-        $window.location.href = 'http://' + $window.location.host + '/#/problems/create';
-    };
 }]);

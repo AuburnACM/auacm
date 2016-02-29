@@ -4,19 +4,14 @@
     <div class="panel-heading">
       <div class="row">
         <h1 class="panel-title col-md-6">Problems</h1>
+
         <div class="col-md-6 pull-right">
-          <div class="row">
-            <form class="form-inline pull-right">
-              <div class="input-group">
-                <div class="input-group-addon glyphicon glyphicon-search"></div>
-                <input type="text" ng-model="searchFilter" placeholder="Search" class="form-control">
-              </div>
-            </form>
-            <button type="button" class="btn btn-default btn-sm pull-right"
-                    ng-click="createProblem()" ng-show="isAdmin === 1">
-              Create Problem
-            </button>
-          </div>
+          <form class="col-md-8 form-inline pull-right">
+            <div class="input-group no-pad col-md-12">
+              <div class="input-group-addon glyphicon glyphicon-search chrome-glyph-hack"></div>
+              <input type="text" ng-model="searchFilter" placeholder="Search" class="form-control">
+            </div>
+          </form>
         </div>
       </div>
     </div>
