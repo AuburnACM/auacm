@@ -382,6 +382,55 @@ messages will be named `status` and have the following form:
 }
 ```
 
+### Get one or more Submissions
+
+__URL:__ `/api/submit`
+
+__Method:__ `GET`
+
+Return a JSON representation of one or more submissions. The URL can take three
+optional query string arguments: `username` and `limit`.
+
+- `username`: Will only return submissions made by this user. If left blank,
+submissions from all users will be returned.
+- `limit`: limits the number of submissions returned (default and max is 100)
+ 
+The structure of the JSON object is as follows:
+
+```json
+{
+  "job_id": 20013,
+  "pid": 17,
+  "username": "bernitup",
+  "file_type": "java",
+  "status": "timeout"
+}
+```
+
+Submissions are always returned chronologically from when the submission was
+made. The most recent submissions will appear first.
+
+__Examples__
+
+* `/api/submit?username=moon_yu` will return up to 100 of the most recent
+submissions made by the user `moon_yu`
+
+* `/api/submit?username=tswizzle&limit=6` will return up to 6 of the most recent
+submissions made by the user `tswizzle`
+
+* `/api/submit` will return up to 100 of the most recent submissions, regardless
+of the user
+
+### Get a Submission from its ID
+
+__URL:__ `/api/submit/{job_id}
+
+__Method:__ `GET`
+
+Returns a JSON object of the submission with the id `job_id`. If no such
+submission can be found, a 401 error response is returned.
+
+
 ---
 
 ## Blog Management
