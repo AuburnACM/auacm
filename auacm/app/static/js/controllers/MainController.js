@@ -4,6 +4,7 @@ app.controller('MainController', ['$scope', '$rootScope', '$http', '$route',
     $scope.isAdmin = false;
     $scope.$route = $route;
     $scope.isOpen = false;
+    $scope.avatar = '';
 
     var closeDropdown = function() {
         $scope.isOpen = false;
@@ -18,6 +19,8 @@ app.controller('MainController', ['$scope', '$rootScope', '$http', '$route',
                     $scope.displayName = response.data.data.displayName;
                     $scope.isAdmin = response.data.data.isAdmin;
                     $scope.loggedIn = true;
+                    $scope.user = {avatar: response.data.data.avatar};
+                    $scope.avatar = response.data.data.avatar;
                 },
                 function(error) {
                     console.log("Error getting current user in MainController");
@@ -28,6 +31,7 @@ app.controller('MainController', ['$scope', '$rootScope', '$http', '$route',
             $scope.displayName = 'Log in';
             $scope.isAdmin = false;
             $scope.loggedIn = false;
+            $scope.avatar = '';
         }
     });
 

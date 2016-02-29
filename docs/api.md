@@ -394,7 +394,7 @@ optional query string arguments: `username` and `limit`.
 - `username`: Will only return submissions made by this user. If left blank,
 submissions from all users will be returned.
 - `limit`: limits the number of submissions returned (default and max is 100)
- 
+
 The structure of the JSON object is as follows:
 
 ```json
@@ -491,7 +491,8 @@ JSON is formatted as follows:
 {
   "username": "George Washington",
   "displayName": "Merica",
-  "isAdmin": 1
+  "isAdmin": 1,
+  "avatar": "http://www.gravatar.com/avatar/abcdef1234567890.jpg"
 }
 ```
 

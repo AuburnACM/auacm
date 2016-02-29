@@ -53,6 +53,7 @@
           <li is-open="isOpen" uib-dropdown>
             <a href="" ng-init="displayName = '{{ display_name }}'; loggedIn = {{ logged_in }}"
                 uib-dropdown-toggle>
+                <img class="avatar" height="20" width="20" ng-src="{% raw %}{{ avatar }}{% endraw %}">
                 {% raw %}{{ displayName }}{% endraw %} <span class="caret"></span>
             </a>
 
