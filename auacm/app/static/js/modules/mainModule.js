@@ -90,6 +90,11 @@ app.config(function($routeProvider) {
             templateUrl : 'static/html/ranking.html',
             controller : 'RankingController',
             activetab: 'ranking'
+        })
+        .when('/users/create', { // route for ranking page
+            templateUrl : 'static/html/createUser.html',
+            controller : 'CreateUserController',
+            activetab: 'settings'
         });
 });
 
