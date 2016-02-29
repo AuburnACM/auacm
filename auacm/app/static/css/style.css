@@ -88,4 +88,6 @@ body {
     line-height: 1;
     vertical-align: middle;
     border-radius: 3px;
+    margin-top: -1px;
+    margin-bottom: -1px;
 }
