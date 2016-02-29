@@ -8,6 +8,7 @@ body {
 
 .margin-left {
     margin-left: 10px;
+    text-decoration: none;
 }
 
 .muted-link {
@@ -70,4 +71,3 @@ body {
 .bernitdown {
     background: url(../img/logo.jpg) repeat;
 }
-
