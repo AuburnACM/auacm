@@ -80,7 +80,7 @@ app.controller('JudgeController', ['$scope', '$rootScope', '$http',
         // FIXME: Sometimes current user is undefined. Happens if this is
         // executed before the call to `/api/me` completes.
         if ($scope.username !== undefined) {
-            $http.get('/api/submit?user=' + $scope.username + '&limit=10')
+            $http.get('/api/submit?username=' + $scope.username + '&limit=10')
                 .then(function (response) {
                     $scope.submitted = response.data.data;
 
