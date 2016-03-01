@@ -39,7 +39,7 @@ __Form Data:__
 | Output Files | __Required__ | `out_file` | Zipped (.zip) directory of all output files |
 | Solution File | __Required__ | `sol_file` | Solution program (not zipped) |
 
-For __Sample Cases__, must be a string JSON array of mappings `input` and `output`.
+__Sample Cases__ must be a string JSON array of mappings `input` and `output`.
 For example,
 
 ```json
@@ -54,6 +54,10 @@ For example,
   }
 ]
 ```
+
+will correspond to a sample case where an input of 1 produces
+an output of 2, and a sample case where an input of 2 produces
+an output of 3.
 
 If any of the required fields are not supplied, the API will return with status
 code 400. If successful, the API will return a JSON object representation of
@@ -70,17 +74,40 @@ __URL:__ `/api/problems/{identifier}`
 __Method:__ `GET`
 
 Returns detailed data on a specific problem as a JSON object.
-Specifically, the method returns
-  * __Problem ID__
-  * __Full Name__
-  * __Short Name__
-  * __Competition Appearance__
-  * __Difficulty Rating__
-  * __AUACM Competition Release__
-  * __Description__
-  * __Input Description__
-  * __Output Description__
-  * __Sample Cases Array__
+Specifically, the method returns:
+
+__Response:__
+| Name | Type | Description |
+| --- | --- | --- |
+|`added`|`int`|The UTC timestamp indicating when this problem was uploaded|
+|`appeared`|`String`|The contest this problem originally appeared in|
+|`comp_release`|`int`|The competition `cid` for the competition this was used in|
+|`description`|`String`|The problem's description|
+|`difficulty`|`int`|The difficulty of the problem from 0 (easiest) to 100 (hardest)|
+|`input_desc`|`String`|A description of the problem's input|
+|`name`|`String`|The name of the problem|
+|`output_desc`|`String`|A description of the problem's output|
+|`pid`|`int`|The problem's unique id.|
+|`sample_cases`|`List<SampleCase>`|A list of samples cases, as described above|
+|`shortname`|`String`|A unique string with no spaces used to identify the problem|
+
+Example use:
+
+```json
+{
+  "added": 1426310855,
+  "appeared": "2014 Mid-Central",
+  "comp_release": 6,
+  "description": null,
+  "difficulty": "67",
+  "input_desc": null,
+  "name": "(More) Multiplication",
+  "output_desc": null,
+  "pid": 34,
+  "sample_cases": [],
+  "shortname": "multiplication"
+}
+```
 
 
 ### Get Data on all problems
@@ -394,7 +421,7 @@ optional query string arguments: `username` and `limit`.
 - `username`: Will only return submissions made by this user. If left blank,
 submissions from all users will be returned.
 - `limit`: limits the number of submissions returned (default and max is 100)
- 
+
 The structure of the JSON object is as follows:
 
 ```json
