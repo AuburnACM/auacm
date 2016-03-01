@@ -77,6 +77,7 @@ Returns detailed data on a specific problem as a JSON object.
 Specifically, the method returns:
 
 __Response:__
+
 | Name | Type | Description |
 | --- | --- | --- |
 |`added`|`int`|The UTC timestamp indicating when this problem was uploaded|
