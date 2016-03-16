@@ -30,6 +30,33 @@ def get_blog_posts():
         postList.append(create_blog_object(p))
     return serve_response(postList)
 
+
+@app.route('/api/blog/<int:bid>')
+def get_one_blog_post(bid):
+    """Retrieve a single blog post by its blog id (bid)"""
+    post = session.query(BlogPost).filter(BlogPost.id == bid).first()
+    if not post:
+        return serve_error('No blog post id: ' + str(bid), 404)
+
+    return serve_response(create_blog_object(post))
+
+
+@app.route('/api/blog/<int:bid>', methods=['PUT'])
+def update_blog_post(bid):
+    """Modify a blog post"""
+    post = session.query(BlogPost).filter(BlogPost.id == bid).first()
+    if not post:
+        return serve_error('No blog post id: ' + str(bid), 404)
+
+    post.title = request.form['title']
+    post.subtitle = request.form['subtitle']
+    post.body = request.form['body']
+    post.username = current_user.username
+    post.commit_to_session()
+
+    return serve_response(create_blog_object(post))
+
+
 @app.route('/api/blog/', methods=["POST"])
 @admin_required
 def create_blog_post():
@@ -41,8 +68,5 @@ def create_blog_post():
                     post_time=int(time()),
                     body=request.form['body'],
                     username=current_user.username)
-    session.add(post)
-    session.flush()
-    session.commit()
-    session.refresh(post)
+    post.commit_to_session()
     return serve_response(create_blog_object(post))
