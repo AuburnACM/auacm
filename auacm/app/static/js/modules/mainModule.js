@@ -97,7 +97,7 @@ app.config(function($routeProvider) {
             activetab: 'ranking'
         })
         .otherwise({
-            templateUrl : 'static/html/404.html'
+            templateUrl : 'templates/404.html'
         });
 });
 
