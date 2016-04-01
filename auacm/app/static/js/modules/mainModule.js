@@ -95,6 +95,9 @@ app.config(function($routeProvider) {
             templateUrl : 'static/html/ranking.html',
             controller : 'RankingController',
             activetab: 'ranking'
+        })
+        .otherwise({
+            templateUrl : 'templates/404.html'
         });
 });
 
