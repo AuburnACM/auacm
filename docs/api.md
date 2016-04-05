@@ -57,7 +57,7 @@ Those logged in as an administrator can perform additional actions:
 |`sample_cases`|`Sample Case[]`|A list of samples cases, as described below|
 |`shortname`|`String`|A unique string with no spaces used to identify the problem|
 
-The `sample_cases` field consists of an array of [Sample Case](#the-sample-case-object) object.
+The `sample_cases` field consists of an array of [Sample Case](#the-sample-case-object) objects.
 
 
 __Example:__
