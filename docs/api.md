@@ -19,27 +19,29 @@ method arguments and return values.
 Problem management allows access to the various problems that exist on the website.
 Problems will always be described using the problem JSON object:
 
-[Problem Object](#the-problem-object)
+__[Problem Object](#the-problem-object)__
 
 Problem objects contain an array of sample cases objects, which are used to describe
 an example mapping of input to output for a problem:
 
-[Sample Cases Object](#the-sample-cases-object)
+__Sample Cases Object](#the-sample-cases-object)__
 
 
 From here, any user can perform the following actions:
+
 1. [Get Data on all Problems](#get-data-on-all-problems)
 2. [Get Data on a Specific Problem](#get-data-on-a-problem)
 
 Those logged in as an administrator can perform additional actions:
+
 3. [Create a New Problem](#create-a-new-problem)
 4. [Edit an Existing Problem](#edit-an-existing-problem)
 5. [Delete a Problem](#delete-a-problem)
 
 
-### Problem Management Objects
+## Problem Management Objects
 
-#### The Problem Object
+### The Problem Object
 
 | Name | Type | Description |
 | --- | --- | --- |
@@ -80,7 +82,7 @@ problem has no description, input description, output description, or sample cas
 with a problem id of 34, and is also uniquely identified by the string "multiplication". (More) Multiplication
 has a difficulty of 67.
 
-#### The Sample Cases Object
+### The Sample Cases Object
 
 | Name | Type | Description |
 | --- | --- | --- |
@@ -99,9 +101,9 @@ __Example:__
 The above sample cases object represents a sample case where an input of "1" to a program that
 correctly solves the associated problem produces a corresponding output of "2".
 
-### Problem Management Endpoints
+## Problem Management Endpoints
 
-#### Get Data on all problems
+### Get Data on all problems
 
 __URL:__ `/api/problems`
 
@@ -116,7 +118,7 @@ __Example use:__
 
 `GET /api/problems`
 
-#### Get Data on a Problem
+### Get Data on a Problem
 
 __URL:__ `/api/problems/{identifier}`
 
@@ -135,7 +137,7 @@ __Example uses:__
 `GET /api/problems/34`
 
 
-#### Create a New Problem
+### Create a New Problem
 ***This method requires being logged in as an administrator***
 
 __URL:__ `/api/problems`
@@ -163,7 +165,7 @@ code 400. If successful, the API will return a [JSON object representation](#the
 of the newly created problem.
 
 
-#### Edit an Existing Problem
+### Edit an Existing Problem
 ***This method requires being signed in as an administrator***
 
 __URL:__ `/api/problems/{identifier}`
@@ -193,7 +195,7 @@ ___Note:___ Any form data parameters not given will remain unaffected by the req
 __Returns:__ A [JSON object](#the-problem-object) of the detailed information of the newly-edited problem.
 
 
-#### Delete a Problem
+### Delete a Problem
 ***This method requires being signed in as an administrator***
 
 __URL:__ `/api/problems/{identifier}`
