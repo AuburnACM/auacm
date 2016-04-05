@@ -24,7 +24,7 @@ __[Problem Object](#the-problem-object)__
 Problem objects contain an array of sample cases objects, which are used to describe
 an example mapping of input to output for a problem:
 
-__Sample Cases Object](#the-sample-cases-object)__
+__[Sample Case Object](#the-sample-case-object)__
 
 
 From here, any user can perform the following actions:
@@ -54,8 +54,10 @@ Those logged in as an administrator can perform additional actions:
 |`name`|`String`|The name of the problem|
 |`output_desc`|`String`|A description of the problem's output|
 |`pid`|`int`|The problem's unique id.|
-|`sample_cases`|`List<[SampleCase](#the-sample-cases-object)>`|A list of samples cases, as described below|
+|`sample_cases`|`Sample Case[]`|A list of samples cases, as described below|
 |`shortname`|`String`|A unique string with no spaces used to identify the problem|
+
+The `sample_cases` field consists of an array of [Sample Case](#the-sample-case-object) object.
 
 
 __Example:__
@@ -82,7 +84,7 @@ problem has no description, input description, output description, or sample cas
 with a problem id of 34, and is also uniquely identified by the string "multiplication". (More) Multiplication
 has a difficulty of 67.
 
-### The Sample Cases Object
+### The Sample Case Object
 
 | Name | Type | Description |
 | --- | --- | --- |
@@ -160,6 +162,8 @@ __Form Data:__
 | Output Files | __Required__ | `out_file` | Zipped (.zip) directory of all output files |
 | Solution File | __Required__ | `sol_file` | Solution program (not zipped) |
 
+The `cases` field consists of a JSON array of [Sample Case](#the-sample-case-object) objects.
+
 __Returns:__ If any of the required fields are not supplied, the API will return with status
 code 400. If successful, the API will return a [JSON object representation](#the-problem-object)
 of the newly created problem.
@@ -189,6 +193,8 @@ __Form Data__
 | Input Files | Optional | `in_file` | Zipped (.zip) directory of judge input files (must be titled `in.zip`) |
 | Output Files | Optional | `out_file` | Zipped (.zip) directory of judge output files (must be titled `out.zip`) |
 | Judge Solution | Optional | `sol_file` | Judge solution program (do not zip) |
+
+The `cases` field consists of a JSON array of [Sample Case](#the-sample-case-object) objects.
 
 ___Note:___ Any form data parameters not given will remain unaffected by the request.
 
