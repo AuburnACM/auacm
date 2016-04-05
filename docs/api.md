@@ -7,7 +7,7 @@ method arguments and return values.
 ### Table of Contents
 
 1. [Problem Management](#problem-management)
-2. [Competition Management](#submission-management)
+2. [Competition Management](#competition-management)
 3. [Submission Management](#submission-management)
 4. [Blog Management](#submission-management)
 5. [User Management](#user-management)
@@ -227,21 +227,39 @@ __Example uses:__
 
 ## Competition Management
 
+## Competition Management Objects
+
+### The Competition Object
+
 Competitions are always represented in JSON with the following format:
 
-  * __cid:__ The integer competition ID
-  * __closed:__ `true` if administrators are the only users that can register
-   participants, `false` otherwise
-  * __length:__ The length of the competition, in seconds
-  * __name:__ The string name of this competition
-  * __registered:__ `true` if the current user is registered for this
-   comptition, `false` otherwise
-  * __startTime:__ The time the competition starts, in seconds since the Unix
-   epoch
-  * __compProblems:__ An array of all the problems in the competition
+| Name | Type | Description |
+| --- | --- | --- |
+|`cid`|`int`|The integer competition ID|
+|`closed`|`boolean`|`true` if administrators are the only users that can register participants, `false` otherwise|
+|`length`|`int`|The length of the competition, in seconds|
+|`name`|`String`|The name of this competition|
+|`registered`|`boolean`|`true` if the current user is registered for this competition, `false` otherwise|
+|`startTime`|`int`|The time the competition starts, in seconds since the Unix epoch|
+|`compProblems`|`Competition Problems`|An array of all the problems in the competition|
 
 
-The `compProblems` object is formatted as follows:
+### The Competition Problems Object
+
+The Competition Problems object represents the collection of problems that appear
+in a particular competition. It consists of a mapping of problem letters
+(i.e. "A" for the first problem, "B" for the second, etc.) to a Competition Problem
+object, described below:
+
+__Competition Problem:__
+
+| Name | Type | Description |
+| --- | --- | --- |
+|`name`|`String`|The full name of the problem|
+|`pid`|`int`|An integer uniquely identifying the problem|
+|`shortname`|`String`|A string that can be used to uniquely identify the problem|
+
+__Example Competition Problems Object:__
 
 ```json
 "compProblems": {
@@ -257,6 +275,17 @@ The `compProblems` object is formatted as follows:
   }
 }
 ```
+
+In the above example, there are two problems in the competition. The first, problem
+"A", is named "Islands in the Data Stream", with problem ID 23 and the shortname
+"islands", while the second, problem "B" is named "Von Neumann's Fly", and has
+problem ID 63 with the shortname "vonneumann".
+
+
+### The Team Object
+
+The `compProblems` object is formatted as follows:
+
 
 The API will also accept a Web Socket message `system_time` with no data. The
 API will reply with another Web Socket message with the same name and the
@@ -343,9 +372,9 @@ registered. Otherwise, no response is returned.
 
 __Web Sockets:__ A message `new_user` will be sent to every connected client
 when a new user is registered with the following data:
+{
 
 ```json
-{
   "cid": 12,
   "user": {
     "display": "Yeezus",
