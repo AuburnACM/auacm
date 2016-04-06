@@ -1,0 +1,26 @@
+version: '2'
+services:
+  web:
+    restart: always
+    build: .
+    ports:
+      - "5000:5000"
+    links:
+      - mysql:mysql
+    volumes:
+      - .:/auacm
+    depends_on:
+      - mysql
+    environment:
+      - DOCKER_HOST=192.168.99.100
+
+  mysql:
+    restart: always
+    image: mysql:latest
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - ./docker-data:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+
