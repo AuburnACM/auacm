@@ -11,8 +11,6 @@ services:
       - .:/auacm
     depends_on:
       - mysql
-    environment:
-      - DOCKER_HOST=192.168.99.100
 
   mysql:
     restart: always

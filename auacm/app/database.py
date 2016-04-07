@@ -1,11 +1,9 @@
 '''Database handlers.'''
-import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.automap import automap_base
 
-DB_HOST = os.environ.get('DOCKER_HOST', 'localhost')
-ENGINE = 'mysql+pymysql://root@{}/acm?charset=utf8'.format(DB_HOST)
+ENGINE = 'mysql+pymysql://root@mysql/acm?charset=utf8'
 
 # Create global database variables
 Base = automap_base()
