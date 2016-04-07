@@ -11,3 +11,14 @@ def get_home():
     logged_in_string = 'true' if logged_in else 'false'
     return render_template('index.html', display_name=display_name,
             logged_in=logged_in_string)
+
+@app.route('/api')
+@app.route('/api/<path:path>')
+def api_404(path=''):
+    """Serve a 404 for the API"""
+    return '404: Not Found', 404
+
+@app.errorhandler(404)
+def general_404(error):
+    """A catch all 404 for non-api requests"""
+    return render_template("404.html")
