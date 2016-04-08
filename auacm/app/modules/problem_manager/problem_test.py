@@ -19,6 +19,7 @@ import copy
 
 from app import app, test_app
 from app.modules.problem_manager.models import Problem, ProblemData, SampleCase
+from app.util import AUACMTest
 from pymysql.err import IntegrityError
 import app.database as database
 
@@ -58,21 +59,8 @@ test_cases = [{
 }]
 
 
-# Helper methods to log in/out of the web app (tests assume they work)
-def _login():
-    username = app.config['TEST_USERNAME']
-    password = app.config['TEST_PASSWORD']
-    rv = json.loads(test_app.post(
-        '/api/login',
-        data=dict(username=username, password=password)).data.decode())
-    assert 200 == rv['status']
-
-def _logout():
-    rv = json.loads(test_app.get('/api/logout').data.decode())
-    assert 200 == rv['status']
-
 def _reinsert_test_problem(test_prob, test_prob_data, test_cases):
-    # Find the problem
+   # Find the problem
     cases = session.query(SampleCase).\
         filter(SampleCase.pid == test_problem['pid']).all()
     data = session.query(ProblemData).\
@@ -94,7 +82,7 @@ def _reinsert_test_problem(test_prob, test_prob_data, test_cases):
         session.add(c)
     session.commit()
 
-class ProblemGetTests(unittest.TestCase):
+class ProblemGetTests(AUACMTest):
     """Tests functionality for GET-ing problems from the API"""
 
     def setUp(self):
@@ -116,7 +104,7 @@ class ProblemGetTests(unittest.TestCase):
             _reinsert_test_problem(self.p, self.pd, self.cases)
 
         # Log in
-        _login()
+        self.login()
 
     def testGetAll(self):
         """Should get basic info about all the problems"""
@@ -167,10 +155,10 @@ class ProblemGetTests(unittest.TestCase):
         session.commit()
 
         # Log out of this session too
-        _logout()
+        self.logout()
 
 
-class ProblemEditTests(unittest.TestCase):
+class ProblemEditTests(AUACMTest):
     """Tests functionality for editing an existing problem"""
 
     def setUp(self):
@@ -192,7 +180,7 @@ class ProblemEditTests(unittest.TestCase):
             _reinsert_test_problem(self.p, self.pd, self.cases)
 
         # Log in
-        _login()
+        self.login()
 
     def testProblemEdit(self):
         new_name = 'A Different Test Problem'
@@ -214,9 +202,10 @@ class ProblemEditTests(unittest.TestCase):
         session.commit()
 
         # Log out of this session too
-        _logout()
+        self.logout()
 
-class ProblemDeleteTests(unittest.TestCase):
+
+class ProblemDeleteTests(AUACMTest):
     """Tests deleting a problem via the API"""
 
     def setUp(self):
@@ -237,7 +226,7 @@ class ProblemDeleteTests(unittest.TestCase):
             _reinsert_test_problem(self.p, self.pd, self.cases)
 
         # Log in as well
-        _login()
+        self.login()
 
     def testDeleteProblem(self):
         resp = test_app.delete('api/problems/' + str(test_problem['pid']))
@@ -265,7 +254,7 @@ class ProblemDeleteTests(unittest.TestCase):
             session.commit()
 
         # Log out as well
-        _logout()
+        self.logout()
 
 
 if __name__ == '__main__':
