@@ -66,6 +66,7 @@ class AUACMTest(unittest.TestCase):
         cls.password = app.config['TEST_PASSWORD']
 
     def login(self):
+        """Log the test user into the app"""
         response = json.loads(test_app.post(
             '/api/login',
             data=dict(username=self.username, password=self.password)
@@ -73,5 +74,6 @@ class AUACMTest(unittest.TestCase):
         assert 200 == response['status']
 
     def logout(self):
+        """Log the test user out of the app"""
         response = json.loads(test_app.get('/api/logout').data.decode())
         assert 200 == response['status']

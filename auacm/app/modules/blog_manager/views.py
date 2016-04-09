@@ -1,15 +1,15 @@
 from flask import request
 from flask.ext.login import current_user, login_required
 from app import app
-from app.database import session
 from app.util import serve_response, serve_error, admin_required
 from .models import BlogPost
 from app.modules.user_manager.models import User
 from sqlalchemy import desc
 from time import time
+import app.database as database
 
 def create_blog_object(post):
-    user = session.query(User).filter(User.username==post.username).first()
+    user = database.session.query(User).filter(User.username==post.username).first()
     return {
         'title' : post.title,
         'subtitle' : post.subtitle,
@@ -24,7 +24,7 @@ def create_blog_object(post):
 
 @app.route('/api/blog')
 def get_blog_posts():
-    posts = session.query(BlogPost).order_by(desc(BlogPost.post_time)).all()
+    posts = database.session.query(BlogPost).order_by(desc(BlogPost.post_time)).all()
     postList = list()
     for p in posts:
         postList.append(create_blog_object(p))
@@ -34,7 +34,7 @@ def get_blog_posts():
 @app.route('/api/blog/<int:bid>')
 def get_one_blog_post(bid):
     """Retrieve a single blog post by its blog id (bid)"""
-    post = session.query(BlogPost).filter(BlogPost.id == bid).first()
+    post = database.session.query(BlogPost).filter(BlogPost.id == bid).first()
     if not post:
         return serve_error('No blog post id: ' + str(bid), 404)
 
@@ -44,7 +44,7 @@ def get_one_blog_post(bid):
 @app.route('/api/blog/<int:bid>', methods=['PUT'])
 def update_blog_post(bid):
     """Modify a blog post"""
-    post = session.query(BlogPost).filter(BlogPost.id == bid).first()
+    post = database.session.query(BlogPost).filter(BlogPost.id == bid).first()
     if not post:
         return serve_error('No blog post id: ' + str(bid), 404)
 
