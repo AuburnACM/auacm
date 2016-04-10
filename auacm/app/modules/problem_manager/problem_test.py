@@ -60,7 +60,7 @@ test_cases = [{
 
 
 def _reinsert_test_problem(test_prob, test_prob_data, test_cases):
-   # Find the problem
+    # Find the problem
     cases = session.query(SampleCase).\
         filter(SampleCase.pid == test_problem['pid']).all()
     data = session.query(ProblemData).\

@@ -44,7 +44,7 @@ class AUACMBlogTests(AUACMTest):
     def testGetAll(self):
         """Test getting all the blog posts"""
         # Put some posts in the test database
-        posts = self._insertTestPost(3)
+        posts = self._insert_test_post(3)
         post_ids = [post.id for post in posts]
 
         response = json.loads(test_app.get('/api/blog').data.decode())
@@ -52,7 +52,7 @@ class AUACMBlogTests(AUACMTest):
 
         self.assertEqual(200, response['status'])
         for (resp, post) in zip(post_response, posts):
-            self._assertPostsEqual(resp, post)
+            self._assert_posts_equal(resp, post)
 
         for post in posts:
             session.delete(post)
@@ -60,7 +60,7 @@ class AUACMBlogTests(AUACMTest):
 
     def testGetOne(self):
         """Test getting just one blog post"""
-        post =  self._insertTestPost()[0]
+        post =  self._insert_test_post()[0]
         post_id = post.id
 
         response = json.loads(test_app.get('/api/blog/{}'.format(post_id))
@@ -68,14 +68,14 @@ class AUACMBlogTests(AUACMTest):
         post_response = response['data']
 
         self.assertEqual(200, response['status'])
-        self._assertPostsEqual(post_response, post)
+        self._assert_posts_equal(post_response, post)
 
         session.delete(post)
         session.commit()
 
     def testDelete(self):
         """Test deleteing a blog post"""
-        post = self._insertTestPost()[0]
+        post = self._insert_test_post()[0]
         post_id = post.id
         session.expunge(post)
 
@@ -89,7 +89,7 @@ class AUACMBlogTests(AUACMTest):
 
     def testEdit(self):
         """Test editing a blog post"""
-        post = self._insertTestPost()[0]
+        post = self._insert_test_post()[0]
         post_id = post.id
         new_body = 'This is different!'
         post_json = {
@@ -111,7 +111,7 @@ class AUACMBlogTests(AUACMTest):
         session.commit()
 
 
-    def _assertPostsEqual(self, return_blog, create_blog):
+    def _assert_posts_equal(self, return_blog, create_blog):
         """
         Assert that a JSON blog post returned from the API is equal to the
         ORM object used to create it
@@ -125,7 +125,7 @@ class AUACMBlogTests(AUACMTest):
                           create_blog.username)
         self.assertEquals(return_blog['body'], create_blog.body)
 
-    def _insertTestPost(self, num=1):
+    def _insert_test_post(self, num=1):
         """
         Manually insert blog posts into the test database
 
@@ -143,3 +143,4 @@ class AUACMBlogTests(AUACMTest):
             post.commit_to_session(session)
 
         return posts
+
