@@ -25,6 +25,7 @@ class AUACMBlogTests(AUACMTest):
 
         response = json.loads(test_app.post('/api/blog', data=post)
                               .data.decode())
+        self.assertEqual(200, response['status'])
         post_response = response['data']
 
         for key in post:
@@ -34,6 +35,7 @@ class AUACMBlogTests(AUACMTest):
                 self.assertEqual(post[key], post_response[key])
 
         # Delete the post from the test database
+        session.flush()
         post = session.query(BlogPost).filter(
             BlogPost.id == post_response['id']).first()
         session.delete(post)
@@ -71,15 +73,43 @@ class AUACMBlogTests(AUACMTest):
         session.delete(post)
         session.commit()
 
+    def testDelete(self):
+        """Test deleteing a blog post"""
+        post = self._insertTestPost()[0]
+        post_id = post.id
+        session.expunge(post)
+
+        response = json.loads(test_app.delete('/api/blog/{}'.format(post_id))
+                              .data.decode())
+        response_data = response['data']
+
+        self.assertEqual(200, response['status'])
+        self.assertIsNone(session.query(BlogPost)
+                          .filter_by(id=post_id).first())
+
     def testEdit(self):
         """Test editing a blog post"""
-        # TODO
-        pass
+        post = self._insertTestPost()[0]
+        post_id = post.id
+        new_body = 'This is different!'
+        post_json = {
+            'title': post.title,
+            'subtitle': post.subtitle,
+            'body': new_body,
+            'username': post.username
+        }
+        session.expunge(post)
 
-    def testDelete(self):
-        """Test deleting a blog post"""
-        # TODO
-        pass
+        response = json.loads(test_app.put('/api/blog/{}'.format(post_id),
+                                           data=post_json).data.decode())
+        response_data = response['data']
+
+        self.assertEquals(200, response['status'])
+        self.assertEquals(new_body, response_data['body'])
+
+        session.delete(session.query(BlogPost).filter_by(id=post.id).first())
+        session.commit()
+
 
     def _assertPostsEqual(self, return_blog, create_blog):
         """
