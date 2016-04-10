@@ -15,7 +15,29 @@ class AUACMBlogTests(AUACMTest):
 
     def testCreate(self):
         """Test creating a new blog post"""
-        pass
+        post = {
+            'title': 'Test Post',
+            'subtitle': 'Testy',
+            'body': 'In test we trust',
+            'username': self.username
+        }
+        self.login()
+
+        response = json.loads(test_app.post('/api/blog', data=post)
+                              .data.decode())
+        post_response = response['data']
+
+        for key in post:
+            if key == 'username':
+                self.assertEqual(post[key], post_response['author'][key])
+            else:
+                self.assertEqual(post[key], post_response[key])
+
+        # Delete the post from the test database
+        post = session.query(BlogPost).filter(
+            BlogPost.id == post_response['id']).first()
+        session.delete(post)
+        session.commit()
 
     def testGetAll(self):
         """Test getting all the blog posts"""
@@ -30,9 +52,9 @@ class AUACMBlogTests(AUACMTest):
         for (resp, post) in zip(post_response, posts):
             self._assertPostsEqual(resp, post)
 
-        for post_id in post_ids:
-            post = session.query(BlogPost).filter(BlogPost.id==post_id).first()
+        for post in posts:
             session.delete(post)
+        session.commit()
 
     def testGetOne(self):
         """Test getting just one blog post"""
@@ -47,7 +69,7 @@ class AUACMBlogTests(AUACMTest):
         self._assertPostsEqual(post_response, post)
 
         session.delete(post)
-
+        session.commit()
 
     def testEdit(self):
         """Test editing a blog post"""
@@ -85,7 +107,9 @@ class AUACMBlogTests(AUACMTest):
             subtitle='Test post {}'.format(i),
             body='Test test test',
             username=self.username
-        ) for i in range(3)]
+        ) for i in range(num)]
+
         for post in posts:
             post.commit_to_session(session)
+
         return posts

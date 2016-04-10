@@ -57,7 +57,7 @@ def update_blog_post(bid):
     return serve_response(create_blog_object(post))
 
 
-@app.route('/api/blog/', methods=["POST"])
+@app.route('/api/blog', methods=["POST"])
 @admin_required
 def create_blog_post():
     if not request.form['title'] or not request.form['subtitle'] or not request.form['body']:
@@ -68,5 +68,5 @@ def create_blog_post():
                     post_time=int(time()),
                     body=request.form['body'],
                     username=current_user.username)
-    post.commit_to_session()
+    post.commit_to_session(database.session)
     return serve_response(create_blog_object(post))
