@@ -19,47 +19,62 @@ may require specific steps or settings***
    * Docker is a *Linux containerization engine*. Containers are like virtual
      machines, but lower level and much more lightweight. The Docker engine is
      what creates, manages, and deletes the individual containers.
-   * Docker Compose is not strictly required, but it will make building and
-     running the app demonstrably easier.
-   * Note that if you're using OSX, both Docker and Docker Compose can be
-     installed with Homebrew (see below).
+
 2. Clone this repo and build the Docker images
-   * In the terminal, run `$ git clone https://github.com/AuburnACM/auacm`
-     wherever you want the project to live.
-   * Navigate to the `auacm/auacm` directory and run `$ docker-compose build`.
-     This will take a few minutes while all the images are downloaded and
-     built, but it will only need to be run once.
+
+   `$ git clone https://github.com/AuburnACM/auacm`
+
+   Navigate to the `auacm/auacm` directory and run:
+
+   `$ docker-compose build`
+
+   This will take a few minutes while all the images are downloaded and
+   built, but it will only need to be run once.
+
 3. Create a `config.py` file in the `app` directory. A minimal one is shown
    below:
+
    ```python
    import os
    DEBUG, TEST = True, False
    SECRET_KEY = 'development key'
    DATA_FOLDER = os.getcwd() + '/app/data'
    ```
-4. Run `docker-compose up` in the `auacm/auacm` directory. Add a `-d` flag if
-   you don't want to see all the messy output.
 
-The server will take a few seconds to start, but then you should be able to
-access it at the IP of your Docker engine at port 5000 (usually
-`localhost:5000` or `192.168.99.100:5000` on OSX/Windows). The running code
-is linked to the repository you cloned, so any changes will cause the server
-to reload. You can bring down the server with `docker-compose stop`.
+4. In the `auacm/auacm` directory, run
+
+    `$ docker-compose up`
+
+   Add a `-d` flag if you don't want to see all the messy output.
+
+The server start, and can be accessed access at the IP of your Docker engine
+at port 5000 (usually `localhost:5000` or `192.168.99.100:5000` on
+OSX/Windows). The running code is linked to the repository you cloned,
+so any changes will cause the server to reload. You can bring down the server
+with `docker-compose stop`.
 
 ### A note on Docker and database persistence
 
 Due to the way Docker runs, the database only has a semi level of persistence.
-If the app is brought down with `docker-compose stop`, any changes to the
-database will still be there when it's brought up again (either with 
-`docker-compose up` or `docker-compose start`). However, if you use the command
-`docker-compose down`, this **destroys** the containers running the app, and
-any changes to the database will **not** persist.
+If the app is brought down with
+
+`$ docker-compose stop`
+
+any changes to the database will still be there when it's brought up again
+(either with `docker-compose up` or `docker-compose start`). However, if you
+use the command
+
+`$ docker-compose down`
+
+this **destroys** the containers running the app, and any changes to the
+database will **not** persist.
 
 If you want to ensure that your changes last, you can dump the database with
-`docker exec auacm_mysql_1 mysqldump --databases acm --add-drop-database >
-{{dump file here}}`. Upon creation, Docker reads from the
-`auacm/auacm/docker-data/acm.sql` to create the database, so dumping there will
-cause the database state to persist.
+
+`docker exec auacm_mysql_1 mysqldump --databases acm --add-drop-database > {{dump file here}}`
+
+Upon creation, Docker reads from the `auacm/auacm/docker-data/acm.sql` file to
+create the database, so dumping there will cause the database state to persist.
 
 
 ##Mac
