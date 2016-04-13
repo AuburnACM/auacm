@@ -1,7 +1,6 @@
 from flask import request
 from flask.ext.login import current_user, login_required
 from app import app
-from app.database import session
 from app.util import serve_response, serve_error, admin_required
 from app.modules.flasknado.flasknado import Flasknado
 from .models import Competition, CompProblem, CompUser
@@ -11,6 +10,7 @@ from app.modules.user_manager.models import User
 from sqlalchemy import asc
 from time import time
 from json import loads
+import app.database as database
 
 
 @app.route('/api/competitions')
@@ -22,12 +22,12 @@ def get_competitions():
     registered = set()
 
     if not current_user.is_anonymous:
-        registered_rows = session.query(CompUser).filter(
+        registered_rows = database.session.query(CompUser).filter(
                 CompUser.username == current_user.username).all()
         for row in registered_rows:
             registered.add(row.cid)
 
-    for competition in session.query(Competition).all():
+    for competition in database.session.query(Competition).all():
         if competition.stop < current_time:
             past.append(competition.to_dict(
                 user_registered=competition.cid in registered))
@@ -55,25 +55,27 @@ def create_competition():
             stop=(int(data['start_time']) + int(data['length'])),
             closed=1 if bool(data['closed']) else 0
         )
-        competition.commit_to_session()
+        competition.commit_to_session(database.session)
 
         comp_problems = loads(data['problems'])
     except KeyError as err:
         return serve_error('You must specify name, startTime, length, and'
-                ' problem attributes. ' + err[0] + ' not found.',
-                response_code=400)
+                           ' problem attributes. ' + err[0] + ' not found.',
+                           response_code=400)
     except ValueError:
         return serve_error('JSON data for \'problems\' not properly formatted',
-                response_code=400)
+                           response_code=400)
 
     for problem in comp_problems:
-        session.add(CompProblem(
-            label=problem['label'][:2],
-            cid=competition.cid,
-            pid=problem['pid']
-        ))
-    session.flush()
-    session.commit()
+        database.session.add(
+            CompProblem(
+                label=problem['label'][:2],
+                cid=competition.cid,
+                pid=problem['pid']
+            )
+        )
+    database.session.flush()
+    database.session.commit()
 
     return serve_response(competition.to_dict())
 
@@ -93,18 +95,19 @@ def update_competition_data(cid):
     data = request.form
 
     try:
-        competition = session.query(Competition).filter(Competition.cid == cid)\
-                .first()
+        competition = database.session.query(Competition).filter(
+            Competition.cid == cid).first()
 
         competition.name = data['name']
         competition.start=int(data['start_time'])
         competition.stop=(int(data['start_time']) + int(data['length']))
         competition.closed = 0 if bool(data['closed']) else 0
-        competition.commit_to_session()
+        competition.commit_to_session(database.session)
 
         # If the client sends a PUT request, we need to delete all of the old
         # problems associated with this competition
-        session.query(CompProblem).filter(CompProblem.cid == cid).delete()
+        database.session.query(CompProblem).filter(
+            CompProblem.cid == cid).delete()
 
         comp_problems = loads(data['problems'])
     except KeyError as err:
@@ -116,39 +119,41 @@ def update_competition_data(cid):
                 response_code=400)
 
     for problem in comp_problems:
-        session.add(CompProblem(
+        database.session.add(CompProblem(
             label=problem['label'],
             cid=competition.cid,
             pid=problem['pid']
         ))
 
-    session.flush()
-    session.commit()
+    database.session.flush()
+    database.session.commit()
     return serve_response(competition.to_dict())
 
 
 @app.route('/api/competitions/<int:cid>')
 def get_competition_data(cid):
-    competition = session.query(Competition).filter(Competition.cid == cid).\
-            first()
+    competition = database.session.query(Competition).filter(
+        Competition.cid == cid).first()
     if competition is None:
         return serve_error('competition not found', response_code=404)
-    comp_users = session.query(CompUser).filter(CompUser.cid == cid).all()
+    comp_users = database.session.query(CompUser).filter(
+            CompUser.cid == cid).all()
 
     comp_problems = dict()
-    for prob in session.query(CompProblem, Problem).join(Problem).\
-            filter(CompProblem.cid == cid).all():
+    for prob in (database.session.query(CompProblem, Problem)
+                 .join(Problem).filter(CompProblem.cid == cid)
+                 .all()):
         comp_problems[prob.CompProblem.label] = {
             'pid': prob.Problem.pid,
             'name': prob.Problem.name,
             'shortname': prob.Problem.shortname
         }
 
-    submissions = session.query(Submission)\
-            .filter(Submission.submit_time > competition.start,\
-                    Submission.submit_time < competition.stop)\
-            .order_by(asc(Submission.submit_time))\
-            .all()
+    submissions = (database.session.query(Submission)
+                   .filter(Submission.submit_time > competition.start,
+                           Submission.submit_time < competition.stop)
+                   .order_by(asc(Submission.submit_time))\
+                   .all())
 
     scoreboard = list()
 
@@ -213,8 +218,8 @@ def register_for_competition(cid):
     listed. A 400 error will be returned if any of the users are already
     registered for the competition.
     """
-    if session.query(Competition).filter(Competition.cid == cid).first() \
-            is None:
+    if database.session.query(Competition).filter(
+         Competition.cid == cid).first() is None:
         return serve_error('Competition does not exist', response_code=404)
 
     if current_user.admin == 1 and 'users' in request.form:
@@ -227,18 +232,22 @@ def register_for_competition(cid):
         registrants = [current_user.username]
 
     for user in registrants:
-        if session.query(CompUser).filter(CompUser.cid == cid,
-            CompUser.username == user).first() is not None:
+        if database.session.query(CompUser).filter(
+            CompUser.cid == cid, CompUser.username == user
+            ).first() is not None:
             return serve_error('User ' + user + ' already registered for '
                     'competition', response_code=400)
 
     for username in registrants:
-        user = session.query(User).filter(User.username == user).first()
-        session.add(CompUser(
-            cid=cid,
-            username=user.username,
-            team=user.display
-        ))
+        user = database.session.query(User).filter(
+            User.username == user).first()
+        database.session.add(
+            CompUser(
+                cid=cid,
+                username=user.username,
+                team=user.display
+            )
+        )
         Flasknado.emit('new_user', {
             'cid': cid,
             'user': {
@@ -246,8 +255,8 @@ def register_for_competition(cid):
                 'username': user.username
             }
         })
-    session.flush()
-    session.commit()
+    database.session.flush()
+    database.session.commit()
 
     return serve_response({})
 
@@ -264,8 +273,8 @@ def unregister_for_competition(cid):
     Similar to the <code>/register</code> endpoint, an admin can post a list of
     users to unregister from the competition.
     """
-    if session.query(Competition).filter(Competition.cid == cid).first() \
-            is None:
+    if database.session.query(Competition).filter(
+        Competition.cid == cid).first() is None:
         return serve_error('Competition does not exist', response_code=404)
 
     if current_user.admin == 1 and 'users' in request.form:
@@ -278,11 +287,11 @@ def unregister_for_competition(cid):
         registrants = [current_user.username]
 
     for user in registrants:
-        (session.query(CompUser)
-                .filter(CompUser.username == user, CompUser.cid == cid)
-                .delete())
-    session.flush()
-    session.commit()
+        (database.session.query(CompUser)
+            .filter(CompUser.username == user, CompUser.cid == cid)
+            .delete())
+    database.session.flush()
+    database.session.commit()
 
     return serve_response({})
 
@@ -294,9 +303,11 @@ def get_competition_teams(cid):
 
     Returns all of the teams, their users, and those users' display names.
     """
-    comp_users = session.query(CompUser, User).join(User,
-            User.username == CompUser.username).filter(CompUser.cid == cid)\
-            .all()
+    comp_users = (database.session.query(CompUser, User)
+        .join(User, User.username == CompUser.username)
+        .filter(CompUser.cid == cid)
+        .all()
+    )
 
     teams = dict()
     for user in comp_users:
@@ -331,18 +342,20 @@ def put_competition_teams(cid):
                 response_code=400)
 
     # Delete all of the old CompUser rows for this competition
-    session.query(CompUser).filter(CompUser.cid == cid).delete()
+    database.session.query(CompUser).filter(CompUser.cid == cid).delete()
 
     for team in teams:
         for user in teams[team]:
-            session.add(CompUser(
-                cid=cid,
-                username=user,
-                team=team
-            ))
+            database.session.add(
+                CompUser(
+                    cid=cid,
+                    username=user,
+                    team=team
+                )
+            )
 
-    session.flush()
-    session.commit()
+    database.session.flush()
+    database.session.commit()
 
     return serve_response({})
 
