@@ -24,6 +24,7 @@ class Competition(Base):
         session.commit()
         session.refresh(self)
         self._problem = None
+        return self.cid
 
 
 class CompProblem(Base):
