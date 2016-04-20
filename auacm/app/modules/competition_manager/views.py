@@ -202,6 +202,34 @@ def get_competition_data(cid):
     })
 
 
+@app.route('/api/competitions/<int:cid>', methods=['DELETE'])
+def delete_competition(cid):
+    """Delete a competition and all the data associated with it"""
+    competition = (database.session.query(Competition)
+                   .filter_by(cid=cid).first())
+
+    if not competition:
+        return '404: Competition not found', 404
+
+    # Delete the problems from a competition
+    competition_problems = (database.session.query(CompProblem)
+                            .filter_by(cid=cid).all())
+    for competition_problem in competition_problems:
+        database.session.delete(competition_problem)
+
+    # Delete the users/tams from a competition
+    competition_users = (database.session.query(CompUser)
+                         .filter_by(cid=cid).all())
+    for user in competition_users:
+        database.session.delete(user)
+
+    # Delete the competition itself
+    database.session.delete(competition)
+    database.session.commit()
+
+    return 'Successfully deleted', 204
+
+
 @app.route('/api/competitions/<int:cid>/register', methods=['POST'])
 @login_required
 def register_for_competition(cid):
@@ -209,14 +237,14 @@ def register_for_competition(cid):
 
     All the user has to do is submit a post to this url with no form data.
     From their logged-in status, we'll go ahead and add them to the competiton
-    as an individual (team name is default their display name). A 400 error will
-    be returned if the user is already registered for the competition.
+    as an individual (team name is default their display name). A 400 error
+    will be returned if the user is already registered for the competition.
 
     If the user that is submitting this is an admin, they can optionally
-    supply a json array of usernames to register for the competition. Specifying
-    this will not register the admin, but it will register all users that are
-    listed. A 400 error will be returned if any of the users are already
-    registered for the competition.
+    supply a json array of usernames to register for the competition.
+    Specifying this will not register the admin, but it will register all users
+    that are listed. A 400 error will be returned if any of the users are
+    already registered for the competition.
     """
     if database.session.query(Competition).filter(
          Competition.cid == cid).first() is None:
@@ -226,8 +254,9 @@ def register_for_competition(cid):
         try:
             registrants = loads(request.form['users'])
         except ValueError:
-            return serve_error('JSON data for \'users\' not properly formatted',
-                    response_code=400)
+            return serve_error(
+                'JSON data for \'users\' not properly formatted',
+                response_code=400)
     else:
         registrants = [current_user.username]
 
