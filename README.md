@@ -20,7 +20,23 @@ may require specific steps or settings***
      machines, but lower level and much more lightweight. The Docker engine is
      what creates, manages, and deletes the individual containers.
 
-2. Clone this repo and build the Docker images
+2. **Mac and Windows users** need to install a Docker machine to run docker
+   containers on (this requires VirtualBox as well). For OSX, create a Docker
+   machine with
+
+   `$ docker-machine create --driver virtualbox default`
+
+   Then set up some environment variables with
+
+   `$ eval $(docker-machine env default)`
+
+   To test, run `docker info` and make sure that it doesn't return an error.
+
+   *NOTE* Docker containers will run on this virtual machine (called the
+   Docker host). When the web app runs, you can find the correct IP with
+   `docker-machine ip default`.
+
+3. Clone this repo and build the Docker images
 
    `$ git clone https://github.com/AuburnACM/auacm`
 
@@ -31,7 +47,7 @@ may require specific steps or settings***
    This will take a few minutes while all the images are downloaded and
    built, but it will only need to be run once.
 
-3. Create a `config.py` file in the `app` directory. A minimal one is shown
+4. Create a `config.py` file in the `app` directory. A minimal one is shown
    below:
 
    ```python
@@ -41,7 +57,7 @@ may require specific steps or settings***
    DATA_FOLDER = os.getcwd() + '/app/data'
    ```
 
-4. In the `auacm/auacm` directory, run
+5. In the `auacm/auacm` directory, run
 
     `$ docker-compose up`
 
