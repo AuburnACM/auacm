@@ -3,11 +3,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.automap import automap_base
 
-ENGINE = 'mysql+pymysql://root@mysql/acm?charset=utf8'
-
 # Create global database variables
 Base = automap_base()
-engine = create_engine(ENGINE)
+engine = create_engine('mysql+pymysql://acm@localhost/acm?charset=utf8')
 connection = engine.connect()
 session = Session(engine)
 

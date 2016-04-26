@@ -15,7 +15,7 @@ app.controller('CreateBlogPostController', ['$scope', '$http', '$location',
         }
         $http({
             method: $scope.editing ? 'PUT' : 'POST',
-            url: '/api/blog/' + ($scope.editing ? $routeParams.id : ''),
+            url: '/api/blog' + ($scope.editing ? '/' + $routeParams.id : ''),
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             transformRequest: function(obj) {
                     var str = [];
