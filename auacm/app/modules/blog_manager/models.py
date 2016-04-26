@@ -1,3 +1,4 @@
+from time import time
 from app.database import Base, session
 
 class BlogPost(Base):
@@ -7,6 +8,13 @@ class BlogPost(Base):
 
     def __init__(self, **kwargs):
         """Initialize a new blog post"""
+        defaults = {
+            'title': kwargs.get('title'),
+            'subtitle': kwargs.get('subtitle'),
+            'body': kwargs.get('body'),
+            'post_time': kwargs.get('post_time', time()),
+            'username': kwargs.get('username')
+        }
         Base.__init__(self, **defaults)
 
     def commit_to_session(self, session=session):
