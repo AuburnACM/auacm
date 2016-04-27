@@ -14,7 +14,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="competition in competitions.ongoing">
+        <tr ng-repeat="competition in competitions.ongoing | orderBy: 'startTime'">
           <td><a href="/#/competitions/{{ competition.cid }}">{{ competition.name }}</a></td>
           <td>{{ competition.startTime | secondsToDateTime | date:"medium" }}</td>
           <td>{{ competition.length | secondsToHours | date:"h:mm:ss" }}</td>
@@ -33,7 +33,7 @@
     <div class="panel-heading">
       <h2 class="panel-title">Upcoming</h2>
     </div>
-    <table class="table table-striped">
+    <table c
       <thead>
         <tr>
           <th class="col-md-3">Name</th>
@@ -43,7 +43,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="competition in competitions.upcoming">
+        <tr ng-repeat="competition in competitions.upcoming | orderBy: 'startTime'">
           <td><a href="/#/competitions/{{ competition.cid }}">{{ competition.name }}</a></td>
           <td>{{ competition.startTime | secondsToDateTime | date:"medium" }}</td>
           <td>{{ competition.length | secondsToHours | date:"h:mm:ss" }}</td>
@@ -70,7 +70,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="competition in competitions.past">
+        <tr ng-repeat="competition in competitions.past | orderBy: 'startTime'">
           <td><a href="/#/competitions/{{ competition.cid }}">{{ competition.name }}</a></td>
           <td>{{ competition.startTime | secondsToDateTime | date:"medium" }}</td>
           <td>{{ competition.length | secondsToHours | date:"h:mm:ss" }}</td>

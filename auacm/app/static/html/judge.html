@@ -13,9 +13,9 @@
           <div class="form-group">
             <label for="pidSelector" class="col-sm-2 control-label">Problem</label>
             <div class="col-sm-8">
-              <select id="pidSelector" class="col-sm-2 form-control"
-                      ng-options="problem.pid as problem.name for problem in problems"
-                      ng-model="pid"></select>
+              <input id="pidSelector" type="text" ng-model="problem" placeholder="Problem name"
+                     uib-typeahead="problem as problem.name for problem in problems | filter:{name:$viewValue}"
+                     class="form-control">
             </div>
           </div>
           <div class="form-group">
@@ -34,7 +34,7 @@
             </div>
           </div>
           <button type="submit" class="btn btn-default col-sm-offset-2 col-sm-2"
-              ng-click="submit()" ng-disabled="!loggedIn">Submit</button>
+              ng-click="submit()" ng-disabled="!loggedIn || !problemSelected || !file">Submit</button>
         </form>
       </div>
     </div>
