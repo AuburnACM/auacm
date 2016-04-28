@@ -3,11 +3,13 @@
 from flask import send_from_directory, jsonify
 from flask.ext.login import LoginManager, current_user
 from flask.ext.bcrypt import Bcrypt
-from app import app
+from app import app, test_app
 from app.database import session
 from app.modules.user_manager.models import User
 from os.path import join
 from functools import wraps
+import unittest
+import json
 
 
 # bcrypt setup
@@ -30,7 +32,8 @@ def serve_html(filename):
 
 def serve_info_pdf(pid):
     '''Serve static PDFs.'''
-    return send_from_directory(join(app.config['DATA_FOLDER'], 'problems', pid), 'info.pdf')
+    return send_from_directory(join(app.config['DATA_FOLDER'],
+                                    'problems', pid), 'info.pdf')
 
 
 def serve_response(response, response_code=200):
@@ -51,3 +54,26 @@ def admin_required(function):
         else:
             return function(*args, **kwargs)
     return wrap
+
+
+class AUACMTest(unittest.TestCase):
+    """A base test class for AUACM tests"""
+
+    @classmethod
+    def setUpClass(cls):
+        """One time setup for the class of tests"""
+        cls.username = app.config['TEST_USERNAME']
+        cls.password = app.config['TEST_PASSWORD']
+
+    def login(self):
+        """Log the test user into the app"""
+        response = json.loads(test_app.post(
+            '/api/login',
+            data=dict(username=self.username, password=self.password)
+        ).data.decode())
+        assert 200 == response['status']
+
+    def logout(self):
+        """Log the test user out of the app"""
+        response = json.loads(test_app.get('/api/logout').data.decode())
+        assert 200 == response['status']

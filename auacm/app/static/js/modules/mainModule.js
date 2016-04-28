@@ -31,6 +31,11 @@ app.config(function($routeProvider) {
             controller : 'BlogPostController',
             activetab : 'blog'
         })
+        .when('/blog/:id/edit', {
+            templateUrl : 'static/html/createBlogPost.html',
+            controller : 'CreateBlogPostController',
+            activetab : 'blog'
+        })
         .when('/problems', { // route for the problems page
             templateUrl : 'static/html/problems.html',
             controller : 'ProblemsController',
@@ -90,6 +95,9 @@ app.config(function($routeProvider) {
             templateUrl : 'static/html/ranking.html',
             controller : 'RankingController',
             activetab: 'ranking'
+        })
+        .otherwise({
+            templateUrl : 'templates/404.html'
         });
 });
 

@@ -60,6 +60,17 @@ class Submission(Base):
                     .first())
         return self._problem
 
+    def to_dict(self):
+        """Return this object as a dictionary"""
+        return {
+            'job_id': self.job,
+            'pid': self.pid,
+            'username': self.username,
+            'submit_time': self.submit_time,
+            'file_type': self.file_type,
+            'status': self.result
+        }
+
 class ProblemSolved(Base):
     """Reflects problem_solved table of the database"""
 
