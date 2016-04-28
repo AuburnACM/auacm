@@ -53,8 +53,7 @@ class Judge:
     problem.
     """
 
-    def __init__(self, pid, submission_path, uploaded_file, time_limit,
-                 on_status=None):
+    def __init__(self, pid, submission_path, uploaded_file, time_limit, on_status=None):
         """Create a new Judgement instance.
 
         :param pid: the problem identifier
@@ -80,7 +79,6 @@ class Judge:
         if not os.path.exists(self.sub_output_path):
             os.mkdir(self.sub_output_path)
 
-
     def run_threaded(self):
         """Runs the Judgement on a new thread
 
@@ -90,7 +88,6 @@ class Judge:
         thread.daemon = False
         thread.start()
         return thread
-
 
     def run(self):
         """Attempts to compile (if necessary) then execute a given file.
@@ -108,7 +105,6 @@ class Judge:
 
         return status, max_time
 
-
     def _update_status(self, status, test_number):
         """This method is invoked during the different events of the judging of
         the problem (e.g. compilation, success, or failure). If the on_status
@@ -122,7 +118,6 @@ class Judge:
         """
         if self.on_status is not None:
             self.on_status(status, test_number)
-
 
     def _compile_submission(self):
         """Compile the submission if it needs compilation. A programming
@@ -148,7 +143,6 @@ class Judge:
             return COMPILATION_SUCCESS
         else:
             return COMPILATION_ERROR
-
 
     def _execute_submission(self):
         """Run the submission.
@@ -206,7 +200,6 @@ class Judge:
 
         # The answer is correct if all the tests complete without any failure.
         return CORRECT_ANSWER, test_number, max_time
-
 
     def _create_process(self, in_file, out_file):
         """Run the program to judge as a subprocess on a separate thread.

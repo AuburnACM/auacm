@@ -11,29 +11,24 @@ from app.modules.submission_manager.judge_test import MockUploadFile
 PROBLEMS_DIR = os.path.join(app.config['DATA_FOLDER'], 'problems')
 
 
-class Timer():
+class Timer:
 
     def __init__(self, problem):
         self.problem = problem
         self.path = os.path.join(PROBLEMS_DIR, str(problem.pid), 'test')
-        self.submission_path = os.path.join(
-            os.getcwd(), 'temp', 'submits')
-
+        self.submission_path = os.path.join(os.getcwd(), 'temp', 'submits')
 
     def _set_up(self):
         try:
-            os.makedirs(
-                    os.path.join(self.submission_path, str(self.problem.pid)))
+            os.makedirs(os.path.join(self.submission_path, str(self.problem.pid)))
         except OSError:
             pass
-
 
     def _tear_down(self):
         try:
             shutil.rmtree(self.submission_path)
         except OSError:
             pass
-
 
     def _time(self):
         """Times all of the problems in the problem's test folder
@@ -57,8 +52,7 @@ class Timer():
                 pid=self.problem.pid, file_type=file_type, job=self.problem.pid)
             upload = MockUploadFile(source)
             upload.save(os.path.join(self.submission_path, str(sub.job), fname))
-            judgement = judge.Judge(sub, upload, 120 if file_type != 'cpp' else 10,
-                    submission_path=self.submission_path)
+            judgement = judge.Judge(sub, self.submission_path, upload, 120 if file_type != 'cpp' else 10)
             status, time = judgement.run()
 
             if status == judge.CORRECT_ANSWER:
@@ -69,7 +63,6 @@ class Timer():
                 return True
             else:
                 return False
-
 
     def run(self):
         """
