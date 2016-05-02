@@ -209,7 +209,7 @@ def delete_competition(cid):
                    .filter_by(cid=cid).first())
 
     if not competition:
-        return '404: Competition not found', 404
+        return serve_error('404: Competition not found', 404)
 
     # Delete the problems from a competition
     competition_problems = (database.session.query(CompProblem)
@@ -227,7 +227,7 @@ def delete_competition(cid):
     database.session.delete(competition)
     database.session.commit()
 
-    return 'Successfully deleted', 204
+    return serve_response('Successfully deleted', 204)
 
 
 @app.route('/api/competitions/<int:cid>/register', methods=['POST'])
