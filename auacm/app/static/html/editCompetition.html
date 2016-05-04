@@ -1,18 +1,18 @@
-
-<div class="row">
-  <h1 class="pull-left">{{ title }}</h1>
-  <button type="button" class="btn btn-success pull-right margin-top col-md-2"
-          ng-click="createCompetition()" ng-show="isAdmin === 1">
-    Save
-  </button>
-</div>
-
-<div class="panel panel-default">
+<div class="margin-top panel panel-default">
   <div class="panel-heading">
-    <div class="panel-title">
-      Metadata
+    <div class="row">
+      <h1 class="panel-title col-md-10">{{ title }}</h1>
+      <div class="col-md-2 no-pad">
+        <button type="button" class="btn btn-success pull-right col-md-10"
+                ng-click="createCompetition()" ng-show="isAdmin === 1">
+          Save
+        </button>
+      </div>
     </div>
   </div>
+
+  <h3 class="col-md-12">Metadata</h3>
+
   <div class="panel-body">
 
     <form name="createCompetitionForm" class="form-horizontal">
@@ -53,27 +53,25 @@
       </div>
 
       <div class="checkbox">
-        <label><input type="checkbox" value="" ng-model="competitionClosed">Closed competition (Only admins can register users)</label>
+        <label>
+          <input type="checkbox" value="" ng-model="competitionClosed">
+          Closed competition (Only admins can register users)
+        </label>
       </div>
     </form>
+  </div>
 
-  </div>
-</div>
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <div class="panel-title">
-      Problems
-    </div>
-  </div>
-  <div class="panel-body">
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th class="col-sm-4">Label</th>
-          <th class="col-sm-4">Name</th>
-          <th class="col-sm-4"></th> <!-- This is reserved for the add/remove button -->
-        </tr>
-      </thead>
+  <h3 class="col-md-12">Problems</h3>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th class="col-sm-4">Label</th>
+        <th class="col-sm-4">Name</th>
+        <th class="col-sm-4"></th> <!-- This is reserved for the add/remove button -->
+      </tr>
+    </thead>
+    <tbody>
       <tr ng-repeat="problem in compProblems">
         <td ng-model="problem.label"><b>{{ $index | indexToCharCode }}</b></td>
         <td>{{ problem.name }}</td>
@@ -96,6 +94,6 @@
           </button>
         </td>
       </tr>
-    </table>
-  </div>
+    </tbody>
+  </table>
 </div>
