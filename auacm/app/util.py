@@ -77,3 +77,25 @@ class AUACMTest(unittest.TestCase):
         """Log the test user out of the app"""
         response = json.loads(test_app.get('/api/logout').data.decode())
         assert 200 == response['status']
+
+    def insert_into_db(session, model, args_list):
+        """
+        Insert a number of ORM objects into the session for testing. The number
+        of objects inserted is equal to the length of the args_list parameter.
+
+        :param session: the database session to insert into
+        :param model: the model class of the objects to be added
+        :param args: a list of the arguments to pass to the model constructor
+        :param num: the number of ORM objects to create and insert
+        :returns: the list of new ORM objects
+        """
+        results = list()
+        for args in args_list:
+            model_object = model(**args)
+            session.add(model_object)
+            session.flush()
+            session.commit(self)
+            session.refresh(model_object)
+            results.append(model_object)
+
+        return results
