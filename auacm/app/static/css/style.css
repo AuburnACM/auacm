@@ -8,6 +8,7 @@ body {
 
 .margin-left {
     margin-left: 10px;
+    text-decoration: none;
 }
 
 .muted-link {
@@ -58,7 +59,7 @@ body {
 }
 
 .ng-cloak {
-  display: none !important;
+    display: none !important;
 }
 
 .failed-login {
@@ -71,3 +72,12 @@ body {
     background: url(../img/logo.jpg) repeat;
 }
 
+.no-pad {
+    margin-top: -7px;
+    margin-bottom: -7px;
+}
+
+.chrome-glyph-hack {
+    position: relative;
+    top: -.5px;
+}

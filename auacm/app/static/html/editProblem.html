@@ -1,7 +1,9 @@
-<div class="col-md-8 col-md-offset-2">
-  <h1 ng-if="isCreate == false">Edit "{{ current_prob.name }}"</h1>
-  <h1 ng-if="isCreate == true">Create New Problem</h1>
+<div class="margin-top col-md-8 col-md-offset-2">
   <div class="panel panel-default">
+    <div class="panel-heading">
+      <h1 class="panel-title" ng-if="isCreate == false">Edit "{{ current_prob.name }}"</h1>
+      <h1 class="panel-title" ng-if="isCreate == true">Create New Problem</h1>
+    </div>
     <div class="panel-body">
       <form>
         <!-- Title -->

@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html lang="en" ng-app="mainModule"> <!--<![endif]-->
 <head>
   <link rel="icon" href="favicon.ico" />
-  <title>ACM Auburn</title>
+  <title>Auburn ACM</title>
 
   <!-- Bootstrap stuff -->
   <link rel="stylesheet" href="/static/components/bootstrap/dist/css/bootstrap.min.css">
@@ -37,22 +37,34 @@
         </ul>
         <ul class="nav navbar-nav navbar-right ng-cloak">
 
+          <li ng-if="isAdmin" uib-dropdown>
+            <a href="" uib-dropdown-toggle>
+              <span class="glyphicon glyphicon-plus"></span>
+              <span class="caret"></span>
+            </a>
+            <ul uib-dropdown-menu>
+              <li><a href="/#/users/create">New User</a></li>
+              <li><a href="/#/competitions/create">New Competition</a></li>
+              <li><a href="/#/problems/create">New Problem</a></li>
+              <li><a href="/#/blog/create">New Blog Post</a></li>
+            </ul>
+          </li>
+
           <!-- Show user options to the user -->
-          <li class="dropdown" is-open="isOpen" uib-dropdown>
-            <a href="" class="dropdown-toggle"
-                ng-init="displayName = '{{ display_name }}'; loggedIn = {{ logged_in }}"
+          <li is-open="isOpen" uib-dropdown>
+            <a href="" ng-init="displayName = '{{ display_name }}'; loggedIn = {{ logged_in }}"
                 uib-dropdown-toggle>
-                {% raw %}{{ displayName }}{% endraw %}<span class="caret"></span>
+                {% raw %}{{ displayName }}{% endraw %} <span class="caret"></span>
             </a>
 
             <!-- If the user is logged in, show their options -->
-            <ul ng-if="loggedIn" class="dropdown-menu" uib-dropdown-menu>
+            <ul ng-if="loggedIn" uib-dropdown-menu>
               <li><a href="/#/settings">Settings</a></li>
               <li><a ng-click="logOut()" href="">Sign out</a></li>
             </ul>
 
             <!-- If the user isn't logged in, show them the login form -->
-            <div ng-if="!loggedIn" ng-click="$event.stopPropagation()" class="dropdown-menu login-dropdown" uib-dropdown-menu>
+            <div ng-if="!loggedIn" ng-click="$event.stopPropagation()" class="login-dropdown" uib-dropdown-menu>
               <p ng-init="failedLogin = false" ng-if="failedLogin" class="failed-login">
                 Incorrect username or password
               </p>
@@ -128,6 +140,7 @@
   <script src="/static/js/controllers/EditCompetitionController.js"></script>
   <script src="/static/js/controllers/TeamController.js"></script>
   <script src="/static/js/controllers/RankingController.js"></script>
+  <script src="/static/js/controllers/CreateUserController.js"></script>
 
   </div>
 </body>
