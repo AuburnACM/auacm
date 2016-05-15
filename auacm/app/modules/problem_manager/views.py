@@ -1,16 +1,6 @@
-"""Manages problems within the app, including their creation, deletion,
+"""
+Manages problems within the app, including their creation, deletion,
 updating, and retreival.
-
-Functions:
-url_for_problem -- returns the route for the pdf description of a problem
-                   given an argument that has a 'pid' field.
-get_problem     -- returns a JSON representation of an individual problem,
-                   with complete information about its description, input,
-                   output, etc.
-get_problems    -- returns basic information about all problems in the database.
-create_problem  -- adds a new problem to the database and the data folder.
-delete_problem  -- removes a problem from the database and data folder
-update_problem  -- modifies the data/files of a specific problem
 """
 import os
 import zipfile
@@ -23,23 +13,11 @@ import app.database as database
 from app.util import serve_response, serve_error, serve_info_pdf, admin_required
 from app.modules.submission_manager.models import Submission
 from app.modules.problem_manager.models import Problem, ProblemData, SampleCase
+from app.modules.competition_manager.models import Competition
 from sqlalchemy.orm import load_only
 from json import loads
 from shutil import rmtree
-
-
-def url_for_problem(problem):
-    """Return the path of the pdf description of a problem"""
-    return os.path.join('problems', str(problem.shortname),
-                        'info.pdf')
-
-
-def is_pid(identifier):
-    try:
-        int(identifier)
-        return True
-    except ValueError:
-        return False
+from time import time
 
 
 @app.route('/problems/<shortname>/info.pdf', methods=['GET'])
@@ -54,18 +32,26 @@ def get_problem_info(shortname):
 
 @app.route('/api/problems/<identifier>', methods=['GET'])
 def get_problem(identifier):
-    """Returns the JSON representation of a specific problem"""
+    """
+    Returns the JSON representation of a specific problem
+
+    If the problem is meant to be released with a competition that has not
+    started yet, a 404 error is returned.
+    """
     problem = database.session.query(Problem, ProblemData).join(ProblemData)
+
     if is_pid(identifier):
         problem = problem.filter(Problem.pid == identifier).first()
     else:
-        problem = problem.\
-                  filter(Problem.shortname == identifier).first()
+        problem = problem.filter(Problem.shortname == identifier).first()
+
+    if problem is None or comp_not_released(problem.Problem.comp_release):
+        return serve_error('404: Problem Not Found', 404)
 
     cases = list()
-    for case in database.session.query(SampleCase).\
-                    filter(SampleCase.pid == problem.Problem.pid).\
-                    all():
+    for case in (database.session.query(SampleCase)
+                 .filter(SampleCase.pid == problem.Problem.pid)
+                 .all()):
         cases.append({
             'case_num': case.case_num,
             'input': case.input,
@@ -318,7 +304,6 @@ def update_problem(identifier):    # pylint: disable=too-many-branches
         request.files['sol_file'].save(
             os.path.join(directory, 'test', request.files['sol_file'].filename))
 
-
     return serve_response({
         'pid': problem.pid,
         'name': problem.name,
@@ -329,3 +314,27 @@ def update_problem(identifier):    # pylint: disable=too-many-branches
         'difficulty' : problem.difficulty,
         'cases': case_lst
     })
+
+
+def url_for_problem(problem):
+    """Return the path of the pdf description of a problem"""
+    return os.path.join('problems', str(problem.shortname),
+                        'info.pdf')
+
+
+def is_pid(identifier):
+    """
+    Returns true if identifier is an integer (representing the problem id)
+    """
+    try:
+        int(identifier)
+        return True
+    except ValueError:
+        return False
+
+
+def comp_not_released(cid):
+    """Returns true if a competition has not yet begun"""
+    if cid is None: return False
+    comp = database.session.query(Competition).filter_by(cid=cid).first()
+    return comp.start > time()
