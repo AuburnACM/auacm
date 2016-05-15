@@ -23,10 +23,10 @@ from time import time
 @app.route('/problems/<shortname>/info.pdf', methods=['GET'])
 def get_problem_info(shortname):
     """Serve the PDF description of a problem"""
-    pid = database.session.query(Problem).\
-            options(load_only('pid', 'shortname')).\
-            filter(Problem.shortname == shortname).\
-            first().pid
+    pid = (database.session.query(Problem)
+           .options(load_only('pid', 'shortname'))
+           .filter(Problem.shortname == shortname)
+           .first().pid)
     return serve_info_pdf(str(pid))
 
 
@@ -80,10 +80,10 @@ def get_problems():
     solved_set = set()
 
     if not current_user.is_anonymous:
-        solved = database.session.query(Submission).\
-                filter(Submission.username == current_user.username).\
-                filter(Submission.result == "good").\
-                all()
+        solved = (database.session.query(Submission)
+                  .filter(Submission.username == current_user.username)
+                  .filter(Submission.result == "good")
+                  .all())
         for solve in solved:
             solved_set.add(solve.pid)
 
@@ -201,16 +201,16 @@ def delete_problem(identifier):
         pid = problem.pid
 
     # Delete from problem_data table first to satisfy foreign key constraint
-    problem_data = database.session.query(ProblemData).\
-        filter(ProblemData.pid == pid)
+    problem_data = (database.session.query(ProblemData)
+                    .filter(ProblemData.pid == pid))
     if not problem_data.first():
         return serve_error('Could not find problem data with pid ' +
                            pid, response_code=401)
     database.session.delete(problem_data.first())
 
     # Delete any and all sample cases associated w/ problem
-    for case in database.session.query(SampleCase).\
-            filter(SampleCase.pid == pid).all():
+    for case in (database.session.query(SampleCase)
+                 .filter(SampleCase.pid == pid).all()):
         database.session.delete(case)
 
     # Delete from problem table
@@ -263,8 +263,8 @@ def update_problem(identifier):    # pylint: disable=too-many-branches
     # If sample cases were uploaded, delete cases and go with the new ones
     case_lst = list()
     if 'cases' in request.form:
-        for old_case in database.session.query(SampleCase).\
-                filter(SampleCase.pid == pid).all():
+        for old_case in (database.session.query(SampleCase)
+                         .filter(SampleCase.pid == pid).all()):
             database.session.delete(old_case)
             database.session.flush()
             database.session.commit()
