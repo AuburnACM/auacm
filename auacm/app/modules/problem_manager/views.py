@@ -78,6 +78,9 @@ def get_problems():
     """Obtain basic information of all the problems in the database"""
     problems = list()
     solved_set = set()
+    competitions = dict()
+    for comp in database.session.query(Competition).all():
+        competitions[comp.cid] = comp.start
 
     if not current_user.is_anonymous:
         solved = (database.session.query(Submission)
@@ -87,18 +90,20 @@ def get_problems():
         for solve in solved:
             solved_set.add(solve.pid)
 
+    now = time()
     for problem in database.session.query(Problem).all():
-        problems.append({
-            'pid': problem.pid,
-            'name': problem.name,
-            'shortname': problem.shortname,
-            'appeared': problem.appeared,
-            'difficulty': problem.difficulty,
-            'comp_release': problem.comp_release,
-            'added': problem.added,
-            'solved': problem.pid in solved_set,
-            'url': url_for_problem(problem)
-        })
+        if problem.comp_release and competitions[problem.comp_release] < now:
+            problems.append({
+                'pid': problem.pid,
+                'name': problem.name,
+                'shortname': problem.shortname,
+                'appeared': problem.appeared,
+                'difficulty': problem.difficulty,
+                'comp_release': problem.comp_release,
+                'added': problem.added,
+                'solved': problem.pid in solved_set,
+                'url': url_for_problem(problem)
+            })
 
     problems.sort(key=lambda x: x['name'])
     return serve_response(problems)
