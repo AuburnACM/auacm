@@ -47,7 +47,7 @@ def get_problem(identifier):
 
     # Hide unreleased problems to non-admins
     if problem is None or (current_user.admin != 1 and comp_not_released(
-            problem.Problem.comp_release)
+            problem.Problem.comp_release)):
         return serve_error('404: Problem Not Found', 404)
 
     cases = list()
