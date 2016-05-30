@@ -75,7 +75,7 @@ app.controller('EditProblemController', ['$scope', '$route', '$http',
             fd.append('sol_file', $scope.solFile);
         if (typeof prob.appeared !== 'undefined')
             fd.append('appeared_in', prob.appeared);
-        if (typeof prob.comp_release !== 'undefined');
+        if (typeof prob.comp_release !== 'undefined')
             fd.append('comp_release', parseInt(prob.comp_release));
 
         $http({

@@ -45,7 +45,9 @@ def get_problem(identifier):
     else:
         problem = problem.filter(Problem.shortname == identifier).first()
 
-    if problem is None or comp_not_released(problem.Problem.comp_release):
+    # Hide unreleased problems to non-admins
+    if problem is None or (current_user.admin != 1 and comp_not_released(
+            problem.Problem.comp_release)
         return serve_error('404: Problem Not Found', 404)
 
     cases = list()
@@ -79,20 +81,22 @@ def get_problems():
     problems = list()
     solved_set = set()
     competitions = dict()
+    is_admin = current_user.admin == 1
     for comp in database.session.query(Competition).all():
         competitions[comp.cid] = comp.start
 
     if not current_user.is_anonymous:
         solved = (database.session.query(Submission)
                   .filter(Submission.username == current_user.username)
-                  .filter(Submission.result == "good")
+                  .filter(Submission.result == 'good')
                   .all())
         for solve in solved:
             solved_set.add(solve.pid)
 
     now = time()
     for problem in database.session.query(Problem).all():
-        if problem.comp_release and competitions[problem.comp_release] < now:
+        if is_admin or (problem.comp_release and
+                competitions[problem.comp_release] < now):
             problems.append({
                 'pid': problem.pid,
                 'name': problem.name,
@@ -134,6 +138,7 @@ def create_problem():
             problem.difficulty = request.form['difficulty']
         if 'appeared_in' in request.form:
             problem.appeared = request.form['appeared_in']
+        problem.comp_release = request.form['comp_release'] or None
 
         # Create the problem data and add it to the database
         problem_data = ProblemData(
