@@ -40,6 +40,16 @@ app.controller('EditProblemController', ['$scope', '$route', '$http',
         }
     };
 
+    // Get all the competitions
+    // TODO: Wrap in a service or $resource
+    $http.get('/api/competitions')
+        .then(function(response) {
+            $scope.competitions = response.data.data.upcoming;
+        }, function(error) {
+          console.error(error);
+        }
+    );
+
     $scope.save = function() {
         // Send the form data to the api
         var fd = new FormData();
@@ -65,6 +75,8 @@ app.controller('EditProblemController', ['$scope', '$route', '$http',
             fd.append('sol_file', $scope.solFile);
         if (typeof prob.appeared !== 'undefined')
             fd.append('appeared_in', prob.appeared);
+        if (typeof prob.comp_release !== 'undefined')
+            fd.append('comp_release', parseInt(prob.comp_release));
 
         $http({
             method: ($scope.isCreate ? 'POST' : 'PUT'),

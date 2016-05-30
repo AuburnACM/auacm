@@ -93,6 +93,18 @@
             ng-model="current_prob.difficulty">
         </div>
 
+        <!-- Competition Release -->
+        <div class="form-group">
+          <label for="comp_release"
+                 uib-tooltip="Hide this problem until the competition starts">
+            Release with competition:
+          </label>
+          <select ng-model="current_prob.comp_release"
+                  ng-options="comp.cid as comp.name for comp in competitions">
+            <option value="">Select Competition</option>
+          </select>
+        </div>
+
         <!-- Submit Button -->
         <button type="submit" class="btn btn-primary"
           ng-click="save()">Save Changes</button>

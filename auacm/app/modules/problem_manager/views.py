@@ -1,16 +1,6 @@
-"""Manages problems within the app, including their creation, deletion,
+"""
+Manages problems within the app, including their creation, deletion,
 updating, and retreival.
-
-Functions:
-url_for_problem -- returns the route for the pdf description of a problem
-                   given an argument that has a 'pid' field.
-get_problem     -- returns a JSON representation of an individual problem,
-                   with complete information about its description, input,
-                   output, etc.
-get_problems    -- returns basic information about all problems in the database.
-create_problem  -- adds a new problem to the database and the data folder.
-delete_problem  -- removes a problem from the database and data folder
-update_problem  -- modifies the data/files of a specific problem
 """
 import os
 import zipfile
@@ -23,49 +13,47 @@ import app.database as database
 from app.util import serve_response, serve_error, serve_info_pdf, admin_required
 from app.modules.submission_manager.models import Submission
 from app.modules.problem_manager.models import Problem, ProblemData, SampleCase
+from app.modules.competition_manager.models import Competition
 from sqlalchemy.orm import load_only
 from json import loads
 from shutil import rmtree
-
-
-def url_for_problem(problem):
-    """Return the path of the pdf description of a problem"""
-    return os.path.join('problems', str(problem.shortname),
-                        'info.pdf')
-
-
-def is_pid(identifier):
-    try:
-        int(identifier)
-        return True
-    except ValueError:
-        return False
+from time import time
 
 
 @app.route('/problems/<shortname>/info.pdf', methods=['GET'])
 def get_problem_info(shortname):
     """Serve the PDF description of a problem"""
-    pid = database.session.query(Problem).\
-            options(load_only('pid', 'shortname')).\
-            filter(Problem.shortname == shortname).\
-            first().pid
+    pid = (database.session.query(Problem)
+           .options(load_only('pid', 'shortname'))
+           .filter(Problem.shortname == shortname)
+           .first().pid)
     return serve_info_pdf(str(pid))
 
 
 @app.route('/api/problems/<identifier>', methods=['GET'])
 def get_problem(identifier):
-    """Returns the JSON representation of a specific problem"""
+    """
+    Returns the JSON representation of a specific problem
+
+    If the problem is meant to be released with a competition that has not
+    started yet, a 404 error is returned.
+    """
     problem = database.session.query(Problem, ProblemData).join(ProblemData)
+
     if is_pid(identifier):
         problem = problem.filter(Problem.pid == identifier).first()
     else:
-        problem = problem.\
-                  filter(Problem.shortname == identifier).first()
+        problem = problem.filter(Problem.shortname == identifier).first()
+
+    # Hide unreleased problems to non-admins
+    if problem is None or (current_user.admin != 1 and comp_not_released(
+            problem.Problem.comp_release)):
+        return serve_error('404: Problem Not Found', 404)
 
     cases = list()
-    for case in database.session.query(SampleCase).\
-                    filter(SampleCase.pid == problem.Problem.pid).\
-                    all():
+    for case in (database.session.query(SampleCase)
+                 .filter(SampleCase.pid == problem.Problem.pid)
+                 .all()):
         cases.append({
             'case_num': case.case_num,
             'input': case.input,
@@ -92,27 +80,34 @@ def get_problems():
     """Obtain basic information of all the problems in the database"""
     problems = list()
     solved_set = set()
+    competitions = dict()
+    is_admin = current_user.admin == 1
+    for comp in database.session.query(Competition).all():
+        competitions[comp.cid] = comp.start
 
     if not current_user.is_anonymous:
-        solved = database.session.query(Submission).\
-                filter(Submission.username == current_user.username).\
-                filter(Submission.result == "good").\
-                all()
+        solved = (database.session.query(Submission)
+                  .filter(Submission.username == current_user.username)
+                  .filter(Submission.result == 'good')
+                  .all())
         for solve in solved:
             solved_set.add(solve.pid)
 
+    now = time()
     for problem in database.session.query(Problem).all():
-        problems.append({
-            'pid': problem.pid,
-            'name': problem.name,
-            'shortname': problem.shortname,
-            'appeared': problem.appeared,
-            'difficulty': problem.difficulty,
-            'comp_release': problem.comp_release,
-            'added': problem.added,
-            'solved': problem.pid in solved_set,
-            'url': url_for_problem(problem)
-        })
+        if is_admin or (problem.comp_release and
+                competitions[problem.comp_release] < now):
+            problems.append({
+                'pid': problem.pid,
+                'name': problem.name,
+                'shortname': problem.shortname,
+                'appeared': problem.appeared,
+                'difficulty': problem.difficulty,
+                'comp_release': problem.comp_release,
+                'added': problem.added,
+                'solved': problem.pid in solved_set,
+                'url': url_for_problem(problem)
+            })
 
     problems.sort(key=lambda x: x['name'])
     return serve_response(problems)
@@ -143,6 +138,7 @@ def create_problem():
             problem.difficulty = request.form['difficulty']
         if 'appeared_in' in request.form:
             problem.appeared = request.form['appeared_in']
+        problem.comp_release = request.form['comp_release'] or None
 
         # Create the problem data and add it to the database
         problem_data = ProblemData(
@@ -215,16 +211,16 @@ def delete_problem(identifier):
         pid = problem.pid
 
     # Delete from problem_data table first to satisfy foreign key constraint
-    problem_data = database.session.query(ProblemData).\
-        filter(ProblemData.pid == pid)
+    problem_data = (database.session.query(ProblemData)
+                    .filter(ProblemData.pid == pid))
     if not problem_data.first():
         return serve_error('Could not find problem data with pid ' +
                            pid, response_code=401)
     database.session.delete(problem_data.first())
 
     # Delete any and all sample cases associated w/ problem
-    for case in database.session.query(SampleCase).\
-            filter(SampleCase.pid == pid).all():
+    for case in (database.session.query(SampleCase)
+                 .filter(SampleCase.pid == pid).all()):
         database.session.delete(case)
 
     # Delete from problem table
@@ -277,8 +273,8 @@ def update_problem(identifier):    # pylint: disable=too-many-branches
     # If sample cases were uploaded, delete cases and go with the new ones
     case_lst = list()
     if 'cases' in request.form:
-        for old_case in database.session.query(SampleCase).\
-                filter(SampleCase.pid == pid).all():
+        for old_case in (database.session.query(SampleCase)
+                         .filter(SampleCase.pid == pid).all()):
             database.session.delete(old_case)
             database.session.flush()
             database.session.commit()
@@ -318,7 +314,6 @@ def update_problem(identifier):    # pylint: disable=too-many-branches
         request.files['sol_file'].save(
             os.path.join(directory, 'test', request.files['sol_file'].filename))
 
-
     return serve_response({
         'pid': problem.pid,
         'name': problem.name,
@@ -329,3 +324,27 @@ def update_problem(identifier):    # pylint: disable=too-many-branches
         'difficulty' : problem.difficulty,
         'cases': case_lst
     })
+
+
+def url_for_problem(problem):
+    """Return the path of the pdf description of a problem"""
+    return os.path.join('problems', str(problem.shortname),
+                        'info.pdf')
+
+
+def is_pid(identifier):
+    """
+    Returns true if identifier is an integer (representing the problem id)
+    """
+    try:
+        int(identifier)
+        return True
+    except ValueError:
+        return False
+
+
+def comp_not_released(cid):
+    """Returns true if a competition has not yet begun"""
+    if cid is None: return False
+    comp = database.session.query(Competition).filter_by(cid=cid).first()
+    return comp.start > time()
