@@ -46,8 +46,9 @@ def get_problem(identifier):
         problem = problem.filter(Problem.shortname == identifier).first()
 
     # Hide unreleased problems to non-admins
-    if problem is None or (current_user.admin != 1 and comp_not_released(
-            problem.Problem.comp_release)
+    if problem is None or ((current_user.is_anonymous or
+                            current_user.admin != 1) and
+                           comp_not_released(problem.Problem.comp_release)):
         return serve_error('404: Problem Not Found', 404)
 
     cases = list()
@@ -81,7 +82,7 @@ def get_problems():
     problems = list()
     solved_set = set()
     competitions = dict()
-    is_admin = current_user.admin == 1
+    is_admin = not current_user.is_anonymous and current_user.admin == 1
     for comp in database.session.query(Competition).all():
         competitions[comp.cid] = comp.start
 
