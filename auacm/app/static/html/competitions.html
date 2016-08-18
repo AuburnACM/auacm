@@ -1,70 +1,81 @@
-<div>
-  <div class="row">
-    <h1 class="col-md-10">Competitions</h1>
-    <button type="button" class="btn btn-default col-md-2 margin-top"
-            ng-click="createCompetition()" ng-show="isAdmin === 1">
-      Create competition
-    </button>
-  </div>
-  <div ng-show="competitions.ongoing.length > 0">
-    <h2>Ongoing</h2>
+<div class="margin-top col-md-10 col-md-offset-1">
+  <div class="panel panel-default" ng-show="competitions.ongoing.length > 0">
+    <div class="panel-heading">
+      <h2 class="panel-title">Ongoing</h2>
+    </div>
     <table class="table table-striped">
-      <tr>
-        <th>Name</th>
-        <th>Remaining</th>
-        <th>Length</th>
-        <th>Start Time</th>
-        <th ng-if="loggedIn">Register</th>
-      </tr>
-      <tr ng-repeat="competition in competitions.ongoing | orderBy: 'startTime'">
-        <td><a href="/#/competitions/{{ competition.cid }}">{{ competition.name }}</a></td>
-        <td>{{ getRemainingTime(competition) | secondsToDateTime | date:"h:mm:ss" }}</td>
-        <td>{{ competition.length | secondsToHours | date:"h:mm:ss" }}</td>
-        <td>{{ competition.startTime | secondsToDateTime | date:"medium" }}</td>
-        <td ng-if="loggedIn">
-          <div ng-if="competition.registered">Registered</div>
-          <a ng-if="!competition.registered && (isAdmin || !competition.closed)"
-              href="" ng-click="register(competition)">Register</a>
-          <div ng-if="!competition.registered && !isAdmin && competition.closed">Closed</div>
-        </td>
-      </tr>
+      <thead>
+        <tr>
+          <th class="col-md-3">Name</th>
+          <th class="col-md-3">Start Time</th>
+          <th class="col-md-2">Length</th>
+          <th ng-class="loggedIn ? 'col-md-2' : 'col-md-4'">Remaining</th>
+          <th class="col-md-2" ng-if="loggedIn">Register</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="competition in competitions.ongoing | orderBy: 'startTime'">
+          <td><a href="/#/competitions/{{ competition.cid }}">{{ competition.name }}</a></td>
+          <td>{{ competition.startTime | secondsToDateTime | date:"medium" }}</td>
+          <td>{{ competition.length | secondsToHours | date:"h:mm:ss" }}</td>
+          <td>{{ getRemainingTime(competition) | secondsToHours | date:"h:mm:ss" }}</td>
+          <td ng-if="loggedIn">
+            <div ng-if="competition.registered">Registered</div>
+            <a ng-if="!competition.registered && (isAdmin || !competition.closed)"
+                href="" ng-click="register(competition)">Register</a>
+            <div ng-if="!competition.registered && !isAdmin && competition.closed">Closed</div>
+          </td>
+        </tr>
+      </tbody>
     </table>
   </div>
-  <div ng-show="competitions.upcoming.length > 0">
-    <h2>Upcoming</h2>
+  <div class="panel panel-default" ng-show="competitions.upcoming.length > 0">
+    <div class="panel-heading">
+      <h2 class="panel-title">Upcoming</h2>
+    </div>
     <table class="table table-striped">
-      <tr>
-        <th>Name</th>
-        <th>Length</th>
-        <th>Start Time</th>
-        <th ng-if="loggedIn">Register</th>
-      </tr>
-      <tr ng-repeat="competition in competitions.upcoming | orderBy: 'startTime'">
-        <td><a href="/#/competitions/{{ competition.cid }}">{{ competition.name }}</a></td>
-        <td>{{ competition.length | secondsToHours | date:"h:mm:ss" }}</td>
-        <td>{{ competition.startTime | secondsToDateTime | date:"medium" }}</td>
-        <td ng-if="loggedIn">
-          <div ng-if="competition.registered">Registered</div>
-          <a ng-if="!competition.registered && (isAdmin || !competition.closed)"
-              href="" ng-click="register(competition)">Register</a>
-          <div ng-if="!competition.registered && !isAdmin && competition.closed">Closed</div>
-        </td>
-      </tr>
+      <thead>
+        <tr>
+          <th class="col-md-3">Name</th>
+          <th class="col-md-3">Start Time</th>
+          <th ng-class="loggedIn ? 'col-md-4' : 'col-md-6'">Length</th>
+          <th class="col-md-2" ng-if="loggedIn">Register</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="competition in competitions.upcoming | orderBy: 'startTime'">
+          <td><a href="/#/competitions/{{ competition.cid }}">{{ competition.name }}</a></td>
+          <td>{{ competition.startTime | secondsToDateTime | date:"medium" }}</td>
+          <td>{{ competition.length | secondsToHours | date:"h:mm:ss" }}</td>
+          <td ng-if="loggedIn">
+            <div ng-if="competition.registered">Registered</div>
+            <a ng-if="!competition.registered && (isAdmin || !competition.closed)"
+                href="" ng-click="register(competition)">Register</a>
+            <div ng-if="!competition.registered && !isAdmin && competition.closed">Closed</div>
+          </td>
+        </tr>
+      </tbody>
     </table>
   </div>
-  <div ng-show="competitions.past.length > 0">
-    <h2>Past</h2>
+  <div class="panel panel-default" ng-show="competitions.past.length > 0">
+    <div class="panel-heading">
+      <h2 class="panel-title">Past</h2>
+    </div>
     <table class="table table-striped">
-      <tr>
-        <th>Name</th>
-        <th>Length</th>
-        <th>Start Time</th>
-      </tr>
-      <tr ng-repeat="competition in competitions.past | orderBy: '-startTime'">
-        <td><a href="/#/competitions/{{ competition.cid }}">{{ competition.name }}</a></td>
-        <td>{{ competition.length | secondsToHours | date:"h:mm:ss" }}</td>
-        <td>{{ competition.startTime | secondsToDateTime | date:"medium" }}</td>
-      </tr>
+      <thead>
+        <tr>
+          <th class="col-md-3">Name</th>
+          <th class="col-md-3">Start Time</th>
+          <th class="col-md-6">Length</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="competition in competitions.past | orderBy: 'startTime'">
+          <td><a href="/#/competitions/{{ competition.cid }}">{{ competition.name }}</a></td>
+          <td>{{ competition.startTime | secondsToDateTime | date:"medium" }}</td>
+          <td>{{ competition.length | secondsToHours | date:"h:mm:ss" }}</td>
+        </tr>
+      </tbody>
     </table>
   </div>
 </div>

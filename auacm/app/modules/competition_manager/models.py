@@ -14,7 +14,7 @@ class Competition(Base):
             'registered': user_registered
         }
 
-    def commit_to_session(self):
+    def commit_to_session(self, session=session):
         """Commit this Competition to the database.
 
         This is useful for adding a newly-created Competition to the database.
@@ -24,6 +24,7 @@ class Competition(Base):
         session.commit()
         session.refresh(self)
         self._problem = None
+        return self.cid
 
 
 class CompProblem(Base):
@@ -33,7 +34,7 @@ class CompProblem(Base):
 class CompUser(Base):
     __tablename__ = 'comp_users'
 
-    def commit_to_session(self):
+    def commit_to_session(self, session=session):
         """Commit this CompUser to the database.
 
         This is useful for adding a newly-created CompUser to the database.

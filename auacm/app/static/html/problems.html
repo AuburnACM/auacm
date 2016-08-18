@@ -1,33 +1,37 @@
-<div class="main-fixed" ng-controller="ProblemsController">
-  <div class="row">
-    <h1 class="pull-left">Problems</h1>
-    <form class="form-inline pull-right margin-top">
-      <div class="input-group">
-        <div class="input-group-addon glyphicon glyphicon-search"></div>
-        <input type="text" ng-model="searchFilter" placeholder="Search" class="form-control">
+<div class="body margin-top col-md-10 col-md-offset-1">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="row">
+        <h1 class="panel-title col-md-6">Problems</h1>
+
+        <div class="col-md-6 pull-right">
+          <form class="col-md-8 form-inline pull-right">
+            <div class="input-group no-pad col-md-12">
+              <div class="input-group-addon glyphicon glyphicon-search chrome-glyph-hack"></div>
+              <input type="text" ng-model="searchFilter" placeholder="Search" class="form-control">
+            </div>
+          </form>
+        </div>
       </div>
-      <button type="button" class="btn btn-default"
-              ng-click="createProblem()" ng-show="isAdmin === 1">
-        Create Problem
-      </button>
-    </form>
-  </div>
-  <div class="body">
+    </div>
+
     <table class="table table-striped">
-      <tr>
-        <th><a href="" ng-click="order('name')" id="problem_name">Name</a></th>
-        <th><a href="" ng-click="order('appeared')" id="appeared">Appeared In</a></th>
-        <th><a href="" ng-click="order('solvedBy')" id="solved">Solved By</a></th>
-        <th><a href="" ng-click="integerOrder('difficulty')" id="difficulty">Difficulty</a></th>
-        <th ng-if="loggedIn">Judge</th>
-      </tr>
-      <tr ng-class="{'success': problem.solved}" ng-repeat="problem in problems | filter:searchFilter">
-        <td><a href="/#/problems/{{ problem.shortname }}">{{ problem.name }}</a></td>
-        <td>{{ problem.appeared }}</td>
-        <td>{{ problem.solvedBy | number }}</td>
-        <td>{{ problem.difficulty | number }}</td>
-        <td ng-if="loggedIn"><a href="/#/judge?problem={{ problem.pid }}">Submit</td>
-      </tr>
+      <thead>
+        <tr>
+          <th><a href="" ng-click="order('name')" id="problem_name">Name</a></th>
+          <th><a href="" ng-click="order('appeared')" id="appeared">Appeared In</a></th>
+          <th><a href="" ng-click="integerOrder('difficulty')" id="difficulty">Difficulty</a></th>
+          <th ng-if="loggedIn">Judge</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-class="{'success': problem.solved}" ng-repeat="problem in problems | filter:searchFilter">
+          <td><a href="/#/problems/{{ problem.shortname }}">{{ problem.name }}</a></td>
+          <td>{{ problem.appeared }}</td>
+          <td>{{ problem.difficulty | number }}</td>
+          <td ng-if="loggedIn"><a href="/#/judge?problem={{ problem.pid }}">Submit</td>
+        </tr>
+      </tbody>
     </table>
   </div>
 </div>

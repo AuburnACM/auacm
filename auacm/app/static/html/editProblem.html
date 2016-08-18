@@ -1,7 +1,9 @@
-<div class="col-md-8 col-md-offset-2">
-  <h1 ng-if="isCreate == false">Edit "{{ current_prob.name }}"</h1>
-  <h1 ng-if="isCreate == true">Create New Problem</h1>
+<div class="margin-top col-md-8 col-md-offset-2">
   <div class="panel panel-default">
+    <div class="panel-heading">
+      <h1 class="panel-title" ng-if="isCreate == false">Edit "{{ current_prob.name }}"</h1>
+      <h1 class="panel-title" ng-if="isCreate == true">Create New Problem</h1>
+    </div>
     <div class="panel-body">
       <form>
         <!-- Title -->
@@ -89,6 +91,18 @@
           <label for="difficulty">Difficulty</label>
           <input type="text" class="form-control" placeholder="0-100"
             ng-model="current_prob.difficulty">
+        </div>
+
+        <!-- Competition Release -->
+        <div class="form-group">
+          <label for="comp_release"
+                 uib-tooltip="Hide this problem until the competition starts">
+            Release with competition:
+          </label>
+          <select ng-model="current_prob.comp_release"
+                  ng-options="comp.cid as comp.name for comp in competitions">
+            <option value="">Select Competition</option>
+          </select>
         </div>
 
         <!-- Submit Button -->

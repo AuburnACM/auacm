@@ -16,9 +16,11 @@ of Independence at 70 years old.
 import unittest
 import json
 import copy
+from time import time
 
 from app import app, test_app
 from app.modules.problem_manager.models import Problem, ProblemData, SampleCase
+from app.modules.competition_manager.models import Competition
 from app.util import AUACMTest
 from pymysql.err import IntegrityError
 import app.database as database
@@ -106,6 +108,17 @@ class ProblemGetTests(AUACMTest):
         # Log in
         self.login()
 
+    def tearDown(self):
+        """Manually remove test problem from the test database"""
+        for c in self.cases:
+            session.delete(c)
+        session.delete(self.pd)
+        session.delete(self.p)
+        session.commit()
+
+        # Log out of this session too
+        self.logout()
+
     def testGetAll(self):
         """Should get basic info about all the problems"""
         # Check that the request went through
@@ -146,16 +159,57 @@ class ProblemGetTests(AUACMTest):
         for key in data_validate:
             self.assertEqual(str(test_problem_data[key]), str(prob[key]))
 
-    def tearDown(self):
-        """Manually remove test problem from the test database"""
-        for c in self.cases:
-            session.delete(c)
-        session.delete(self.pd)
-        session.delete(self.p)
-        session.commit()
+    def testHideUnreleasedProblem(self):
+        """Test that GET-ting an unreleased problem returns a 404"""
+        unreleased_cid = self._setUpUnreleasedComp()
 
-        # Log out of this session too
-        self.logout()
+        resp = test_app.get('/api/problems/{}'.format(self.p.pid))
+        self.assertEqual(404, resp.status_code)
+
+        self._tearDownComp(unreleased_cid)
+
+    def testHideUnreleasedProblems(self):
+        """
+        Test that GET-ting all problems doesn't return unreleased problems
+        """
+        unreleased_cid = self._setUpUnreleasedComp()
+
+        resp = test_app.get('/api/problems')
+        self.assertEqual(200, resp.status_code)
+        rv = json.loads(resp.data.decode())['data']
+
+        # Test problem should be hidden
+        for prob in rv:
+            self.assertNotEqual(self.p.pid, prob['pid'])
+
+        self._tearDownComp(unreleased_cid)
+
+    def _setUpUnreleasedComp(self):
+        """
+        Creates an unreleased competition and associates the test's problem with it
+
+        :return: the cid of the new competition
+        """
+        unreleased_cid = Competition(
+            name='Test Competition',
+            start=int(time() + 10000),
+            stop=int(time() + 20000),
+            closed=0
+        ).commit_to_session(session)
+
+        self.p.comp_release = unreleased_cid
+        self.p.commit_to_session(session)
+
+        return unreleased_cid
+
+    def _tearDownComp(self, cid):
+        """Removes a competition from the database by its cid"""
+        session.delete(
+            session.query(Competition)
+            .filter_by(cid=cid)
+            .first()
+        )
+        session.commit()
 
 
 class ProblemEditTests(AUACMTest):
