@@ -46,7 +46,15 @@
       <tbody>
         <tr ng-repeat="team in teams | orderBy:['-solved', 'time']">
           <td>{{ team.rank }}</td>
-          <td>{{ team.name }}</td>
+          <td>
+              {{ team.name }}
+              <br>
+              <small ng-if="team.display_names.length > 1 || team.display_names[0] != team.name">
+                <div ng-repeat="member in team.display_names">
+                  &nbsp;&nbsp;&nbsp;&nbsp;{{ member }}
+                </div>
+              </small>
+          </td>
           <td>{{ team.solved }}</td>
           <td>{{ team.time }}</td>
           <td ng-if="active || ended" ng-repeat="name in problemNames"
