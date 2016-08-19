@@ -50,8 +50,8 @@
               {{ team.name }}
               <br>
               <small ng-if="team.display_names.length > 1 || team.display_names[0] != team.name">
-                <div ng-repeat="member in team.display_names">
-                  &nbsp;&nbsp;&nbsp;&nbsp;{{ member }}
+                <div class="pad-team-member-name" ng-repeat="member in team.display_names">
+                  {{ member }}
                 </div>
               </small>
           </td>

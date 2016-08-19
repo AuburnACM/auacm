@@ -46,6 +46,11 @@ body {
 
 }
 
+/* used to shift team member's names over on the scoreboard */
+.pad-team-member-name {
+    padding-left: 15%;
+}
+
 .underlineHeader {
     padding-bottom: 0.3em;
     font-size: 1.75em;
