@@ -4,6 +4,8 @@ import shutil
 import sys
 
 from app import config
+from app import database
+from app.modules.problem_manager import models
 from app.modules.submission_manager import judge
 from app.modules.submission_manager.models import MockSubmission
 from app.modules.submission_manager.judge_test import MockUploadFile
@@ -57,16 +59,20 @@ class Timer:
             found for the given problem.
         """
         files = os.listdir(self.path)
-        if len(files) == 0:
-            raise NoJudgeSolitionsError(self.problem.pid)
 
+        judged_count = 0
         found_max = 0
+        problem_details = (database.session.query(models.Problem)
+                           .filter(models.Problem.pid == self.problem.pid).first())
+        print('Judging', problem_details.name, '...', file=sys.stderr)
         for fname in files:
             source = os.path.join(self.path, fname)
             if not os.path.isfile(source):
                 continue
             if not judge.allowed_filetype(fname):
                 raise UnsupportedFileTypeError(fname, self.problem.pid)
+
+            print('    Trying', fname, '...', file=sys.stderr)
 
             file_type = fname.rsplit('.', 1)[1].lower()
             sub = MockSubmission(
@@ -82,11 +88,16 @@ class Timer:
             status, time = judgement.run()
 
             if status == judge.CORRECT_ANSWER:
+                judged_count += 1
                 time_limit = int(math.ceil(
                         time * 1.5 / judge.TIMEOUT_MULTIPLIER[file_type]))
                 found_max = max(found_max, time_limit)
                 self.problem.time_limit = found_max
                 self.problem.commit_to_session()
+
+        if judged_count == 0:
+            raise NoJudgeSolitionsError(self.problem.pid, problem_details.name)
+        print('Judged', problem_details.name, 'with time', found_max)
 
     def run(self):
         """Executes the problem timer."""
@@ -101,12 +112,14 @@ class Timer:
 
 class NoJudgeSolitionsError(Exception):
 
-    def __init__(self, value):
+    def __init__(self, value, name):
         Exception.__init__(self)
         self.value = value
+        self.name = name
 
     def __str__(self):
-        return 'No judge solutions found for PID: ' + repr(self.value)
+        return ('No judge solutions found for PID: ' + repr(self.value) +
+                ' (' + self.name + ')')
 
 
 class UnsupportedFileTypeError(Exception):
