@@ -96,7 +96,7 @@ class Timer:
                 self.problem.commit_to_session()
 
         if judged_count == 0:
-            raise NoJudgeSolitionsError(self.problem.pid, problem_details.name)
+            raise NoJudgeSolutionsError(self.problem.pid, problem_details.name)
         print('Judged', problem_details.name, 'with time', found_max)
 
     def run(self):
@@ -104,13 +104,13 @@ class Timer:
         self._create_temp_directory()
         try:
             self._run()
-        except NoJudgeSolitionsError as e:
+        except NoJudgeSolutionsError as e:
             print(str(e), file=sys.stderr)
         else:
             self._remove_temp_files()
 
 
-class NoJudgeSolitionsError(Exception):
+class NoJudgeSolutionsError(Exception):
 
     def __init__(self, value, name):
         Exception.__init__(self)
