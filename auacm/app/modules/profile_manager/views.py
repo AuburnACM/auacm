@@ -1,5 +1,6 @@
-"""User-related routes and methods"""
+"""Profile-related routes and methods"""
 
+from sqlalchemy import and_
 from app import app
 from app.util import serve_response, serve_error
 from app.modules.user_manager.models import User
@@ -18,11 +19,13 @@ def get_profile(username='tester'):
     """
     Return a user profile. 
     """
-    user = database.session.query(User).filter(User.username == username).first()
+    user = database.session.query(User).filter(
+        User.username == username).first()
     if user is None:
         return serve_error('user does not exist', 404)
 
-    problems_solved = len(database.session.query(ProblemSolved).filter(ProblemSolved.username == username).all())
+    problems_solved = len(database.session.query(ProblemSolved).filter(
+            ProblemSolved.username == username).all())
 
     return serve_response({
         'display': user.display,
@@ -45,7 +48,7 @@ def get_recent_blog_posts(username):
         recent_blog_posts.append({
             'title': blog_post.title,
             'subtitle': blog_post.subtitle,
-            'post_time': blog_post.post_time,
+            'post_time': blog_post.post_time * 1000,
             'id': blog_post.id
         }) 
         if len(recent_blog_posts) >= MAX_RECENT_BLOG_POSTS:
@@ -62,15 +65,20 @@ def get_recent_competitions(username):
 
     recent_competitions = list()    
 
-    for comp_user in database.session.query(CompUser).filter(CompUser.username == username).order_by(CompUser.cid.desc()):
-        cid = comp_user.cid        
-        comp = database.session.query(Competition).filter(Competition.cid == cid).first()
+    for comp_user in database.session.query(CompUser).filter(
+            CompUser.username == username).order_by(CompUser.cid.desc()):
+
+        cid = comp_user.cid
+        comp = database.session.query(Competition).filter(
+                Competition.cid == cid).first()
+
+        team_size = len(database.session.query(CompUser).filter(and_(
+                CompUser.cid == cid, CompUser.team == comp_user.team)).all())
         recent_competitions.append({
             'team_name': comp_user.team,
             'cid': cid,
             'comp_name': comp.name,
-            'comp_start': comp.start,
-            'comp_stop': comp.stop
+            'team_size': team_size
         })
         if len(recent_competitions) >= MAX_RECENT_COMPETITIONS:
             break;
@@ -86,7 +94,8 @@ def get_recent_attempts(username):
     recent_attempts = list()
 
     # For each of the user's most recent submissions:
-    for recent_submit in database.session.query(Submission).filter(Submission.username == username).order_by(Submission.job.desc()):
+    for recent_submit in database.session.query(Submission).filter(
+            Submission.username == username).order_by(Submission.job.desc()):
 
         # If this is the most recent or different from the previous:
         if last_submit is None or last_submit.pid != recent_submit.pid:
@@ -108,7 +117,6 @@ def get_recent_attempts(username):
     
     # If we haven't hit the cap, but we have an unused attempt session, add it.
     if len(recent_attempts) < MAX_RECENT_ATTEMPTS and attempt_session is not None:
-
         recent_attempts.append(attempt_session.to_dict())
 
     return recent_attempts

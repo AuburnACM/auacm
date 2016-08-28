@@ -80,6 +80,7 @@ app.controller('MainController', ['$scope', '$rootScope', '$http', '$route',
             },
             data: request
         }).then(function(response) {
+            $scope.username = $scope.loginUsername;
             $scope.loggedIn = true;
             $scope.failedLogin = false;
             getProblems();

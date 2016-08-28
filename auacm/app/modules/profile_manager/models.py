@@ -1,5 +1,8 @@
 '''Reflection and utilities for the users database table.'''
 
+from app.modules.problem_manager.models import Problem
+import app.database as database
+
 class AttemptSession:
     '''Object that represents a user's work on a single problem.
 
@@ -16,6 +19,10 @@ class AttemptSession:
         self.job_ids = list()
         self.job_ids.append(submission.job)
         self.correct = (submission.result == 'good')
+        problem = database.session.query(Problem).filter(
+                Problem.pid == self.pid).first()
+        self.shortname = problem.shortname
+        self.name = problem.name
 
     def add_submission(self, submission):
         ''' Given a submission_manager Submission, add it to the
@@ -32,5 +39,7 @@ class AttemptSession:
             'submission_count': self.count,
             'pid': self.pid,
             'submission_ids': self.job_ids,
-            'correct': self.correct
+            'correct': self.correct,
+            'shortname': self.shortname,
+            'name': self.name
         }

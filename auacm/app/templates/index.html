@@ -34,6 +34,9 @@
           <li ng-if="loggedIn" ng-class="{active: $route.current.activetab == 'judge'}"><a href="/#/judge">Judge</a></li>
           <li ng-class="{active: $route.current.activetab == 'ranking'}"><a href="/#/ranking">Rankings</a></li>
           <li ng-class="{active: $route.current.activetab == 'competitions'}"><a href="/#/competitions">Competitions</a></li>
+          <li ng-if="loggedIn" ng-class="{active: $route.current.activetab == 'profile'}">
+            <a href="/#/profile/{% raw %}{{ username }}{% endraw %}">Profile</a>
+          </li>
         </ul>
         <ul class="nav navbar-nav navbar-right ng-cloak">
 
@@ -141,6 +144,7 @@
   <script src="/static/js/controllers/TeamController.js"></script>
   <script src="/static/js/controllers/RankingController.js"></script>
   <script src="/static/js/controllers/CreateUserController.js"></script>
+  <script src="/static/js/controllers/ProfileController.js"></script>
 
   </div>
 </body>

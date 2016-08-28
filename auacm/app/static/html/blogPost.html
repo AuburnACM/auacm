@@ -3,10 +3,13 @@
   <div class="col-md-8 col-md-offset-2">
     <div>
       <h2>{{ post.title }} <small>{{ post.subtitle }}</small></h2>
-      <h5><small>Posted on {{ post.postTime | date : short }} by {{ post.author.display }}</small></h5>
+      <h5><small>Posted on {{ post.postTime | date : short }} by
+        <a ng-href="#/profile/{{ post.author.username }}">
+          {{ post.author.display }}
+        </a></small></h5>
       <p class="text-left" markdown="post.body"></p>
       <div ng-if="isAdmin === 1">
-        <a ng-href="#/blog/{{post.id}}/edit"><button class="btn btn-info pull-right">Edit Post</button></a>
+        <a ng-href="#/blog/{{ post.id }}/edit"><button class="btn btn-info pull-right">Edit Post</button></a>
       </div>
     </div>
   </div>

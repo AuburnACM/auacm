@@ -9,6 +9,7 @@ def get_home():
     logged_in = not current_user.is_anonymous
     display_name = (current_user.display if logged_in else 'Log in')
     logged_in_string = 'true' if logged_in else 'false'
+    username = (current_user.username if logged_in else '')
     return render_template('index.html', display_name=display_name,
             logged_in=logged_in_string)
 

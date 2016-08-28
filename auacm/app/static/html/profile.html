@@ -1,0 +1,110 @@
+<!-- User Profile -->
+<div class="body">
+
+  <!-- Basics -->
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2 text-center">
+      <div>
+        <h2 style=>{{ display_name }}  <small>  - {{problems_solved}} Problems Solved</small></h2>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity Panel -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Activity</h3>
+    </div>
+
+    <!-- Activity Panel Body -->
+    <div class="panel-body">
+
+      <!-- Displayed if the activity panel would otherwise be empty. -->
+      <div class="row" ng-if="!has_activity">
+        <div class="col-md-12">
+          <h4 class="text-center">No Recent Activity</h4> 
+        </div>
+      </div>
+
+      <!-- Holds recent submissions and/or competitions. -->
+      <div class="row">
+
+        <!-- Recent Submissions -->
+        <div ng-if="recent_attempts.length > 0" class="col-md-6">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Recent Submissions</th>
+              </tr>
+            </thead>
+            </tbody>
+              <tr ng-repeat="attempt in recent_attempts">
+                <td ng-if="attempt.submission_count === 1"
+                    ng-class="{'success': attempt.correct, 'danger': !attempt.correct}">
+                  {{attempt.submission_count}} submission for 
+                  <a ng-href="#/problems/{{attempt.shortname}}">{{ attempt.name }} </a>
+                </td>
+                <td ng-if="attempt.submission_count !== 1"
+                    ng-class="{'success': attempt.correct, 'danger': !attempt.correct}">
+                  {{attempt.submission_count}} submissions for 
+                  <a ng-href="#/problems/{{attempt.shortname}}">{{ attempt.name }} </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Recent Competitions -->
+        <div ng-if="recent_competitions.length > 0" class="col-md-6">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Recent Competitions</th>
+              </tr>
+            </thead>
+            </tbody>
+              <tr ng-repeat="competition in recent_competitions">
+                <td ng-if="competition.team_size > 1"> 
+                  <a ng-href="#/competitions/{{competition.cid}}">{{competition.comp_name}}</a> 
+                  on team "{{competition.team_name}}"
+                </td>
+                <td ng-if="competition.team_size === 1 && competition.team_name != display_name">
+                  <a ng-href="#/competitions/{{competition.cid}}">{{competition.comp_name}}</a> 
+                  competing as "{{competition.team_name}}"
+                </td>
+                <td ng-if="competition.team_size === 1 && competition.team_name === display_name">
+                  <a ng-href="#/competitions/{{competition.cid}}">{{competition.comp_name}}</a> 
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Holds recent blog posts. -->
+      <div class="row" ng-if="recent_blog_posts.length > 0">
+        <div class="col-md-12">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Recent Blog Posts</th>
+                <th>Posted At</th>
+              </tr>
+            </thead>
+            </tbody>
+              <tr ng-repeat="blog_post in recent_blog_posts">
+                <td> 
+                  <a ng-href="#/blog/{{blog_post.id}}">{{blog_post.title}} - {{blog_post.subtitle}}</a> 
+                </td>
+                <td>
+                  <small>{{ blog_post.post_time | date : short }}</small>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
