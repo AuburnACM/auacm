@@ -10,21 +10,21 @@
 
       <!-- Form body -->
       <div class="panel-body">
-        <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== 0}">
+        <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== UPLOAD_STAGE_START}">
           <label class="btn btn-default btn-file">
             Select File <input type="file" style="display: none;"  ng-model="input"
               onchange="angular.element(document.getElementById('imageSelectionCanvas')).scope().loadImage(this);">
           </label>
         </div>
-        <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== 1}">
+        <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== UPLOAD_STAGE_DRAW_SELECTION}">
           <h4>Drag inside the circle to move it, or outside to resize it.</h4>
         </div>
-        <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== 1}">
+        <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== UPLOAD_STAGE_DRAW_SELECTION}">
           <canvas id="imageSelectionCanvas" width="0" height="0" style="border:1px solid #000000;">
             Your browser does not support the HTML5 canvas tag.
           </canvas>
         </div>
-        <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== 1}">
+        <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== UPLOAD_STAGE_DRAW_SELECTION}">
           <div class="col-md-4 col-md-offset-1">
             <button class="btn btn-info" ng-click="clipSelection();">Choose Selection</button>
           </div>
@@ -32,10 +32,10 @@
             <button class="btn btn-info" ng-click="returnToFileSelect();">Choose Another File</button>
           </div>
         </div>
-        <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== 2}">
+        <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== UPLOAD_STAGE_CONFIRM_SELECTION}">
           <img id="confirmSelectionImg" class="profile-picture">
         </div>
-        <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== 2}">
+        <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== UPLOAD_STAGE_CONFIRM_SELECTION}">
           <div class="col-md-4 col-md-offset-1">
             <button class="btn btn-info" ng-click="confirmSelection();">Confirm</button>
           </div>
@@ -43,7 +43,7 @@
             <button class="btn btn-info" ng-click="returnToSelectRegion();">Go Back</button>
           </div>
         </div>
-        <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== 3}">
+        <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== UPLOAD_STAGE_FINISHED}">
           <h4>TODO: SEND THE REQUEST!</h4>
         </div>
       </div>

@@ -12,7 +12,14 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
     var baseImageReady = false;
     var baseImage = new Image();
 
-    $scope.uploadStage = 0;
+    $scope.UPLOAD_STAGE_SELECT_FILE = 0;
+    $scope.UPLOAD_STAGE_START = $scope.UPLOAD_STAGE_SELECT_FILE;
+    $scope.UPLOAD_STAGE_DRAW_SELECTION = 1;
+    $scope.UPLOAD_STAGE_CONFIRM_SELECTION = 2;
+    $scope.UPLOAD_STAGE_FINISHED = 3;
+    $scope.UPLOAD_STAGE_ERROR = 4;
+
+    $scope.uploadStage = $scope.UPLOAD_STAGE_START;
 
     baseImage.onload = function () {
         baseImageReady = true;
@@ -30,18 +37,18 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
 
     // Used to return to the first screen.
     $scope.returnToFileSelect = function() {
-        $scope.uploadStage = 0;
+        $scope.uploadStage = $scope.UPLOAD_STAGE_SELECT_FILE;
     }
 
     // Used to return to the 2nd screen.
     $scope.returnToSelectRegion = function() {
-        $scope.uploadStage = 1;
+        $scope.uploadStage = $scope.UPLOAD_STAGE_DRAW_SELECTION;
     }
 
     // Used to advance to the confirmation screen.
     // TODO: Send the request here!
     $scope.confirmSelection = function() {
-        $scope.uploadStage = 3;
+        $scope.uploadStage = $scope.UPLOAD_STAGE_FINISHED;
     }
 
     // loadImage is used to load the image into the selection canvas.
@@ -66,8 +73,7 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
                 selection.y = canvas.height / 2;
                 selection.r = Math.min(canvas.width, canvas.height) / 4;
                 $scope.$apply(function() {
-                    $scope.uploadStage = 1;
-                    console.log("APPLY 1!");
+                    $scope.uploadStage = $scope.UPLOAD_STAGE_DRAW_SELECTION;
                 });
             };
             reader.readAsDataURL(input.files[0]);
@@ -118,7 +124,6 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
     // to the given selection (translating / scaling it).
     function startSelection(e) {
         mousePos = getMousePos(canvas, e);
-        console.log(mousePos.x + ", " + mousePos.y);
         startX = mousePos.x;
         startY = mousePos.y;
         var dx = startX - selection.x;
@@ -169,7 +174,7 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
         var imgData = ctx.getImageData(selection.x - selection.r,
                 selection.y - selection.r, 2*selection.r, 2*selection.r);
         writeCanvas.getContext("2d").putImageData(imgData, 0, 0);
-        $scope.uploadStage = 2;
+        $scope.uploadStage = $scope.UPLOAD_STAGE_CONFIRM_SELECTION;
 
         // Resize this and render it.
         resizeImg(writeCanvas);
