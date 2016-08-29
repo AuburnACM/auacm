@@ -13,14 +13,14 @@
         <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== 0}">
           <label class="btn btn-default btn-file">
             Select File <input type="file" style="display: none;"  ng-model="input"
-              onchange="angular.element(document.getElementById('myCanvas')).scope().loadImage(this);">
+              onchange="angular.element(document.getElementById('imageSelectionCanvas')).scope().loadImage(this);">
           </label>
         </div>
         <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== 1}">
           <h4>Drag inside the circle to move it, or outside to resize it.</h4>
         </div>
         <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== 1}">
-          <canvas id="myCanvas" width="0" height="0" style="border:1px solid #000000;">
+          <canvas id="imageSelectionCanvas" width="0" height="0" style="border:1px solid #000000;">
             Your browser does not support the HTML5 canvas tag.
           </canvas>
         </div>
@@ -33,7 +33,7 @@
           </div>
         </div>
         <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== 2}">
-          <img id="myImg" class="profile-picture">
+          <img id="confirmSelectionImg" class="profile-picture">
         </div>
         <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== 2}">
           <div class="col-md-4 col-md-offset-1">

@@ -6,16 +6,16 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
     var PROFILE_PIC_DIMENSION = 256;
     var SELECTION_RADIUS_MIN = 64;
 
-    var canvas = document.getElementById("myCanvas");
+    var canvas = document.getElementById("imageSelectionCanvas");
     var ctx = canvas.getContext("2d");
 
-    var bgReady = false;
-    var bgImage = new Image();
+    var baseImageReady = false;
+    var baseImage = new Image();
 
     $scope.uploadStage = 0;
 
-    bgImage.onload = function () {
-        bgReady = true;
+    baseImage.onload = function () {
+        baseImageReady = true;
         drawSelection(canvas);
     };
 
@@ -50,18 +50,18 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
             var reader = new FileReader();
 
             reader.onload = function (e) {
-                bgImage.src = e.target.result;
+                baseImage.src = e.target.result;
 
-                var widthRatio = MAX_SELECTED_IMG_WIDTH / bgImage.width;
-                var heightRatio = MAX_SELECTED_IMG_HEIGHT / bgImage.height;
+                var widthRatio = MAX_SELECTED_IMG_WIDTH / baseImage.width;
+                var heightRatio = MAX_SELECTED_IMG_HEIGHT / baseImage.height;
                 var scaleFactor = 1;
 
                 if (widthRatio < 1 || heightRatio < 1) {
                     scaleFactor = Math.min(widthRatio, heightRatio);
                 }
 
-                canvas.width = bgImage.width * scaleFactor;
-                canvas.height = bgImage.height * scaleFactor;
+                canvas.width = baseImage.width * scaleFactor;
+                canvas.height = baseImage.height * scaleFactor;
                 selection.x = canvas.width / 2;
                 selection.y = canvas.height / 2;
                 selection.r = Math.min(canvas.width, canvas.height) / 4;
@@ -76,8 +76,8 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
 
     // clear resets the screen to just be the image.
     function drawImage(cnv) {
-        if (bgReady) {
-            cnv.getContext("2d").drawImage(bgImage, 0, 0, cnv.width,
+        if (baseImageReady) {
+            cnv.getContext("2d").drawImage(baseImage, 0, 0, cnv.width,
                     cnv.height);
         }
     }
@@ -190,7 +190,7 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
             resizeCanvas.getContext("2d").drawImage(this, 0, 0,
                     PROFILE_PIC_DIMENSION, PROFILE_PIC_DIMENSION);
             outCanvas = resizeCanvas;
-            document.getElementById("myImg").src = outCanvas.toDataURL("image/png");
+            document.getElementById("confirmSelectionImg").src = outCanvas.toDataURL("image/png");
         };
         newImage.src = originalCanvas.toDataURL("image/png");
     }
@@ -234,30 +234,32 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
 
     // sanitizeNewRadius takes a new radius for the selection, and adjusts it
     // and the selection location so that the selection fits on the screen.
-    function sanitizeNewRadius(nR) {
+    function sanitizeNewRadius(newRadius) {
         selection.x = selectionStartX;
         selection.y = selectionStartY;
 
-        if (2 * nR > canvas.height || 2 * nR > canvas.width) {
-            nR = Math.min(canvas.height, canvas.width) / 2;
-        } else if (nR < SELECTION_RADIUS_MIN) {
-            nR = SELECTION_RADIUS_MIN;
+        if (2 * newRadius > canvas.height || 2 * newRadius > canvas.width) {
+            newRadius = Math.min(canvas.height, canvas.width) / 2;
+        } else if (newRadius < SELECTION_RADIUS_MIN) {
+            newRadius = SELECTION_RADIUS_MIN;
         }
 
-        if (selection.y - nR < 0) {
-            selection.y = nR;
-        } else if (selection.y + nR > canvas.height) {
-            selection.y = canvas.height - nR;
+        if (selection.y - newRadius < 0) {
+            selection.y = newRadius;
+        } else if (selection.y + newRadius > canvas.height) {
+            selection.y = canvas.height - newRadius;
         }
 
-        if (selection.x - nR < 0) {
-            selection.x = nR;
-        } else if (selection.x + nR > canvas.width) {
-            selection.x = canvas.width - nR;
+        if (selection.x - newRadius < 0) {
+            selection.x = newRadius;
+        } else if (selection.x + newRadius > canvas.width) {
+            selection.x = canvas.width - newRadius;
         }
-        return nR;
+        return newRadius;
     }
 
+    // resizes the selected area to match the specified size, and then
+    // writes it to the confimation image.
     function resizeSelection(e) {
         selection.r = sanitizeNewRadius(getNewRadius(e));
         drawSelection(canvas);
