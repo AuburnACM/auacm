@@ -15,6 +15,10 @@ body {
     color: #767676;
 }
 
+.profile-picture {
+    border-radius: 50%;
+}
+
 .grid-padding {
     margin: 10px;
 }

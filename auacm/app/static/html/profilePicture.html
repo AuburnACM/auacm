@@ -1,19 +1,52 @@
 
+<div class="body main-fixed col-md-10 col-md-offset-1">
+  <div class="container col-md-12 col-md-offset-0 margin-top">
+    <div class="panel panel-default">
 
-<div class="body">
-  <div class="row">
-    <input type='file' ng-controller="ProfilePictureController" ng-model="input"
-        onchange="angular.element(document.getElementById('myCanvas')).scope().loadImage(this);"/>
+      <!-- Page title -->
+      <div class="panel-heading">
+        <h1 class="panel-title">Edit Profile Picture</h1>
+      </div>
+
+      <!-- Form body -->
+      <div class="panel-body">
+        <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== 0}">
+          <label class="btn btn-default btn-file">
+            Select File <input type="file" style="display: none;"  ng-model="input"
+              onchange="angular.element(document.getElementById('myCanvas')).scope().loadImage(this);">
+          </label>
+        </div>
+        <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== 1}">
+          <h4>Drag inside the circle to move it, or outside to resize it.</h4>
+        </div>
+        <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== 1}">
+          <canvas id="myCanvas" width="0" height="0" style="border:1px solid #000000;">
+            Your browser does not support the HTML5 canvas tag.
+          </canvas>
+        </div>
+        <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== 1}">
+          <div class="col-md-4 col-md-offset-1">
+            <button class="btn btn-info" ng-click="clipSelection();">Choose Selection</button>
+          </div>
+          <div class="col-md-4 col-md-offset-2">
+            <button class="btn btn-info" ng-click="returnToFileSelect();">Choose Another File</button>
+          </div>
+        </div>
+        <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== 2}">
+          <img id="myImg" class="profile-picture">
+        </div>
+        <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== 2}">
+          <div class="col-md-4 col-md-offset-1">
+            <button class="btn btn-info" ng-click="confirmSelection();">Confirm</button>
+          </div>
+          <div class="col-md-4 col-md-offset-2">
+            <button class="btn btn-info" ng-click="returnToSelectRegion();">Go Back</button>
+          </div>
+        </div>
+        <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== 3}">
+          <h4>TODO: SEND THE REQUEST!</h4>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="row">
-    <canvas id="myCanvas" width="0" height="0" style="border:1px solid #000000;">
-    Your browser does not support the HTML5 canvas tag.
-    </canvas>
-  </div>
-  <div class="row">
-    <button ng-click="clipSelection();">Click Here</button>
-  </div>
-  <div class="row">
-    <img id="myImg">
-  </div>
-<div>
+</div>

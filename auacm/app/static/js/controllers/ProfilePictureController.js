@@ -1,11 +1,9 @@
 app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
     function($scope, $routeParams, $http) {
 
-    //$scope.input= "";
-
-    var MAX_SELECTED_IMG_WIDTH  = document.documentElement.clientWidth * 0.85;
-    var MAX_SELECTED_IMG_HEIGHT = document.documentElement.clientHeight * 0.95;
-    var PROFILE_PIC_DIMENSION = 128;
+    var MAX_SELECTED_IMG_WIDTH  = document.documentElement.clientWidth * 0.65;
+    var MAX_SELECTED_IMG_HEIGHT = document.documentElement.clientHeight * 0.85;
+    var PROFILE_PIC_DIMENSION = 256;
     var SELECTION_RADIUS_MIN = 64;
 
     var canvas = document.getElementById("myCanvas");
@@ -13,6 +11,8 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
 
     var bgReady = false;
     var bgImage = new Image();
+
+    $scope.uploadStage = 0;
 
     bgImage.onload = function () {
         bgReady = true;
@@ -24,6 +24,24 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
         x: 300,
         y: 700,
         r: SELECTION_RADIUS_MIN,
+    }
+
+    // TODO: Have a better means of maintaining state than $scope.uploadStage
+
+    // Used to return to the first screen.
+    $scope.returnToFileSelect = function() {
+        $scope.uploadStage = 0;
+    }
+
+    // Used to return to the 2nd screen.
+    $scope.returnToSelectRegion = function() {
+        $scope.uploadStage = 1;
+    }
+
+    // Used to advance to the confirmation screen.
+    // TODO: Send the request here!
+    $scope.confirmSelection = function() {
+        $scope.uploadStage = 3;
     }
 
     // loadImage is used to load the image into the selection canvas.
@@ -47,6 +65,10 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
                 selection.x = canvas.width / 2;
                 selection.y = canvas.height / 2;
                 selection.r = Math.min(canvas.width, canvas.height) / 4;
+                $scope.$apply(function() {
+                    $scope.uploadStage = 1;
+                    console.log("APPLY 1!");
+                });
             };
             reader.readAsDataURL(input.files[0]);
         } 
@@ -96,6 +118,7 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
     // to the given selection (translating / scaling it).
     function startSelection(e) {
         mousePos = getMousePos(canvas, e);
+        console.log(mousePos.x + ", " + mousePos.y);
         startX = mousePos.x;
         startY = mousePos.y;
         var dx = startX - selection.x;
@@ -106,8 +129,10 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
 
         if (dx*dx + dy*dy <= selection.r * selection.r) {
             active = true;
+            resize = false;
         } else {
             resize = true;
+            active = false;
         }
     }
 
@@ -118,6 +143,7 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
         active = false;
     }
 
+    // mutateSelection moves the selection or resizes it.
     function mutateSelection(e) {
         if (active) {
             transposeSelection(e);
@@ -127,24 +153,14 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
     }
 
 
-    addEventListener("mousedown", startSelection, false);
-    addEventListener("mouseup", endSelection, false);
-    addEventListener("mousemove", mutateSelection, false);
+    canvas.addEventListener("mousedown", startSelection, false);
+    canvas.addEventListener("mouseup", endSelection, false);
+    canvas.addEventListener("mousemove", mutateSelection, false);
+    canvas.addEventListener("mouseout", endSelection, false);
 
-    function cropToSelection(cnv) {
-
-        cnvCtx = cnv.getContext("2d");
-        // Only allow drawing inside the selection.
-        cnvCtx.clearRect(0, 0, cnv.width, cnv.height);
-        cnvCtx.arc(cnv.width/2, cnv.height/2, cnv.height/2, 0, 2*Math.PI);
-        cnvCtx.clip();
-    }
-
-
-    // clipSelection saves the selected region.
+    // clipSelection clips to the selected region.
     $scope.clipSelection = function() {
         ctx.save();
-        //cropToSelection();
         drawImage(canvas);
         // Create a new canvas and put the selected image data on it
         var writeCanvas = document.createElement("canvas");
@@ -153,6 +169,7 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
         var imgData = ctx.getImageData(selection.x - selection.r,
                 selection.y - selection.r, 2*selection.r, 2*selection.r);
         writeCanvas.getContext("2d").putImageData(imgData, 0, 0);
+        $scope.uploadStage = 2;
 
         // Resize this and render it.
         resizeImg(writeCanvas);
@@ -161,6 +178,7 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
         drawSelection(canvas);
     }
 
+    // resizeImg resizes the selection such that it fits the required size.
     function resizeImg(originalCanvas) {
         var newImage = new Image();
         var outCanvas = null;
@@ -169,7 +187,6 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
             var resizeCanvas = document.createElement("canvas");
             resizeCanvas.width = PROFILE_PIC_DIMENSION;
             resizeCanvas.height = PROFILE_PIC_DIMENSION;
-            cropToSelection(resizeCanvas);
             resizeCanvas.getContext("2d").drawImage(this, 0, 0,
                     PROFILE_PIC_DIMENSION, PROFILE_PIC_DIMENSION);
             outCanvas = resizeCanvas;
@@ -178,6 +195,7 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
         newImage.src = originalCanvas.toDataURL("image/png");
     }
 
+    // keepInRange ensures that a translation stays inside the canvas.
     function keepInRange(lo, hi, rad, val) {
         if (val - rad < lo) {
             return lo + rad;
@@ -187,6 +205,7 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
         return val;
     }
 
+    // transposeSelection moves the selected region's circle a bit.
     function transposeSelection(e) {
         mousePos = getMousePos(canvas, e);
         var dx = mousePos.x - startX;
@@ -196,6 +215,8 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
         drawSelection(canvas);
     }
 
+    // getNewRadius determines what the updated radius of the selection should
+    // be. This radius may be of an invalid size or go off the screen.
     function getNewRadius(e) {
         mousePos = getMousePos(canvas, e);
         var dx = mousePos.x - startX;
@@ -211,6 +232,8 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
         return selectionStartR - dotProduct;
     }
 
+    // sanitizeNewRadius takes a new radius for the selection, and adjusts it
+    // and the selection location so that the selection fits on the screen.
     function sanitizeNewRadius(nR) {
         selection.x = selectionStartX;
         selection.y = selectionStartY;
