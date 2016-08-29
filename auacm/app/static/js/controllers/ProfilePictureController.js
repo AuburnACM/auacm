@@ -1,0 +1,242 @@
+app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
+    function($scope, $routeParams, $http) {
+
+    //$scope.input= "";
+
+    var MAX_SELECTED_IMG_WIDTH  = document.documentElement.clientWidth * 0.85;
+    var MAX_SELECTED_IMG_HEIGHT = document.documentElement.clientHeight * 0.95;
+    var PROFILE_PIC_DIMENSION = 128;
+    var SELECTION_RADIUS_MIN = 64;
+
+    var canvas = document.getElementById("myCanvas");
+    var ctx = canvas.getContext("2d");
+
+    var bgReady = false;
+    var bgImage = new Image();
+
+    bgImage.onload = function () {
+        bgReady = true;
+        drawSelection(canvas);
+    };
+
+    // selection holds the area surrounded by the circle.
+    selection = {
+        x: 300,
+        y: 700,
+        r: SELECTION_RADIUS_MIN,
+    }
+
+    // loadImage is used to load the image into the selection canvas.
+    $scope.loadImage = function(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                bgImage.src = e.target.result;
+
+                var widthRatio = MAX_SELECTED_IMG_WIDTH / bgImage.width;
+                var heightRatio = MAX_SELECTED_IMG_HEIGHT / bgImage.height;
+                var scaleFactor = 1;
+
+                if (widthRatio < 1 || heightRatio < 1) {
+                    scaleFactor = Math.min(widthRatio, heightRatio);
+                }
+
+                canvas.width = bgImage.width * scaleFactor;
+                canvas.height = bgImage.height * scaleFactor;
+                selection.x = canvas.width / 2;
+                selection.y = canvas.height / 2;
+                selection.r = Math.min(canvas.width, canvas.height) / 4;
+            };
+            reader.readAsDataURL(input.files[0]);
+        } 
+    }
+
+    // clear resets the screen to just be the image.
+    function drawImage(cnv) {
+        if (bgReady) {
+            cnv.getContext("2d").drawImage(bgImage, 0, 0, cnv.width,
+                    cnv.height);
+        }
+    }
+
+    // draw draws the selection image on the screen.
+    function drawSelection(cnv) {
+        drawImage(cnv);
+        var ctx = cnv.getContext("2d");
+        ctx.beginPath();
+        ctx.arc(selection.x, selection.y, selection.r, 0, 2*Math.PI);
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'rgba(50,50,50,0.7)';
+        ctx.fillStyle= 'rgba(210,210,210,0.5)';
+        ctx.fill();
+        ctx.stroke();
+    }
+
+    // getMousePos returns the coordinates of the mouse within the canvas.
+    function getMousePos(canvas, evt) {
+        var rect = canvas.getBoundingClientRect();
+        return {
+            x: evt.clientX - rect.left,
+            y: evt.clientY - rect.top
+        };
+    }
+
+    // The initial coordinates of the mouse when clicked.
+    var startX, startY;
+
+    // Holds which "mode" of changing the image we are in.
+    var active, resize;
+
+    // Holds the initial state of the collection when first
+    // selected.
+    var selectionStartX, selectionStartY, selectionStartR;
+
+    // initSelectionData prepares everything for a mutation
+    // to the given selection (translating / scaling it).
+    function startSelection(e) {
+        mousePos = getMousePos(canvas, e);
+        startX = mousePos.x;
+        startY = mousePos.y;
+        var dx = startX - selection.x;
+        var dy = startY - selection.y;
+        selectionStartX = selection.x;
+        selectionStartY = selection.y;
+        selectionStartR = selection.r;
+
+        if (dx*dx + dy*dy <= selection.r * selection.r) {
+            active = true;
+        } else {
+            resize = true;
+        }
+    }
+
+    // endSelection cleans up after a selection mutation
+    // (translation / scaling) is done.
+    function endSelection(e) {
+        resize = false;
+        active = false;
+    }
+
+    function mutateSelection(e) {
+        if (active) {
+            transposeSelection(e);
+        } else if (resize) {
+            resizeSelection(e);
+        }
+    }
+
+
+    addEventListener("mousedown", startSelection, false);
+    addEventListener("mouseup", endSelection, false);
+    addEventListener("mousemove", mutateSelection, false);
+
+    function cropToSelection(cnv) {
+
+        cnvCtx = cnv.getContext("2d");
+        // Only allow drawing inside the selection.
+        cnvCtx.clearRect(0, 0, cnv.width, cnv.height);
+        cnvCtx.arc(cnv.width/2, cnv.height/2, cnv.height/2, 0, 2*Math.PI);
+        cnvCtx.clip();
+    }
+
+
+    // clipSelection saves the selected region.
+    $scope.clipSelection = function() {
+        ctx.save();
+        //cropToSelection();
+        drawImage(canvas);
+        // Create a new canvas and put the selected image data on it
+        var writeCanvas = document.createElement("canvas");
+        writeCanvas.width = 2*selection.r;
+        writeCanvas.height = 2*selection.r;
+        var imgData = ctx.getImageData(selection.x - selection.r,
+                selection.y - selection.r, 2*selection.r, 2*selection.r);
+        writeCanvas.getContext("2d").putImageData(imgData, 0, 0);
+
+        // Resize this and render it.
+        resizeImg(writeCanvas);
+
+        ctx.restore();
+        drawSelection(canvas);
+    }
+
+    function resizeImg(originalCanvas) {
+        var newImage = new Image();
+        var outCanvas = null;
+
+        newImage.onload = function() {
+            var resizeCanvas = document.createElement("canvas");
+            resizeCanvas.width = PROFILE_PIC_DIMENSION;
+            resizeCanvas.height = PROFILE_PIC_DIMENSION;
+            cropToSelection(resizeCanvas);
+            resizeCanvas.getContext("2d").drawImage(this, 0, 0,
+                    PROFILE_PIC_DIMENSION, PROFILE_PIC_DIMENSION);
+            outCanvas = resizeCanvas;
+            document.getElementById("myImg").src = outCanvas.toDataURL("image/png");
+        };
+        newImage.src = originalCanvas.toDataURL("image/png");
+    }
+
+    function keepInRange(lo, hi, rad, val) {
+        if (val - rad < lo) {
+            return lo + rad;
+        } else if (val + rad > hi) {
+            return hi - rad;
+        }
+        return val;
+    }
+
+    function transposeSelection(e) {
+        mousePos = getMousePos(canvas, e);
+        var dx = mousePos.x - startX;
+        var dy = mousePos.y - startY;
+        selection.x = keepInRange(0, canvas.width, selection.r, selectionStartX + dx);
+        selection.y = keepInRange(0, canvas.height, selection.r, selectionStartY + dy);
+        drawSelection(canvas);
+    }
+
+    function getNewRadius(e) {
+        mousePos = getMousePos(canvas, e);
+        var dx = mousePos.x - startX;
+        var dy = mousePos.y - startY;
+
+        var start_dx = selectionStartX - startX;
+        var start_dy = selectionStartY - startY;
+        var origDist = Math.sqrt(start_dx * start_dx + start_dy * start_dy);
+        start_dx = start_dx / origDist;
+        start_dy = start_dy / origDist;
+
+        var dotProduct = (dx * start_dx + dy * start_dy);
+        return selectionStartR - dotProduct;
+    }
+
+    function sanitizeNewRadius(nR) {
+        selection.x = selectionStartX;
+        selection.y = selectionStartY;
+
+        if (2 * nR > canvas.height || 2 * nR > canvas.width) {
+            nR = Math.min(canvas.height, canvas.width) / 2;
+        } else if (nR < SELECTION_RADIUS_MIN) {
+            nR = SELECTION_RADIUS_MIN;
+        }
+
+        if (selection.y - nR < 0) {
+            selection.y = nR;
+        } else if (selection.y + nR > canvas.height) {
+            selection.y = canvas.height - nR;
+        }
+
+        if (selection.x - nR < 0) {
+            selection.x = nR;
+        } else if (selection.x + nR > canvas.width) {
+            selection.x = canvas.width - nR;
+        }
+        return nR;
+    }
+
+    function resizeSelection(e) {
+        selection.r = sanitizeNewRadius(getNewRadius(e));
+        drawSelection(canvas);
+    }
+}]);

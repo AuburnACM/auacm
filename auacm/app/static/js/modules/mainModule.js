@@ -106,6 +106,11 @@ app.config(function($routeProvider) {
             controller: 'ProfileController',
             activetab: 'profile'
         })
+        .when('/editprofile', {
+            templateUrl: 'static/html/profilePicture.html',
+            controller: 'ProfilePictureController',
+            activetab: 'profile'
+        })
         .otherwise({
             templateUrl : 'templates/404.html'
         });

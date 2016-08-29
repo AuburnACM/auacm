@@ -1,0 +1,19 @@
+
+
+<div class="body">
+  <div class="row">
+    <input type='file' ng-controller="ProfilePictureController" ng-model="input"
+        onchange="angular.element(document.getElementById('myCanvas')).scope().loadImage(this);"/>
+  </div>
+  <div class="row">
+    <canvas id="myCanvas" width="0" height="0" style="border:1px solid #000000;">
+    Your browser does not support the HTML5 canvas tag.
+    </canvas>
+  </div>
+  <div class="row">
+    <button ng-click="clipSelection();">Click Here</button>
+  </div>
+  <div class="row">
+    <img id="myImg">
+  </div>
+<div>
