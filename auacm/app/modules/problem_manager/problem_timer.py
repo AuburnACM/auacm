@@ -10,6 +10,7 @@ from app.modules.submission_manager import judge
 from app.modules.submission_manager.models import MockSubmission
 from app.modules.submission_manager.judge_test import MockUploadFile
 
+TIME_LIMIT = 20
 
 PROBLEMS_DIR = os.path.join(config.DATA_FOLDER, 'problems')
 
@@ -84,7 +85,7 @@ class Timer:
             upload = MockUploadFile(source)
             upload.save(os.path.join(submission_path, fname))
 
-            judgement = judge.Judge(sub.pid, submission_path, upload, 120 if file_type != 'cpp' else 10)
+            judgement = judge.Judge(sub.pid, submission_path, upload, TIME_LIMIT)
             status, time = judgement.run()
 
             if status == judge.CORRECT_ANSWER:
@@ -106,7 +107,7 @@ class Timer:
             self._run()
         except NoJudgeSolutionsError as e:
             print(str(e), file=sys.stderr)
-        else:
+        finally:
             self._remove_temp_files()
 
 

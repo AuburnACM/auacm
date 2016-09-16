@@ -61,8 +61,8 @@ def submit():
     attempt.commit_to_session()
 
 
-    submission_path = os.path.join(
-            app.config['DATA_FOLDER'], 'submits', str(submit.job))
+    submission_path = os.path.join(app.config['DATA_FOLDER'],
+                                   'submits', str(attempt.job))
     os.mkdir(submission_path)
     uploaded_file.save(os.path.join(submission_path, uploaded_file.filename))
 
