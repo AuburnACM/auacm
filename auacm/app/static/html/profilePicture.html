@@ -26,10 +26,10 @@
         </div>
         <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== UPLOAD_STAGE_DRAW_SELECTION}">
           <div class="col-md-4 col-md-offset-1">
-            <button class="btn btn-info" ng-click="clipSelection();">Choose Selection</button>
+            <button class="btn btn-default" ng-click="returnToFileSelect();">Choose Another File</button>
           </div>
           <div class="col-md-4 col-md-offset-2">
-            <button class="btn btn-info" ng-click="returnToFileSelect();">Choose Another File</button>
+            <button class="btn btn-info" ng-click="clipSelection();">Choose Selection</button>
           </div>
         </div>
         <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== UPLOAD_STAGE_CONFIRM_SELECTION}">
@@ -37,10 +37,10 @@
         </div>
         <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== UPLOAD_STAGE_CONFIRM_SELECTION}">
           <div class="col-md-4 col-md-offset-1">
-            <button class="btn btn-info" ng-click="confirmSelection();">Confirm</button>
+            <button class="btn btn-default" ng-click="returnToSelectRegion();">Go Back</button>
           </div>
           <div class="col-md-4 col-md-offset-2">
-            <button class="btn btn-info" ng-click="returnToSelectRegion();">Go Back</button>
+            <button class="btn btn-info" ng-click="confirmSelection();">Confirm</button>
           </div>
         </div>
         <div class="row text-center" ng-class="{'ng-cloak': uploadStage !== UPLOAD_STAGE_FINISHED}">

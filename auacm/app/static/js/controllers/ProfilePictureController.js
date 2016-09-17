@@ -77,6 +77,7 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
                 });
             };
             reader.readAsDataURL(input.files[0]);
+            input.value = null;
         } 
     }
 
