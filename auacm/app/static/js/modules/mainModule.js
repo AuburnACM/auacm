@@ -101,14 +101,14 @@ app.config(function($routeProvider) {
             controller: 'CreateUserController',
             activetab: 'settings'
         })
-        .when('/profile/:username', { // route for profile page
-            templateUrl: 'static/html/profile.html',
-            controller: 'ProfileController',
-            activetab: 'profile'
-        })
-        .when('/editprofile', {
+        .when('/profile/edit/:username', {
             templateUrl: 'static/html/profilePicture.html',
             controller: 'ProfilePictureController',
+            activetab: 'profile'
+        })
+        .when('/profile/user/:username', { // route for profile page
+            templateUrl: 'static/html/profile.html',
+            controller: 'ProfileController',
             activetab: 'profile'
         })
         .otherwise({

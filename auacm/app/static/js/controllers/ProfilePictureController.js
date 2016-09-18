@@ -49,6 +49,28 @@ app.controller('ProfilePictureController', ['$scope', '$routeParams', '$http',
     // TODO: Send the request here!
     $scope.confirmSelection = function() {
         $scope.uploadStage = $scope.UPLOAD_STAGE_FINISHED;
+
+        /*
+        $http({
+            method: 'PUT',
+            url: '/api/profile/image/' + $routeParams.username,
+            headers: {'Content-Type': undefined},
+            transformRequest: angular.identity,
+            data: {
+                'data':  document.getElementById("confirmSelectionImg").src.replace(/^data:image\/(png|jpg);base64,/, ""),
+                'mimetype': 'image/png'
+            }
+        }).then(function(response) {
+            console.log('success');
+        }, function(response) {
+            console.error(response);
+        }); */
+
+        $http.put('/api/profile/image/' + $routeParams.username,{
+                "data":  document.getElementById("confirmSelectionImg").src.replace(/^data:image\/(png|jpg);base64,/, ""),
+                "mimetype": "image/png"
+            }
+        );
     }
 
     // loadImage is used to load the image into the selection canvas.

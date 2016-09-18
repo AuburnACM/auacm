@@ -4,7 +4,7 @@
     <div>
       <h2>{{ post.title }} <small>{{ post.subtitle }}</small></h2>
       <h5><small>Posted on {{ post.postTime | date : short }} by
-        <a ng-href="#/profile/{{ post.author.username }}">
+        <a ng-href="#/profile/user/{{ post.author.username }}">
           {{ post.author.display }}
         </a></small></h5>
       <p class="text-left" markdown="post.body"></p>

@@ -6,7 +6,7 @@ app.controller('ProfileController', ['$scope', '$routeParams', '$http',
     $scope.has_activity = false;
 
     var getProfile = function() {
-        $http.get('/api/profile/' + $scope.username)
+        $http.get('/api/profile/userprofile/' + $scope.username)
             .then(function(response) {
                 data = response.data.data;
                 $scope.display_name = data.display;

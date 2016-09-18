@@ -35,7 +35,7 @@
           <li ng-class="{active: $route.current.activetab == 'ranking'}"><a href="/#/ranking">Rankings</a></li>
           <li ng-class="{active: $route.current.activetab == 'competitions'}"><a href="/#/competitions">Competitions</a></li>
           <li ng-if="loggedIn" ng-class="{active: $route.current.activetab == 'profile'}">
-            <a href="/#/profile/{% raw %}{{ username }}{% endraw %}">Profile</a>
+            <a href="/#/profile/user/{% raw %}{{ username }}{% endraw %}">Profile</a>
           </li>
         </ul>
         <ul class="nav navbar-nav navbar-right ng-cloak">

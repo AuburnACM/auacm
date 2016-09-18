@@ -38,7 +38,7 @@
         <tbody>
           <tr ng-repeat="user in ranks">
             <td>{{ ($index + 1) }}</td>
-            <td><a ng-href="#/profile/{{user.username}}">{{ user.displayName }}</a></td>
+            <td><a ng-href="#/profile/user/{{user.username}}">{{ user.displayName }}</a></td>
             <td>{{ user.solved }}</td>
           </tr>
         </tbody>

@@ -1,6 +1,7 @@
 """Profile-related routes and methods"""
 
 from sqlalchemy import and_
+from flask import send_file, request
 from app import app
 from app.util import serve_response, serve_error
 from app.modules.user_manager.models import User
@@ -8,24 +9,78 @@ from app.modules.submission_manager.models import Submission, ProblemSolved
 from app.modules.profile_manager.models import AttemptSession
 from app.modules.competition_manager.models import CompUser, Competition
 from app.modules.blog_manager.models import BlogPost
+from os.path import join
 import app.database as database
+import os
+import mimetypes
+import base64
 
 MAX_RECENT_ATTEMPTS = 5
 MAX_RECENT_COMPETITIONS = 5
 MAX_RECENT_BLOG_POSTS = 3
 
-@app.route('/api/profile/<username>', methods=['GET'])
-def get_profile(username='tester'):
+image_dir = join(app.config['DATA_FOLDER'], 'profile')
+
+@app.route('/api/profile/image/<username>', methods=['GET'])
+def get_profile_image(username='tester'):
     """
-    Return a user profile. 
+    Return a user's profile picture. 
+    """
+
+    imagefile = [filename for filename in os.listdir(join(app.config['DATA_FOLDER'],
+        'profile')) if filename.startswith(username + '.')]
+
+
+    if len(imagefile) == 0:
+        return send_file(join(image_dir, 'default', 'profile.png'),
+            mimetype='image/png')
+    else:
+        file_ext = '.' + imagefile[0].split('.', 1)[1]
+        mime_type = mimetypes.types_map[file_ext]
+        return send_file(join(image_dir, imagefile[0]), mimetype=mime_type)
+
+@app.route('/api/profile/image/<username>', methods=['PUT'])
+def set_profile_image(username='tester'):
+    """
+    Set a user's profile picture. 
     """
     user = database.session.query(User).filter(
         User.username == username).first()
     if user is None:
         return serve_error('user does not exist', 404)
 
-    problems_solved = len(database.session.query(ProblemSolved).filter(
-            ProblemSolved.username == username).all())
+    request_json = request.get_json()
+    mimetype = request_json['mimetype']
+    filedata = request_json['data'].encode('utf-8')
+
+    fileExt = mimetypes.guess_extension(mimetype)
+    if fileExt is None:
+        return serve_error('invalid mime type', 400)
+
+    imagefiles = [filename for filename in os.listdir(image_dir)
+        if filename.startswith(username + '.')]
+
+    for filename in imagefiles:
+        os.remove(join(image_dir, filename))
+
+    filename = join(image_dir, username + fileExt)
+
+    with open(filename, "wb") as writefile:
+        writefile.write(base64.decodestring(filedata))
+
+    return serve_response({
+        'message': 'Image saved'
+    })
+
+@app.route('/api/profile/userprofile/<username>', methods=['GET'])
+def get_profile(username='tester'):
+    """
+    Return a user's profile. 
+    """
+    user = database.session.query(User).filter(
+        User.username == username).first()
+    if user is None:
+        return serve_error('user does not exist', 404)
 
     return serve_response({
         'display': user.display,
