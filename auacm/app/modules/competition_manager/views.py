@@ -158,10 +158,19 @@ def get_competition_data(cid):
     scoreboard = list()
 
     team_users = dict()
+    team_display_names = dict()
+
+    all_users = database.session.query(User).all()
+    name_to_display = dict()
+    for user in all_users:
+        name_to_display[user.username] = user.display
+
     for user in comp_users:
         if not user.team in team_users:
             team_users[user.team] = list()
+            team_display_names[user.team] = list()
         team_users[user.team].append(user.username)
+        team_display_names[user.team].append(name_to_display[user.username])
 
     for team in team_users:
         team_problems = dict()
@@ -192,6 +201,7 @@ def get_competition_data(cid):
         team_row = dict()
         team_row['name'] = team
         team_row['users'] = team_users[team]
+        team_row['display_names'] = team_display_names[team]
         team_row['problemData'] = team_problems
         scoreboard.append(team_row)
 
