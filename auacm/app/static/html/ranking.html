@@ -37,9 +37,11 @@
         </thead>
         <tbody>
           <tr ng-repeat="user in ranks">
-            <td>{{ ($index + 1) }}</td>
-            <td><a ng-href="#/profile/user/{{user.username}}">{{ user.displayName }}</a></td>
-            <td>{{ user.solved }}</td>
+            <td style="vertical-align:middle;">{{ ($index + 1) }}</td>
+            <td style="vertical-align:middle;">
+              <img src="/api/profile/image/{{user.username}}" class="ranking-profile-picture">
+              <a ng-href="#/profile/user/{{user.username}}">{{ user.displayName }}</a></td>
+            <td style="vertical-align:middle;">{{ user.solved }}</td>
           </tr>
         </tbody>
       </table>

@@ -19,6 +19,39 @@ body {
     border-radius: 50%;
 }
 
+.ranking-profile-picture {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    margin-right: 5px;
+/*    margin-top: 5px;
+    margin-bottom: 5px; */
+}
+
+.login-link-box:hover {
+    text-decoration:none;
+}
+
+.profile-page-picture {
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    margin: 15px;
+}
+
+.vcenter {
+    display: flex;
+    justify-content: center;
+}
+
+.vcenter-inner {
+    align-self: center;
+}
+
+.valign-mid {
+    vertical-align: middle;
+}
+
 .grid-padding {
     margin: 10px;
 }
