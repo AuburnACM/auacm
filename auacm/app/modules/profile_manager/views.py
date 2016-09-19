@@ -82,6 +82,9 @@ def get_profile(username='tester'):
     if user is None:
         return serve_error('user does not exist', 404)
 
+    problems_solved = len(database.session.query(ProblemSolved).filter(
+        ProblemSolved.username == username).all())
+
     return serve_response({
         'display': user.display,
         'recent_attempts': get_recent_attempts(username),

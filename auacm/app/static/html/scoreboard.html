@@ -47,13 +47,18 @@
         <tr ng-repeat="team in teams | orderBy:['-solved', 'time']">
           <td>{{ team.rank }}</td>
           <td>
-              {{ team.name }}
-              <br>
-              <small ng-if="team.display_names.length > 1 || team.display_names[0] != team.name">
-                <div class="pad-team-member-name" ng-repeat="member in team.display_names">
-                  {{ member }}
-                </div>
-              </small>
+              <div ng-if="team.display_names.length == 1 && team.display_names[0] === team.name">
+                <a ng-href="#/profile/user/{{team.users[0]}}"> {{ team.name }}</a>
+              </div>
+              <div ng-if="team.display_names.length > 1 || team.display_names[0] != team.name">
+                {{ team.name }}
+                <br>
+                <small>
+                  <div class="pad-team-member-name" ng-repeat="member in team.display_names track by $index">
+                    <a ng-href="#/profile/user/{{team.users[$index]}}">{{ member }}</a>
+                  </div>
+                </small>
+              </div>
           </td>
           <td>{{ team.solved }}</td>
           <td>{{ team.time }}</td>
