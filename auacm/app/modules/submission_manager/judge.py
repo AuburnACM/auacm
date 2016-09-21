@@ -39,6 +39,9 @@ RUNTIME_ERROR = 3
 TIMELIMIT_EXCEEDED = 4
 WRONG_ANSWER = 5
 CORRECT_ANSWER = 6
+DB_STATUS = ['', 'compile', 'start', 'runtime', 'timeout', 'wrong', 'good']
+EVENT_STATUS = ['', 'compile', 'running', 'runtime', 'timeout', 'incorrect',
+                'correct']
 
 
 def allowed_filetype(filename):

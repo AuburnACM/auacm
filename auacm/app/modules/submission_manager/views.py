@@ -14,9 +14,6 @@ from sqlalchemy.orm import load_only
 from app.modules.flasknado.flasknado import Flasknado
 
 
-DB_STATUS = ['', 'compile', 'start', 'runtime', 'timeout', 'wrong', 'good']
-
-
 @app.route("/api/submit", methods=["POST"])
 @login_required
 def submit():
@@ -70,14 +67,14 @@ def submit():
         """Updates the status of the submission and notifies the clients that
         the submission has a new status.
         """
-        attempt.update_status(DB_STATUS[status])
+        attempt.update_status(judge.DB_STATUS[status])
         Flasknado.emit('status', {
             'submissionId': attempt.job,
             'problemId': attempt.pid,
             'username': attempt.username,
             'submitTime': attempt.submit_time,
             'testNum': test_number,
-            'status': DB_STATUS[status]
+            'status': judge.EVENT_STATUS[status]
         })
 
     judge.Judge(attempt.pid, submission_path, uploaded_file, time_limit,
