@@ -33,15 +33,21 @@ TIMEOUT_MULTIPLIER = {
     'cpp': 1,
     'go': 1
 }
-COMPILATION_ERROR = 1
-COMPILATION_SUCCESS = 2
-RUNTIME_ERROR = 3
-TIMELIMIT_EXCEEDED = 4
-WRONG_ANSWER = 5
-CORRECT_ANSWER = 6
-DB_STATUS = ['', 'compile', 'start', 'runtime', 'timeout', 'wrong', 'good']
-EVENT_STATUS = ['', 'compile', 'running', 'runtime', 'timeout', 'incorrect',
-                'correct']
+COMPILATION_ERROR = 'compile'
+COMPILATION_SUCCESS = 'start'
+RUNTIME_ERROR = 'runtime'
+TIMELIMIT_EXCEEDED = 'timeout'
+WRONG_ANSWER = 'wrong'
+CORRECT_ANSWER = 'good'
+
+EVENT_STATUS = {
+    COMPILATION_ERROR: 'compile',
+    COMPILATION_SUCCESS: 'running',
+    RUNTIME_ERROR: 'runtime',
+    TIMELIMIT_EXCEEDED: 'timeout',
+    WRONG_ANSWER: 'incorrect',
+    CORRECT_ANSWER: 'correct'
+}
 
 
 def allowed_filetype(filename):

@@ -42,7 +42,6 @@ def submit():
             filter(ProblemData.pid==request.form['pid']).\
             first().time_limit
 
-
     ext = uploaded_file.filename.rsplit('.')[1].lower()
     if 'python' in request.form:
         ext = request.form['python']
@@ -57,7 +56,6 @@ def submit():
 
     attempt.commit_to_session()
 
-
     submission_path = os.path.join(app.config['DATA_FOLDER'],
                                    'submits', str(attempt.job))
     os.mkdir(submission_path)
@@ -67,7 +65,7 @@ def submit():
         """Updates the status of the submission and notifies the clients that
         the submission has a new status.
         """
-        attempt.update_status(judge.DB_STATUS[status])
+        attempt.update_status(status)
         Flasknado.emit('status', {
             'submissionId': attempt.job,
             'problemId': attempt.pid,
