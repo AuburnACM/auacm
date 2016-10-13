@@ -52,7 +52,7 @@ class Problem(Base):
         }
 
 
-class  ProblemData(Base):
+class ProblemData(Base):
     """Problem Data class that reflects mysql database
 
     Problem Data obeys the following structure:

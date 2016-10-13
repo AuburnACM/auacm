@@ -74,13 +74,15 @@ class JudgeTest(object):
         )
         file_path = os.path.join(
             data_folder, 'problems', problem, 'solutions', filename)
-        submit_directory = os.path.join(app.config['DATA_FOLDER'], 'submits', str(submit.job))
+        submit_directory = os.path.join(app.config['DATA_FOLDER'], 'submits',
+                                        str(submit.job))
         if not os.path.exists(submit_directory):
             os.mkdir(submit_directory)
         # Keep track of submit_file so that we can close it.
         self.submit = submit
         self.submit_file = MockUploadFile(file_path)
-        self.judge = judge.Judge(self.submit, self.submit_file, 1)
+        self.judge = judge.Judge(self.submit.pid, submit_directory,
+                                 self.submit_file, 1)
 
     def assertEvaluation(self, expected_result):
         """Assert the behavior of a submission.

@@ -6,7 +6,6 @@ import threading
 import time
 
 from app import app
-from app.modules.flasknado.flasknado import Flasknado
 
 
 ALLOWED_EXTENSIONS = ['java', 'c', 'cpp', 'py', 'go']
@@ -34,15 +33,21 @@ TIMEOUT_MULTIPLIER = {
     'cpp': 1,
     'go': 1
 }
-DB_STATUS = ['', 'compile', 'start', 'runtime', 'timeout', 'wrong', 'good']
-EVENT_STATUS = ['', 'compile', 'running', 'runtime', 'timeout', 'incorrect',
-                'correct']
-COMPILATION_ERROR = 1
-COMPILATION_SUCCESS = 2
-RUNTIME_ERROR = 3
-TIMELIMIT_EXCEEDED = 4
-WRONG_ANSWER = 5
-CORRECT_ANSWER = 6
+COMPILATION_ERROR = 'compile'
+COMPILATION_SUCCESS = 'start'
+RUNTIME_ERROR = 'runtime'
+TIMELIMIT_EXCEEDED = 'timeout'
+WRONG_ANSWER = 'wrong'
+CORRECT_ANSWER = 'good'
+
+EVENT_STATUS = {
+    COMPILATION_ERROR: 'compile',
+    COMPILATION_SUCCESS: 'running',
+    RUNTIME_ERROR: 'runtime',
+    TIMELIMIT_EXCEEDED: 'timeout',
+    WRONG_ANSWER: 'incorrect',
+    CORRECT_ANSWER: 'correct'
+}
 
 
 def allowed_filetype(filename):
@@ -50,36 +55,38 @@ def allowed_filetype(filename):
     return ('.' in filename and
             filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS)
 
+
 class Judge:
     """A container for a judging instance. It contains the submission, the
     source code that goes along with the submission, and the time limit of the
     problem.
     """
 
-    def __init__(self, submission, uploaded_file, time_limit):
+    def __init__(self, pid, submission_path, uploaded_file, time_limit, on_status=None):
         """Create a new Judgement instance.
 
-        :param submission: the submission to be judged
+        :param pid: the problem identifier
+        :param submission_path: the path to where the execution should be stored
         :param uploaded_file: the source code file
         :param time_limit: the time limit for execution
+        :param on_status: a function that takes two parameters (status,
+                test_number) where status is one of the status constants and
+                test_number is the number of tests that have successfully
+                completed.
         """
-        self.submission = submission
+        self.pid = pid
         self.uploaded_file = uploaded_file
-        self.submission_path = os.path.join(
-            app.config['DATA_FOLDER'], 'submits', str(self.submission.job))
+        self.file_type = uploaded_file.filename.rsplit('.')[1].lower()
+        self.time_limit = (time_limit * TIMEOUT_MULTIPLIER[self.file_type])
+        self.on_status = on_status
         problem_path = os.path.join(
-            app.config['DATA_FOLDER'], 'problems', str(self.submission.pid))
-
-        self.sub_output_path = os.path.join(self.submission_path, 'out')
+            app.config['DATA_FOLDER'], 'problems', str(self.pid))
+        self.submission_path = submission_path
         self.prob_input_path = os.path.join(problem_path, 'in')
         self.prob_output_path = os.path.join(problem_path, 'out')
-
+        self.sub_output_path = os.path.join(self.submission_path, 'out')
         if not os.path.exists(self.sub_output_path):
             os.mkdir(self.sub_output_path)
-
-        self.time_limit = (time_limit *
-                           TIMEOUT_MULTIPLIER[self.submission.file_type])
-
 
     def run_threaded(self):
         """Runs the Judgement on a new thread
@@ -90,7 +97,6 @@ class Judge:
         thread.daemon = False
         thread.start()
         return thread
-
 
     def run(self):
         """Attempts to compile (if necessary) then execute a given file.
@@ -108,36 +114,36 @@ class Judge:
 
         return status, max_time
 
-
     def _update_status(self, status, test_number):
-        """Updates the status of the submission and notifies the clients that
-        the submission has a new status.
-        """
-        self.submission.update_status(DB_STATUS[status])
-        Flasknado.emit('status', {
-            'submissionId': self.submission.job,
-            'problemId': self.submission.pid,
-            'username': self.submission.username,
-            'submitTime': self.submission.submit_time,
-            'testNum': test_number,
-            'status': EVENT_STATUS[status]
-        })
+        """This method is invoked during the different events of the judging of
+        the problem (e.g. compilation, success, or failure). If the on_status
+        parameter is defined, then it will call back with the parameters
+        (status, test_number) where status is one of the status integer
+        constants and test_number is the highest test number that was
+        completed.
 
+        :param status: one of the status integer constants
+        :param test_number: the highest test number that was completed
+        """
+        if self.on_status is not None:
+            self.on_status(status, test_number)
 
     def _compile_submission(self):
         """Compile the submission if it needs compilation. A programming
         language that does not need compilation will return COMPILATION_SUCCESS.
+
+        :return: either COMPILATION_SUCCESS or COMPILATION_ERROR
         """
         directory = self.submission_path
         filename = self.uploaded_file.filename
         name, _ = filename.rsplit('.', 1)
 
         # Don't compile file types that we can't compile.
-        if COMPILE_COMMAND[self.submission.file_type] is None:
+        if COMPILE_COMMAND[self.file_type] is None:
             return COMPILATION_SUCCESS
 
         result = subprocess.call(
-            shlex.split(COMPILE_COMMAND[self.submission.file_type]
+            shlex.split(COMPILE_COMMAND[self.file_type]
                         .format(os.path.join(directory, name))),
             stderr=open(os.path.join(directory, 'error.txt'), 'w')
         )
@@ -147,7 +153,6 @@ class Judge:
         else:
             return COMPILATION_ERROR
 
-
     def _execute_submission(self):
         """Run the submission.
 
@@ -156,6 +161,10 @@ class Judge:
             2. runs the submission with each input file
             3. checks the performance of the submission for errors
             4. compares the output against correct test output
+
+        :return: a tuple containing a status code, the highest test number
+                completed, and the most time that any one of the tests took to
+                run
         """
         max_time = 0
         # Iterate over all the input files.
@@ -186,9 +195,9 @@ class Judge:
 
                 # The execution is completed.  Check its correctness.
                 with open(os.path.join(
-                         self.prob_output_path, out_file)) as correct, \
+                          self.prob_output_path, out_file)) as correct, \
                      open(os.path.join(
-                         self.sub_output_path, out_file)) as sub_result:
+                          self.sub_output_path, out_file)) as sub_result:
                     correct_lines = correct.readlines()
                     submission_lines = sub_result.readlines()
                     if len(submission_lines) != len(correct_lines):
@@ -200,7 +209,6 @@ class Judge:
 
         # The answer is correct if all the tests complete without any failure.
         return CORRECT_ANSWER, test_number, max_time
-
 
     def _create_process(self, in_file, out_file):
         """Run the program to judge as a subprocess on a separate thread.
@@ -217,7 +225,7 @@ class Judge:
 
         # Create the subprocess
         process = subprocess.Popen(
-            shlex.split(RUN_COMMAND[self.submission.file_type]
+            shlex.split(RUN_COMMAND[self.file_type]
                         .format(self.submission_path, name)),
             stdin=open(os.path.join(self.prob_input_path, in_file)),
             stdout=open(os.path.join(self.sub_output_path, out_file), 'w'),

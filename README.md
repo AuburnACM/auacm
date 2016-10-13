@@ -1,4 +1,4 @@
-#AUACM
+# AUACM
 
 Welcome to the Auburn ACM site source code
 
@@ -7,6 +7,25 @@ programming as well as a community of excited developers.
 
 Think this is cool and want to get involved? Email us at auburnacm@gmail.com
 or join us on Slack! We'd love you to help us out!
+
+## Configuring your project
+
+Since we don't want to share config files (that's bad), you should create your
+own `config.py` file when once you clone the repository. There are a few things
+you should drop in there. A good config file looks like this:
+
+```py
+# This file holds constants for configuration.
+# DO NOT EXPOSE THIS TO GITHUB.
+DEBUG = True
+SECRET_KEY = 'developement key'
+DATA_FOLDER = '/Path/to/your/clone/auacm/auacm/app/data'
+TEMP_DIRECTORY = '/Path/to/your/clone/auacm/auacm/temp'
+
+TEST_USERNAME = 'will'
+TEST_PASSWORD = 'password'
+```
+Your `config.py` file belongs in the `auacm/auacm/app` directory.
 
 ## Getting started with Docker
 
@@ -95,7 +114,7 @@ create the database, so dumping there will cause the database state to persist.
 
 ##Mac
 
-0. Install Homebrew 
+0. Install Homebrew
     ``$ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" ``
 
 1. Install git
@@ -106,7 +125,7 @@ create the database, so dumping there will cause the database state to persist.
     ``git clone https://github.com/AuburnACM/AUACM.git ``
 
 3. Navigate to ``/../auacm/auacm/`` and set up your virtual environment.
-Do this by executing the following commands: 
+Do this by executing the following commands:
 
     ``$ pip install virtualenv``
 
@@ -124,7 +143,7 @@ Do this by executing the following commands:
 
 6. Install local components using Bower
 
-    ``$ bower install`` 
+    ``$ bower install``
 
 7. Now you can run the server on ``localhost:5000`` by running
 
@@ -149,7 +168,7 @@ Do this by executing the following commands:
 2. Navigate to ``.../AUACM/setup/`` and execute this to setup the environment:
 
     ``$ sh ubuntu_setup.sh``
-    
+
     Follow all the setup instructions.
 
 3. Now you can run the server on localhost:5000 by running
@@ -158,17 +177,10 @@ Do this by executing the following commands:
 
     ``$ ./run.py``
 
-# Need test solutions or competitions?
-## We've got you covered.
+## Creating Judge Times for Problems
 
-1. Navigate to /setup in terminal and type
-
-    ``$ chmod +x create_competition.sh``
-
-    ``$ ./create_competition.sh <<< "Your Mock Mock Competition Name"``
-
-2. When prompted for your passwords, simply enter them there. If you
-   don't have one, just press enter.
-
-3. Have fun with your Mock Mock Competition. All of the solitions
-   should be located in the /testing/testSolutions folder.
+So, you probably want to actually time out after a reasonable amount of time.
+To generate all of the judge times on your host machine, simply set up the
+project as you usually would, then from the same directory as `run.py`, simply
+run `$ ./time_problems.py`. It may take a while, as it runs all of the
+submissions in serial.

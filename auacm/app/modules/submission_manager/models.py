@@ -96,7 +96,8 @@ class MockSubmission(Base):
         Base.__init__(self, **kwargs)
         # The MockSubmission will also mock relevant data about the problem.
         self.time_limit = MOCK_PROBLEM_TIMEOUT
-        self.job = "mocksubmit"
+        if not self.job:
+            self.job = "mocksubmit"
 
     def commit_to_session(self):
         pass

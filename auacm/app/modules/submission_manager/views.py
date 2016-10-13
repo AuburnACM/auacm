@@ -11,10 +11,7 @@ from app.modules.problem_manager.models import ProblemData
 from app.database import session
 from sqlalchemy.orm import load_only
 
-
-def directory_for_submission(submission):
-    return os.path.join(
-        app.config['DATA_FOLDER'], 'submits', str(submission.job))
+from app.modules.flasknado.flasknado import Flasknado
 
 
 @app.route("/api/submit", methods=["POST"])
@@ -45,8 +42,7 @@ def submit():
             filter(ProblemData.pid==request.form['pid']).\
             first().time_limit
 
-
-    ext = uploaded_file.filename.split('.')[-1].lower()
+    ext = uploaded_file.filename.rsplit('.')[1].lower()
     if 'python' in request.form:
         ext = request.form['python']
 
@@ -60,11 +56,27 @@ def submit():
 
     attempt.commit_to_session()
 
-    directory = directory_for_submission(attempt)
-    os.mkdir(directory)
-    uploaded_file.save(os.path.join(directory, uploaded_file.filename))
+    submission_path = os.path.join(app.config['DATA_FOLDER'],
+                                   'submits', str(attempt.job))
+    os.mkdir(submission_path)
+    uploaded_file.save(os.path.join(submission_path, uploaded_file.filename))
 
-    judge.Judge(attempt, uploaded_file, time_limit).run_threaded()
+    def update_status(status, test_number):
+        """Updates the status of the submission and notifies the clients that
+        the submission has a new status.
+        """
+        attempt.update_status(status)
+        Flasknado.emit('status', {
+            'submissionId': attempt.job,
+            'problemId': attempt.pid,
+            'username': attempt.username,
+            'submitTime': attempt.submit_time,
+            'testNum': test_number,
+            'status': judge.EVENT_STATUS[status]
+        })
+
+    judge.Judge(attempt.pid, submission_path, uploaded_file, time_limit,
+            update_status).run_threaded()
 
     return serve_response({
         'submissionId': attempt.job
