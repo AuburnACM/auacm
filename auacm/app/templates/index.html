@@ -57,13 +57,10 @@
           </li>
             <!-- Show user options to the user -->
             <li is-open="isOpen" uib-dropdown class="profile-link">
-                
-                <a ng-if="loggedIn" href="/#/profile/user/{% raw %}{{ username }}{% endraw %}" class="login-link-box profile-link">
-                  <img src="/api/profile/image/{% raw %}{{ username }}{% endraw %}" class="ranking-profile-picture">
-                </a> 
                 <a href="" ng-init="displayName = '{{ display_name }}'; loggedIn = {{ logged_in }}"
-                    uib-dropdown-toggle class="profile-link">
-                    {% raw %}{{ displayName }}{% endraw %} <span class="caret"></span>
+                    uib-dropdown-toggle class="profile-link navbar-nav">
+                    <div class="login-name navbar-nav"> {% raw %}{{ displayName }}{% endraw %} <span class="caret"></span></div>
+                    <img ng-if="loggedIn" src="/api/profile/image/{% raw %}{{ username }}{% endraw %}" class="ranking-profile-picture">
                 </a>
                 <!-- If the user is logged in, show their options -->
                 <ul ng-if="loggedIn" uib-dropdown-menu>

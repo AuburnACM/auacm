@@ -25,16 +25,21 @@ body {
     width: 40px;
     border-radius: 50%;
     margin-right: 5px;
-/*    margin-top: 5px;
-    margin-bottom: 5px; */
 }
 
 .login-link-box:hover {
     text-decoration:none;
 }
 
+.login-name {
+    float: right;
+    margin-top: 15px;
+    margin-left: 5px;
+}
+
 .profile-link {
     padding: 0px !important;
+    margin-left:5px;
     display: inline-block !important;
 }
 
