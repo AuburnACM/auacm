@@ -7,7 +7,7 @@ method arguments and return values.
 ### Table of Contents
 
 1. [Problem Management](#problem-management)
-2. [Competition Management](#submission-management)
+2. [Competition Management](#competition-management)
 3. [Submission Management](#submission-management)
 4. [Blog Management](#submission-management)
 5. [User Management](#user-management)
@@ -16,10 +16,133 @@ method arguments and return values.
 
 ## Problem Management
 
+Problem management allows access to the various problems that exist on the website.
+Problems will always be described using the problem JSON object:
+
+__[Problem Object](#the-problem-object)__
+
+Problem objects contain an array of sample cases objects, which are used to describe
+an example mapping of input to output for a problem:
+
+__[Sample Case Object](#the-sample-case-object)__
+
+
+From here, any user can perform the following actions:
+
+1. [Get Data on all Problems](#get-data-on-all-problems)
+2. [Get Data on a Specific Problem](#get-data-on-a-problem)
+
+Those logged in as an administrator can perform additional actions:
+
+3. [Create a New Problem](#create-a-new-problem)
+4. [Edit an Existing Problem](#edit-an-existing-problem)
+5. [Delete a Problem](#delete-a-problem)
+
+
+## Problem Management Objects
+
+### The Problem Object
+
+| Name | Type | Description |
+| --- | --- | --- |
+|`added`|`int`|The UTC timestamp indicating when this problem was uploaded|
+|`appeared`|`String`|The contest this problem originally appeared in|
+|`comp_release`|`int`|The competition `cid` for the competition this was used in|
+|`description`|`String`|The problem's description|
+|`difficulty`|`int`|The difficulty of the problem from 0 (easiest) to 100 (hardest)|
+|`input_desc`|`String`|A description of the problem's input|
+|`name`|`String`|The name of the problem|
+|`output_desc`|`String`|A description of the problem's output|
+|`pid`|`int`|The problem's unique id.|
+|`sample_cases`|`Sample Case[]`|A list of samples cases, as described below|
+|`shortname`|`String`|A unique string with no spaces used to identify the problem|
+
+The `sample_cases` field consists of an array of [Sample Case](#the-sample-case-object) objects.
+
+
+__Example:__
+
+```json
+{
+  "added": 1426310855,
+  "appeared": "2014 Mid-Central",
+  "comp_release": 6,
+  "description": null,
+  "difficulty": "67",
+  "input_desc": null,
+  "name": "(More) Multiplication",
+  "output_desc": null,
+  "pid": 34,
+  "sample_cases": [],
+  "shortname": "multiplication"
+}
+```
+
+The above problem object represents a problem that was added to the website March 14, 2015, at 12:30 AM, that
+originally appeared in the 2014 Mid-Central ICPC. It was first used in an AUACM competition with id 6. The
+problem has no description, input description, output description, or sample cases. It is named (More) Multiplication,
+with a problem id of 34, and is also uniquely identified by the string "multiplication". (More) Multiplication
+has a difficulty of 67.
+
+### The Sample Case Object
+
+| Name | Type | Description |
+| --- | --- | --- |
+|`input`|`String`|The input fed to standard in for a test run|
+|`output`|`String`|The output that would be produced to standard out by a correct program for that test run|
+
+__Example:__
+
+```json
+{
+    "input": "1",
+    "output": "2"
+}
+```
+
+The above sample cases object represents a sample case where an input of "1" to a program that
+correctly solves the associated problem produces a corresponding output of "2".
+
+## Problem Management Endpoints
+
+### Get Data on all problems
+
+__URL:__ `/api/problems`
+
+__Method:__ `GET`
+
+__Returns:__ a JSON array of all the publicly available data on all the problems
+in the database.
+Specifically, the method returns an array of [problem objects](#the-problem-object)
+describing every public problem in the database.
+
+__Example use:__
+
+`GET /api/problems`
+
+### Get Data on a Problem
+
+__URL:__ `/api/problems/{identifier}`
+
+ _Note:_ A problem's identifier can be its numeric id (i.e. 1) or its
+ alphanumeric "shortname" (i.e. blackvienna)
+
+__Method:__ `GET`
+
+__Returns:__ detailed data on a specific problem as a JSON object.
+Specifically, the method returns a [problem object](#the-problem-object).
+
+__Example uses:__
+
+`GET /api/problems/multiplication`
+
+`GET /api/problems/34`
+
+
 ### Create a New Problem
 ***This method requires being logged in as an administrator***
 
-__URL:__ `/api/problems/`
+__URL:__ `/api/problems`
 
 __Method:__ `POST`
 
@@ -39,70 +162,12 @@ __Form Data:__
 | Output Files | __Required__ | `out_file` | Zipped (.zip) directory of all output files |
 | Solution File | __Required__ | `sol_file` | Solution program (not zipped) |
 
-For __Sample Cases__, must be a string JSON array of mappings `input` and `output`.
-For example,
+The `cases` field consists of a JSON array of [Sample Case](#the-sample-case-object) objects.
 
-```json
-[
-  {
-    "input": "1",
-    "output": "2"
-  },
-  {
-    "input": "2",
-    "output": "3"
-  }
-]
-```
+__Returns:__ If any of the required fields are not supplied, the API will return with status
+code 400. If successful, the API will return a [JSON object representation](#the-problem-object)
+of the newly created problem.
 
-If any of the required fields are not supplied, the API will return with status
-code 400. If successful, the API will return a JSON object representation of
-the newly created problem.
-
-
-### Get Data on a Problem
-
-__URL:__ `/api/problems/{identifier}`
-
- _Note:_ A problem's identifier can be its numeric id (i.e. 1) or it's
- alphanumeric "shortname" (i.e. blackvienna)
-
-__Method:__ `GET`
-
-Returns detailed data on a specific problem as a JSON object.
-Specifically, the method returns
-  * __Problem ID__
-  * __Full Name__
-  * __Short Name__
-  * __Competition Appearance__
-  * __Difficulty Rating__
-  * __AUACM Competition Release__
-  * __Description__
-  * __Input Description__
-  * __Output Description__
-  * __Sample Cases Array__
-
-
-### Get Data on all problems
-
-__URL:__ `/api/problems/`
-
-__Method:__ `GET`
-
-Returns a JSON array of all the publicly available data on all the problems problems
-in the database.
-Specifically, the method returns
-  * __pid__
-  * __full name__
-  * __short name__
-  * __competition appearance__
-  * __difficulty rating__
-  * __auacm competition release__
-  * __date added__
-  * __solved by user__
-  * __problem url__
-
-of all the problems.
 
 ### Edit an Existing Problem
 ***This method requires being signed in as an administrator***
@@ -129,9 +194,11 @@ __Form Data__
 | Output Files | Optional | `out_file` | Zipped (.zip) directory of judge output files (must be titled `out.zip`) |
 | Judge Solution | Optional | `sol_file` | Judge solution program (do not zip) |
 
+The `cases` field consists of a JSON array of [Sample Case](#the-sample-case-object) objects.
+
 ___Note:___ Any form data parameters not given will remain unaffected by the request.
 
-__Returns:__ A JSON object of the detailed information of the newly-edited problem.
+__Returns:__ A [JSON object](#the-problem-object) of the detailed information of the newly-edited problem.
 
 
 ### Delete a Problem
@@ -145,30 +212,54 @@ _Note:_ {identifier} can be the numeric problem ID or the alphanumeric
 __Method:__ `DELETE`
 
 Deletes a problem completely from the database. If any judge files are
-associated with the problem, they get deleted as well.
+associated with the problem, they will be deleted as well.
 
-__Returns:__ A JSON object containing the problem identifier of the
+__Returns:__ A [JSON object](#the-problem-object) containing the problem identifier of the
 successfully deleted problem (`deleted_pid`)
+
+__Example uses:__
+
+`DELETE /api/problems/multiplication`
+
+`DELETE /api/problems/34`
 
 ---
 
 ## Competition Management
 
+## Competition Management Objects
+
+### The Competition Object
+
 Competitions are always represented in JSON with the following format:
 
-  * __cid:__ The integer competition ID
-  * __closed:__ `true` if administrators are the only users that can register
-   participants, `false` otherwise
-  * __length:__ The length of the competition, in seconds
-  * __name:__ The string name of this competition
-  * __registered:__ `true` if the current user is registered for this
-   comptition, `false` otherwise
-  * __startTime:__ The time the competition starts, in seconds since the Unix
-   epoch
-  * __compProblems:__ An array of all the problems in the competition
+| Name | Type | Description |
+| --- | --- | --- |
+|`cid`|`int`|The integer competition ID|
+|`closed`|`boolean`|`true` if administrators are the only users that can register participants, `false` otherwise|
+|`length`|`int`|The length of the competition, in seconds|
+|`name`|`String`|The name of this competition|
+|`registered`|`boolean`|`true` if the current user is registered for this competition, `false` otherwise|
+|`startTime`|`int`|The time the competition starts, in seconds since the Unix epoch|
+|`compProblems`|`Competition Problems`|An array of all the problems in the competition|
 
 
-The `compProblems` object is formatted as follows:
+### The Competition Problems Object
+
+The Competition Problems object represents the collection of problems that appear
+in a particular competition. It consists of a mapping of problem letters
+(i.e. "A" for the first problem, "B" for the second, etc.) to a Competition Problem
+object, described below:
+
+__Competition Problem:__
+
+| Name | Type | Description |
+| --- | --- | --- |
+|`name`|`String`|The full name of the problem|
+|`pid`|`int`|An integer uniquely identifying the problem|
+|`shortname`|`String`|A string that can be used to uniquely identify the problem|
+
+__Example Competition Problems Object:__
 
 ```json
 "compProblems": {
@@ -184,6 +275,17 @@ The `compProblems` object is formatted as follows:
   }
 }
 ```
+
+In the above example, there are two problems in the competition. The first, problem
+"A", is named "Islands in the Data Stream", with problem ID 23 and the shortname
+"islands", while the second, problem "B" is named "Von Neumann's Fly", and has
+problem ID 63 with the shortname "vonneumann".
+
+
+### The Team Object
+
+The `compProblems` object is formatted as follows:
+
 
 The API will also accept a Web Socket message `system_time` with no data. The
 API will reply with another Web Socket message with the same name and the
@@ -270,9 +372,9 @@ registered. Otherwise, no response is returned.
 
 __Web Sockets:__ A message `new_user` will be sent to every connected client
 when a new user is registered with the following data:
+{
 
 ```json
-{
   "cid": 12,
   "user": {
     "display": "Yeezus",
@@ -394,7 +496,7 @@ optional query string arguments: `username` and `limit`.
 - `username`: Will only return submissions made by this user. If left blank,
 submissions from all users will be returned.
 - `limit`: limits the number of submissions returned (default and max is 100)
- 
+
 The structure of the JSON object is as follows:
 
 ```json
