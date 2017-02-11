@@ -227,7 +227,7 @@ __Example uses:__
 
 ## Competition Management
 
-	Competition management allows users to participate in, create, or view past competitions. Competitions in general will be represented using the competition JSON object:
+Competition management allows users to participate in, create, or view past competitions. Competitions in general will be represented using the competition JSON object:
 
 __[Competition Object](#the-competition-object)__
 
