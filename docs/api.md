@@ -9,7 +9,7 @@ method arguments and return values.
 1. [Problem Management](#problem-management)
 2. [Competition Management](#competition-management)
 3. [Submission Management](#submission-management)
-4. [Blog Management](#submission-management)
+4. [Blog Management](#blog-management)
 5. [User Management](#user-management)
 
 ---
