@@ -227,6 +227,32 @@ __Example uses:__
 
 ## Competition Management
 
+	Competition management allows users to participate in, create, or view past competitions. Competitions in general will be represented using the competition JSON object:
+
+__[Competition Object](#the-competition-object)__
+
+More detailed information on the content of a competition will be specified in the form of a competion problems object, which maps a problem label (A, B, C ... ) to more information about the given problem:
+
+__[Competition Problem Object](#the-competition-problems-object)__
+
+Finally, every competition consists of teams, allowing for multiple people to participate, or to at least change their team name:
+
+__[Team Object](#the-team-object)__
+
+From the competition endpoint, all users can perform a variety of tasks:
+
+1. [Get data on all competitions](#get-data-on-all-competitions)
+2. [Get data on a specific competition](#get-data-on-a-specific-competition)
+3. [Register for a competition](#register-a-user-for-a-competition)
+4. [Unregister from a competition](#unregister-a-user-for-a-competition)
+
+Additionally, administrators can perform the following tasks:
+
+1. [Create a competition](#create-a-competition)
+2. [Edit a competition](#edit-an-existing-competition)
+3. [Get all teams in a competition](#get-all-teams-in-a-competition)
+4. [Edit a competition's teams](#edit-the-teams-for-a-competition)
+
 ## Competition Management Objects
 
 ### The Competition Object
@@ -241,8 +267,6 @@ Competitions are always represented in JSON with the following format:
 |`name`|`String`|The name of this competition|
 |`registered`|`boolean`|`true` if the current user is registered for this competition, `false` otherwise|
 |`startTime`|`int`|The time the competition starts, in seconds since the Unix epoch|
-|`compProblems`|`Competition Problems`|An array of all the problems in the competition|
-
 
 ### The Competition Problems Object
 
@@ -284,8 +308,64 @@ problem ID 63 with the shortname "vonneumann".
 
 ### The Team Object
 
-The `compProblems` object is formatted as follows:
+The teams in a competition will be described with an array of team objects, described below:
 
+__Team:__
+
+| Name | Type | Description |
+| --- | --- | --- |
+|`display_names`|`String[]`|The display name of every member of the team.|
+|`name`|`String`|The name of the team.|
+|`problemData`|`map[String]ProblemData`|A map of problem id to the status of every problem in the contest.|
+|`users`|`String[]`|The usernames of everyone in the time. Note that this will be aligned with `display_names`, so `users[i]` is the username with the display name at `display_names[i]`.|
+
+
+__Problem Data__:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `label` | `String` | The label (A, B, C ... etc) of the problem within the contest|
+| `status` | `String` | One of "correct", "incorrect", or "unattempted" |
+| `submitCount` | `int` | The number of submissions this team has made for this problem |
+| `submitTime` | `int` | The number of minutes into the contest that this team solved this problem, or 0 if it is unsolved.|
+
+__Example Teams Data__:
+
+```json
+"teams": [
+	{
+		"display_names": [
+			"Julius Caesar",
+			"Pompey the Great",
+			"Marcus Licinius Crassus"
+		],
+		"name": "First Triumvirate",
+		"problemData": {
+			"4": {
+				"label": "A",
+				"status": "incorrect",
+				"submitCount": 1,
+				"submitTime": 0
+			},
+			"11": {
+				"label": "B",
+				"status": "correct",
+				"submitCount": 1,
+				"submitTime": 40
+			}
+		},
+		"users": [
+			"juliusc",
+			"pompey",
+			"marcusc"
+		]
+	}, ...
+]
+```
+
+The above example illustrates the first in a list of teams. The team is called the First Triumvirate, consiting of Julius Caesar (juliusc), Pompey the Great (pompey), and Marcus Licinius Crassus (marcusc). They have 1 incorrect submission for problem A (which has a pid of 4), and solved problem B (which has a pid of 11) on their first attempt 40 minutes into the contest.
+
+__Competition Timing:__
 
 The API will also accept a Web Socket message `system_time` with no data. The
 API will reply with another Web Socket message with the same name and the
@@ -314,9 +394,77 @@ __URL:__ `/api/competitions/{competition_id}`
 
 __Method:__ `GET`
 
-Returns a JSON object of the competition with the ID matching `{competition_id}`
+Returns a JSON object of with detailed info for the competition with the ID matching `{competition_id}`
 in the route.
 
+| Name | Type | Description |
+| --- | --- | --- |
+|`compProblems`|[Competition Problems](#the-competition-problems-object)|Data on all problems in the competition.|
+|`competition`|[Competition Info](#the-competition-object)|Basic info about the competition.|
+|`teams`|[Team Info](#the-team-object)|Data for all teams in the competition.|
+
+__Example use:__
+
+`GET /api/competitions/1`
+
+__Example response:__
+
+```json
+{
+  "data": {
+    "compProblems": {
+      "A": {
+        "name": "The Ides of March",
+        "pid": 65,
+        "shortname": "idesofmarch"
+      },
+      "B": {
+        "name": "Rubicon",
+        "pid": 49,
+        "shortname": "rubicon"
+      }
+    },
+    "competition": {
+      "cid": 1,
+      "closed": false,
+      "length": 18000,
+      "name": "Roman Mock",
+      "registered": false,
+      "startTime": 1413050400
+    },
+    "teams": [
+      {
+        "display_names": [
+          "Julius Caesar",
+          "Pompey the Great",
+          "Marcus Licinus Crassus"
+        ],
+        "name": "First Trirumvirate",
+        "problemData": {
+          "4": {
+            "label": "A",
+            "status": "incorrect",
+            "submitCount": 1,
+            "submitTime": 0
+          },
+          "11": {
+            "label": "B",
+            "status": "correct",
+            "submitCount": 1,
+            "submitTime": 40
+          }
+        },
+        "users": [
+          "juliusc",
+          "pompey",
+          "marcusc"
+        ]
+      }
+    ]
+  },
+  "status": 200
+}
+```
 
 ### Create a Competition
 ***This method requires being signed in as an administrator***
@@ -395,7 +543,7 @@ self-unregister, though if the current user is an admin, a JSON array of
 usernames can be supplied. All users in the array will be registered, but the
 admin will not (unless also included in the array).
 
-### Get All Teams in an Competition
+### Get All Teams in a Competition
 ***This method requires being signed in as an administrator***
 
 __URL:__ `/api/competitions/{competition_id}/teams`
