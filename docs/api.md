@@ -726,7 +726,7 @@ __Form Data__
 
 ---
 
-## Problem Management
+## User Management
 
 ### Get Info on the Current User
 
