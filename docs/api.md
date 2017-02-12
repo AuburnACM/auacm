@@ -106,9 +106,9 @@ __Example:__
 
 ```json
 {
-		"case_num": 1
-    "input": "3\n1 2 3",
-    "output": "6"
+	"case_num": 1,
+	"input": "3\n1 2 3",
+	"output": "6"
 }
 ```
 
@@ -150,8 +150,8 @@ out/
 	out<n>.txt
 ```
 
-Where out<i>.txt is the output that a valid program would produce given the input
-stored in in<i>.txt for all i between 1 and n.
+Where `out<i>.txt` is the output that a valid program would produce given the input
+stored in `in<i>.txt` for all i between 1 and n.
 
 For example, suppose the only test data for the sample [Problem object](#the-problem-object)
 was to verify that the user passed the two sample cases. In this case, in.zip would contain:
