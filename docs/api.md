@@ -45,36 +45,46 @@ Those logged in as an administrator can perform additional actions:
 
 | Name | Type | Description |
 | --- | --- | --- |
-|`added`|`int`|The UTC timestamp indicating when this problem was uploaded|
+|`added`|`int`|The UTC timestamp indicating when this problem was uploaded, in seconds|
 |`appeared`|`String`|The contest this problem originally appeared in|
 |`comp_release`|`int`|The competition `cid` for the competition this was used in|
-|`description`|`String`|The problem's description|
+|`description`|`String`|The problem's description, formatted in markdown|
 |`difficulty`|`int`|The difficulty of the problem from 0 (easiest) to 100 (hardest)|
 |`input_desc`|`String`|A description of the problem's input|
 |`name`|`String`|The name of the problem|
 |`output_desc`|`String`|A description of the problem's output|
 |`pid`|`int`|The problem's unique id.|
-|`sample_cases`|`Sample Case[]`|A list of samples cases, as described below|
+|`sample_cases`|`SampleCase[]`|A list of samples cases, as described below|
 |`shortname`|`String`|A unique string with no spaces used to identify the problem|
 
-The `sample_cases` field consists of an array of [Sample Case](#the-sample-case-object) objects.
-
+For more information on the `sample_cases` field, see the description [here](#the-sample-case-object).
 
 __Example:__
 
 ```json
 {
   "added": 1426310855,
-  "appeared": "2014 Mid-Central",
-  "comp_release": 6,
-  "description": null,
-  "difficulty": "67",
-  "input_desc": null,
-  "name": "(More) Multiplication",
-  "output_desc": null,
-  "pid": 34,
-  "sample_cases": [],
-  "shortname": "multiplication"
+  "appeared": "Sample Competition",
+  "comp_release": 4,
+  "description": "Given a list of N numbers, determine the sum of the numbers.",
+  "difficulty": "15",
+  "input_desc": "Input will consist of a number N, between 1 and 100. On the next line will be N space-separated integers, between 1 and 1000",
+  "name": "Sum the Numbers",
+  "output_desc": "Output a single integer, the sum of the N numbers.",
+  "pid": 123,
+  "sample_cases": [
+		{
+			"case_num": 1,
+			"input": "3\n1 2 3",
+			"output": "6",
+		},
+		{
+			"case_num": 2,
+			"input": "4\n10 10 10 10",
+			"output": "40",
+		}
+	],
+  "shortname": "sumthenumbers"
 }
 ```
 
@@ -88,6 +98,7 @@ has a difficulty of 67.
 
 | Name | Type | Description |
 | --- | --- | --- |
+|`case_num`|`int`| The number that this case is (the first test case will have a `case_num` of 1, for example)|
 |`input`|`String`|The input fed to standard in for a test run|
 |`output`|`String`|The output that would be produced to standard out by a correct program for that test run|
 
@@ -95,13 +106,25 @@ __Example:__
 
 ```json
 {
-    "input": "1",
-    "output": "2"
+		"case_num": 1
+    "input": "3\n1 2 3",
+    "output": "6"
 }
 ```
 
-The above sample cases object represents a sample case where an input of "1" to a program that
-correctly solves the associated problem produces a corresponding output of "2".
+The above sample cases object represents a sample case (the first test case for the given problem) where an input of:
+```
+3
+1 2 3
+```
+to a program that correctly solves the associated problem produces a corresponding output of:
+```
+6
+```
+
+### Zip File Format
+
+TODO: Write zip file format here!
 
 ## Problem Management Endpoints
 
@@ -113,7 +136,7 @@ __Method:__ `GET`
 
 __Returns:__ a JSON array of all the publicly available data on all the problems
 in the database.
-Specifically, the method returns an array of [problem objects](#the-problem-object)
+Specifically, the method returns an array of [Problem objects](#the-problem-object)
 describing every public problem in the database.
 
 __Example use:__
@@ -130,7 +153,7 @@ __URL:__ `/api/problems/{identifier}`
 __Method:__ `GET`
 
 __Returns:__ detailed data on a specific problem as a JSON object.
-Specifically, the method returns a [problem object](#the-problem-object).
+Specifically, the method returns a [Problem object](#the-problem-object).
 
 __Example uses:__
 
@@ -140,7 +163,7 @@ __Example uses:__
 
 
 ### Create a New Problem
-***This method requires being logged in as an administrator***
+***This endpoint requires being logged in as an administrator***
 
 __URL:__ `/api/problems`
 
@@ -148,29 +171,29 @@ __Method:__ `POST`
 
 __Form Data:__
 
-| Title | Required | Form Name | Description|
-| --- | --- | --- | --- |
-| Problem Name | __Required__ | `name` | Full problem name (<= 32 characters) |
-| Description | __Required__ | `description` | Problem background story |
-| Input Description | __Required__ | `input_desc` | Description of input values |
-| Output Description | __Required__ | `output_desc` | Description of output values |
-| Sample Case(s) | __Required__ | `cases` | JSON array of sample input/output (see below) |
-| Time Limit | Optional | `time_limit` | Max execution time (in seconds) |
-| Difficulty | Optional | `difficulty` | 0-100 difficulty rating |
-| Appeared In | Optional | `appeared_in` | String name of original competition |
-| Input Files | __Required__ | `in_file` | Zipped (.zip) directory of all input files |
-| Output Files | __Required__ | `out_file` | Zipped (.zip) directory of all output files |
-| Solution File | __Required__ | `sol_file` | Solution program (not zipped) |
+| Title | Required | Type | Form Name | Description|
+| --- | --- | --- | --- | --- |
+| Problem Name | __Required__ | `String` | `name` | Full problem name (<= 32 characters) |
+| Description | __Required__ | `String` | `description` | Problem background story |
+| Input Description | __Required__ | `String` | `input_desc` | Description of input values |
+| Output Description | __Required__ | `String` | `output_desc` | Description of output values |
+| Sample Case(s) | __Required__ | `SampleCase[]` | `cases` | JSON array of sample input/output (see below) |
+| Time Limit | Optional | `int` | `time_limit` | Max execution time (in seconds) |
+| Difficulty | Optional | `int` | `difficulty` | 0-100 difficulty rating |
+| Appeared In | Optional | `String` | `appeared_in` | String name of original competition |
+| Input Files | __Required__ | `File` | `in_file` | Zipped (.zip) directory of all input files ([format](#zip-file-format))|
+| Output Files | __Required__ | `File` | `out_file` | Zipped (.zip) directory of all output files ([format](#zip-file-format))|
+| Solution File | __Required__ | `File` | `sol_file` | Solution program (not zipped) |
 
-The `cases` field consists of a JSON array of [Sample Case](#the-sample-case-object) objects.
+The `cases` field consists of an array of [SampleCase](#the-sample-case-object) objects.
 
-__Returns:__ If any of the required fields are not supplied, the API will return with status
-code 400. If successful, the API will return a [JSON object representation](#the-problem-object)
-of the newly created problem.
+__Returns:__ If successful, the API will return a [representation](#the-problem-object)
+of the newly created problem. However, if any of the required fields are not supplied, the API
+will return with status code 400.
 
 
 ### Edit an Existing Problem
-***This method requires being signed in as an administrator***
+***This endpoint requires being signed in as an administrator***
 
 __URL:__ `/api/problems/{identifier}`
 
@@ -202,7 +225,7 @@ __Returns:__ A [JSON object](#the-problem-object) of the detailed information of
 
 
 ### Delete a Problem
-***This method requires being signed in as an administrator***
+***This endpoint requires being signed in as an administrator***
 
 __URL:__ `/api/problems/{identifier}`
 
@@ -467,7 +490,7 @@ __Example response:__
 ```
 
 ### Create a Competition
-***This method requires being signed in as an administrator***
+***This endpoint requires being signed in as an administrator***
 
 __URL:__ `/api/competitions`
 
@@ -492,7 +515,7 @@ demonstrated at the top of this heading.
 
 
 ### Edit an Existing Competition
-***This method required being signed in as an administrator***
+***This endpoint required being signed in as an administrator***
 
 __URL:__ `/api/competitions/{competition_id}`
 
@@ -544,7 +567,7 @@ usernames can be supplied. All users in the array will be registered, but the
 admin will not (unless also included in the array).
 
 ### Get All Teams in a Competition
-***This method requires being signed in as an administrator***
+***This endpoint requires being signed in as an administrator***
 
 __URL:__ `/api/competitions/{competition_id}/teams`
 
@@ -574,7 +597,7 @@ The format of the JSON is as follows:
 ```
 
 ### Edit the Teams for a Competition
-***This method requires being signed in as an administrator***
+***This endpoint requires being signed in as an administrator***
 
 __URL:__ `/api/competitions/{competition_id}/teams`
 
