@@ -7,105 +7,259 @@ method arguments and return values.
 ### Table of Contents
 
 1. [Problem Management](#problem-management)
-2. [Competition Management](#submission-management)
+2. [Competition Management](#competition-management)
 3. [Submission Management](#submission-management)
-4. [Blog Management](#submission-management)
+4. [Blog Management](#blog-management)
 5. [User Management](#user-management)
 
 ---
 
 ## Problem Management
 
-### Create a New Problem
-***This method requires being logged in as an administrator***
+Problem management allows access to the various problems that exist on the website.
+Problems will always be described using the problem JSON object:
 
-__URL:__ `/api/problems/`
+__[Problem Object](#the-problem-object)__
 
-__Method:__ `POST`
+Problem objects contain an array of sample cases objects, which are used to describe
+an example mapping of input to output for a problem:
 
-__Form Data:__
+__[Sample Case Object](#the-sample-case-object)__
 
-| Title | Required | Form Name | Description|
-| --- | --- | --- | --- |
-| Problem Name | __Required__ | `name` | Full problem name (<= 32 characters) |
-| Description | __Required__ | `description` | Problem background story |
-| Input Description | __Required__ | `input_desc` | Description of input values |
-| Output Description | __Required__ | `output_desc` | Description of output values |
-| Sample Case(s) | __Required__ | `cases` | JSON array of sample input/output (see below) |
-| Time Limit | Optional | `time_limit` | Max execution time (in seconds) |
-| Difficulty | Optional | `difficulty` | 0-100 difficulty rating |
-| Appeared In | Optional | `appeared_in` | String name of original competition |
-| Input Files | __Required__ | `in_file` | Zipped (.zip) directory of all input files |
-| Output Files | __Required__ | `out_file` | Zipped (.zip) directory of all output files |
-| Solution File | __Required__ | `sol_file` | Solution program (not zipped) |
 
-For __Sample Cases__, must be a string JSON array of mappings `input` and `output`.
-For example,
+From here, any user can perform the following actions:
+
+1. [Get Data on all Problems](#get-data-on-all-problems)
+2. [Get Data on a Specific Problem](#get-data-on-a-problem)
+
+Those logged in as an administrator can perform additional actions:
+
+3. [Create a New Problem](#create-a-new-problem)
+4. [Edit an Existing Problem](#edit-an-existing-problem)
+5. [Delete a Problem](#delete-a-problem)
+
+
+## Problem Management Objects
+
+### The Problem Object
+
+| Name | Type | Description |
+| --- | --- | --- |
+|`added`|`int`|The UTC timestamp indicating when this problem was uploaded, in seconds|
+|`appeared`|`String`|The contest this problem originally appeared in|
+|`comp_release`|`int`|The competition `cid` for the competition this was used in|
+|`description`|`String`|The problem's description, formatted in markdown|
+|`difficulty`|`int`|The difficulty of the problem from 0 (easiest) to 100 (hardest)|
+|`input_desc`|`String`|A description of the problem's input|
+|`name`|`String`|The name of the problem|
+|`output_desc`|`String`|A description of the problem's output|
+|`pid`|`int`|The problem's unique id.|
+|`sample_cases`|`SampleCase[]`|A list of samples cases, as described below|
+|`shortname`|`String`|A unique string with no spaces used to identify the problem|
+
+For more information on the `sample_cases` field, see the description [here](#the-sample-case-object).
+
+__Example:__
 
 ```json
-[
-  {
-    "input": "1",
-    "output": "2"
-  },
-  {
-    "input": "2",
-    "output": "3"
-  }
-]
+{
+  "added": 1426310855,
+  "appeared": "Sample Competition",
+  "comp_release": 4,
+  "description": "Given a list of N numbers, determine the sum of the numbers.",
+  "difficulty": "15",
+  "input_desc": "Input will consist of a number N, between 1 and 100. On the next line will be N space-separated integers, between 1 and 1000",
+  "name": "Sum the Numbers",
+  "output_desc": "Output a single integer, the sum of the N numbers.",
+  "pid": 123,
+  "sample_cases": [
+		{
+			"case_num": 1,
+			"input": "3\n1 2 3",
+			"output": "6",
+		},
+		{
+			"case_num": 2,
+			"input": "4\n10 10 10 10",
+			"output": "40",
+		}
+	],
+  "shortname": "sumthenumbers"
+}
 ```
 
-If any of the required fields are not supplied, the API will return with status
-code 400. If successful, the API will return a JSON object representation of
-the newly created problem.
+The above problem object represents a problem that was added to the website March 14, 2015, at 12:30 AM, that
+originally appeared in the 2014 Mid-Central ICPC. It was first used in an AUACM competition with id 6. The
+problem has no description, input description, output description, or sample cases. It is named (More) Multiplication,
+with a problem id of 34, and is also uniquely identified by the string "multiplication". (More) Multiplication
+has a difficulty of 67.
 
+### The Sample Case Object
+
+| Name | Type | Description |
+| --- | --- | --- |
+|`case_num`|`int`| The number that this case is (the first test case will have a `case_num` of 1, for example)|
+|`input`|`String`|The input fed to standard in for a test run|
+|`output`|`String`|The output that would be produced to standard out by a correct program for that test run|
+
+__Example:__
+
+```json
+{
+	"case_num": 1,
+	"input": "3\n1 2 3",
+	"output": "6"
+}
+```
+
+The above sample cases object represents a sample case (the first test case for the given problem) where an input of:
+```
+3
+1 2 3
+```
+to a program that correctly solves the associated problem produces a corresponding output of:
+```
+6
+```
+
+### Zip File Format
+
+Matching test input and output zip files must be structured in the following way:
+
+__Input:__
+```
+in/
+	in1.txt
+	in2.txt
+	in3.txt
+	.
+	.
+	.
+	in<n>.txt
+```
+
+__Output:__
+```
+out/
+	out1.txt
+	out2.txt
+	out3.txt
+	.
+	.
+	.
+	out<n>.txt
+```
+
+Where `out<i>.txt` is the output that a valid program would produce given the input
+stored in `in<i>.txt` for all i between 1 and n. In addition to this, the input
+zip folder should be named `in.zip`, and the output should be named `out.zip`.
+
+For example, suppose the only test data for the sample [Problem object](#the-problem-object)
+was to verify that the user passed the two sample cases. In this case, in.zip would contain:
+
+```
+in/
+	in1.txt
+	in2.txt
+```
+
+in1.txt:
+```
+3
+1 2 3
+```
+
+in2.txt:
+```
+4
+10 10 10 10
+```
+
+And the corresponding out.zip would contain:
+
+```
+out/
+	out1.txt
+	out2.txt
+```
+
+out1.txt
+```
+6
+```
+
+out2.txt
+```
+40
+```
+
+
+## Problem Management Endpoints
+
+### Get Data on all problems
+
+__URL:__ `/api/problems`
+
+__Method:__ `GET`
+
+__Returns:__ a JSON array of all the publicly available data on all the problems
+in the database.
+Specifically, the method returns an array of [Problem objects](#the-problem-object)
+describing every public problem in the database.
+
+__Example use:__
+
+`GET /api/problems`
 
 ### Get Data on a Problem
 
 __URL:__ `/api/problems/{identifier}`
 
- _Note:_ A problem's identifier can be its numeric id (i.e. 1) or it's
+ _Note:_ A problem's identifier can be its numeric id (i.e. 1) or its
  alphanumeric "shortname" (i.e. blackvienna)
 
 __Method:__ `GET`
 
-Returns detailed data on a specific problem as a JSON object.
-Specifically, the method returns
-  * __Problem ID__
-  * __Full Name__
-  * __Short Name__
-  * __Competition Appearance__
-  * __Difficulty Rating__
-  * __AUACM Competition Release__
-  * __Description__
-  * __Input Description__
-  * __Output Description__
-  * __Sample Cases Array__
+__Returns:__ detailed data on a specific problem as a JSON object.
+Specifically, the method returns a [Problem object](#the-problem-object).
+
+__Example uses:__
+
+`GET /api/problems/multiplication`
+
+`GET /api/problems/34`
 
 
-### Get Data on all problems
+### Create a New Problem
+***This endpoint requires being logged in as an administrator***
 
-__URL:__ `/api/problems/`
+__URL:__ `/api/problems`
 
-__Method:__ `GET`
+__Method:__ `POST`
 
-Returns a JSON array of all the publicly available data on all the problems problems
-in the database.
-Specifically, the method returns
-  * __pid__
-  * __full name__
-  * __short name__
-  * __competition appearance__
-  * __difficulty rating__
-  * __auacm competition release__
-  * __date added__
-  * __solved by user__
-  * __problem url__
+__Form Data:__
 
-of all the problems.
+| Title | Required | Type | Form Name | Description|
+| --- | --- | --- | --- | --- |
+| Problem Name | __Required__ | `String` | `name` | Full problem name (<= 32 characters) |
+| Description | __Required__ | `String` | `description` | Problem background story |
+| Input Description | __Required__ | `String` | `input_desc` | Description of input values |
+| Output Description | __Required__ | `String` | `output_desc` | Description of output values |
+| Sample Case(s) | __Required__ | `SampleCase[]` | `cases` | Array of [sample input/output](#the-sample-case-object) |
+| Time Limit | Optional | `int` | `time_limit` | Max execution time (in seconds) |
+| Difficulty | Optional | `int` | `difficulty` | 0-100 difficulty rating |
+| Appeared In | Optional | `String` | `appeared_in` | String name of original competition |
+| Input Files | __Required__ | `File` | `in_file` | Zipped (.zip) directory of all input files ([format](#zip-file-format))|
+| Output Files | __Required__ | `File` | `out_file` | Zipped (.zip) directory of all output files ([format](#zip-file-format))|
+| Solution File | __Required__ | `File` | `sol_file` | Solution program (not zipped) |
+
+__Returns:__ If successful, the API will return a [representation](#the-problem-object)
+of the newly created problem. However, if any of the required fields are not supplied, the API
+will return with status code 400.
+
 
 ### Edit an Existing Problem
-***This method requires being signed in as an administrator***
+***This endpoint requires being signed in as an administrator***
 
 __URL:__ `/api/problems/{identifier}`
 
@@ -116,26 +270,25 @@ __Method:__ `PUT`
 
 __Form Data__
 
-| Title | Required | Form Name | Description |
-| --- | --- | --- | --- |
-| Name | Optional | `name` | Full title of the problem (also becomes shortname) |
-| Description | Optional | `description` | Full text of problem description |
-| Input Description | Optional | `input_desc` | Input description text |
-| Output Description | Optional | `output_desc` | Output description text |
-| Appearance | Optional | `appeared_in` | Original competition of problem |
-| Difficulty | Optional | `difficulty` | 0-100 difficulty rating |
-| Sample Cases | Optional | `cases` | JSON array of input/output (see problem creation) |
-| Input Files | Optional | `in_file` | Zipped (.zip) directory of judge input files (must be titled `in.zip`) |
-| Output Files | Optional | `out_file` | Zipped (.zip) directory of judge output files (must be titled `out.zip`) |
-| Judge Solution | Optional | `sol_file` | Judge solution program (do not zip) |
+| Title | Required | Type | Form Name | Description |
+| --- | --- | --- | --- | --- |
+| Name | Optional | `String` | `name` | Full title of the problem (also becomes shortname) |
+| Description | Optional | `String` | `description` | Full text of problem description |
+| Input Description | Optional | `String` | `input_desc` | Input description text |
+| Output Description | Optional | `String` | `output_desc` | Output description text |
+| Appearance | Optional | `String` | `appeared_in` | Original competition of problem |
+| Difficulty | Optional | `int` | `difficulty` | 0-100 difficulty rating |
+| Sample Cases | Optional | `SampleCase[]` | `cases` | Array of [sample input/output](#the-sample-case-object) |
+| Input Files | Optional | `File` | `in_file` | Zipped (.zip) directory of judge input files ([format](#zip-file-format))|
+| Output Files | Optional | `File` | `out_file` | Zipped (.zip) directory of judge output files ([format](#zip-file-format))|
+| Judge Solution | Optional | `File` | `sol_file` | Judge solution program (do not zip) |
 
 ___Note:___ Any form data parameters not given will remain unaffected by the request.
 
-__Returns:__ A JSON object of the detailed information of the newly-edited problem.
-
+__Returns:__ A [JSON object](#the-problem-object) of the detailed information of the newly-edited problem.
 
 ### Delete a Problem
-***This method requires being signed in as an administrator***
+***This endpoint requires being signed in as an administrator***
 
 __URL:__ `/api/problems/{identifier}`
 
@@ -145,30 +298,78 @@ _Note:_ {identifier} can be the numeric problem ID or the alphanumeric
 __Method:__ `DELETE`
 
 Deletes a problem completely from the database. If any judge files are
-associated with the problem, they get deleted as well.
+associated with the problem, they will be deleted as well.
 
-__Returns:__ A JSON object containing the problem identifier of the
+__Returns:__ A [JSON object](#the-problem-object) containing the problem identifier of the
 successfully deleted problem (`deleted_pid`)
+
+__Example uses:__
+
+`DELETE /api/problems/multiplication`
+
+`DELETE /api/problems/34`
 
 ---
 
 ## Competition Management
 
+Competition management allows users to participate in, create, or view past competitions. Competitions in general will be represented using the competition JSON object:
+
+__[Competition Object](#the-competition-object)__
+
+More detailed information on the content of a competition will be specified in the form of a competion problems object, which maps a problem label (A, B, C ... ) to more information about the given problem:
+
+__[Competition Problem Object](#the-competition-problems-object)__
+
+Finally, every competition consists of teams, allowing for multiple people to participate, or to at least change their team name:
+
+__[Team Object](#the-team-object)__
+
+From the competition endpoint, all users can perform a variety of tasks:
+
+1. [Get data on all competitions](#get-data-on-all-competitions)
+2. [Get data on a specific competition](#get-data-on-a-specific-competition)
+3. [Register for a competition](#register-a-user-for-a-competition)
+4. [Unregister from a competition](#unregister-a-user-for-a-competition)
+
+Additionally, administrators can perform the following tasks:
+
+1. [Create a competition](#create-a-competition)
+2. [Edit a competition](#edit-an-existing-competition)
+3. [Get all teams in a competition](#get-all-teams-in-a-competition)
+4. [Edit a competition's teams](#edit-the-teams-for-a-competition)
+
+## Competition Management Objects
+
+### The Competition Object
+
 Competitions are always represented in JSON with the following format:
 
-  * __cid:__ The integer competition ID
-  * __closed:__ `true` if administrators are the only users that can register
-   participants, `false` otherwise
-  * __length:__ The length of the competition, in seconds
-  * __name:__ The string name of this competition
-  * __registered:__ `true` if the current user is registered for this
-   comptition, `false` otherwise
-  * __startTime:__ The time the competition starts, in seconds since the Unix
-   epoch
-  * __compProblems:__ An array of all the problems in the competition
+| Name | Type | Description |
+| --- | --- | --- |
+|`cid`|`int`|The integer competition ID|
+|`closed`|`boolean`|`true` if administrators are the only users that can register participants, `false` otherwise|
+|`length`|`int`|The length of the competition, in seconds|
+|`name`|`String`|The name of this competition|
+|`registered`|`boolean`|`true` if the current user is registered for this competition, `false` otherwise|
+|`startTime`|`int`|The time the competition starts, in seconds since the Unix epoch|
 
+### The Competition Problems Object
 
-The `compProblems` object is formatted as follows:
+The Competition Problems object represents the collection of problems that appear
+in a particular competition. It consists of a mapping of problem letters
+(i.e. "A" for the first problem, "B" for the second, etc.) to a Competition Problem
+object, described below:
+
+__Competition Problem:__
+
+| Name | Type | Description |
+| --- | --- | --- |
+|`name`|`String`|The full name of the problem|
+|`pid`|`int`|An integer uniquely identifying the problem|
+|`shortname`|`String`|A string that can be used to uniquely identify the problem|
+
+__Example Competition Problems Object:__
 
 ```json
 "compProblems": {
@@ -184,6 +385,73 @@ The `compProblems` object is formatted as follows:
   }
 }
 ```
+
+In the above example, there are two problems in the competition. The first, problem
+"A", is named "Islands in the Data Stream", with problem ID 23 and the shortname
+"islands", while the second, problem "B" is named "Von Neumann's Fly", and has
+problem ID 63 with the shortname "vonneumann".
+
+
+### The Team Object
+
+The teams in a competition will be described with an array of team objects, described below:
+
+__Team:__
+
+| Name | Type | Description |
+| --- | --- | --- |
+|`display_names`|`String[]`|The display name of every member of the team.|
+|`name`|`String`|The name of the team.|
+|`problemData`|`map[String]ProblemData`|A map of problem id to the status of every problem in the contest.|
+|`users`|`String[]`|The usernames of everyone in the time. Note that this will be aligned with `display_names`, so `users[i]` is the username with the display name at `display_names[i]`.|
+
+
+__Problem Data__:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `label` | `String` | The label (A, B, C ... etc) of the problem within the contest|
+| `status` | `String` | One of "correct", "incorrect", or "unattempted" |
+| `submitCount` | `int` | The number of submissions this team has made for this problem |
+| `submitTime` | `int` | The number of minutes into the contest that this team solved this problem, or 0 if it is unsolved.|
+
+__Example Teams Data__:
+
+```json
+"teams": [
+	{
+		"display_names": [
+			"Julius Caesar",
+			"Pompey the Great",
+			"Marcus Licinius Crassus"
+		],
+		"name": "First Triumvirate",
+		"problemData": {
+			"4": {
+				"label": "A",
+				"status": "incorrect",
+				"submitCount": 1,
+				"submitTime": 0
+			},
+			"11": {
+				"label": "B",
+				"status": "correct",
+				"submitCount": 1,
+				"submitTime": 40
+			}
+		},
+		"users": [
+			"juliusc",
+			"pompey",
+			"marcusc"
+		]
+	}, ...
+]
+```
+
+The above example illustrates the first in a list of teams. The team is called the First Triumvirate, consiting of Julius Caesar (juliusc), Pompey the Great (pompey), and Marcus Licinius Crassus (marcusc). They have 1 incorrect submission for problem A (which has a pid of 4), and solved problem B (which has a pid of 11) on their first attempt 40 minutes into the contest.
+
+__Competition Timing:__
 
 The API will also accept a Web Socket message `system_time` with no data. The
 API will reply with another Web Socket message with the same name and the
@@ -212,12 +480,80 @@ __URL:__ `/api/competitions/{competition_id}`
 
 __Method:__ `GET`
 
-Returns a JSON object of the competition with the ID matching `{competition_id}`
+Returns a JSON object of with detailed info for the competition with the ID matching `{competition_id}`
 in the route.
 
+| Name | Type | Description |
+| --- | --- | --- |
+|`compProblems`|[Competition Problems](#the-competition-problems-object)|Data on all problems in the competition.|
+|`competition`|[Competition Info](#the-competition-object)|Basic info about the competition.|
+|`teams`|[Team Info](#the-team-object)|Data for all teams in the competition.|
+
+__Example use:__
+
+`GET /api/competitions/1`
+
+__Example response:__
+
+```json
+{
+  "data": {
+    "compProblems": {
+      "A": {
+        "name": "The Ides of March",
+        "pid": 65,
+        "shortname": "idesofmarch"
+      },
+      "B": {
+        "name": "Rubicon",
+        "pid": 49,
+        "shortname": "rubicon"
+      }
+    },
+    "competition": {
+      "cid": 1,
+      "closed": false,
+      "length": 18000,
+      "name": "Roman Mock",
+      "registered": false,
+      "startTime": 1413050400
+    },
+    "teams": [
+      {
+        "display_names": [
+          "Julius Caesar",
+          "Pompey the Great",
+          "Marcus Licinus Crassus"
+        ],
+        "name": "First Trirumvirate",
+        "problemData": {
+          "4": {
+            "label": "A",
+            "status": "incorrect",
+            "submitCount": 1,
+            "submitTime": 0
+          },
+          "11": {
+            "label": "B",
+            "status": "correct",
+            "submitCount": 1,
+            "submitTime": 40
+          }
+        },
+        "users": [
+          "juliusc",
+          "pompey",
+          "marcusc"
+        ]
+      }
+    ]
+  },
+  "status": 200
+}
+```
 
 ### Create a Competition
-***This method requires being signed in as an administrator***
+***This endpoint requires being signed in as an administrator***
 
 __URL:__ `/api/competitions`
 
@@ -229,20 +565,16 @@ a table of the form arguments for creating the competition.
 
 __Form Data__
 
-| Title | Required | Form Name | Description |
-| --- | --- | --- | --- |
-| Name | Required | `name` | Name of the competition |
-| Start Time | Required | `start_time` | The start time of the competition, in seconds since the Unix epoch |
-| Length | Required | `length` | The length of the competition, in seconds |
-| Closed | Required | `closed` | `true` if the competition is closed, `false` otherwise |
-| Problems | Required | `problems` | A JSON object of the problems in the competitions (see format below) |
-
-The structure of the `problems` is identical to the `compProblems` object
-demonstrated at the top of this heading.
-
+| Title | Required | Type | Form Name | Description |
+| --- | --- | --- | --- | --- |
+| Name | Required | `String` | `name` | Name of the competition |
+| Start Time | Required | `int` | `start_time` | The start time of the competition, in seconds since the Unix epoch |
+| Length | Required | `int` | `length` | The length of the competition, in seconds |
+| Closed | Required | `boolean` | `closed` | `true` if the competition is closed, `false` otherwise |
+| Problems | Required | `CompetitionProblems` | `problems` | The [problems](#the-competition-problems-object) in the competition |
 
 ### Edit an Existing Competition
-***This method required being signed in as an administrator***
+***This endpoint required being signed in as an administrator***
 
 __URL:__ `/api/competitions/{competition_id}`
 
@@ -251,7 +583,7 @@ __Method:__ `PUT`
 Change an existing competition, identified by `competition_id`. Nothing gets
 returned upon success.
 
-Form fields are identical to creating a new competition (see above).
+Form fields are identical to creating a new competition ([see above](#create-a-competition)).
 
 
 ### Register a User for a Competition
@@ -261,7 +593,7 @@ __URL:__ `/api/competitions/{competition_id}/register`
 __Method:__ `POST`
 
 Registers the current user for a competition. No form data is required to self-
-register, though if the current user is an admin, a JSON array of usernames
+register, though if the current user is an admin, an array of usernames
 can be supplied. All users in the array will be registered, but the admin will
 not (unless also included in the array).
 
@@ -289,12 +621,12 @@ __URL:__ `/api/competitions/{competition_id}/unregister`
 __Method:__ `POST`
 
 Unregisters the current user for a competition. No form data is required to
-self-unregister, though if the current user is an admin, a JSON array of
+self-unregister, though if the current user is an admin, an array of
 usernames can be supplied. All users in the array will be registered, but the
 admin will not (unless also included in the array).
 
-### Get All Teams in an Competition
-***This method requires being signed in as an administrator***
+### Get All Teams in a Competition
+***This endpoint requires being signed in as an administrator***
 
 __URL:__ `/api/competitions/{competition_id}/teams`
 
@@ -324,7 +656,7 @@ The format of the JSON is as follows:
 ```
 
 ### Edit the Teams for a Competition
-***This method requires being signed in as an administrator***
+***This endpoint requires being signed in as an administrator***
 
 __URL:__ `/api/competitions/{competition_id}/teams`
 
@@ -342,7 +674,7 @@ __Form Data__
 | Teams | Required | `teams` | A JSON object of the arrangment of teams |
 
 The JSON object should be formatted as an array of teams, each team mapped
-to an array of the participants (see above for example).
+to an array of the participants ([see above](#get-all-teams-in-a-competition) for an example).
 
 ---
 
@@ -394,7 +726,7 @@ optional query string arguments: `username` and `limit`.
 - `username`: Will only return submissions made by this user. If left blank,
 submissions from all users will be returned.
 - `limit`: limits the number of submissions returned (default and max is 100)
- 
+
 The structure of the JSON object is as follows:
 
 ```json
@@ -476,7 +808,7 @@ __Form Data__
 
 ---
 
-## Problem Management
+## User Management
 
 ### Get Info on the Current User
 
