@@ -151,7 +151,8 @@ out/
 ```
 
 Where `out<i>.txt` is the output that a valid program would produce given the input
-stored in `in<i>.txt` for all i between 1 and n.
+stored in `in<i>.txt` for all i between 1 and n. In addition to this, the input
+zip folder should be named `in.zip`, and the output should be named `out.zip`.
 
 For example, suppose the only test data for the sample [Problem object](#the-problem-object)
 was to verify that the user passed the two sample cases. In this case, in.zip would contain:
@@ -244,15 +245,13 @@ __Form Data:__
 | Description | __Required__ | `String` | `description` | Problem background story |
 | Input Description | __Required__ | `String` | `input_desc` | Description of input values |
 | Output Description | __Required__ | `String` | `output_desc` | Description of output values |
-| Sample Case(s) | __Required__ | `SampleCase[]` | `cases` | JSON array of sample input/output (see below) |
+| Sample Case(s) | __Required__ | `SampleCase[]` | `cases` | Array of [sample input/output](#the-sample-case-object) |
 | Time Limit | Optional | `int` | `time_limit` | Max execution time (in seconds) |
 | Difficulty | Optional | `int` | `difficulty` | 0-100 difficulty rating |
 | Appeared In | Optional | `String` | `appeared_in` | String name of original competition |
 | Input Files | __Required__ | `File` | `in_file` | Zipped (.zip) directory of all input files ([format](#zip-file-format))|
 | Output Files | __Required__ | `File` | `out_file` | Zipped (.zip) directory of all output files ([format](#zip-file-format))|
 | Solution File | __Required__ | `File` | `sol_file` | Solution program (not zipped) |
-
-The `cases` field consists of an array of [SampleCase](#the-sample-case-object) objects.
 
 __Returns:__ If successful, the API will return a [representation](#the-problem-object)
 of the newly created problem. However, if any of the required fields are not supplied, the API
@@ -271,25 +270,22 @@ __Method:__ `PUT`
 
 __Form Data__
 
-| Title | Required | Form Name | Description |
-| --- | --- | --- | --- |
-| Name | Optional | `name` | Full title of the problem (also becomes shortname) |
-| Description | Optional | `description` | Full text of problem description |
-| Input Description | Optional | `input_desc` | Input description text |
-| Output Description | Optional | `output_desc` | Output description text |
-| Appearance | Optional | `appeared_in` | Original competition of problem |
-| Difficulty | Optional | `difficulty` | 0-100 difficulty rating |
-| Sample Cases | Optional | `cases` | JSON array of input/output (see problem creation) |
-| Input Files | Optional | `in_file` | Zipped (.zip) directory of judge input files (must be titled `in.zip`) |
-| Output Files | Optional | `out_file` | Zipped (.zip) directory of judge output files (must be titled `out.zip`) |
-| Judge Solution | Optional | `sol_file` | Judge solution program (do not zip) |
-
-The `cases` field consists of a JSON array of [Sample Case](#the-sample-case-object) objects.
+| Title | Required | Type | Form Name | Description |
+| --- | --- | --- | --- | --- |
+| Name | Optional | `String` | `name` | Full title of the problem (also becomes shortname) |
+| Description | Optional | `String` | `description` | Full text of problem description |
+| Input Description | Optional | `String` | `input_desc` | Input description text |
+| Output Description | Optional | `String` | `output_desc` | Output description text |
+| Appearance | Optional | `String` | `appeared_in` | Original competition of problem |
+| Difficulty | Optional | `int` | `difficulty` | 0-100 difficulty rating |
+| Sample Cases | Optional | `SampleCase[]` | `cases` | Array of [sample input/output](#the-sample-case-object) |
+| Input Files | Optional | `File` | `in_file` | Zipped (.zip) directory of judge input files ([format](#zip-file-format))|
+| Output Files | Optional | `File` | `out_file` | Zipped (.zip) directory of judge output files ([format](#zip-file-format))|
+| Judge Solution | Optional | `File` | `sol_file` | Judge solution program (do not zip) |
 
 ___Note:___ Any form data parameters not given will remain unaffected by the request.
 
 __Returns:__ A [JSON object](#the-problem-object) of the detailed information of the newly-edited problem.
-
 
 ### Delete a Problem
 ***This endpoint requires being signed in as an administrator***
@@ -569,17 +565,13 @@ a table of the form arguments for creating the competition.
 
 __Form Data__
 
-| Title | Required | Form Name | Description |
-| --- | --- | --- | --- |
-| Name | Required | `name` | Name of the competition |
-| Start Time | Required | `start_time` | The start time of the competition, in seconds since the Unix epoch |
-| Length | Required | `length` | The length of the competition, in seconds |
-| Closed | Required | `closed` | `true` if the competition is closed, `false` otherwise |
-| Problems | Required | `problems` | A JSON object of the problems in the competitions (see format below) |
-
-The structure of the `problems` is identical to the `compProblems` object
-demonstrated at the top of this heading.
-
+| Title | Required | Type | Form Name | Description |
+| --- | --- | --- | --- | --- |
+| Name | Required | `String` | `name` | Name of the competition |
+| Start Time | Required | `int` | `start_time` | The start time of the competition, in seconds since the Unix epoch |
+| Length | Required | `int` | `length` | The length of the competition, in seconds |
+| Closed | Required | `boolean` | `closed` | `true` if the competition is closed, `false` otherwise |
+| Problems | Required | `CompetitionProblems` | `problems` | The [problems](#the-competition-problems-object) in the competition |
 
 ### Edit an Existing Competition
 ***This endpoint required being signed in as an administrator***
@@ -591,7 +583,7 @@ __Method:__ `PUT`
 Change an existing competition, identified by `competition_id`. Nothing gets
 returned upon success.
 
-Form fields are identical to creating a new competition (see above).
+Form fields are identical to creating a new competition ([see above](#create-a-competition)).
 
 
 ### Register a User for a Competition
@@ -601,7 +593,7 @@ __URL:__ `/api/competitions/{competition_id}/register`
 __Method:__ `POST`
 
 Registers the current user for a competition. No form data is required to self-
-register, though if the current user is an admin, a JSON array of usernames
+register, though if the current user is an admin, an array of usernames
 can be supplied. All users in the array will be registered, but the admin will
 not (unless also included in the array).
 
@@ -610,9 +602,9 @@ registered. Otherwise, no response is returned.
 
 __Web Sockets:__ A message `new_user` will be sent to every connected client
 when a new user is registered with the following data:
-{
 
 ```json
+{
   "cid": 12,
   "user": {
     "display": "Yeezus",
@@ -629,7 +621,7 @@ __URL:__ `/api/competitions/{competition_id}/unregister`
 __Method:__ `POST`
 
 Unregisters the current user for a competition. No form data is required to
-self-unregister, though if the current user is an admin, a JSON array of
+self-unregister, though if the current user is an admin, an array of
 usernames can be supplied. All users in the array will be registered, but the
 admin will not (unless also included in the array).
 
@@ -682,7 +674,7 @@ __Form Data__
 | Teams | Required | `teams` | A JSON object of the arrangment of teams |
 
 The JSON object should be formatted as an array of teams, each team mapped
-to an array of the participants (see above for example).
+to an array of the participants ([see above](#get-all-teams-in-a-competition) for an example).
 
 ---
 
