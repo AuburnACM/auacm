@@ -124,7 +124,74 @@ to a program that correctly solves the associated problem produces a correspondi
 
 ### Zip File Format
 
-TODO: Write zip file format here!
+Matching test input and output zip files must be structured in the following way:
+
+__Input:__
+```
+in/
+	in1.txt
+	in2.txt
+	in3.txt
+	.
+	.
+	.
+	in<n>.txt
+```
+
+__Output:__
+```
+out/
+	out1.txt
+	out2.txt
+	out3.txt
+	.
+	.
+	.
+	out<n>.txt
+```
+
+Where out<i>.txt is the output that a valid program would produce given the input
+stored in in<i>.txt for all i between 1 and n.
+
+For example, suppose the only test data for the sample [Problem object](#the-problem-object)
+was to verify that the user passed the two sample cases. In this case, in.zip would contain:
+
+```
+in/
+	in1.txt
+	in2.txt
+```
+
+in1.txt:
+```
+3
+1 2 3
+```
+
+in2.txt:
+```
+4
+10 10 10 10
+```
+
+And the corresponding out.zip would contain:
+
+```
+out/
+	out1.txt
+	out2.txt
+```
+
+out1.txt
+```
+6
+```
+
+out2.txt
+```
+40
+```
+
 
 ## Problem Management Endpoints
 
