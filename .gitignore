@@ -1,3 +1,6 @@
 **/*.pyc
 .idea
 node_modules/
+.DS_Store
+auacm/app/static/angular/dist/
+auacm/app/static/angular/node_modules/

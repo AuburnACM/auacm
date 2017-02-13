@@ -1,0 +1,73 @@
+<div class="body main-fixed col-md-10 col-md-offset-1">
+  <div class="container col-md-12 col-md-offset-0 margin-top">
+    <div class="panel panel-default">
+
+      <!-- Page title -->
+      <div class="panel-heading">
+        <h1 class="panel-title">Submit File</h1>
+      </div>
+
+      <!-- Judge body -->
+      <div class="panel-body">
+        <form class="form-horizontal" (ngSubmit)="onSubmit($event)">
+          <div class="form-group">
+            <label for="pidSelector" class="col-sm-2 control-label">Problem</label>
+            <div class="col-sm-8">
+              <div class="dropdown dropdown-custom">
+                <input #searchBox id="pidSelector dropdownMenu1 search-box" (keyup)="search($event, searchBox.value)" type="text" name="problemSelector" [(ngModel)]="searchFilter" placeholder="Problem name"
+                     class="form-control dropdown-toggle" aria-haspopup="true" (ngModelChange)="boxUpdate($event)" aria-expanded="true" autocomplete="off">
+                <ul class="dropdown-menu" id="drop-list">
+                  <li *ngFor="let problem of problemsObs | async; let i = index" (mouseover)="highlightIndex = i" [ngClass]="{'highlight': i === highlightIndex, 'hover-pointer': true, 'problemSearch': true}"><a (click)="problemSelected(problem)">{{problem.name}}</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="fileUpload" class="col-sm-2 control-label">Source code</label>
+            <input type="file" accept=".java,.py,.c,.cpp,.c++,.go" (change)="fileSelect($event)"
+                [disabled]="!user.loggedIn"/>
+          </div>
+          <div class="form-group" *ngIf="file !== undefined && file.name.endsWith('.py')">
+            <label for="pythonSelector" class="col-sm-2 control-label">Python Version</label>
+            <div class="col-sm-3">
+              <select id="pythonSelector" class="col-sm-2 form-control"
+                  [(ngModel)]="python.version" name="pythonSelector">
+                <option value="py">Python 2.7</option>
+                <option value="py3">Python 3</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-default col-sm-offset-2 col-sm-2"
+              (click)="onSubmit($event)" [disabled]="!user.loggedIn || problem.pid < 1 || file === undefined">Submit</button>
+        </form>
+      </div>
+    </div>
+    <div ng-show="submitted.length">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h1 class="panel-title">Submissions</h1>
+        </div>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th class="col-md-4">Problem Name</th>
+              <th class="col-md-4">Submitted File</th>
+              <th class="col-md-4">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let submission of submitted"
+                [ngClass]="{ success: submission.status=='correct', danger: submission.status=='incorrect'
+                            || submission.status=='runtime' || submission.status=='compile'
+                            || submission.status=='timeout'}">
+              <td>{{ submission.problem }}</td>
+              <td>{{ submission.fileName }}</td>
+              <td>{{ submission.statusDescription }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

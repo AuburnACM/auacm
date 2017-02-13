@@ -1,0 +1,13 @@
+<div class="body">
+  <!-- Container -->
+  <div class="col-md-8 col-md-offset-2">
+    <div>
+      <h2>{{ post.title }} <small>{{ post.subtitle }}</small></h2>
+      <h5><small>Posted on {{ post.postTime | date : short }} by {{ post.author.display }}</small></h5>
+      <p class="text-left" markdown="post.body"></p>
+      <div *ngIf="user.isAdmin === 1">
+        <a href="#/blog/{{post.id}}/edit"><button class="btn btn-info pull-right">Edit Post</button></a>
+      </div>
+    </div>
+  </div>
+</div>

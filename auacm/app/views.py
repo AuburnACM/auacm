@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, send_from_directory
 from flask.ext.login import current_user
 from app import app
 
@@ -9,8 +9,7 @@ def get_home():
     logged_in = not current_user.is_anonymous
     display_name = (current_user.display if logged_in else 'Log in')
     logged_in_string = 'true' if logged_in else 'false'
-    return render_template('index.html', display_name=display_name,
-            logged_in=logged_in_string)
+    return render_template('index_angular.html')
 
 @app.route('/api')
 @app.route('/api/<path:path>')
