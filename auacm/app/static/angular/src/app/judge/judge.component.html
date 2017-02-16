@@ -61,7 +61,7 @@
                 [ngClass]="{ success: submission.status=='correct', danger: submission.status=='incorrect'
                             || submission.status=='runtime' || submission.status=='compile'
                             || submission.status=='timeout'}">
-              <td>{{ problemsMap[submission.pid].name }}</td>
+              <td *ngIf="problemsMap[submission.pid]">{{ problemsMap[submission.pid].name }}</td>
               <td>{{ submission.fileName }}</td>
               <td>{{ submission.statusDescription }}</td>
             </tr>

@@ -98,7 +98,6 @@ export class JudgeComponent implements OnInit {
   // WARNING: Wizard magic ahead. Proceed with caution.
   ngOnInit() {
     this.user = this._authService.getUserData();                                            /* Get the user information */
-    var self = this;
     this.problemsObs = this.searchTerms.distinctUntilChanged().switchMap(term => term       /* gets a list of problems matching the search term */
           ? this.searchProblem(term) : Observable.of<Problem[]>([])).catch(err => {
       return Observable.of<Problem[]>([]);
@@ -107,8 +106,12 @@ export class JudgeComponent implements OnInit {
     // Gets the problem id from the url parameters and fetches the problem id
     this._route.params.switchMap((params: Params) => params['problem'] !== undefined  ? this._problemService.getProblemByPid(+params['problem']) : Observable.of<Problem>(new Problem()))
     .subscribe((problem: Problem) => {
-      this.searchFilter = problem.name;
-      this.problem = problem;
+      if (problem !== undefined) {
+        this.searchFilter = problem.name;
+        this.problem = problem;
+      } else {
+        this.problem = new Problem();
+      }
     }, (err) => {
       this.problem = new Problem();
     });
