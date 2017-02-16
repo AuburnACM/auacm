@@ -34,11 +34,11 @@
           (click)="postBlog()" [disabled]="formDisabled">Post!</button>
       <button type="button" class="btn btn-default"
           (click)="back()">Cancel</button>
-      <div *ngIf="failed">
-        <div class="label label-danger">Failed to update the blog post!</div>
+      <div *ngIf="submitFailed">
+        <div class="label label-danger">Failed to create the blog post!</div>
         </div>
-        <div *ngIf="success">
-        <div class="label label-success">Blog post updated successfully!</div>
+        <div *ngIf="submitSuccess">
+        <div class="label label-success">Blog post created successfully!</div>
       </div>
     </div>
   </div>

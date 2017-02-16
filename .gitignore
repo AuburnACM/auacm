@@ -7,3 +7,5 @@ auacm/app/static/angular/node_modules/
 auacm/app/data/
 setup/data/
 setup/__MACOSX/
+auacm/app/static/angular/.bin/
+auacm/app/static/angular/src/assets/showdown.min.js

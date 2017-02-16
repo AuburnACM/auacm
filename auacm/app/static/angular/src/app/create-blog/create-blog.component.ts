@@ -18,6 +18,7 @@ export class CreateBlogComponent implements OnInit {
   userData: UserData;
   formDisabled = false;
   submitFailed = false;
+  submitSuccess = false;
 
   tabSelect: string = "edit";
 
@@ -49,8 +50,11 @@ export class CreateBlogComponent implements OnInit {
     this._blogService.createBlog(this.blogPost.title, this.blogPost.subtitle, this.blogPost.body).then(post => {
       if (post === undefined) {
         this.formDisabled = false;
+        this.submitFailed = true;
       } else {
         this.blogPost = post;
+        this.formDisabled = false;
+        this.submitSuccess = true;
       }
     });
   };

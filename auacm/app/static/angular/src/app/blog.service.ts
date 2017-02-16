@@ -10,7 +10,25 @@ export class BlogService {
   constructor(private _http: Http) { }
 
   createBlog(title: string, subtitle: string, body: string) : Promise<BlogPost> {
-    return undefined;
+    return new Promise((resolve, reject) => {
+      var params = new URLSearchParams();
+      params.append('title', title);
+      params.append('subtitle', subtitle);
+      params.append('body', body);
+
+      var headers = new Headers();
+      headers.append('Content-Type', 'application/x-www-form-urlencoded');
+
+      this._http.post(`/api/blog`, params.toString(), { headers: headers }).subscribe((res: Response) => {
+        if (res.status === 200) {
+          resolve(res.json().data);
+        } else {
+          resolve(undefined);
+        }
+      }, (err: Response) => {
+        resolve(undefined);
+      })
+    });
   };
 
   updateBlogPost(postId: number, title: string, subtitle: string, body: string) : Promise<BlogPost> {
