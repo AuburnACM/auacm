@@ -9,3 +9,4 @@ setup/data/
 setup/__MACOSX/
 auacm/app/static/angular/.bin/
 auacm/app/static/angular/src/assets/showdown.min.js
+auacm/app/templates/index_angular.html
