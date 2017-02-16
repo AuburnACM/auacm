@@ -41,7 +41,7 @@ def create_user():
         user = User(username=username, passw=hashed, display=display, admin=0)
         user.commit_to_session()
         return serve_response({})
-    return serve_error('username already exists', 401)
+    return serve_error('username already exists', 400)
 
 
 @app.route('/api/change_password', methods=['POST'])

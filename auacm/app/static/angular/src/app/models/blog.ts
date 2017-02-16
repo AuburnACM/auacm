@@ -3,6 +3,8 @@ export class BlogPost {
 		this.title = "";
 		this.subtitle = "";
 		this.body = "";
+		this.author = new BlogAuthor();
+		this.resized = false;
 	}
 	id: number;
 	postTime: number;
@@ -10,6 +12,7 @@ export class BlogPost {
 	subtitle: string;
 	body: string;
 	author: BlogAuthor;
+	resized: boolean;
 }
 
 export class BlogAuthor {

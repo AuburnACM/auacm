@@ -9,7 +9,7 @@
 
       <!-- Judge body -->
       <div class="panel-body">
-        <form class="form-horizontal" (ngSubmit)="onSubmit($event)">
+        <form class="form-horizontal" (ngSubmit)="onSubmit()">
           <div class="form-group">
             <label for="pidSelector" class="col-sm-2 control-label">Problem</label>
             <div class="col-sm-8">
@@ -38,11 +38,11 @@
             </div>
           </div>
           <button type="submit" class="btn btn-default col-sm-offset-2 col-sm-2"
-              (click)="onSubmit($event)" [disabled]="!user.loggedIn || problem.pid < 1 || file === undefined">Submit</button>
+              [disabled]="!user.loggedIn || problem.pid < 1 || file === undefined">Submit</button>
         </form>
       </div>
     </div>
-    <div ng-show="submitted.length">
+    <div *ngIf="submitted.length > 0">
       <div class="panel panel-default">
         <div class="panel-heading">
           <h1 class="panel-title">Submissions</h1>
@@ -61,7 +61,7 @@
                 [ngClass]="{ success: submission.status=='correct', danger: submission.status=='incorrect'
                             || submission.status=='runtime' || submission.status=='compile'
                             || submission.status=='timeout'}">
-              <td>{{ submission.problem }}</td>
+              <td>{{ problemsMap[submission.pid].name }}</td>
               <td>{{ submission.fileName }}</td>
               <td>{{ submission.statusDescription }}</td>
             </tr>

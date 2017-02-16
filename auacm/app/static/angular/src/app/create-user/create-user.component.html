@@ -1,3 +1,72 @@
-<p>
-  create-user works!
-</p>
+<div class="margin-top col-md-8 col-md-offset-2">
+  <div class="panel panel-default">
+    <div class="panel-heading"><h1 class="panel-title">Create New User</h1></div>
+    <div class="panel-body">
+      <form name="createUserForm" novalidate ng-submit="createUser(createUserForm)">
+        <!-- Display Name -->
+        <div class="form-group">
+          <label for="newUserDislpayName" class="control-label">Display Name</label>
+          <input class="form-control" name="displayname" id="newUserDisplayName" type="text"
+            placeholder="William Hester" [(ngModel)]="userData.displayName" required minlength="2"
+            maxlength="32" #displayName="ngModel" autocomplete="false">
+          <!-- Messages for form validation -->
+          <div *ngIf="displayName.errors && (displayName.dirty || displayName.touched)">
+            <div *ngIf="displayName.errors.minlength" class="label label-danger">Display name is too short</div>
+            <div *ngIf="displayName.errors.maxlength" class="label label-danger">Display name is too long</div>
+            <div *ngIf="displayName.errors.required" class="label label-danger">Display name is required</div>
+          </div>
+        </div>
+
+        <!-- Username -->
+        <div class="form-group">
+          <label for="newUserName" class="control-label">Username</label>
+          <input class="form-control" name="newusername" id="newUserName" type="text" placeholder="willdawg"
+            [(ngModel)]="userData.username" required maxlength="32" minlength="2" #username="ngModel" autocomplete="false">
+          <!-- Bit 'o validation -->
+          <div *ngIf="username.errors && (username.dirty || username.touched)">
+            <div *ngIf="username.errors.minlength" class="label label-danger">Username is too short</div>
+            <div *ngIf="username.errors.maxlength" class="label label-danger">Username is too long</div>
+            <div *ngIf="username.errors.required" class="label label-danger">Username is required</div>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="newUserPassword" class="control-label">Password</label>
+          <input class="form-control" id="newUserPassword" type="password" placeholder="Password"
+            [(ngModel)]="userData.password" name="newpassword" required minlength="6" maxlength="32" #password="ngModel" autocomplete="false">
+          <!-- Bit 'o validation -->
+          <div *ngIf="password.errors && (password.dirty || password.touched)">
+            <div *ngIf="password.errors.minlength" class="label label-danger">Password is too short</div>
+            <div *ngIf="password.errors.maxlength" class="label label-danger">Password is too long</div>
+            <div *ngIf="password.errors.required" class="label label-danger">Password is required</div>
+          </div>
+        </div>
+
+        <!-- Pasword Comfirm -->
+        <div class="form-group">
+          <label for="newUserPasswordConfirm" class="control-label">Confirm password</label>
+          <input class="form-control" id="newUserPasswordConfirm" type="password" placeholder="Confirm Password"
+            [(ngModel)]="confirmPassword" name="newpasswordconfirm" minlength="6" maxlength="32" #passwordConfirm="ngModel" autocomplete="false">
+          <!-- Show if the passwords dont match (only displays after a submit) -->
+          <div [hidden]="confirmPassword === userData.password && !(passwordConfirm.errors && (passwordConfirm.dirty || passwordConfirm.touched))">
+            <div class="label label-danger">Passwords do not match</div>
+          </div>
+        </div>
+
+        <!-- Submit button -->
+        <button class="btn btn-default" type="submit" (click)="submit(username, password, displayName, passwordConfirm)">
+          Create User
+        </button>
+
+        <!-- Display a failed/successful user creation -->
+        <div *ngIf="serverResponse !== undefined && !serverResponse.success">
+          <div class="label label-danger">{{serverResponse.message}}</div>
+        </div>
+        <div *ngIf="serverResponse !== undefined && serverResponse.success">
+          <div class="label label-success">{{serverResponse.message}}</div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

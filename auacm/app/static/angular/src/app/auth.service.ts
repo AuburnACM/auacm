@@ -16,7 +16,8 @@ export class AuthService {
 
   userData$ = this.userDataSource.asObservable();
 
-  constructor(private _http: Http) { }
+  constructor(private _http: Http) {
+  }
 
   updateUserData(userData: UserData) : void {
     this.userData = userData;
@@ -80,7 +81,7 @@ export class AuthService {
           var data = res.json().data;
           var userData = new UserData();
           userData.displayName = data.displayName;
-          userData.isAdmin = data.isAdmin == 1;
+          userData.isAdmin = data.isAdmin === 1;
           userData.loggedIn = true;
           userData.username = data.username;
           self.updateUserData(userData);
@@ -94,13 +95,45 @@ export class AuthService {
     });
   };
 
-  createUser(username: string, password: string, displayName: string) : Promise<boolean> {
-    return undefined;
+  createUser(username: string, password: string, displayName: string) : Promise<SimpleResponse> {
+    return new Promise((resolve, reject) => {
+      var params = new URLSearchParams();
+      params.append('username', username);
+      params.append('password', password);
+      params.append('display', displayName);
+
+      var headers = new Headers();
+      headers.append('Content-Type', 'application/x-www-form-urlencoded');
+
+      this._http.post('/api/create_user', params.toString(), { headers: headers }).subscribe((res: Response) => {
+        if (res.status === 200) {
+          resolve(new SimpleResponse(true, 'User created successfully.'))
+        } else {
+          resolve(new SimpleResponse(false, res.json().error));
+        }
+      }, (err: Response) => {
+        if (err.status === 401) {
+          resolve(new SimpleResponse(false, 'You need to be an admin to do this.'))
+        } else if (err.status === 400) {
+          resolve(new SimpleResponse(false, 'That user already exists.'));
+        } else {
+          resolve(new SimpleResponse(false, 'Failed to create the user.'));
+        }
+      });
+    });
   };
 
   changePassword(oldPassword: string, newPassword: string) : Promise<boolean> {
     return undefined;
   };
+
+  /**
+   * We should implement this sometime in the future so that we don't have to edit the
+   * database manually if we want to make someone an admin.
+   */
+  updateAdminStatus(username: string) : Promise<SimpleResponse> {
+    return undefined;
+  }
 
   getRanking(timeframe: string) : Promise<RankData[]> {
     return new Promise((resolve, reject) => {
@@ -119,7 +152,6 @@ export class AuthService {
       });
     });
   }
-
 }
 
 export class TimeFrame {
@@ -128,4 +160,13 @@ export class TimeFrame {
 	public MONTH: string = "month";
 	public YEAR: string = "year";
 	public ALL: string = "all";
+}
+
+export class SimpleResponse {
+  constructor(success: boolean, message: string) {
+    this.success = success;
+    this.message = message;
+  }
+  success: boolean;
+  message: string;
 }

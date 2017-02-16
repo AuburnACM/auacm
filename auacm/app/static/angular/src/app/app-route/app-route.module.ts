@@ -8,14 +8,22 @@ import { ProblemsComponent } from '../problems/problems.component';
 import { RankingComponent } from '../ranking/ranking.component';
 import { CompetitionsComponent } from '../competitions/competitions.component';
 import { JudgeComponent } from '../judge/judge.component';
+import { CreateUserComponent } from '../create-user/create-user.component';
+import { BlogPostComponent } from '../blog-post/blog-post.component';
+import { CreateBlogComponent } from '../create-blog/create-blog.component';
+import { EditBlogComponent } from '../edit-blog/edit-blog.component';
 
 const appRoutes: Routes = [
   { path: '', component: BlogListComponent },
   { path: 'problems', component: ProblemsComponent },
-  { path: 'ranking', component: RankingComponent },
+  { path: 'rankings', component: RankingComponent },
   { path: 'competitions', component: CompetitionsComponent },
   { path: 'judge/:problem', component: JudgeComponent },
-  { path: 'judge', component: JudgeComponent }
+  { path: 'judge', component: JudgeComponent },
+  { path: 'users/create', component: CreateUserComponent },
+  { path: 'blogs/create', component: CreateBlogComponent },
+  { path: 'blog/:id/edit', component: EditBlogComponent },
+  { path: 'blog/:id', component: BlogPostComponent }
 ];
 
 @NgModule({

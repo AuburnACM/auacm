@@ -5,10 +5,12 @@ import 'rxjs/add/operator/switchMap';
 import { Subject, Observable } from 'rxjs';
 
 import { AuthService } from '../auth.service';
+import { SubmissionService } from '../submission.service';
 import { ProblemService } from '../problem.service';
 
 import { UserData } from '../models/user';
 import { Problem } from '../models/problem';
+import { RecentSubmission } from '../models/submission';
 
 declare var $:any;
 
@@ -30,11 +32,30 @@ export class JudgeComponent implements OnInit {
   searchFilter: string = ""
   problem: Problem = new Problem();
   problems: Problem[] = [];
+  problemsMap: Map<number, Problem> = new Map<number, Problem>();
   problemsObs: Observable<Problem[]>;
 
   private searchTerms = new Subject<string>();
 
   highlightIndex = 0;
+
+  submitted: RecentSubmission[] = [];
+
+  constructor(private _authService: AuthService,
+              private _submissionService: SubmissionService,
+              private _problemService: ProblemService,
+              private _router: Router, private _route: ActivatedRoute) {
+    this._authService.userData$.subscribe(user => {
+      this.user = user;
+    });
+    this._submissionService.recentSubmitsData$.subscribe(submissions => {
+      this.submitted = submissions;
+    })
+  };
+
+  python: any = {
+    version: 'py3'
+  };
 
   /**
    * This is needed
@@ -72,18 +93,6 @@ export class JudgeComponent implements OnInit {
     this.searchTerms.next(term);
   };
 
-  constructor(private _authService: AuthService,
-      private _problemService: ProblemService,
-      private _router: Router, private _route: ActivatedRoute) {
-    this._authService.userData$.subscribe(user => {
-      this.user = user;
-    });
-  };
-
-  python: any = {
-    version: 'py3'
-  };
-
   currentHighlight: any = undefined;
 
   // WARNING: Wizard magic ahead. Proceed with caution.
@@ -107,7 +116,13 @@ export class JudgeComponent implements OnInit {
     // Fetches all the problems
     this._problemService.getAllProblems().then(problems => {
       this.problems = problems;
-    })
+      for (var i = 0; i < problems.length; i++) {
+        this.problemsMap[problems[i].pid] = problems[i];
+      }
+    });
+
+    // Fetches the most recent submissions
+    this._submissionService.refreshSubmits(this.user.username, 10);
   };
 
   // called when a user clicks a problem from the problem search list
@@ -147,6 +162,9 @@ export class JudgeComponent implements OnInit {
   // Implment the submission stuff here
   onSubmit() {
     if (this.submitReady()) {
+      this._submissionService.submit(this.file, this.problem, this.python.version, this.user).then(data => {
+        // Do something here...
+      })
       return true;
     } else {
       return false;

@@ -12,11 +12,11 @@
       </div>
       <div class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'">
         <ul class="nav navbar-nav navbar-left">
-          <li [ngClass]="{active: this._router.url == '/', 'hover-pointer': true}"><a (click)="navigateTo('')">Blog</a></li>
-          <li [ngClass]="{active: this._router.url == '/problems', 'hover-pointer': true}"><a (click)="navigateTo('problems')">Problems</a></li>
-          <li *ngIf="user.loggedIn" [ngClass]="{active: _router.url == '/judge', 'hover-pointer': true}"><a (click)="navigateTo('judge')">Judge</a></li>
-          <li [ngClass]="{active: _router.url == '/ranking', 'hover-pointer': true}"><a (click)="navigateTo('ranking')">Rankings</a></li>
-          <li [ngClass]="{active: _router.url == '/competitions', 'hover-pointer': true}"><a (click)="navigateTo('competitions')">Competitions</a></li>
+          <li [ngClass]="{active: this._router.url == '/', 'hover-pointer': true}"><a [routerLink]="['']">Blog</a></li>
+          <li [ngClass]="{active: this._router.url == '/problems', 'hover-pointer': true}"><a [routerLink]="['problems']">Problems</a></li>
+          <li *ngIf="user.loggedIn" [ngClass]="{active: _router.url == '/judge', 'hover-pointer': true}"><a [routerLink]="['judge']">Judge</a></li>
+          <li [ngClass]="{active: _router.url == '/rankings', 'hover-pointer': true}"><a [routerLink]="['rankings']">Rankings</a></li>
+          <li [ngClass]="{active: _router.url == '/competitions', 'hover-pointer': true}"><a [routerLink]="['competitions']">Competitions</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
 
@@ -26,10 +26,10 @@
               <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
-              <li><a href="/users/create">New User</a></li>
-              <li><a href="/competitions/create">New Competition</a></li>
-              <li><a href="/problems/create">New Problem</a></li>
-              <li><a href="/blog/create">New Blog Post</a></li>
+              <li><a (click)="navigateTo('/users/create')" class="hover-pointer">New User</a></li>
+              <li><a (click)="navigateTo('/competitions/create')" class="hover-pointer">New Competition</a></li>
+              <li><a (click)="navigateTo('/problems/create')" class="hover-pointer">New Problem</a></li>
+              <li><a (click)="navigateTo('/blogs/create')" class="hover-pointer">New Blog Post</a></li>
             </ul>
           </li>
 
@@ -40,7 +40,7 @@
 
             <!-- If the user is logged in, show their options -->
             <ul *ngIf="user.loggedIn" class="dropdown-menu">
-              <li><a href="/settings">Settings</a></li>
+              <li><a [routerLink]="['/settings']" class="hover-pointer">Settings</a></li>
               <li><a (click)="logout()" class="hover-pointer">Sign out</a></li>
             </ul>
 

@@ -4,3 +4,6 @@ node_modules/
 .DS_Store
 auacm/app/static/angular/dist/
 auacm/app/static/angular/node_modules/
+auacm/app/data/
+setup/data/
+setup/__MACOSX/

@@ -4,10 +4,18 @@
     <div class="page-header">
       <h1>Auburn ACM Blog</h1>
     </div>
-    <div *ngFor="let post of blogPosts">
-      <a href="/#/blog/{{ post.id }}/"><h2>{{ post.title }} <small>{{ post.subtitle }}</small></h2></a>
-      <h5><small>Posted on {{ post.postTime | date : short }} by {{ post.author.display }}</small></h5>
-      <div class="text-left" Markdown>{{post.body | limitWords : 750}}</div>
+    <div class="row blog-list" (mouseover)="hoverId = post.id" (mouseleave)="hoverId = -1" *ngFor="let post of blogPosts;">
+      <div class="row header-parent">
+        <div class="col-md-11">
+          <a [routerLink]="['/blog/' + post.id]"><h2>{{ post.title }} <small>{{ post.subtitle }}</small></h2></a>
+          <h5><small>Posted on {{ post.postTime | date : short }} by {{ post.author.display }}</small></h5>
+        </div>
+        <div class="col-md-1 text-center">
+          <h4 (click)="editPost(post.id)" class="vertical-center" *ngIf="user.isAdmin && hoverId === post.id"><span class="hover-pointer glyphicon glyphicon-pencil" aria-hidden="true"></span></h4>
+        </div>
+      </div>
+      <div class="text-left" Markdown>{{post.body | limitWords : 200}}</div>
+      <a *ngIf="post.resized" class="btn btn-default pull-right" [routerLink]="['/blog/' + post.id]" role="button">Continue Reading <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span></a>
     </div>
   </div>
 </div>

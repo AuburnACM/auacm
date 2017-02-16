@@ -16,6 +16,8 @@ import { BlogService } from './blog.service';
 import { AuthService } from './auth.service';
 import { ProblemService } from './problem.service';
 import { CompetitionService } from './competition.service';
+import { SubmissionService } from './submission.service';
+import { WebsocketService } from './websocket.service';
 
 import { SecondsToDateTimePipe } from './pipes/seconds-to-date-time.pipe';
 import { SecondsToHoursPipe } from './pipes/seconds-to-hours.pipe';
@@ -25,6 +27,8 @@ import { SearchFilterPipe } from './pipes/search-filter.pipe';
 import { OrderByPipe } from './pipes/order-by.pipe';
 import { JudgeComponent } from './judge/judge.component';
 import { CreateUserComponent } from './create-user/create-user.component';
+import { CreateBlogComponent } from './create-blog/create-blog.component';
+import { EditBlogComponent } from './edit-blog/edit-blog.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +46,9 @@ import { CreateUserComponent } from './create-user/create-user.component';
     CompetitionsComponent,
     OrderByPipe,
     JudgeComponent,
-    CreateUserComponent
+    CreateUserComponent,
+    CreateBlogComponent,
+    EditBlogComponent
   ],
   imports: [
     BrowserModule,
@@ -55,7 +61,9 @@ import { CreateUserComponent } from './create-user/create-user.component';
     BlogService,
     AuthService,
     ProblemService,
-    CompetitionService
+    CompetitionService,
+    SubmissionService,
+    WebsocketService
   ],
   bootstrap: [AppComponent]
 })
