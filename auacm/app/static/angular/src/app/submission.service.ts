@@ -25,11 +25,7 @@ export class SubmissionService {
   recentSubmitsData$: Observable<RecentSubmission[]> = this.submissionsSource.asObservable();
 
   constructor(private _http: Http, private _websocketService: WebsocketService) {
-    // this._websocketService.connect('ws://' + window.location.host + '/websocket').map((response: MessageEvent) => {
-    //   console.log('websocket endpoint activated');
-    //   console.log(response);
-    // })
-    this._websocketService.connect('ws://' + window.location.host + '/websocket').subscribe(data => {
+    this._websocketService.connect(window.location.host + '/websocket').subscribe(data => {
         // Make sure the websocket eventType is for updating a submission
         var response = JSON.parse(data.data);
         if (response.eventType === 'status') {

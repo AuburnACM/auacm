@@ -12,7 +12,7 @@ export class WebsocketService {
   connect(url: string) : Subject<MessageEvent> {
     if (!this.subject) {
       console.log('Opening websocket..');
-      this.subject = this.create(url);
+      this.subject = this.create(window.location.protocol === 'http:' ? 'ws://' + url : 'wss://' + url);
       return this.subject;
     }
     return this.subject;
