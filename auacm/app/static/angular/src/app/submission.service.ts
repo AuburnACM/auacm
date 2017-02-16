@@ -101,7 +101,13 @@ export class SubmissionService {
             recentSubmit.fileType = data[i].file_type;
             recentSubmit.jobId = data[i].job_id;
             recentSubmit.pid = data[i].pid;
-            recentSubmit.status = data[i].status;
+            if (data[i].status === 'good') {
+              recentSubmit.status = 'correct';
+            } else if (data[i].status === 'wrong') {
+              recentSubmit.status = 'incorrect';
+            } else {
+              recentSubmit.status = data[i].status;
+            }
             recentSubmit.submitTime = data[i].submit_time;
             recentSubmit.username = data[i].username;
             recentSubmit.statusDescription = this.STATUS_NAMES[recentSubmit.status];
