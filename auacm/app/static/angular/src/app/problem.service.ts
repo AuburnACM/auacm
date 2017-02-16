@@ -48,7 +48,7 @@ export class ProblemService {
           problem.added = data.added;
           problem.appeared = data.appeared;
           problem.compRelease = data.comp_release;
-          problem.description = data.description;
+          problem.description = (data.description === undefined || data.description === null) ? "" : data.description;
           problem.difficulty = data.difficulty;
           problem.inputDesc = (data.input_desc === undefined || data.input_desc === null) ? "" : data.input_desc;
           problem.name = data.name;

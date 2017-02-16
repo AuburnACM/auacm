@@ -27,7 +27,7 @@
       </thead>
       <tbody>
         <tr [ngClass]="{'success': problem.solved}" *ngFor="let problem of problems | searchFilter:searchFilter">
-          <td><a class="hover-pointer" (click)="navigateTo('/problems/' + problem.shortName)">{{problem.name}}</a></td>
+          <td><a class="hover-pointer" [routerLink]="['/problem/' + problem.shortName]">{{problem.name}}</a></td>
           <td>{{problem.appeared}}</td>
           <td>{{problem.difficulty}}</td>
           <td *ngIf="user.loggedIn"><a class="hover-pointer" (click)="navigateTo('/judge/' + problem.pid)">Submit</a></td>

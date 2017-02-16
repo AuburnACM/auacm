@@ -25,6 +25,15 @@ def get_home():
 
 @app.route('/blog/<int:id>')
 @app.route('/blog/<int:id>/edit')
+def get_blog_page(id):
+    """Render the home page for the logged in user, if any"""
+    logged_in = not current_user.is_anonymous
+    display_name = (current_user.display if logged_in else 'Log in')
+    logged_in_string = 'true' if logged_in else 'false'
+    return render_template('index_angular.html')
+
+@app.route('/problem/<string:id>')
+@app.route('/problem/<string:id>/edit')
 def get_problem_page(id):
     """Render the home page for the logged in user, if any"""
     logged_in = not current_user.is_anonymous
