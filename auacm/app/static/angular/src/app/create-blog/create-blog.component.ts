@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
+import { Converter } from 'showdown';
 
 import { BlogService } from '../blog.service';
 import { AuthService } from '../auth.service';
@@ -13,6 +14,8 @@ import { UserData } from '../models/user';
   styleUrls: ['./create-blog.component.css']
 })
 export class CreateBlogComponent implements OnInit {
+
+  converter: Converter = new Converter();
 
   blogPost: BlogPost = new BlogPost();
   userData: UserData;

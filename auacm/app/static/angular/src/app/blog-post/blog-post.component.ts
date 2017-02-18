@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Converter } from 'showdown';
 
 import { AuthService } from '../auth.service';
 import { BlogService } from '../blog.service';
@@ -16,6 +17,8 @@ import 'rxjs/add/operator/switchMap';
   styleUrls: ['./blog-post.component.css']
 })
 export class BlogPostComponent implements OnInit {
+
+  converter: Converter = new Converter();
 
   user: UserData;
 

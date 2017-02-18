@@ -83,7 +83,6 @@ export class ProblemService {
         if (xmlSubmit.readyState === 4) {
           if (xmlSubmit.status === 200) {
             var data = JSON.parse(xmlSubmit.response).data;
-            console.log(data);
             var newProblem = new Problem();
             newProblem.added = data.added;
             newProblem.appeared = data.appeared;

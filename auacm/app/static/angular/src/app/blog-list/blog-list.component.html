@@ -14,7 +14,7 @@
           <h4 (click)="editPost(post.id)" class="vertical-center" *ngIf="user.isAdmin && hoverId === post.id"><span class="hover-pointer glyphicon glyphicon-pencil" aria-hidden="true"></span></h4>
         </div>
       </div>
-      <div class="text-left" Markdown>{{post.body | limitWords : 200}}</div>
+      <div class="text-left" [innerHTML]="converter.makeHtml(post.body | limitWords : 200)"></div>
       <a *ngIf="post.resized" class="btn btn-default pull-right" [routerLink]="['/blog/' + post.id]" role="button">Continue Reading <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span></a>
     </div>
   </div>

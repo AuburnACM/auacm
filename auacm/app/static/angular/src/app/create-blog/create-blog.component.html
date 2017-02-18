@@ -28,7 +28,7 @@
       <div class="form-group" *ngIf="tabSelect === 'preview'">
         <h2>{{ blogPost.title }} <small>{{ blogPost.subtitle }}</small></h2>
         <h5><small>Posted on {{ blogPost.postTime | date : short }} by {{ blogPost.author.display }}</small></h5>
-        <div *ngIf="blogPost.body !== ''" class="text-left" Markdown>{{blogPost.body}}</div>
+        <div *ngIf="blogPost.body !== ''" class="text-left" [innerHTML]="converter.makeHtml(blogPost.body)"></div>
       </div>
       <button type="submit" class="btn btn-default"
           (click)="postBlog()" [disabled]="formDisabled">Post!</button>

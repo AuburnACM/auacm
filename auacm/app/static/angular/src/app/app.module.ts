@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppRouteModule } from './app-route/app-route.module';
-import { MarkdownModule } from 'angular2-markdown';
 
 import { AppComponent } from './app.component';
 import { BlogListComponent } from './blog-list/blog-list.component';
@@ -63,8 +62,7 @@ import { ProblemValidatorDirective } from './problem-validator.directive';
     BrowserModule,
     FormsModule,
     HttpModule,
-    AppRouteModule,
-    MarkdownModule.forRoot()
+    AppRouteModule
   ],
   providers: [
     BlogService,

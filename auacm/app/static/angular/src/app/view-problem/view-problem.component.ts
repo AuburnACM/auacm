@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Converter } from 'showdown';
 
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/switchMap';
@@ -16,6 +17,8 @@ import { Problem } from '../models/problem';
   styleUrls: ['./view-problem.component.css']
 })
 export class ViewProblemComponent implements OnInit {
+
+  converter: Converter = new Converter();
 
   userData: UserData = new UserData();
 

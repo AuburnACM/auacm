@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Converter } from 'showdown';
 
 import 'rxjs/add/operator/switchMap';
 import { Observable } from 'rxjs';
@@ -17,6 +18,8 @@ import { BlogPost } from '../models/blog';
   styleUrls: ['./edit-blog.component.css']
 })
 export class EditBlogComponent implements OnInit {
+
+  converter: Converter = new Converter();
 
   userData: UserData;
 

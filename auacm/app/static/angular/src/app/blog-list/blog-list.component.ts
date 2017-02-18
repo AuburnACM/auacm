@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Converter } from 'showdown';
 
 import { BlogService } from '../blog.service';
 import { AuthService } from '../auth.service';
@@ -13,6 +14,8 @@ import { UserData } from '../models/user';
   styleUrls: ['./blog-list.component.css']
 })
 export class BlogListComponent implements OnInit {
+
+  converter: Converter = new Converter();
 
   blogPosts: BlogPost[] = [];
 
