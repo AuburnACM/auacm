@@ -255,7 +255,7 @@ def update_problem(identifier):    # pylint: disable=too-many-branches
     data = database.session.query(ProblemData).filter(ProblemData.pid == pid).first()
     if 'name' in request.form:
         problem.name = request.form['name'][:32]
-        problem.shortname = request.form['name'][:32].replace(' ', '').lower()
+        problem.shortname = request.form['name'][:32].replace(' ', '').replace('(', '').replace(')', '').lower()
     if 'description' in request.form:
         data.description = request.form['description']
     if 'input_desc' in request.form:
