@@ -11,7 +11,7 @@
         <a href="/" class="navbar-brand" id="logo">Auburn ACM</a>
       </div>
       <div class="collapse navbar-collapse" id="mainNavList">
-        <ul class="nav navbar-nav navbar-left" data-toggle="collapse" data-target="#mainNavList">
+        <ul class="nav navbar-nav navbar-left" data-toggle="collapse" data-target="#mainNavList.in">
           <li [ngClass]="{active: this._router.url == '/', 'hover-pointer': true}"><a [routerLink]="['']">Blog</a></li>
           <li [ngClass]="{active: this._router.url == '/problems', 'hover-pointer': true}"><a [routerLink]="['problems']">Problems</a></li>
           <li *ngIf="user.loggedIn" [ngClass]="{active: _router.url == '/judge', 'hover-pointer': true}"><a [routerLink]="['judge']">Judge</a></li>
