@@ -6,6 +6,7 @@ import { Observable, Observer, Subject } from 'rxjs/Rx';
 export class WebsocketService {
 
   private subject: Subject<MessageEvent>;
+  private websocket: WebSocket;
 
   constructor() { }
 
@@ -18,41 +19,32 @@ export class WebsocketService {
   }
 
   private create(url: string) {
-    var webSocket = new WebSocket(url);
+    this.websocket = new WebSocket(url);
 
-    var thing = new Subject<MessageEvent>();
+    var subject = new Subject<MessageEvent>();
 
-    webSocket.onmessage = event => {
-      thing.next(event);
+    this.websocket.onmessage = event => {
+      subject.next(event);
     }
 
-    webSocket.onerror = event => {
-      thing.error(event);
+    this.websocket.onerror = event => {
+      subject.error(event);
     }
 
-    webSocket.onclose = event => {
-      thing.complete();
+    this.websocket.onclose = event => {
+      subject.complete();
     }
-    
-    // var observable = Observable.create((obs: Observer<MessageEvent>) => {
-    //   webSocket.onmessage = event => {
-    //     obs.next(event);
-    //   }
-    //   webSocket.onerror = event => {
-    //     obs.error(event);
-    //   };
-    //   webSocket.onclose(obs.complete.bind(obs));
-    // });
+    return subject;
+  };
 
-    var observer = {
-      next: (data: Object) => {
-        if (webSocket.readyState === WebSocket.OPEN) {
-          console.log(data);
-          webSocket.send(JSON.stringify(data));
-        }
+  send(data: Object) {
+    if (this.websocket !== undefined) {
+      if (this.websocket.readyState === WebSocket.OPEN) {
+        console.log(data);
+        this.websocket.send(JSON.stringify(data));
       }
-    };
-    //return Subject.create(observer, observable);
-    return thing;
+    } else {
+      console.log('Websocket does not exist!');
+    }
   }
 }

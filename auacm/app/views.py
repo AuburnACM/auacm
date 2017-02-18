@@ -43,6 +43,16 @@ def get_problem_page(id):
     logged_in_string = 'true' if logged_in else 'false'
     return render_template('index_angular.html')
 
+@app.route('/competition/<string:id>')
+@app.route('/competition/<string:id>/edit')
+@app.route('/competition/<string:id>/teams')
+def get_scorboard_page(id):
+    """Render the home page for the logged in user, if any"""
+    logged_in = not current_user.is_anonymous
+    display_name = (current_user.display if logged_in else 'Log in')
+    logged_in_string = 'true' if logged_in else 'false'
+    return render_template('index_angular.html')
+
 @app.route('/api')
 @app.route('/api/<path:path>')
 def api_404(path=''):

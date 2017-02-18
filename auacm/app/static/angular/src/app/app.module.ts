@@ -17,6 +17,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { ProblemsComponent } from './problems/problems.component';
 import { RankingComponent } from './ranking/ranking.component';
 import { ViewProblemComponent } from './view-problem/view-problem.component';
+import { ViewScoreboardComponent } from './view-scoreboard/view-scoreboard.component';
 
 import { AuthService } from './auth.service';
 import { BlogService } from './blog.service';
@@ -27,12 +28,14 @@ import { WebsocketService } from './websocket.service';
 
 import { IifPipe } from './pipes/iif.pipe';
 import { LimitWordsPipe } from './pipes/limit-words.pipe';
-import { SearchFilterPipe } from './pipes/search-filter.pipe';
+import { MapKeysPipe } from './pipes/map-keys.pipe';
 import { OrderByPipe } from './pipes/order-by.pipe';
+import { SearchFilterPipe } from './pipes/search-filter.pipe';
 import { SecondsToDateTimePipe } from './pipes/seconds-to-date-time.pipe';
 import { SecondsToHoursPipe } from './pipes/seconds-to-hours.pipe';
 
 import { ProblemValidatorDirective } from './problem-validator.directive';
+
 
 @NgModule({
   declarations: [
@@ -56,7 +59,9 @@ import { ProblemValidatorDirective } from './problem-validator.directive';
     ViewProblemComponent,
     EditProblemComponent,
     NotFoundComponent,
-    ProblemValidatorDirective
+    ProblemValidatorDirective,
+    ViewScoreboardComponent,
+    MapKeysPipe
   ],
   imports: [
     BrowserModule,

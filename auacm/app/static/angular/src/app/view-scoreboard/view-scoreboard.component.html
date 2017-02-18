@@ -1,0 +1,84 @@
+<div class="body margin-top">
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-md-4 pull-left">
+          <h1 class="panel-title pull-left">{{ competition.name }}</h1>
+          <div *ngIf="userData.isAdmin && !ended" class="col-md-4 dropdown">
+            <a class="muted-link dropdown-toggle hover-pointer" type="button"
+                id="#dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="true">
+              Manage
+              <span class="caret"></span>
+            </a>
+            <ul id="dropdownMenu1" class="dropdown-menu">
+              <li><a [routerLink]="['/competition/' + competition.cid + '/edit']">Edit</a></li>
+              <li><a [routerLink]="['/competition/' + competition.cid + '/teams']">Teams</a></li>
+            </ul>
+          </div>
+        </div>
+        <!-- Countdown to competition start -->
+        <div class="col-md-4 row" *ngIf="timeUntil > 0">
+          <div class="text-center">
+            <h3 class="panel-title">Time Until Start: {{ timeUntil | secondsToHours | date:"H:mm:ss" }}</h3>
+          </div>
+        </div>
+        <h2 class="panel-title col-md-4 pull-right text-right"
+            *ngIf="active || !ended">
+            {{ timeLeft | secondsToHours | date:"H:mm:ss" }}
+        </h2>
+      </div>
+    </div>
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Team</th>
+          <th>Solved</th>
+          <th>Time</th>
+          <ng-container *ngIf="active || ended">
+            <th *ngFor="let problem of (competition.compProblems | mapKeys)">
+              <a [routerLink]="['/problem/' + competition.compProblems[problem].shortName]">{{ problem }}</a>
+            </th>
+          </ng-container>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let team of competition.teams | orderBy:['-solved', 'time']">
+          <td>{{ team.rank }}</td>
+          <td>
+              {{ team.name }}
+              <br>
+              <small *ngIf="team.displayNames.length > 1 || team.displayNames[0] != team.name">
+                <div class="pad-team-member-name" *ngFor="let member of team.displayNames">
+                  {{ member }}
+                </div>
+              </small>
+          </td>
+          <td>{{ team.solved }}</td>
+          <td>{{ team.time }}</td>
+          <ng-container *ngIf="active || ended">
+            <td *ngFor="let name of (competition.compProblems | mapKeys)"
+                [ngClass]="{'success': team.problemData[competition.compProblems[name].pid].status === 'correct',
+                        'danger': team.problemData[competition.compProblems[name].pid].status === 'incorrect',
+                        'info': team.problemData[competition.compProblems[name].pid].status === 'running'}">
+                <div *ngIf="team.problemData[competition.compProblems[name].pid].status !== 'unattempted'">
+                  {{ team.problemData[competition.compProblems[name].pid].submitCount }}
+                  <br>
+                  <small>
+                    {{team.problemData[competition.compProblems[name].pid].status == 'incorrect'
+                        || team.problemData[competition.compProblems[name].pid].status == 'running' | iif : '--' :
+                        team.problemData[competition.compProblems[name].pid].submitTime
+                    }} {{team.problemData[competition.compProblems[name].pid].penaltyTime > 0 | iif : ' (+' +
+                            team.problemData[competition.compProblems[name].pid].penaltyTime + ')' : '' }}
+                  </small>
+                </div>
+            </td>
+          </ng-container>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

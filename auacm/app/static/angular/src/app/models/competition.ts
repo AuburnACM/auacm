@@ -9,6 +9,7 @@ export class Competition {
 		this.length = 0;
 		this.closed = false;
 		this.compProblems = new Map<string, CompetitionProblem>();
+		this.teams = [];
 		this.registered = false;
 	}
 	cid: number;
@@ -18,30 +19,52 @@ export class Competition {
 	closed: boolean;
 	length: number;
 	compProblems: Map<string, CompetitionProblem>;
+	teams: CompetitionTeam[];
 	registered: boolean;
 }
 
 export class CompetitionProblem {
 	constructor() {
-		this.cid = 0;
 		this.pid = 0;
-		this.label = "";
 		this.name = "";
 		this.shortName = "";
 	}
-	cid: number;
 	pid: number;
-	label: string;
 	name: string;
 	shortName: string;
 }
 
+export class TeamProblemData {
+	constructor() {
+		this.label = "";
+		this.status = "";
+		this.submitCount = 0;
+		this.submitTime = 0;
+		this.penaltyTime = 0;
+	}
+	label: string;
+	status: string;
+	submitCount: number;
+	submitTime: number;
+	penaltyTime: number;
+}
+
 export class CompetitionTeam {
 	constructor() {
-		this.members = [];
 		this.name = "";
+		this.displayNames = [];
+		this.users = [];
+		this.problemData = new Map<string, TeamProblemData>();
+		this.rank = 0;
+		this.solved = 0;
+		this.time = 0;
 	}
 	name: string;
-	members: BlogAuthor[];
+	displayNames: string[];
+	users: string[];
+	rank: number;
+	solved: number;
+	time: number;
+	problemData: Map<string, TeamProblemData>;
 }
 

@@ -15,12 +15,14 @@ import { EditBlogComponent } from '../edit-blog/edit-blog.component';
 import { ViewProblemComponent } from '../view-problem/view-problem.component';
 import { EditProblemComponent } from '../edit-problem/edit-problem.component';
 import { NotFoundComponent } from '../not-found/not-found.component';
+import { ViewScoreboardComponent } from '../view-scoreboard/view-scoreboard.component';
 
 const appRoutes: Routes = [
   { path: '', component: BlogListComponent },
   { path: 'problems', component: ProblemsComponent },
   { path: 'rankings', component: RankingComponent },
   { path: 'competitions', component: CompetitionsComponent },
+  { path: 'competition/:cid', component: ViewScoreboardComponent },
   { path: 'judge/:problem', component: JudgeComponent },
   { path: 'judge', component: JudgeComponent },
   { path: 'users/create', component: CreateUserComponent },
