@@ -21,7 +21,9 @@ export class CreateUserComponent implements OnInit {
     this._authService.userData$.subscribe(userData => {
       this.activeUser = userData;
       if (!this.activeUser.loggedIn || !this.activeUser.isAdmin) {
-        this._router.navigate(['404']);
+        if (this._router.url === '/users/create') {
+          this._router.navigate(['404']);
+        }
       }
     })
   }

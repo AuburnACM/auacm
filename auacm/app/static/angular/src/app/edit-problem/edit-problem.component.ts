@@ -50,7 +50,7 @@ export class EditProblemComponent implements OnInit {
               private _competitionService: CompetitionService, private _router: Router) {
     this._authService.userData$.subscribe(userData => {
       this.userData = userData;
-      if (!this.userData.loggedIn) {
+      if (this._router.url.startsWith('/problem') && (this._router.url.endsWith('/edit') || this._router.url.endsWith('/create'))) {
         this._router.navigate(['404']);
       }
       this.disableForm = this.userData.isAdmin ? false : true;

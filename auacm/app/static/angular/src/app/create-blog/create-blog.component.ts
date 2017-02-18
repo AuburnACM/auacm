@@ -31,7 +31,9 @@ export class CreateBlogComponent implements OnInit {
     _authService.userData$.subscribe(data => {
       this.userData = data;
       if (!this.userData.loggedIn || !this.userData.isAdmin) {
-        this._router.navigate(['404']);
+        if (this._router.url === '/blogs/create') {
+          this._router.navigate(['404']);
+        }
       }
       this.blogPost.author.display = this.userData.displayName;
       this.blogPost.author.username = this.userData.username;

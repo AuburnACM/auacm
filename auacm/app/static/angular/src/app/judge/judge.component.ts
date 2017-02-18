@@ -48,7 +48,9 @@ export class JudgeComponent implements OnInit {
     this._authService.userData$.subscribe(user => {
       this.user = user;
       if (!this.user.loggedIn) {
-        this._router.navigate(['404']);
+        if (this._router.url.startsWith('/judge')) {
+          this._router.navigate(['404']);
+        }
       }
     });
     this._submissionService.recentSubmitsData$.subscribe(submissions => {

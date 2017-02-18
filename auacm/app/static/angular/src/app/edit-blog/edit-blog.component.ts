@@ -38,7 +38,9 @@ export class EditBlogComponent implements OnInit {
     _authService.userData$.subscribe(userData => {
       this.userData = userData;
       if (!this.userData.loggedIn || !this.userData.isAdmin) {
-        this._router.navigate(['404']);
+        if (this._router.url.startsWith('/blog') && this._router.url.endsWith('/edit')) {
+          this._router.navigate(['404']);
+        }
       }
     });
   }
