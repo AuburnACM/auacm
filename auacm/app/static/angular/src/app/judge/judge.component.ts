@@ -47,6 +47,9 @@ export class JudgeComponent implements OnInit {
               private _router: Router, private _route: ActivatedRoute) {
     this._authService.userData$.subscribe(user => {
       this.user = user;
+      if (!this.user.loggedIn) {
+        this._router.navigate(['404']);
+      }
     });
     this._submissionService.recentSubmitsData$.subscribe(submissions => {
       this.submitted = submissions;

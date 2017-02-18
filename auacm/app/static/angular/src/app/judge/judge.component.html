@@ -8,7 +8,7 @@
       </div>
 
       <!-- Judge body -->
-      <div class="panel-body">
+      <div *ngIf="user.loggedIn" class="panel-body">
         <form class="form-horizontal" (ngSubmit)="onSubmit()">
           <div class="form-group">
             <label for="pidSelector" class="col-sm-2 control-label">Problem</label>

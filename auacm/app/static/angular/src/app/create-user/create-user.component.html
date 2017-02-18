@@ -1,7 +1,7 @@
 <div class="margin-top col-md-8 col-md-offset-2">
   <div class="panel panel-default">
     <div class="panel-heading"><h1 class="panel-title">Create New User</h1></div>
-    <div class="panel-body">
+    <div *ngIf="activeUser.loggedIn" class="panel-body">
       <form name="createUserForm" novalidate ng-submit="createUser(createUserForm)">
         <!-- Display Name -->
         <div class="form-group">

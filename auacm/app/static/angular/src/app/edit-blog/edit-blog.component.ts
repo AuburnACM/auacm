@@ -19,24 +19,27 @@ import { BlogPost } from '../models/blog';
 })
 export class EditBlogComponent implements OnInit {
 
-  converter: Converter = new Converter();
+  private converter: Converter = new Converter();
 
-  userData: UserData;
+  private userData: UserData;
 
-  oldBlogPost: BlogPost = new BlogPost();
-  newBlogPost: BlogPost = new BlogPost();
+  private oldBlogPost: BlogPost = new BlogPost();
+  private newBlogPost: BlogPost = new BlogPost();
 
-  tabSelect: string = "edit";
+  private tabSelect: string = "edit";
 
-  formDisabled: boolean = false;
-  success: boolean = false;
-  failed: boolean = false;
+  private formDisabled: boolean = false;
+  private success: boolean = false;
+  private failed: boolean = false;
 
   constructor(private _router: Router, private _activeRoute: ActivatedRoute,
               private _authService: AuthService, private _blogService: BlogService,
               private _location: Location) {
     _authService.userData$.subscribe(userData => {
       this.userData = userData;
+      if (!this.userData.loggedIn || !this.userData.isAdmin) {
+        this._router.navigate(['404']);
+      }
     });
   }
 

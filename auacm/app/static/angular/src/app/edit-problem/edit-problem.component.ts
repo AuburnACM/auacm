@@ -22,34 +22,37 @@ declare var $:any;
 })
 export class EditProblemComponent implements OnInit {
 
-  problem: Problem = new Problem();
-  competitions: Competition[] = [];
+  private problem: Problem = new Problem();
+  private competitions: Competition[] = [];
 
-  userData: UserData = new UserData();
+  private userData: UserData = new UserData();
 
-  updateFailed: boolean = false;
-  updateSuccess: boolean = false;
-  disableForm: boolean = true;
-  createProblem: boolean = false;
-  showCaseList: boolean = true;
+  private updateFailed: boolean = false;
+  private updateSuccess: boolean = false;
+  private disableForm: boolean = true;
+  private createProblem: boolean = false;
+  private showCaseList: boolean = true;
 
-  failMessage: string = `Failed to ${this.createProblem ? 'create' : 'update'} the problem!`
-  successMessage: string = `Problem ${this.createProblem ? 'created' : 'updated'} successfully!`
-  submitButton: string = this.createProblem ? 'Create' : 'Update';
+  private failMessage: string = `Failed to ${this.createProblem ? 'create' : 'update'} the problem!`
+  private successMessage: string = `Problem ${this.createProblem ? 'created' : 'updated'} successfully!`
+  private submitButton: string = this.createProblem ? 'Create' : 'Update';
 
   // Files
-  judgeInput: File;
-  judgeOutput: File;
-  judgeSolution: File;
+  private judgeInput: File;
+  private judgeOutput: File;
+  private judgeSolution: File;
 
-  addCaseErrorMsg: string = 'Please fill in the previous case before adding another';
-  addCaseError: boolean = false;
+  private addCaseErrorMsg: string = 'Please fill in the previous case before adding another';
+  private addCaseError: boolean = false;
 
   constructor(private _authService: AuthService, private _problemService: ProblemService,
               private _activeRoute: ActivatedRoute, private _location: Location,
-              private _competitionService: CompetitionService) {
+              private _competitionService: CompetitionService, private _router: Router) {
     this._authService.userData$.subscribe(userData => {
       this.userData = userData;
+      if (!this.userData.loggedIn) {
+        this._router.navigate(['404']);
+      }
       this.disableForm = this.userData.isAdmin ? false : true;
     });
   }

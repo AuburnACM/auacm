@@ -18,11 +18,11 @@ import { Problem } from '../models/problem';
 })
 export class ViewProblemComponent implements OnInit {
 
-  converter: Converter = new Converter();
+  private converter: Converter = new Converter();
 
-  userData: UserData = new UserData();
+  private userData: UserData = new UserData();
 
-  problem: Problem = new Problem();
+  private problem: Problem = new Problem();
 
   constructor(private _router: Router, private _authService: AuthService,
               private _problemService: ProblemService, private _activeRoute: ActivatedRoute) {

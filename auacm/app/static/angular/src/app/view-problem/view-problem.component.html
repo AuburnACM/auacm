@@ -12,7 +12,7 @@
 
         <!-- Show the button for submission if the user is not an admin -->
         <div class="col-md-2">
-          <a [routerLink]="['/judge?problem=' + problem.pid]">
+          <a *ngIf="userData.loggedIn" [routerLink]="['/judge/' + problem.pid]">
             <button class="btn btn-success no-pad" style="width:100%;">Submit</button>
           </a>
         </div>

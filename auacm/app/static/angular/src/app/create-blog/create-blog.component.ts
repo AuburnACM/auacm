@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Converter } from 'showdown';
 
@@ -26,13 +27,17 @@ export class CreateBlogComponent implements OnInit {
   tabSelect: string = "edit";
 
   constructor(private _authService: AuthService, private _blogService: BlogService,
-              private _location: Location) {
+              private _location: Location, private _router: Router) {
     _authService.userData$.subscribe(data => {
       this.userData = data;
+      if (!this.userData.loggedIn || !this.userData.isAdmin) {
+        this._router.navigate(['404']);
+      }
       this.blogPost.author.display = this.userData.displayName;
       this.blogPost.author.username = this.userData.username;
       this.blogPost.postTime = new Date().getTime();
       if (!this.userData.isAdmin) { this.formDisabled = true; } else { this.formDisabled = false; }
+
     })
   }
 

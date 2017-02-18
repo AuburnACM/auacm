@@ -4,7 +4,7 @@
       <h1 class="panel-title" *ngIf="!createProblem">Edit "{{ problem.name }}"</h1>
       <h1 class="panel-title" *ngIf="createProblem">Create New Problem</h1>
     </div>
-    <div class="panel-body">
+    <div *ngIf="userData.loggedIn" class="panel-body">
       <form>
         <!-- Title -->
         <div class="form-group">
