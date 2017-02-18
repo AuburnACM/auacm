@@ -4,9 +4,9 @@ export class Problem {
 		this.name = "";
 		this.shortName = "";
 		this.appeared ="";
-		this.difficulty = -1;
+		this.difficulty = 0;
 		this.added = -1;
-		this.compRelease = -1;
+		this.compRelease = 0;
 		this.description = "";
 		this.inputDesc = "";
 		this.outputDesc = "";

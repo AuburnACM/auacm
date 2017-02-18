@@ -7,7 +7,7 @@
               target="_blank">
             {{ problem.name }}
           </a>
-          <span *ngIf="userData.isAdmin">– <a class="muted-link" [routerLink]="['/problems/' + problem.pid + '/edit']">Edit</a></span>
+          <span *ngIf="userData.isAdmin">– <a class="muted-link" [routerLink]="['/problem/' + problem.pid + '/edit']">Edit</a></span>
         </h1>
 
         <!-- Show the button for submission if the user is not an admin -->
@@ -21,19 +21,19 @@
     <div class="panel-body">
       <!-- Problem Description -->
       <div>
-        <p class="problemBody" markdown="problem.description"></p>
+        <p class="problemBody" Markdown>{{problem.description}}</p>
       </div>
 
       <!-- Input description -->
       <h2 class="underlineHeader">Input</h2>
-      <p *ngIf="problem.input_desc" class="problemBody" Markdown>{{problem.input_desc}}</p>
+      <p *ngIf="problem.inputDesc" class="problemBody" Markdown>{{problem.inputDesc}}</p>
 
       <!-- Output description -->
       <h2 class="underlineHeader">Output</h2>
-      <p class="problemBody" Markdown>{{problem.output_desc}}</p>
+      <p *ngIf="problem.outputDesc.length > 0" class="problemBody" Markdown>{{problem.outputDesc}}</p>
 
       <!-- Sample Input || Sample Output -->
-      <div *ngFor="let case of problem.sample_cases; let i = index" class="clearfix">
+      <div *ngFor="let case of problem.sampleCases; let i = index" class="clearfix">
         <h2 class="underlineHeader">Sample Case {{ i + 1 }}</h2>
         <div class="pull-left" style="width:48%;">
           <pre>{{ case.input }}</pre>

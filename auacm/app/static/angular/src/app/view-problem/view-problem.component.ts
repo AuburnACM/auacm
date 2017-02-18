@@ -30,8 +30,12 @@ export class ViewProblemComponent implements OnInit {
 
   ngOnInit() {
     this.userData = this._authService.getUserData();
-    this._activeRoute.params.switchMap((params: Params) => params['shortName'] ? this._problemService.getProblemByShortName(params['shortName']) : Observable.of(new Problem())).subscribe(problem => {
-      this.problem = problem;
+    this._activeRoute.params.switchMap((params: Params) => params['shortName'] ? this._problemService.getProblemByShortName(params['shortName']) : Observable.of(undefined)).subscribe(problem => {
+      if (problem !== undefined) {
+        this.problem = problem;
+      } else {
+        this._router.navigate(['/404']);
+      }
     });
   }
 

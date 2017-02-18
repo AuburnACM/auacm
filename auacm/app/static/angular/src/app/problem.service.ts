@@ -10,8 +10,101 @@ export class ProblemService {
   constructor(private _http: Http) { }
 
   // Returns a copy of itself if successful
-  createProblem(problem: Problem) : Promise<Problem> {
-    return undefined;
+  createProblem(problem: Problem, judgeInput: File, judgeOutput: File, judgeSolution: File) : Promise<Problem> {
+    var requestForm = new FormData();
+    requestForm.append('pid', problem.pid);
+    requestForm.append('name', problem.name);
+    requestForm.append('description', problem.description);
+    requestForm.append('input_desc', problem.inputDesc);
+    requestForm.append('output_desc', problem.outputDesc);
+    requestForm.append('cases', JSON.stringify(problem.sampleCases));
+    if (problem.difficulty >= 0)
+      requestForm.append('difficulty', problem.difficulty);
+    if (judgeInput !== undefined)
+      requestForm.append('in_file', judgeInput);
+    if (judgeOutput !== undefined)
+      requestForm.append('out_file', judgeOutput);
+    if (judgeSolution !== undefined)
+      requestForm.append('sol_file', judgeSolution);
+    requestForm.append('appeared_in', problem.appeared);
+    requestForm.append('comp_release', problem.compRelease);
+
+    return new Promise((resolve, reject) => {
+      var xmlSubmit = new XMLHttpRequest();
+      xmlSubmit.onreadystatechange = () => {
+        if (xmlSubmit.readyState === 4) {
+          if (xmlSubmit.status === 200) {
+            var data = JSON.parse(xmlSubmit.response).data;
+            var newProblem = new Problem();
+            newProblem.added = data.added;
+            newProblem.appeared = data.appeared;
+            newProblem.compRelease = data.comp_release;
+            newProblem.description = data.description;
+            newProblem.difficulty = data.difficulty;
+            newProblem.inputDesc = (data.input_desc === undefined || data.input_desc === null) ? "" : data.input_desc;
+            newProblem.name = data.name;
+            newProblem.outputDesc = (data.output_desc === undefined || data.output_desc === null) ? "" : data.output_desc;
+            newProblem.pid = data.pid;
+            newProblem.sampleCases = data.cases;
+            newProblem.shortName = data.shortname;
+            resolve(newProblem);
+          } else {
+            resolve(undefined);
+          }
+        }
+      };
+      xmlSubmit.open('POST', window.location.protocol + '//' + window.location.host + '/api/problems', true);
+      xmlSubmit.send(requestForm);
+    });
+  };
+
+  updateProblem(problem: Problem, judgeInput: File, judgeOutput: File, judgeSolution: File) : Promise<Problem> {
+    var requestForm = new FormData();
+    requestForm.append('pid', problem.pid);
+    requestForm.append('name', problem.name);
+    requestForm.append('description', problem.description);
+    requestForm.append('input_desc', problem.inputDesc);
+    requestForm.append('output_desc', problem.outputDesc);
+    requestForm.append('cases', JSON.stringify(problem.sampleCases));
+    if (problem.difficulty >= 0)
+      requestForm.append('difficulty', problem.difficulty);
+    if (judgeInput !== undefined)
+      requestForm.append('in_file', judgeInput);
+    if (judgeOutput !== undefined)
+      requestForm.append('out_file', judgeOutput);
+    if (judgeSolution !== undefined)
+      requestForm.append('sol_file', judgeSolution);
+    requestForm.append('appeared_in', problem.appeared);
+    requestForm.append('comp_release', problem.compRelease);
+
+    return new Promise((resolve, reject) => {
+      var xmlSubmit = new XMLHttpRequest();
+      xmlSubmit.onreadystatechange = () => {
+        if (xmlSubmit.readyState === 4) {
+          if (xmlSubmit.status === 200) {
+            var data = JSON.parse(xmlSubmit.response).data;
+            console.log(data);
+            var newProblem = new Problem();
+            newProblem.added = data.added;
+            newProblem.appeared = data.appeared;
+            newProblem.compRelease = data.comp_release;
+            newProblem.description = data.description;
+            newProblem.difficulty = data.difficulty;
+            newProblem.inputDesc = (data.input_desc === undefined || data.input_desc === null) ? "" : data.input_desc;
+            newProblem.name = data.name;
+            newProblem.outputDesc = (data.output_desc === undefined || data.output_desc === null) ? "" : data.output_desc;
+            newProblem.pid = data.pid;
+            newProblem.sampleCases = data.cases;
+            newProblem.shortName = data.shortname;
+            resolve(newProblem);
+          } else {
+            resolve(undefined);
+          }
+        }
+      };
+      xmlSubmit.open('PUT', window.location.protocol + '//' + window.location.host + '/api/problems/' + problem.pid, true);
+      xmlSubmit.send(requestForm);
+    });
   };
 
   getProblemByPid(identifier: number) : Promise<Problem> {
@@ -97,14 +190,6 @@ export class ProblemService {
   };
 
   deleteProblemByShortName(identifier: string) : Promise<number> {
-    return undefined;
-  };
-
-  updateProblemWithPid(problem: Problem) : Promise<Problem> {
-    return undefined;
-  };
-
-  updateProblemWithShortName(problem: Problem) : Promise<Problem> {
     return undefined;
   };
 }

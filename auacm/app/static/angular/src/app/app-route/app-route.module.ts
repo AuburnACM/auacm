@@ -13,6 +13,8 @@ import { BlogPostComponent } from '../blog-post/blog-post.component';
 import { CreateBlogComponent } from '../create-blog/create-blog.component';
 import { EditBlogComponent } from '../edit-blog/edit-blog.component';
 import { ViewProblemComponent } from '../view-problem/view-problem.component';
+import { EditProblemComponent } from '../edit-problem/edit-problem.component';
+import { NotFoundComponent } from '../not-found/not-found.component';
 
 const appRoutes: Routes = [
   { path: '', component: BlogListComponent },
@@ -25,7 +27,10 @@ const appRoutes: Routes = [
   { path: 'blogs/create', component: CreateBlogComponent },
   { path: 'blog/:id/edit', component: EditBlogComponent },
   { path: 'blog/:id', component: BlogPostComponent },
-  { path: 'problem/:shortName', component: ViewProblemComponent }
+  { path: 'problem/:pid/edit', component: EditProblemComponent },
+  { path: 'problem/:shortName', component: ViewProblemComponent },
+  { path: 'problems/create', component: EditProblemComponent },
+  { path: '404', component: NotFoundComponent }
 ];
 
 @NgModule({
