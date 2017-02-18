@@ -21,7 +21,7 @@
     <div class="panel-body">
       <!-- Problem Description -->
       <div>
-        <p class="problemBody" Markdown>{{problem.description}}</p>
+        <p *ngIf="problem.description" class="problemBody" Markdown>{{problem.description}}</p>
       </div>
 
       <!-- Input description -->
