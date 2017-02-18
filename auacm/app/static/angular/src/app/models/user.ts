@@ -2,7 +2,7 @@ export class UserData {
 	constructor() {
 		this.username = "";
 		this.password = "";
-		this.displayName = "Log In";
+		this.displayName = "";
 		this.isAdmin = false;
 		this.loggedIn = false;
 	};

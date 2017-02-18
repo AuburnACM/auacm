@@ -36,7 +36,7 @@
           <!-- Show user options to the user -->
           <li class="dropdown">
             <a (click)="openDropdownMenu()"class="dropdown-toggle hover-pointer" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              {{user.displayName}}<span class="caret"></span></a>
+              {{user.displayName === '' ? 'Log In' : user.displayName}}<span class="caret"></span></a>
 
             <!-- If the user is logged in, show their options -->
             <ul *ngIf="user.loggedIn" class="dropdown-menu">

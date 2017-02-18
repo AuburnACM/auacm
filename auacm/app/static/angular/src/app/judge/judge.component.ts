@@ -46,6 +46,9 @@ export class JudgeComponent implements OnInit {
               private _problemService: ProblemService,
               private _router: Router, private _route: ActivatedRoute) {
     this._authService.userData$.subscribe(user => {
+      if (!this.user.loggedIn && user.loggedIn) {
+        this._submissionService.refreshSubmits(this.user.username, 10);
+      }
       this.user = user;
       if (!this.user.loggedIn) {
         if (this._router.url.startsWith('/judge')) {
@@ -130,7 +133,9 @@ export class JudgeComponent implements OnInit {
     });
 
     // Fetches the most recent submissions
-    this._submissionService.refreshSubmits(this.user.username, 10);
+    if (this.user.username !== '') {
+      this._submissionService.refreshSubmits(this.user.username, 10);
+    }
   };
 
   // called when a user clicks a problem from the problem search list
