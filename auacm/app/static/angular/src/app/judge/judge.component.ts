@@ -47,7 +47,7 @@ export class JudgeComponent implements OnInit {
               private _router: Router, private _route: ActivatedRoute) {
     this._authService.userData$.subscribe(user => {
       if (!this.user.loggedIn && user.loggedIn) {
-        this._submissionService.refreshSubmits(this.user.username, 10);
+        this._submissionService.refreshSubmits(user.username, 10);
       }
       this.user = user;
       if (!this.user.loggedIn) {
