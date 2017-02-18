@@ -90,3 +90,7 @@ body {
 .hover-pointer {
     cursor: pointer;
 }
+
+.dropdown-backdrop {
+    position: static;
+}
