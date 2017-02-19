@@ -40,8 +40,9 @@ export class WebsocketService {
   send(data: Object) {
     if (this.websocket !== undefined) {
       if (this.websocket.readyState === WebSocket.OPEN) {
-        console.log(data);
         this.websocket.send(JSON.stringify(data));
+      } else {
+        console.log('Websocket is not ready.');
       }
     } else {
       console.log('Websocket does not exist!');

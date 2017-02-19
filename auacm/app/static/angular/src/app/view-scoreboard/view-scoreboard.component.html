@@ -21,12 +21,12 @@
         <!-- Countdown to competition start -->
         <div class="col-md-4 row" *ngIf="timeUntil > 0">
           <div class="text-center">
-            <h3 class="panel-title">Time Until Start: {{ timeUntil | secondsToHours | date:"H:mm:ss" }}</h3>
+            <h3 class="panel-title">Time Until Start: {{ timeUntil | secondsToHours }}</h3>
           </div>
         </div>
         <h2 class="panel-title col-md-4 pull-right text-right"
             *ngIf="active || !ended">
-            {{ timeLeft | secondsToHours | date:"H:mm:ss" }}
+            {{ timeLeft | secondsToHours }}
         </h2>
       </div>
     </div>

@@ -26,10 +26,10 @@
               <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
-              <li><a (click)="navigateTo('/users/create')" class="hover-pointer">New User</a></li>
-              <li><a (click)="navigateTo('/competitions/create')" class="hover-pointer">New Competition</a></li>
-              <li><a (click)="navigateTo('/problems/create')" class="hover-pointer">New Problem</a></li>
-              <li><a (click)="navigateTo('/blogs/create')" class="hover-pointer">New Blog Post</a></li>
+              <li><a [routerLink]="['/users/create']" class="hover-pointer">New User</a></li>
+              <li><a [routerLink]="['/competitions/create']" class="hover-pointer">New Competition</a></li>
+              <li><a [routerLink]="['/problems/create']" class="hover-pointer">New Problem</a></li>
+              <li><a [routerLink]="['/blogs/create']" class="hover-pointer">New Blog Post</a></li>
             </ul>
           </li>
 

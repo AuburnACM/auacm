@@ -25,7 +25,7 @@ export class ViewScoreboardComponent implements OnInit, OnDestroy {
   private ended: boolean = false; 
   private active: boolean = false; 
   private clientTimeOffset: number = 0;
-  private scoreboardTimer: NodeJS.Timer = undefined;
+  private scoreboardTimer: NodeJS.Timer[] = [];
 
   constructor(private _activeRoute: ActivatedRoute, private _competitionService: CompetitionService,
               private _authService: AuthService, private _websocketService: WebsocketService,
@@ -62,9 +62,10 @@ export class ViewScoreboardComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     // You need to clear the timer when the component is destroyed 
     // otherwise the client will build up 1 billion timers. xD
-    if (this.scoreboardTimer !== undefined) {
-      clearInterval(this.scoreboardTimer);
-      this.scoreboardTimer = undefined;
+    if (this.scoreboardTimer !== undefined && this.scoreboardTimer !== null) {
+      for (var timer of this.scoreboardTimer) {
+        clearInterval(timer);
+      }
     }
     // If the user is on this page, clear the scoreboard data
     this._competitionService.resetScoreboard();
@@ -132,37 +133,41 @@ export class ViewScoreboardComponent implements OnInit, OnDestroy {
   };
 
   calculateCompetitionProgress() {
-    var clientTime = Math.floor((Date.now() + this.clientTimeOffset) / 1000);
-    if (clientTime < this.competition.startTime + this.competition.length) {
-      // only start the timer if the competition is still going or
-      // it hasn't yet started
-      this.ended = false;
-      this.active = false;
-      var self = this;
-      this.scoreboardTimer = setInterval(function() {
-        var timeToEnd = self.competition.startTime + self.competition.length - clientTime;
+    if (this.scoreboardTimer.length < 1) {
+      var clientTime = Math.floor((Date.now() + this.clientTimeOffset) / 1000);
+      if (clientTime < this.competition.startTime + this.competition.length) {
+        // only start the timer if the competition is still going or
+        // it hasn't yet started
+        this.ended = false;
+        this.active = false;
+        var self = this;
+        var timer = setInterval(function() {
+          var timeToEnd = self.competition.startTime + self.competition.length - clientTime;
 
-        // Compute the remaining time as the minimum of the time
-        // until the compeition is over and the length of the
-        // competition.
-        self.timeLeft = Math.min(timeToEnd, self.competition.length);
-        
-        if (self.timeLeft < self.competition.length) {
-          self.active = true;
-        } else {
-          self.timeUntil = self.competition.startTime - clientTime;
-        }
+          // Compute the remaining time as the minimum of the time
+          // until the compeition is over and the length of the
+          // competition.
+          self.timeLeft = Math.min(timeToEnd, self.competition.length);
+          
+          if (self.timeLeft < self.competition.length) {
+            self.active = true;
+          } else {
+            self.timeUntil = self.competition.startTime - clientTime;
+          }
 
-        clientTime = Math.floor((Date.now() + this.clientTimeOffset) / 1000);
-        if (self.timeLeft <= 0) {
-          self.active = false;
-          self.ended = true;
-          self.timeLeft = 0;
-          clearInterval(self.scoreboardTimer);
-        }
-      }, 1000);
-    } else {
-      this.ended = true;
+          clientTime = Math.floor((Date.now() + self.clientTimeOffset) / 1000);
+          if (self.timeLeft <= 0) {
+            self.active = false;
+            self.ended = true;
+            self.timeLeft = 0;
+            self.scoreboardTimer.splice(self.scoreboardTimer.indexOf(timer), 1);
+            clearInterval(timer);
+          }
+        }, 1000);
+        this.scoreboardTimer.push(timer);
+      } else {
+        this.ended = true;
+      }
     }
   }
 

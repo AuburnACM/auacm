@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Http, Request, Response } from '@angular/http';
+import { Http, Request, Response, Headers, URLSearchParams } from '@angular/http';
 import { Subject } from 'rxjs';
 
 import { WebsocketService } from './websocket.service'; 
 
 import { CompetitionProblem, Competition, CompetitionTeam, TeamProblemData } from './models/competition';
 import { RecentSubmission } from './models/submission';
+import { Problem } from './models/problem';
+import { SimpleUser } from './models/user';
 
 @Injectable()
 export class CompetitionService {
@@ -63,7 +65,10 @@ export class CompetitionService {
           this.competitionSource.next(this.competition);
         }
     });
-    this._websocketService.send('system_time');
+    var self = this;
+    setTimeout(function() {
+      self._websocketService.send({eventType: 'system_time'});
+    }, 2000);
   }
 
   resetScoreboard() {
@@ -82,8 +87,35 @@ export class CompetitionService {
     return this.clientTimeOffset;
   };
 
-  createCompetition(name: string, start: number, stop: number, closed: boolean, compProblems: CompetitionProblem[]) : Promise<Competition> {
-    return undefined;
+  createCompetition(competition: Competition, problems: Problem[]) : Promise<Competition> {
+    var problemData = [];
+    for (var i = 0; i < problems.length; i++) {
+      problemData.push({
+        label: String.fromCharCode("A".charCodeAt(0) + i),
+        pid: problems[i].pid
+      });
+    }
+    var formData = new URLSearchParams();
+    formData.append('name', competition.name);
+    formData.append('start_time', competition.startTime.toString());
+    formData.append('length', competition.length.toString());
+    formData.append('problems', JSON.stringify(problemData));
+    formData.append('closed', competition.closed.toString());
+
+    var headers = new Headers();
+    headers.append('Content-Type', 'application/x-www-form-urlencoded');
+
+    return new Promise((resolve, reject) => {
+      this._http.post('/api/competitions', formData.toString(), { headers: headers }).subscribe((res: Response) => {
+        if (res.status === 200) {
+          resolve(new Competition());
+        } else {
+          resolve(undefined);
+        }
+      }, (err: Response) => {
+        resolve(undefined);
+      })
+    });
   };
 
   getAllCompetitions() : Promise<Map<string, Competition[]>> {
@@ -175,19 +207,68 @@ export class CompetitionService {
   };
 
   register(cid: number) : Promise<boolean> {
-    return undefined;
+    return new Promise((resolve, reject) => {
+      this._http.post(`/api/competitions/${cid}/register`, '').subscribe((res: Response) => {
+        if (res.status === 200) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      }, (err: Response) => {
+        resolve(false);
+      });
+    });
   };
 
   unregister(cid: number) : Promise<boolean> {
-    return undefined;
+    return new Promise((resolve, reject) => {
+      this._http.post(`/api/competitions/${cid}/unregister`, '').subscribe((res: Response) => {
+        if (res.status === 200) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      }, (err: Response) => {
+        resolve(false);
+      });
+    });
   };
 
-  getCompetitionTeams(cid: number) : Promise<Map<string, CompetitionTeam>> {
-    return undefined;
+  getCompetitionTeams(cid: number) : Promise<Map<string, SimpleUser[]>> {
+    return new Promise((resolve, reject) => {
+      this._http.get(`/api/competitions/${cid}/teams`).subscribe((res: Response) => {
+        if (res.status === 200) {
+          var data = res.json().data;
+          var map = new Map<string, SimpleUser[]>();
+          for (var team of data) {
+            map[team] = data[team];
+          }
+          resolve(map);
+        } else {
+          resolve(new Map<string, SimpleUser[]>());
+        }
+      }, (err: Response) => {
+        console.log('Failed to fetch the teams for the competition!');
+        resolve(new Map<string, SimpleUser[]>());
+      });
+    });
   };
 
-  updateCompetitionTeams(cid: number, team: CompetitionTeam) {
-    return undefined;
+  updateCompetitionTeams(cid: number, team: Map<string, SimpleUser[]>): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      var formData = new FormData();
+      formData.append('teams', JSON.stringify(team));
+      this._http.put(`/api/competitions/${cid}/teams`, formData).subscribe((res: Response) => {
+        if (res.status === 200) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      }, (err: Response) => {
+        console.log('Failed to update the teams for the competition!');
+        resolve(false);
+      });
+    });
   }
 
   private problemIsInComp(problemId: number): boolean {

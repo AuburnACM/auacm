@@ -11,6 +11,7 @@ import { CompetitionsComponent } from './competitions/competitions.component';
 import { CreateBlogComponent } from './create-blog/create-blog.component';
 import { CreateUserComponent } from './create-user/create-user.component';
 import { EditBlogComponent } from './edit-blog/edit-blog.component';
+import { EditCompetitionComponent } from './edit-competition/edit-competition.component';
 import { EditProblemComponent } from './edit-problem/edit-problem.component';
 import { JudgeComponent } from './judge/judge.component';
 import { NotFoundComponent } from './not-found/not-found.component';
@@ -27,6 +28,7 @@ import { SubmissionService } from './submission.service';
 import { WebsocketService } from './websocket.service';
 
 import { IifPipe } from './pipes/iif.pipe';
+import { IndexToCharCodePipe } from './pipes/index-to-char-code.pipe';
 import { LimitWordsPipe } from './pipes/limit-words.pipe';
 import { MapKeysPipe } from './pipes/map-keys.pipe';
 import { OrderByPipe } from './pipes/order-by.pipe';
@@ -34,7 +36,10 @@ import { SearchFilterPipe } from './pipes/search-filter.pipe';
 import { SecondsToDateTimePipe } from './pipes/seconds-to-date-time.pipe';
 import { SecondsToHoursPipe } from './pipes/seconds-to-hours.pipe';
 
-import { ProblemValidatorDirective } from './problem-validator.directive';
+import { ProblemValidatorDirective } from './directives/problem-validator.directive';
+import { DateFormatValidatorDirective } from './directives/date-format-validator.directive';
+import { ContestLengthValidatorDirective } from './directives/contest-length-validator.directive';
+import { EditTeamsComponent } from './edit-teams/edit-teams.component';
 
 
 @NgModule({
@@ -61,7 +66,12 @@ import { ProblemValidatorDirective } from './problem-validator.directive';
     NotFoundComponent,
     ProblemValidatorDirective,
     ViewScoreboardComponent,
-    MapKeysPipe
+    MapKeysPipe,
+    EditCompetitionComponent,
+    DateFormatValidatorDirective,
+    ContestLengthValidatorDirective,
+    IndexToCharCodePipe,
+    EditTeamsComponent
   ],
   imports: [
     BrowserModule,

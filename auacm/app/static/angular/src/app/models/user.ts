@@ -25,3 +25,12 @@ export class RankData {
 	solved: number;
 	username: string;
 };
+
+export class SimpleUser {
+	constructor() {
+		this.display = '';
+		this.username = '';
+	}
+	display: string;
+	username: string;
+}

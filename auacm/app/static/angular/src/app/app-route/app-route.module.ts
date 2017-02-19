@@ -16,12 +16,17 @@ import { ViewProblemComponent } from '../view-problem/view-problem.component';
 import { EditProblemComponent } from '../edit-problem/edit-problem.component';
 import { NotFoundComponent } from '../not-found/not-found.component';
 import { ViewScoreboardComponent } from '../view-scoreboard/view-scoreboard.component';
+import { EditCompetitionComponent } from '../edit-competition/edit-competition.component';
+import { EditTeamsComponent } from '../edit-teams/edit-teams.component';
 
 const appRoutes: Routes = [
   { path: '', component: BlogListComponent },
   { path: 'problems', component: ProblemsComponent },
   { path: 'rankings', component: RankingComponent },
   { path: 'competitions', component: CompetitionsComponent },
+  { path: 'competition/:cid/edit', component: EditCompetitionComponent },
+  { path: 'competition/:cid/teams', component: EditTeamsComponent },
+  { path: 'competitions/create', component: EditCompetitionComponent },
   { path: 'competition/:cid', component: ViewScoreboardComponent },
   { path: 'judge/:problem', component: JudgeComponent },
   { path: 'judge', component: JudgeComponent },

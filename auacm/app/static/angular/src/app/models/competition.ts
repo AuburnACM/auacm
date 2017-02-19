@@ -11,6 +11,7 @@ export class Competition {
 		this.compProblems = new Map<string, CompetitionProblem>();
 		this.teams = [];
 		this.registered = false;
+		this.timeRemaining = 0;
 	}
 	cid: number;
 	name: string;
@@ -21,6 +22,7 @@ export class Competition {
 	compProblems: Map<string, CompetitionProblem>;
 	teams: CompetitionTeam[];
 	registered: boolean;
+	timeRemaining: number;
 }
 
 export class CompetitionProblem {
@@ -67,4 +69,3 @@ export class CompetitionTeam {
 	time: number;
 	problemData: Map<string, TeamProblemData>;
 }
-
