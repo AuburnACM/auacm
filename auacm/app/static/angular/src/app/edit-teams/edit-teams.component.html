@@ -1,27 +1,35 @@
 <div class="row">
-  <h1 class="pull-left">Teams</h1>
-  <button class="btn btn-success pull-right margin-top" ng-click="save()">Save</button>
+  <div class="col-md-10">
+    <h1 class="pull-left">Teams</h1>
+  </div>
+  <div class="col-md-2">
+    <div class="button-group">
+      <button class="btn btn-default pull-right margin-top" (click)="back()">Back</button>
+      <button class="btn btn-success pull-right margin-top" (click)="save()">Save</button>
+    </div>
+    <div *ngIf="responseFailed" class="save-response pull-right">
+      <div class="label label-danger">{{responseMessage}}</div>
+    </div>
+    <div *ngIf="responseSuccess" class="save-response pull-right">
+      <div class="label label-success">{{responseMessage}}</div>
+    </div>
+  </div>
 </div>
 <div class="row">
   <div class="col-md-9 gridded">
-    <div class="col-md-6" ng-repeat="(name, members) in teams">
+    <div class="col-md-6" *ngFor="let team of teamNames">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <div class="panel-title">{{ name }}
-            <span class="glyphicon glyphicon-remove-circle pull-right"
-                ng-click="removeTeam(name)"></span>
+          <div class="panel-title">{{ team }}
+            <span class="hover-pointer glyphicon glyphicon-remove-circle pull-right"
+                (click)="removeTeam(team)"></span>
           </div>
         </div>
-        <div class="panel-body" dnd-list="members">
-          <div class="panel panel-default movable" ng-repeat="user in members"
-              dnd-draggable="user"
-              dnd-moved="members.splice($index, 1)"
-              dnd-effect-allowed="move">
+        <div class="panel-body" [dragula]="members" [dragulaModel]='teams[team]'>
+          <div class="panel panel-default movable" *ngFor="let user of teams[team]">
             <div class="panel-body">
               {{ user.display }}
             </div>
-          </div>
-          <div class="dndPlaceholder">
           </div>
         </div>
       </div>
@@ -29,12 +37,14 @@
     <div class="col-md-6">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <div class="col-md-8">
-            <input class="form-control" placeholder="New Team"
-                ng-model="newTeamName">
-          </div>
-          <button class="btn btn-default" ng-click="addTeam()"
-              ng-disabled="teamExists()">Add</button>
+          <form class="form-group" submit="addTeam()">
+            <div class="col-md-8">
+              <input class="form-control" placeholder="New Team"
+                  [(ngModel)]="teamName" name="teamName">
+            </div>
+            <button class="btn btn-default" (click)="addTeam()"
+                [disabled]="teamExists()">Add</button>
+          </form>
         </div>
       </div>
     </div>
@@ -44,17 +54,11 @@
       <div class="panel-heading">
         <div class="panel-title">Individuals</div>
       </div>
-      <div class="panel-body"
-          dnd-list="individuals">
-        <div class="panel panel-default movable" ng-repeat="user in individuals"
-          dnd-draggable="user"
-          dnd-effect-allowed="move"
-          dnd-moved="individuals.splice($index, 1)">
+      <div class="panel-body" [dragula]="members" [dragulaModel]='individuals'>
+        <div class="panel panel-default" *ngFor="let user of individuals">
           <div class="panel-body">
             {{ user.display }}
           </div>
-        </div>
-        <div class="dndPlaceholder">
         </div>
       </div>
     </div>

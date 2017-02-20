@@ -19,7 +19,8 @@
       "tsconfig": "tsconfig.json",
       "prefix": "app",
       "styles": [
-        "styles.css"
+        "styles.css",
+        "../node_modules/dragula/dist/dragula.min.css"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",

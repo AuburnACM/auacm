@@ -45,6 +45,13 @@ export class ViewScoreboardComponent implements OnInit, OnDestroy {
         this.competition = competition;
       }
     });
+
+    // When a user is added to the competition refresh the competition data
+    this._competitionService.competitionTeamSource.subscribe(data => {
+      if (this.competition.cid > 0) {
+        this._competitionService.fetchCompetition(this.competition.cid);
+      }
+    })
   }
 
   ngOnInit() {

@@ -22,7 +22,7 @@
           <td *ngIf="user.loggedIn">
             <div *ngIf="competition.registered">Registered</div>
             <a *ngIf="!competition.registered && (user.isAdmin || !competition.closed)"
-                 (click)="register(competition)">Register</a>
+                 (click)="register(competition)" class="hover-pointer">Register</a>
             <div *ngIf="!competition.registered && !user.isAdmin && competition.closed">Closed</div>
           </td>
         </tr>
@@ -50,7 +50,7 @@
           <td *ngIf="user.loggedIn">
             <div *ngIf="competition.registered">Registered</div>
             <a *ngIf="!competition.registered && (user.isAdmin || !competition.closed)"
-                href="" (click)="register(competition)">Register</a>
+                class="hover-pointer" (click)="register(competition)">Register</a>
             <div *ngIf="!competition.registered && !user.isAdmin && competition.closed">Closed</div>
           </td>
         </tr>

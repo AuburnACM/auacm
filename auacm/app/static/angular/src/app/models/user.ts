@@ -34,3 +34,14 @@ export class SimpleUser {
 	display: string;
 	username: string;
 }
+
+export class WebsocketRegisteredUser {
+	constructor() {
+		this.display = '';
+		this.username = '';
+		this.cid = 0;
+	}
+	display: string;
+	username: string;
+	cid: number;
+}

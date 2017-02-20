@@ -11,11 +11,13 @@
       </div>
     </div>
     <div class="row">
-      <div *ngIf="responseFailed pull-right">
-        <div class="label label-danger">{{responseMessage}}</div>
-      </div>
-      <div *ngIf="responseSuccess pull-right">
-        <div class="label label-success">{{responseMessage}}</div>
+      <div class="col-md-12">
+        <div *ngIf="responseFailed" class="save-response pull-right">
+          <div class="label label-danger">{{responseMessage}}</div>
+        </div>
+        <div *ngIf="responseSuccess" class="save-response pull-right">
+          <div class="label label-success">{{responseMessage}}</div>
+        </div>
       </div>
     </div>
   </div>

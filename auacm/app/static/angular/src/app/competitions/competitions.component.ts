@@ -55,7 +55,7 @@ export class CompetitionsComponent implements OnInit, OnDestroy {
     this.timer = setInterval(function() {
       if (self.competitions['ongoing'].length > 0) {
         for (var comp of self.competitions['ongoing']) {
-          if (comp.remainingTime < 0) {
+          if (comp.timeRemaining < 0) {
             self.getCompetitions();
             self.competitions['ongoing'].splice(self.competitions['ongoing'].indexOf(comp), 1);
             break;
