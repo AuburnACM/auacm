@@ -154,7 +154,9 @@ export class CompetitionService {
     formData.append('start_time', competition.startTime.toString());
     formData.append('length', competition.length.toString());
     formData.append('problems', JSON.stringify(problemData));
-    formData.append('closed', competition.closed.toString());
+    // in python, a non empty string that is parsed will be true,
+    // while an empty string will be false.
+    formData.append('closed', competition.closed ? '1' : '');
 
     var headers = new Headers();
     headers.append('Content-Type', 'application/x-www-form-urlencoded');
