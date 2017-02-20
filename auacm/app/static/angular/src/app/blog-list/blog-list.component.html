@@ -15,7 +15,7 @@
         </div>
       </div>
       <div class="text-left" [innerHTML]="converter.makeHtml(post.body | limitWords : 200)"></div>
-      <a *ngIf="post.resized" class="btn btn-default pull-right" [routerLink]="['/blog/' + post.id]" role="button">Continue Reading <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span></a>
+      <a *ngIf="post.resized" class="btn btn-default pull-right" [routerLink]="['/blog/' + post.id]" role="button">Continue Reading</a>
     </div>
   </div>
 </div>
