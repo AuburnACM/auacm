@@ -124,7 +124,24 @@ export class AuthService {
   };
 
   changePassword(oldPassword: string, newPassword: string) : Promise<boolean> {
-    return undefined;
+    return new Promise((resolve, reject) => {
+      var params = new URLSearchParams();
+      params.append('oldPassword', oldPassword);
+      params.append('newPassword', newPassword);
+
+      var headers = new Headers();
+      headers.append('Content-Type', 'application/x-www-form-urlencoded');
+
+      this._http.post('/api/change_password', params.toString(), { headers: headers }).subscribe((res: Response) => {
+        if (res.status === 200) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      }, (err: Response) => {
+        resolve(false);
+      })
+    })
   };
 
   /**

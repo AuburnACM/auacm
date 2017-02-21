@@ -18,6 +18,7 @@ import { NotFoundComponent } from '../not-found/not-found.component';
 import { ViewScoreboardComponent } from '../view-scoreboard/view-scoreboard.component';
 import { EditCompetitionComponent } from '../edit-competition/edit-competition.component';
 import { EditTeamsComponent } from '../edit-teams/edit-teams.component';
+import { EditUserComponent } from '../edit-user/edit-user.component';
 
 const appRoutes: Routes = [
   { path: '', component: BlogListComponent },
@@ -37,6 +38,7 @@ const appRoutes: Routes = [
   { path: 'problem/:pid/edit', component: EditProblemComponent },
   { path: 'problem/:shortName', component: ViewProblemComponent },
   { path: 'problems/create', component: EditProblemComponent },
+  { path: 'settings', component: EditUserComponent },
   { path: '404', component: NotFoundComponent }
 ];
 

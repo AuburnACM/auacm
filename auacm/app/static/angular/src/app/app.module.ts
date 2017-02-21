@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppRouteModule } from './app-route/app-route.module';
 import { DragulaModule } from 'ng2-dragula';
@@ -41,6 +41,7 @@ import { ProblemValidatorDirective } from './directives/problem-validator.direct
 import { DateFormatValidatorDirective } from './directives/date-format-validator.directive';
 import { ContestLengthValidatorDirective } from './directives/contest-length-validator.directive';
 import { EditTeamsComponent } from './edit-teams/edit-teams.component';
+import { EditUserComponent } from './edit-user/edit-user.component';
 
 
 @NgModule({
@@ -72,14 +73,16 @@ import { EditTeamsComponent } from './edit-teams/edit-teams.component';
     DateFormatValidatorDirective,
     ContestLengthValidatorDirective,
     IndexToCharCodePipe,
-    EditTeamsComponent
+    EditTeamsComponent,
+    EditUserComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
     AppRouteModule,
-    DragulaModule
+    DragulaModule,
+    ReactiveFormsModule
   ],
   providers: [
     BlogService,
