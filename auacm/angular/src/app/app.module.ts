@@ -14,6 +14,8 @@ import { CreateUserComponent } from './create-user/create-user.component';
 import { EditBlogComponent } from './edit-blog/edit-blog.component';
 import { EditCompetitionComponent } from './edit-competition/edit-competition.component';
 import { EditProblemComponent } from './edit-problem/edit-problem.component';
+import { EditTeamsComponent } from './edit-teams/edit-teams.component';
+import { EditUserComponent } from './edit-user/edit-user.component';
 import { JudgeComponent } from './judge/judge.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { ProblemsComponent } from './problems/problems.component';
@@ -40,8 +42,6 @@ import { SecondsToHoursPipe } from './pipes/seconds-to-hours.pipe';
 import { ProblemValidatorDirective } from './directives/problem-validator.directive';
 import { DateFormatValidatorDirective } from './directives/date-format-validator.directive';
 import { ContestLengthValidatorDirective } from './directives/contest-length-validator.directive';
-import { EditTeamsComponent } from './edit-teams/edit-teams.component';
-import { EditUserComponent } from './edit-user/edit-user.component';
 
 
 @NgModule({

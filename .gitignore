@@ -7,6 +7,16 @@ auacm/app/static/angular/node_modules/
 auacm/app/data/
 setup/data/
 setup/__MACOSX/
-auacm/app/static/angular/.bin/
-auacm/app/static/angular/src/assets/showdown.min.js
-auacm/app/templates/index_angular.html
+
+# Angular dependencies
+auacm/angular/.bin/
+auacm/angular/src/assets/showdown.min.js
+auacm/angular/node_modules
+auacm/angular/dist
+auacm/angular/tmp
+auacm/app/static/assets/
+auacm/app/static/favicon.ico
+auacm/app/static/index.html
+auacm/app/static/*.bundle.js
+auacm/app/static/*.bundle.css
+auacm/app/static/*.jpg

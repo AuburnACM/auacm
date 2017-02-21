@@ -20,7 +20,7 @@ from shutil import rmtree
 from time import time
 
 
-@app.route('/problems/<shortname>/info.pdf', methods=['GET'])
+@app.route('/problem/<shortname>/info.pdf', methods=['GET'])
 def get_problem_info(shortname):
     """Serve the PDF description of a problem"""
     pid = (database.session.query(Problem)

@@ -18,6 +18,7 @@ proper page."""
 @app.route('/competitions/create')
 @app.route('/users/create')
 @app.route('/404')
+@app.route('/settings')
 def get_home():
     """Render the home page for the logged in user, if any"""
     logged_in = not current_user.is_anonymous

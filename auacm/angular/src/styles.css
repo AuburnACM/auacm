@@ -74,7 +74,7 @@ body {
 }
 
 .bernitdown {
-    background: url(../img/logo.jpg) repeat;
+    background: url(./static/img/logo.jpg) repeat;
 }
 
 .no-pad {
@@ -85,4 +85,12 @@ body {
 .chrome-glyph-hack {
     position: relative;
     top: -.5px;
+}
+
+.hover-pointer {
+    cursor: pointer;
+}
+
+.dropdown-backdrop {
+    position: static;
 }
