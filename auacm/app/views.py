@@ -24,7 +24,7 @@ def get_home():
     logged_in = not current_user.is_anonymous
     display_name = (current_user.display if logged_in else 'Log in')
     logged_in_string = 'true' if logged_in else 'false'
-    return render_template('index_angular.html')
+    return render_template('index.html')
 
 @app.route('/blog/<int:id>')
 @app.route('/blog/<int:id>/edit')
@@ -33,7 +33,7 @@ def get_blog_page(id):
     logged_in = not current_user.is_anonymous
     display_name = (current_user.display if logged_in else 'Log in')
     logged_in_string = 'true' if logged_in else 'false'
-    return render_template('index_angular.html')
+    return render_template('index.html')
 
 @app.route('/problem/<string:id>')
 @app.route('/problem/<string:id>/edit')
@@ -42,7 +42,7 @@ def get_problem_page(id):
     logged_in = not current_user.is_anonymous
     display_name = (current_user.display if logged_in else 'Log in')
     logged_in_string = 'true' if logged_in else 'false'
-    return render_template('index_angular.html')
+    return render_template('index.html')
 
 @app.route('/competition/<string:id>')
 @app.route('/competition/<string:id>/edit')
@@ -52,7 +52,7 @@ def get_scorboard_page(id):
     logged_in = not current_user.is_anonymous
     display_name = (current_user.display if logged_in else 'Log in')
     logged_in_string = 'true' if logged_in else 'false'
-    return render_template('index_angular.html')
+    return render_template('index.html')
 
 @app.route('/api')
 @app.route('/api/<path:path>')
