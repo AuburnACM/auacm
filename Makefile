@@ -5,6 +5,7 @@ nonprod:
 	rm -f auacm/app/static/*.bundle.js
 	rm -f auacm/app/static/*.bundle.css
 	rm -f auacm/app/static/*.html
+	rm -f auacm/app/static/*.bundle.js.map
 	cp -r auacm/angular/dist/* auacm/app/static/
 prod:
 	cd auacm/angular/ && ng build --prod --deploy-url static/
@@ -13,4 +14,5 @@ prod:
 	rm -f auacm/app/static/*.bundle.js
 	rm -f auacm/app/static/*.bundle.css
 	rm -f auacm/app/static/*.html
+	rm -f auacm/app/static/*.bundle.js.map
 	cp -r auacm/angular/dist/* auacm/app/static/

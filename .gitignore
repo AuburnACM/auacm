@@ -20,3 +20,4 @@ auacm/app/static/index.html
 auacm/app/static/*.bundle.js
 auacm/app/static/*.bundle.css
 auacm/app/static/*.jpg
+auacm/app/templates/index.html
