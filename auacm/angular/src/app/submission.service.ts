@@ -127,7 +127,5 @@ export class SubmissionService {
       this.recentSubmissions = data;
       this.submissionsSource.next(this.recentSubmissions);
     });
-  };
-
-  
+  };  
 }

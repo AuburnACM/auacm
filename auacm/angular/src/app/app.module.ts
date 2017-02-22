@@ -1,9 +1,9 @@
+import { AppRouteModule } from './app-route/app-route.module';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { DragulaModule } from 'ng2-dragula';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { AppRouteModule } from './app-route/app-route.module';
-import { DragulaModule } from 'ng2-dragula';
+import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { BlogListComponent } from './blog-list/blog-list.component';
@@ -39,9 +39,9 @@ import { SearchFilterPipe } from './pipes/search-filter.pipe';
 import { SecondsToDateTimePipe } from './pipes/seconds-to-date-time.pipe';
 import { SecondsToHoursPipe } from './pipes/seconds-to-hours.pipe';
 
-import { ProblemValidatorDirective } from './directives/problem-validator.directive';
-import { DateFormatValidatorDirective } from './directives/date-format-validator.directive';
 import { ContestLengthValidatorDirective } from './directives/contest-length-validator.directive';
+import { DateFormatValidatorDirective } from './directives/date-format-validator.directive';
+import { ProblemValidatorDirective } from './directives/problem-validator.directive';
 
 
 @NgModule({
@@ -50,45 +50,44 @@ import { ContestLengthValidatorDirective } from './directives/contest-length-val
     BlogListComponent,
     BlogPostComponent,
     CompetitionsComponent,
+    ContestLengthValidatorDirective,
+    CreateBlogComponent,
+    CreateUserComponent,
+    DateFormatValidatorDirective,
+    EditBlogComponent,
+    EditCompetitionComponent,
+    EditProblemComponent,
+    EditTeamsComponent,
+    EditUserComponent,
+    IifPipe,
+    IndexToCharCodePipe,
+    JudgeComponent,
+    LimitWordsPipe,
+    MapKeysPipe,
+    NotFoundComponent,
+    OrderByPipe,
+    ProblemsComponent,
+    ProblemValidatorDirective,
+    RankingComponent,
+    SearchFilterPipe,
     SecondsToDateTimePipe,
     SecondsToHoursPipe,
-    IifPipe,
-    LimitWordsPipe,
-    ProblemsComponent,
-    SearchFilterPipe,
-    RankingComponent,
-    CompetitionsComponent,
-    OrderByPipe,
-    JudgeComponent,
-    CreateUserComponent,
-    CreateBlogComponent,
-    EditBlogComponent,
     ViewProblemComponent,
-    EditProblemComponent,
-    NotFoundComponent,
-    ProblemValidatorDirective,
-    ViewScoreboardComponent,
-    MapKeysPipe,
-    EditCompetitionComponent,
-    DateFormatValidatorDirective,
-    ContestLengthValidatorDirective,
-    IndexToCharCodePipe,
-    EditTeamsComponent,
-    EditUserComponent
+    ViewScoreboardComponent
   ],
   imports: [
+    AppRouteModule,
     BrowserModule,
+    DragulaModule,
     FormsModule,
     HttpModule,
-    AppRouteModule,
-    DragulaModule,
     ReactiveFormsModule
   ],
   providers: [
-    BlogService,
     AuthService,
-    ProblemService,
+    BlogService,
     CompetitionService,
+    ProblemService,
     SubmissionService,
     WebsocketService
   ],

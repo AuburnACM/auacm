@@ -3,6 +3,7 @@ import { Http, Request, Response, Headers, URLSearchParams } from '@angular/http
 import { Subject } from 'rxjs';
 
 import { UserData, RankData } from './models/user';
+import { SimpleResponse } from './models/response';
 
 /**
  * All methods of this class should notify the userData observable
@@ -177,13 +178,4 @@ export class TimeFrame {
 	public MONTH: string = "month";
 	public YEAR: string = "year";
 	public ALL: string = "all";
-}
-
-export class SimpleResponse {
-  constructor(success: boolean, message: string) {
-    this.success = success;
-    this.message = message;
-  }
-  success: boolean;
-  message: string;
 }

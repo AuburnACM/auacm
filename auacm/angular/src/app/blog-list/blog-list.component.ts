@@ -9,10 +9,13 @@ import { LimitWordsPipe }from '../pipes/limit-words.pipe';
 import { BlogPost } from '../models/blog';
 import { UserData } from '../models/user';
 
+const EDIT_ICON_NONE: number = -1;
+
 @Component({
   templateUrl: './blog-list.component.html',
   styleUrls: ['./blog-list.component.css']
 })
+
 export class BlogListComponent implements OnInit {
 
   converter: Converter = new Converter();
@@ -20,10 +23,7 @@ export class BlogListComponent implements OnInit {
   blogPosts: BlogPost[] = [];
 
   user: UserData;
-
-  hoverId: number = -1;
-
-  searchFilter: string = "";
+  hoverId: number = EDIT_ICON_NONE;
 
   constructor(private _blogService: BlogService, private _authService: AuthService,
               private _router: Router) {

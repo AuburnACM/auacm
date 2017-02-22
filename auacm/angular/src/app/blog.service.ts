@@ -91,6 +91,7 @@ export class BlogService {
   };
 
   deleteBlogPost(blogId: number) : Promise<boolean> {
+    // TODO when the backend supports this method.
     return undefined;
   };
 }

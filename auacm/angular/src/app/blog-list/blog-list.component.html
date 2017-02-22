@@ -4,7 +4,7 @@
     <div class="page-header">
       <h1>Auburn ACM Blog</h1>
     </div>
-    <div class="row blog-list" (mouseover)="hoverId = post.id" (mouseleave)="hoverId = -1" *ngFor="let post of blogPosts;">
+    <div class="row blog-list" (mouseover)="hoverId = post.id" (mouseleave)="hoverId = EDIT_ICON_NONE" *ngFor="let post of blogPosts">
       <div class="row header-parent">
         <div class="col-md-11">
           <a [routerLink]="['/blog/' + post.id]"><h2>{{ post.title }} <small>{{ post.subtitle }}</small></h2></a>

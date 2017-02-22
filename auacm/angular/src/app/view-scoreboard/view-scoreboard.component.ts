@@ -177,5 +177,4 @@ export class ViewScoreboardComponent implements OnInit, OnDestroy {
       }
     }
   }
-
 }

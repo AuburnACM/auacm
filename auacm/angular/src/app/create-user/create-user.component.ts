@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AuthService, SimpleResponse } from '../auth.service';
+import { AuthService } from '../auth.service';
 
 import { UserData } from '../models/user';
+import { SimpleResponse } from '../models/response';
 
 @Component({
   selector: 'app-create-user',
