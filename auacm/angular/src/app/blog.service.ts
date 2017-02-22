@@ -55,8 +55,6 @@ export class BlogService {
 
   /**
    * Fetches the blog posts from /api/blog.
-   * 
-   * @author John Harrison
    */
   getAllBlogPosts() : Promise<BlogPost[]> {
     return new Promise((resolve, reject) => {

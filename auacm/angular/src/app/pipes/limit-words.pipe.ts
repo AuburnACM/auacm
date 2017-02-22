@@ -2,8 +2,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 /**
  * This pipe limits the words in a string to a certain amount.
- * 
- * @author John Harrison
  */
 @Pipe({
   name: 'limitWords'

@@ -19,8 +19,6 @@ import { SimpleUser, WebsocketRegisteredUser } from './models/user';
  *   - system_time
  *   - status
  *   - new_user
- * 
- * @author John Harrison
  */
 @Injectable()
 export class CompetitionService {
