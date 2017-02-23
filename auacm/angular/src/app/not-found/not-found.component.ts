@@ -18,14 +18,6 @@ export class NotFoundComponent implements OnInit {
   constructor(private _router: Router, private _userService: UserService,
               private _location: Location) {
     this._userService.userData$.subscribe(newData => {
-      if (!this.userData.loggedIn && newData.loggedIn) {
-        this.userData = newData;
-        if (this._router.url === '/404') {
-          try {
-            this._location.back();
-          } catch(err) {}
-        }
-      }
       this.userData = newData;
     })
   }
@@ -33,5 +25,4 @@ export class NotFoundComponent implements OnInit {
   ngOnInit() {
     this.userData = this._userService.getUserData();
   }
-
 }

@@ -1,4 +1,4 @@
-from flask import render_template, send_from_directory
+from flask import render_template, send_from_directory, redirect
 from flask.ext.login import current_user
 from app import app
 
@@ -63,4 +63,4 @@ def api_404(path=''):
 @app.errorhandler(404)
 def general_404(error):
     """A catch all 404 for non-api requests"""
-    return render_template("404.html")
+    return redirect("//auacm.com/404", code=302)

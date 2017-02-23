@@ -6,7 +6,7 @@ import os
 import zipfile
 
 # pylint: disable=no-name-in-module, f0401
-from flask import request
+from flask import request, redirect
 from flask.ext.login import current_user
 from app import app
 import app.database as database
@@ -22,12 +22,15 @@ from time import time
 
 @app.route('/problem/<shortname>/info.pdf', methods=['GET'])
 def get_problem_info(shortname):
-    """Serve the PDF description of a problem"""
-    pid = (database.session.query(Problem)
-           .options(load_only('pid', 'shortname'))
-           .filter(Problem.shortname == shortname)
-           .first().pid)
-    return serve_info_pdf(str(pid))
+    """Serve the PDF description of a problem. If it doesn't exist, serve 404."""
+    try:
+        pid = (database.session.query(Problem)
+            .options(load_only('pid', 'shortname'))
+            .filter(Problem.shortname == shortname)
+            .first().pid)
+        return serve_info_pdf(str(pid))
+    except AttributeError:
+        return redirect("//auacm.com/404", code=302)
 
 
 @app.route('/api/problems/<identifier>', methods=['GET'])
