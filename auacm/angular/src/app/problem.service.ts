@@ -185,10 +185,12 @@ export class ProblemService {
   };
 
   deleteProblemByPid(identifier: number) : Promise<number> {
+    // TODO implement this on the backend
     return undefined;
   };
 
   deleteProblemByShortName(identifier: string) : Promise<number> {
+    // TODO implement this on the backend
     return undefined;
   };
 }
