@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ProblemService } from '../problem.service';
-import { AuthService } from '../auth.service';
+import { UserService } from '../user.service';
 
 import { UserData } from '../models/user';
 import { Problem } from '../models/problem';
@@ -23,9 +23,9 @@ export class ProblemsComponent implements OnInit {
 
   problems: Problem[] = [];
 
-  constructor(private _problemService: ProblemService, private _authService: AuthService,
+  constructor(private _problemService: ProblemService, private _userService: UserService,
               private _router: Router) {
-    this._authService.userData$.subscribe(user => {
+    this._userService.userData$.subscribe(user => {
       // Check if the user was logged out or in. If so, refresh the problems
       if (this.user.loggedIn && !user.loggedIn || !this.user.loggedIn && user.loggedIn) {
         this.getProblems();
@@ -35,7 +35,7 @@ export class ProblemsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.user = this._authService.getUserData();
+    this.user = this._userService.getUserData();
     this.getProblems();
   };
 
@@ -74,5 +74,4 @@ export class ProblemsComponent implements OnInit {
   navigateTo(path: string) {
     this._router.navigate([path]);
   }
-
 }

@@ -5,7 +5,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import 'rxjs/add/operator/switchMap';
 import { Observable } from 'rxjs'; 
 
-import { AuthService } from '../auth.service';
+import { UserService } from '../user.service';
 import { ProblemService } from '../problem.service';
 import { CompetitionService } from '../competition.service';
 
@@ -45,10 +45,10 @@ export class EditProblemComponent implements OnInit {
   private addCaseErrorMsg: string = 'Please fill in the previous case before adding another';
   private addCaseError: boolean = false;
 
-  constructor(private _authService: AuthService, private _problemService: ProblemService,
+  constructor(private _userService: UserService, private _problemService: ProblemService,
               private _activeRoute: ActivatedRoute, private _location: Location,
               private _competitionService: CompetitionService, private _router: Router) {
-    this._authService.userData$.subscribe(userData => {
+    this._userService.userData$.subscribe(userData => {
       this.userData = userData;
       if (this._router.url.startsWith('/problem') && (this._router.url.endsWith('/edit') || this._router.url.endsWith('/create'))) {
         this._router.navigate(['404']);
@@ -58,7 +58,7 @@ export class EditProblemComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userData = this._authService.getUserData();
+    this.userData = this._userService.getUserData();
     this.disableForm = this.userData.isAdmin ? false : true;
     this._activeRoute.params.switchMap((params: Params) => params['pid']
         ? this._problemService.getProblemByPid(+params['pid']) 

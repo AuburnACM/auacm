@@ -4,7 +4,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/switchMap';
 
-import { AuthService } from '../auth.service';
+import { UserService } from '../user.service';
 import { CompetitionService } from '../competition.service';
 import { ProblemService } from '../problem.service';
 
@@ -35,9 +35,9 @@ export class EditCompetitionComponent implements OnInit {
   private formDisabled: boolean = false;
 
   constructor(private _router: Router, private _activeRoute: ActivatedRoute,
-              private _authService: AuthService, private _competitionService: CompetitionService, 
+              private _userService: UserService, private _competitionService: CompetitionService, 
               private _problemService: ProblemService) {
-    this._authService.userData$.subscribe(newData => {
+    this._userService.userData$.subscribe(newData => {
       this.userData = newData;
       if (!this.userData.loggedIn || !this.userData.isAdmin) {
         if ((this._router.url.startsWith('/competition') && this._router.url.endsWith('/edit')) || (this._router.url === '/competitions/create')) {
@@ -48,7 +48,7 @@ export class EditCompetitionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userData = this._authService.getUserData();
+    this.userData = this._userService.getUserData();
     this.startTime = this.defaultStartTime();
     this.compLength = '3:00';
     if (this._router.url === '/competitions/create') {

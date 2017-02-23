@@ -4,7 +4,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import 'rxjs/add/operator/switchMap';
 import { Subject, Observable } from 'rxjs';
 
-import { AuthService } from '../auth.service';
+import { UserService } from '../user.service';
 import { SubmissionService } from '../submission.service';
 import { ProblemService } from '../problem.service';
 
@@ -41,11 +41,11 @@ export class JudgeComponent implements OnInit {
 
   submitted: RecentSubmission[] = [];
 
-  constructor(private _authService: AuthService,
+  constructor(private _userService: UserService,
               private _submissionService: SubmissionService,
               private _problemService: ProblemService,
               private _router: Router, private _route: ActivatedRoute) {
-    this._authService.userData$.subscribe(user => {
+    this._userService.userData$.subscribe(user => {
       if (!this.user.loggedIn && user.loggedIn) {
         this._submissionService.refreshSubmits(user.username, 10);
       }
@@ -105,7 +105,7 @@ export class JudgeComponent implements OnInit {
 
   // WARNING: Wizard magic ahead. Proceed with caution.
   ngOnInit() {
-    this.user = this._authService.getUserData();                                            /* Get the user information */
+    this.user = this._userService.getUserData();                                            /* Get the user information */
     this.problemsObs = this.searchTerms.distinctUntilChanged().switchMap(term => term       /* gets a list of problems matching the search term */
           ? this.searchProblem(term) : Observable.of<Problem[]>([])).catch(err => {
       return Observable.of<Problem[]>([]);

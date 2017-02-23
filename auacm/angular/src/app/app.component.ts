@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AuthService } from './auth.service';
+import { UserService } from './user.service';
 
 import { UserData } from './models/user';
 
@@ -14,9 +14,9 @@ declare var $:any;
 })
 export class AppComponent implements OnInit {
 
-  constructor(private _router: Router, private _authService: AuthService) {
-    this.user = _authService.getUserData();
-    _authService.userData$.subscribe(user => {
+  constructor(private _router: Router, private _userService: UserService) {
+    this.user = _userService.getUserData();
+    _userService.userData$.subscribe(user => {
       this.user = user;
     });
   }
@@ -29,15 +29,15 @@ export class AppComponent implements OnInit {
   navCollapsed: boolean = false;
 
   ngOnInit() {
-    this._authService.refreshUserData();
+    this._userService.refreshUserData();
   };
 
   logout() {
-    this._authService.logout();
+    this._userService.logout();
   };
 
   logIn() {
-    this._authService.login(this.user.username, this.user.password).then(success => {
+    this._userService.login(this.user.username, this.user.password).then(success => {
       if (!success) {
         this.failedLogin = true;
         document.getElementById('username').focus();

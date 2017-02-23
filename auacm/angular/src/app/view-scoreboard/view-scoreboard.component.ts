@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import 'rxjs/add/operator/switchMap';
 
 import { CompetitionService } from '../competition.service';
-import { AuthService } from '../auth.service';
+import { UserService } from '../user.service';
 import { WebsocketService } from '../websocket.service';
 
 import { Competition, CompetitionProblem, CompetitionTeam, TeamProblemData } from '../models/competition';
@@ -28,9 +28,9 @@ export class ViewScoreboardComponent implements OnInit, OnDestroy {
   private scoreboardTimer: NodeJS.Timer[] = [];
 
   constructor(private _activeRoute: ActivatedRoute, private _competitionService: CompetitionService,
-              private _authService: AuthService, private _websocketService: WebsocketService,
+              private _userService: UserService, private _websocketService: WebsocketService,
               private _router: Router) {
-    this._authService.userData$.subscribe(data => this.userData = data);
+    this._userService.userData$.subscribe(data => this.userData = data);
 
     // Subscribe to the competition service so that the component receives the latest
     // time offset and competition data
@@ -55,7 +55,7 @@ export class ViewScoreboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.userData = this._authService.getUserData();
+    this.userData = this._userService.getUserData();
     this.clientTimeOffset = this._competitionService.getClientTimeOffset();
     this._activeRoute.params.subscribe(params => {
       if (params['cid']) {

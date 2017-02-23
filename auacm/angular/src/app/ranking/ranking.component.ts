@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { AuthService } from '../auth.service';
+import { UserService } from '../user.service';
 
 import { UserData, RankData } from '../models/user';
 
@@ -17,14 +17,14 @@ export class RankingComponent implements OnInit {
 
   timeFrame: string = "all";
 
-  constructor(private _authService: AuthService) { }
+  constructor(private _userService: UserService) { }
 
   ngOnInit() {
     this.getRankings();
   };
 
   getRankings() {
-    this._authService.getRanking(this.timeFrame).then(ranks => {
+    this._userService.getRanking(this.timeFrame).then(ranks => {
       this.ranks = ranks;
     })
   };

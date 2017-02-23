@@ -6,7 +6,7 @@ import { Converter } from 'showdown';
 import 'rxjs/add/operator/switchMap';
 import { Observable } from 'rxjs';
 
-import { AuthService } from '../auth.service';
+import { UserService } from '../user.service';
 import { BlogService } from '../blog.service';
 
 import { UserData } from '../models/user';
@@ -33,9 +33,9 @@ export class EditBlogComponent implements OnInit {
   private failed: boolean = false;
 
   constructor(private _router: Router, private _activeRoute: ActivatedRoute,
-              private _authService: AuthService, private _blogService: BlogService,
+              private _userService: UserService, private _blogService: BlogService,
               private _location: Location) {
-    _authService.userData$.subscribe(userData => {
+    _userService.userData$.subscribe(userData => {
       this.userData = userData;
       if (!this.userData.loggedIn || !this.userData.isAdmin) {
         if (this._router.url.startsWith('/blog') && this._router.url.endsWith('/edit')) {
@@ -46,7 +46,7 @@ export class EditBlogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userData = this._authService.getUserData();
+    this.userData = this._userService.getUserData();
     this._activeRoute.params.switchMap((params: Params) => params['id'] ? this._blogService.getBlogPost(params['id']) 
         : Observable.of(new BlogPost())).subscribe(post => {
       this.oldBlogPost.title = post.title;

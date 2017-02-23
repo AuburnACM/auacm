@@ -5,7 +5,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/switchMap';
 
-import { AuthService } from '../auth.service';
+import { UserService } from '../user.service';
 import { CompetitionService } from '../competition.service';
 
 import { SimpleUser, UserData, WebsocketRegisteredUser } from '../models/user';
@@ -29,10 +29,10 @@ export class EditTeamsComponent implements OnInit {
   private responseSuccess: boolean = false;
   private responseMessage: string = '';
 
-  constructor(private _router: Router, private _authService: AuthService,
+  constructor(private _router: Router, private _userService: UserService,
               private _competitionService: CompetitionService, private _activeRoute: ActivatedRoute,
               private _location: Location) {
-    this._authService.userData$.subscribe(data => {
+    this._userService.userData$.subscribe(data => {
       this.userData = data;
       if (!this.userData.loggedIn || !this.userData.isAdmin) {
         if (this._router.url.startsWith('/blog') && this._router.url.endsWith('/edit')) {

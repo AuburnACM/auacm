@@ -23,11 +23,11 @@ import { RankingComponent } from './ranking/ranking.component';
 import { ViewProblemComponent } from './view-problem/view-problem.component';
 import { ViewScoreboardComponent } from './view-scoreboard/view-scoreboard.component';
 
-import { AuthService } from './auth.service';
 import { BlogService } from './blog.service';
 import { CompetitionService } from './competition.service';
 import { ProblemService } from './problem.service';
 import { SubmissionService } from './submission.service';
+import { UserService } from './user.service';
 import { WebsocketService } from './websocket.service';
 
 import { IifPipe } from './pipes/iif.pipe';
@@ -84,11 +84,11 @@ import { ProblemValidatorDirective } from './directives/problem-validator.direct
     ReactiveFormsModule
   ],
   providers: [
-    AuthService,
     BlogService,
     CompetitionService,
     ProblemService,
     SubmissionService,
+    UserService,
     WebsocketService
   ],
   bootstrap: [AppComponent]

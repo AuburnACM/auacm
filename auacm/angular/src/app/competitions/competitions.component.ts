@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { CompetitionService } from '../competition.service';
-import { AuthService } from '../auth.service';
+import { UserService } from '../user.service';
 
 import { Competition, CompetitionProblem } from '../models/competition';
 import { UserData } from '../models/user';
@@ -20,17 +20,17 @@ export class CompetitionsComponent implements OnInit, OnDestroy {
 
   // Needs sorting eventually
   constructor(private _competitionService: CompetitionService,
-              private _authService: AuthService) { 
+              private _userService: UserService) { 
     this.competitions['ongoing'] = [];
     this.competitions['upcoming'] = [];
     this.competitions['past'] = [];
-    this._authService.userData$.subscribe(data => {
+    this._userService.userData$.subscribe(data => {
       this.user = data;
     })
   }
 
   ngOnInit() {
-    this.user = this._authService.getUserData();
+    this.user = this._userService.getUserData();
     this.getCompetitions();
     this.startTimer();
   }

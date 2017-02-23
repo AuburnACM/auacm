@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 import { Converter } from 'showdown';
 
 import { BlogService } from '../blog.service';
-import { AuthService } from '../auth.service';
+import { UserService } from '../user.service';
 
 import { BlogPost } from '../models/blog';
 import { UserData } from '../models/user';
@@ -26,9 +26,9 @@ export class CreateBlogComponent implements OnInit {
 
   tabSelect: string = "edit";
 
-  constructor(private _authService: AuthService, private _blogService: BlogService,
+  constructor(private _userService: UserService, private _blogService: BlogService,
               private _location: Location, private _router: Router) {
-    _authService.userData$.subscribe(data => {
+    _userService.userData$.subscribe(data => {
       this.userData = data;
       if (!this.userData.loggedIn || !this.userData.isAdmin) {
         if (this._router.url === '/blogs/create') {
@@ -44,7 +44,7 @@ export class CreateBlogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userData = this._authService.getUserData();
+    this.userData = this._userService.getUserData();
     this.blogPost.author.display = this.userData.displayName;
     this.blogPost.author.username = this.userData.username;
     this.blogPost.postTime = new Date().getTime();

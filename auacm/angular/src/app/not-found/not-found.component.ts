@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
-import { AuthService } from '../auth.service';
+import { UserService } from '../user.service';
 
 import { UserData } from '../models/user';
 
@@ -15,9 +15,9 @@ export class NotFoundComponent implements OnInit {
 
   private userData: UserData = new UserData();
 
-  constructor(private _router: Router, private _authService: AuthService,
+  constructor(private _router: Router, private _userService: UserService,
               private _location: Location) {
-    this._authService.userData$.subscribe(newData => {
+    this._userService.userData$.subscribe(newData => {
       if (!this.userData.loggedIn && newData.loggedIn) {
         this.userData = newData;
         if (this._router.url === '/404') {
@@ -31,7 +31,7 @@ export class NotFoundComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userData = this._authService.getUserData();
+    this.userData = this._userService.getUserData();
   }
 
 }

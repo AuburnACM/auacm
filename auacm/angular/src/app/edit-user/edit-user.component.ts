@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormControlDirective, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { AuthService } from '../auth.service';
+import { UserService } from '../user.service';
 
 import { UserData } from '../models/user';
 
@@ -23,9 +23,9 @@ export class EditUserComponent implements OnInit {
   private responseFailed: boolean = false;
   private responseMessage: string = '';
 
-  constructor(private _authService: AuthService, private _router: Router,
+  constructor(private _userService: UserService, private _router: Router,
               private _formBuilder: FormBuilder) {
-    this._authService.userData$.subscribe(user => {
+    this._userService.userData$.subscribe(user => {
       if (!user.loggedIn) {
         this._router.navigate(['404']);
       } else {
@@ -40,11 +40,11 @@ export class EditUserComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userData = this._authService.getUserData();
+    this.userData = this._userService.getUserData();
   }
 
   changePassword(): void {
-    this._authService.changePassword(this.settingsForm.controls['oldPassword'].value, this.settingsForm.controls['newPassword'].value).then(success => {
+    this._userService.changePassword(this.settingsForm.controls['oldPassword'].value, this.settingsForm.controls['newPassword'].value).then(success => {
       if (success) {
         this.responseSuccess = true;
         this.responseFailed = false;

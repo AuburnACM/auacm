@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Converter } from 'showdown';
 
 import { BlogService } from '../blog.service';
-import { AuthService } from '../auth.service';
+import { UserService } from '../user.service';
 import { LimitWordsPipe }from '../pipes/limit-words.pipe';
 
 import { BlogPost } from '../models/blog';
@@ -25,15 +25,15 @@ export class BlogListComponent implements OnInit {
   user: UserData;
   hoverId: number = EDIT_ICON_NONE;
 
-  constructor(private _blogService: BlogService, private _authService: AuthService,
+  constructor(private _blogService: BlogService, private _userService: UserService,
               private _router: Router) {
-    this._authService.userData$.subscribe(newData => {
+    this._userService.userData$.subscribe(newData => {
       this.user = newData;
     })
    }
 
   ngOnInit() {
-    this.user = this._authService.getUserData();
+    this.user = this._userService.getUserData();
     this.getBlogs();
   };
 

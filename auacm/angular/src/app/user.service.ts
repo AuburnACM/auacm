@@ -10,7 +10,7 @@ import { SimpleResponse } from './models/response';
  * so that components subscribed can be notified of a change.
  */
 @Injectable()
-export class AuthService {
+export class UserService {
 
   private userDataSource: Subject<UserData> = new Subject<UserData>();
   private userData: UserData = new UserData();

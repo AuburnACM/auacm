@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Converter } from 'showdown';
 
-import { AuthService } from '../auth.service';
+import { UserService } from '../user.service';
 import { BlogService } from '../blog.service';
 
 import { UserData } from '../models/user';
@@ -24,16 +24,16 @@ export class BlogPostComponent implements OnInit {
 
   post: BlogPost = new BlogPost();
 
-  constructor(private _authService: AuthService,
+  constructor(private _userService: UserService,
               private _blogService: BlogService,
               private _router: Router, private _activeRoute: ActivatedRoute) {
-    this._authService.userData$.subscribe(userData => {
+    this._userService.userData$.subscribe(userData => {
       this.user = userData;
     });
   }
 
   ngOnInit() {
-    this.user = this._authService.getUserData();
+    this.user = this._userService.getUserData();
     this._activeRoute.params.switchMap((params: Params) => params['id'] 
           ? this._blogService.getBlogPost(params['id']) : Observable.of(new BlogPost()))
           .subscribe(blogPost => {
