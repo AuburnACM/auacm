@@ -20,14 +20,10 @@ import { BlogPost } from '../models/blog';
 export class EditBlogComponent implements OnInit {
 
   private converter: Converter = new Converter();
-
   private userData: UserData;
-
   private oldBlogPost: BlogPost = new BlogPost();
   private newBlogPost: BlogPost = new BlogPost();
-
   private tabSelect: string = "edit";
-
   private formDisabled: boolean = false;
   private success: boolean = false;
   private failed: boolean = false;

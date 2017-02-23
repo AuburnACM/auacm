@@ -257,11 +257,41 @@ export class CompetitionService {
     });
   };
 
-  updateCompetition(cid: number, name: string, start: number, stop: number, closed: boolean, compProblems: CompetitionProblem[]) : Promise<Competition> {
-    return undefined;
+  updateCompetition(competition: Competition, problems: Problem[]) : Promise<Competition> {
+    var problemData = [];
+    for (var i = 0; i < problems.length; i++) {
+      problemData.push({
+        label: String.fromCharCode("A".charCodeAt(0) + i),
+        pid: problems[i].pid
+      });
+    }
+    var formData = new URLSearchParams();
+    formData.append('name', competition.name);
+    formData.append('start_time', competition.startTime.toString());
+    formData.append('length', competition.length.toString());
+    formData.append('problems', JSON.stringify(problemData));
+    // in python, a non empty string that is parsed will be true,
+    // while an empty string will be false.
+    formData.append('closed', competition.closed ? '1' : '');
+
+    var headers = new Headers();
+    headers.append('Content-Type', 'application/x-www-form-urlencoded');
+
+    return new Promise((resolve, reject) => {
+      this._http.put(`/api/competitions/${competition.cid}`, formData.toString(), { headers: headers }).subscribe((res: Response) => {
+        if (res.status === 200) {
+          resolve(new Competition());
+        } else {
+          resolve(undefined);
+        }
+      }, (err: Response) => {
+        resolve(undefined);
+      })
+    });
   };
 
   deleteCompetition(cid: number) : Promise<boolean> {
+    // TODO Add this functionallity to the front and backend 
     return undefined;
   };
 

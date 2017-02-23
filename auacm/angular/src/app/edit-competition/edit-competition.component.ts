@@ -140,17 +140,32 @@ export class EditCompetitionComponent implements OnInit {
     this.formDisabled = true;
     this.competition.startTime = this.getStartTimeSeconds();
     this.competition.length = this.getLengthSeconds();
-    this._competitionService.createCompetition(this.competition, this.selectedProblems).then(competition => {
-      this.formDisabled = false;
-      if (competition === undefined) {
-        this.responseMessage = `Failed to ${this.createComp ? 'create' : 'update'} the competition!`;
-        this.responseFailed = true;
-        this.responseSuccess = false;
-      } else {
-        this.responseMessage = `Successfully ${this.createComp ? 'created' : 'updated'} the competition!`;
-        this.responseFailed = false;
-        this.responseSuccess = true;
-      }
-    });
+    if (this.createComp) {
+      this._competitionService.createCompetition(this.competition, this.selectedProblems).then(competition => {
+        this.formDisabled = false;
+        if (competition === undefined) {
+          this.responseMessage = `Failed to ${this.createComp ? 'create' : 'update'} the competition!`;
+          this.responseFailed = true;
+          this.responseSuccess = false;
+        } else {
+          this.responseMessage = `Successfully ${this.createComp ? 'created' : 'updated'} the competition!`;
+          this.responseFailed = false;
+          this.responseSuccess = true;
+        }
+      });
+    } else {
+      this._competitionService.updateCompetition(this.competition, this.selectedProblems).then(competition => {
+        this.formDisabled = false;
+        if (competition === undefined) {
+          this.responseMessage = `Failed to ${this.createComp ? 'create' : 'update'} the competition!`;
+          this.responseFailed = true;
+          this.responseSuccess = false;
+        } else {
+          this.responseMessage = `Successfully ${this.createComp ? 'created' : 'updated'} the competition!`;
+          this.responseFailed = false;
+          this.responseSuccess = true;
+        }
+      })
+    }
   }
 }
