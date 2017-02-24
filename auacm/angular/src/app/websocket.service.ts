@@ -10,7 +10,7 @@ export class WebsocketService {
 
   constructor() { }
 
-  connect(url: string) : Subject<MessageEvent> {
+  connect(url: string): Subject<MessageEvent> {
     if (!this.subject) {
       this.subject = this.create(window.location.protocol === 'http:' ? 'ws://' + url : 'wss://' + url);
       return this.subject;
@@ -21,21 +21,21 @@ export class WebsocketService {
   private create(url: string) {
     this.websocket = new WebSocket(url);
 
-    var subject = new Subject<MessageEvent>();
+    let subject = new Subject<MessageEvent>();
 
     this.websocket.onmessage = event => {
       subject.next(event);
-    }
+    };
 
     this.websocket.onerror = event => {
       subject.error(event);
-    }
+    };
 
     this.websocket.onclose = event => {
       subject.complete();
-    }
+    };
     return subject;
-  };
+  }
 
   send(data: Object) {
     if (this.websocket !== undefined) {

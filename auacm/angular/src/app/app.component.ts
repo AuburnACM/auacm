@@ -5,7 +5,7 @@ import { UserService } from './user.service';
 
 import { UserData } from './models/user';
 
-declare var $:any;
+declare var $: any;
 
 @Component({
   selector: 'app-root',
@@ -13,20 +13,17 @@ declare var $:any;
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+  public user: UserData;
+  public failedLogin = false;
+  public loginOpen = false;
+  public navCollapsed = false;
 
-  constructor(private _router: Router, private _userService: UserService) {
+  constructor(public _router: Router, private _userService: UserService) {
     this.user = _userService.getUserData();
     _userService.userData$.subscribe(user => {
       this.user = user;
     });
   }
-
-  private user: UserData;
-
-  failedLogin: boolean = false;
-
-  loginOpen: boolean = false;
-  navCollapsed: boolean = false;
 
   ngOnInit() {
     this._userService.refreshUserData();
@@ -44,7 +41,7 @@ export class AppComponent implements OnInit {
       } else {
         // Closes the gosh dern menu if login is successful. I spent years trying to figure this out.
         // Send help.
-        $("#dropdownMenu1").dropdown("toggle");
+        $('#dropdownMenu1').dropdown('toggle');
         this.failedLogin = false;
       }
     });
@@ -58,7 +55,7 @@ export class AppComponent implements OnInit {
     // Sets the focus on the username form.
     // Needs a slight delay so the username form can be rendered by the *ngIf
     setTimeout(function() {
-      var doc = document.getElementById('username');
+      const doc = document.getElementById('username');
       if (doc !== undefined && doc !== null) {
         doc.focus();
       }
