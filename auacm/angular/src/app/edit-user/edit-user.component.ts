@@ -42,7 +42,7 @@ export class EditUserComponent implements OnInit {
     this.userData = this._userService.getUserData();
   }
 
-  changePassword(): void {
+  changePassword() {
     this._userService.changePassword(this.settingsForm.controls['oldPassword'].value,
         this.settingsForm.controls['newPassword'].value).then(success => {
       if (success) {

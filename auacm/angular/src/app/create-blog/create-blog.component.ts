@@ -65,7 +65,7 @@ export class CreateBlogComponent implements OnInit {
         this.submitSuccess = true;
       }
     });
-  };
+  }
 
   back() {
     this._location.back();

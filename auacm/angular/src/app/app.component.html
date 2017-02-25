@@ -2,7 +2,8 @@
   <div class="navbar navbar-default navbar-fixed-top">
     <div class="container">
       <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mainNavList" (click)="navCollapsed = !navCollapsed">
+        <button type="button" class="navbar-toggle" data-toggle="collapse"
+            data-target="#mainNavList" (click)="navCollapsed = !navCollapsed">
           <span class="sr-only">Toggle navigation</span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
@@ -11,17 +12,30 @@
         <a href="/" class="navbar-brand" id="logo">Auburn ACM</a>
       </div>
       <div class="collapse navbar-collapse" id="mainNavList">
-        <ul class="nav navbar-nav navbar-left" data-toggle="collapse" data-target="#mainNavList.in">
-          <li [ngClass]="{active: this._router.url == '/', 'hover-pointer': true}"><a [routerLink]="['']">Blog</a></li>
-          <li [ngClass]="{active: this._router.url == '/problems', 'hover-pointer': true}"><a [routerLink]="['problems']">Problems</a></li>
-          <li *ngIf="user.loggedIn" [ngClass]="{active: _router.url == '/judge', 'hover-pointer': true}"><a [routerLink]="['judge']">Judge</a></li>
-          <li [ngClass]="{active: _router.url == '/rankings', 'hover-pointer': true}"><a [routerLink]="['rankings']">Rankings</a></li>
-          <li [ngClass]="{active: _router.url == '/competitions', 'hover-pointer': true}"><a [routerLink]="['competitions']">Competitions</a></li>
+        <ul class="nav navbar-nav navbar-left" data-toggle="collapse"
+            data-target="#mainNavList.in">
+          <li [ngClass]="{active: this._router.url == '/', 'hover-pointer': true}">
+            <a [routerLink]="['']">Blog</a>
+          </li>
+          <li [ngClass]="{active: this._router.url == '/problems', 'hover-pointer': true}">
+            <a [routerLink]="['problems']">Problems</a>
+          </li>
+          <li *ngIf="user.loggedIn" [ngClass]="{active: _router.url == '/judge',
+              'hover-pointer': true}">
+            <a [routerLink]="['judge']">Judge</a>
+          </li>
+          <li [ngClass]="{active: _router.url == '/rankings', 'hover-pointer': true}">
+            <a [routerLink]="['rankings']">Rankings</a>
+          </li>
+          <li [ngClass]="{active: _router.url == '/competitions', 'hover-pointer': true}">
+            <a [routerLink]="['competitions']">Competitions</a>
+          </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
 
           <li *ngIf="user.isAdmin" class="dropdown">
-            <a class="dropdown-toggle hover-pointer" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <a class="dropdown-toggle hover-pointer" id="dropdownMenu1"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
               <span class="glyphicon glyphicon-plus"></span>
               <span class="caret"></span>
             </a>
@@ -35,7 +49,8 @@
 
           <!-- Show user options to the user -->
           <li class="dropdown">
-            <a (click)="openDropdownMenu()"class="dropdown-toggle hover-pointer" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <a (click)="openDropdownMenu()"class="dropdown-toggle hover-pointer"
+                id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
               {{user.displayName === '' ? 'Log In' : user.displayName}}<span class="caret"></span></a>
 
             <!-- If the user is logged in, show their options -->
@@ -45,7 +60,8 @@
             </ul>
 
             <!-- If the user isn't logged in, show them the login form -->
-            <div *ngIf="!user.loggedIn" (click)="$event.stopPropagation()" class="login-dropdown dropdown-menu" aria-labelledby="dropdownMenu1">
+            <div *ngIf="!user.loggedIn" (click)="$event.stopPropagation()"
+                class="login-dropdown dropdown-menu" aria-labelledby="dropdownMenu1">
               <p *ngIf="failedLogin" class="failed-login">
                 Incorrect username or password
               </p>
