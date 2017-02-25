@@ -12,14 +12,13 @@ import { UserData } from '../models/user';
   styleUrls: ['./not-found.component.css']
 })
 export class NotFoundComponent implements OnInit {
-
   private userData: UserData = new UserData();
 
   constructor(private _router: Router, private _userService: UserService,
               private _location: Location) {
     this._userService.userData$.subscribe(newData => {
       this.userData = newData;
-    })
+    });
   }
 
   ngOnInit() {

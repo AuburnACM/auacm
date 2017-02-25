@@ -16,15 +16,13 @@ import { UserData } from '../models/user';
 })
 export class CreateBlogComponent implements OnInit {
 
-  converter: Converter = new Converter();
-
-  blogPost: BlogPost = new BlogPost();
-  userData: UserData;
-  formDisabled = false;
-  submitFailed = false;
-  submitSuccess = false;
-
-  tabSelect: string = "edit";
+  public converter: Converter = new Converter();
+  public blogPost: BlogPost = new BlogPost();
+  public userData: UserData;
+  public formDisabled = false;
+  public submitFailed = false;
+  public submitSuccess = false;
+  public tabSelect = 'edit';
 
   constructor(private _userService: UserService, private _blogService: BlogService,
               private _location: Location, private _router: Router) {
@@ -38,9 +36,12 @@ export class CreateBlogComponent implements OnInit {
       this.blogPost.author.display = this.userData.displayName;
       this.blogPost.author.username = this.userData.username;
       this.blogPost.postTime = new Date().getTime();
-      if (!this.userData.isAdmin) { this.formDisabled = true; } else { this.formDisabled = false; }
-
-    })
+      if (!this.userData.isAdmin) {
+        this.formDisabled = true;
+      } else {
+        this.formDisabled = false;
+      }
+    });
   }
 
   ngOnInit() {
@@ -48,16 +49,17 @@ export class CreateBlogComponent implements OnInit {
     this.blogPost.author.display = this.userData.displayName;
     this.blogPost.author.username = this.userData.username;
     this.blogPost.postTime = new Date().getTime();
-    if (!this.userData.isAdmin) { 
+    if (!this.userData.isAdmin) {
       this.formDisabled = true;
-    } else { 
+    } else {
       this.formDisabled = false;
     }
   }
 
   postBlog() {
     this.formDisabled = true;
-    this._blogService.createBlog(this.blogPost.title, this.blogPost.subtitle, this.blogPost.body).then(post => {
+    this._blogService.createBlog(this.blogPost.title,
+        this.blogPost.subtitle, this.blogPost.body).then(post => {
       if (post === undefined) {
         this.formDisabled = false;
         this.submitFailed = true;

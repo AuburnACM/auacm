@@ -1,47 +1,51 @@
 export class UserData {
-	constructor() {
-		this.username = "";
-		this.password = "";
-		this.displayName = "";
-		this.isAdmin = false;
-		this.loggedIn = false;
-	};
-	username: string;
-	password: string;
-	displayName: string;
-	isAdmin: boolean;
-	loggedIn: boolean;
-};
+  public username: string;
+  public password: string;
+  public displayName: string;
+  public isAdmin: boolean;
+  public loggedIn: boolean;
+
+  constructor() {
+    this.username = '';
+    this.password = '';
+    this.displayName = '';
+    this.isAdmin = false;
+    this.loggedIn = false;
+  }
+}
 
 export class RankData {
-	constructor() {
-		this.displayName = "";
-		this.rank = -1;
-		this.solved = 0;
-		this.username = "";
-	};
-	displayName: string;
-	rank: number;
-	solved: number;
-	username: string;
-};
+  public displayName: string;
+  public rank: number;
+  public solved: number;
+  public username: string;
+
+  constructor() {
+    this.displayName = '';
+    this.rank = -1;
+    this.solved = 0;
+    this.username = '';
+  }
+}
 
 export class SimpleUser {
-	constructor() {
-		this.display = '';
-		this.username = '';
-	}
-	display: string;
-	username: string;
+  public display: string;
+  public username: string;
+
+  constructor() {
+    this.display = '';
+    this.username = '';
+  }
 }
 
 export class WebsocketRegisteredUser {
-	constructor() {
-		this.display = '';
-		this.username = '';
-		this.cid = 0;
-	}
-	display: string;
-	username: string;
-	cid: number;
+  public display: string;
+  public username: string;
+  public cid: number;
+
+  constructor() {
+    this.display = '';
+    this.username = '';
+    this.cid = 0;
+  }
 }

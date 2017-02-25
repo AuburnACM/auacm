@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
 import 'rxjs/add/operator/switchMap';
-import { Observable } from 'rxjs'; 
+import { Observable } from 'rxjs/Observable';
 
 import { UserService } from '../user.service';
 import { ProblemService } from '../problem.service';
@@ -13,7 +13,7 @@ import { UserData } from '../models/user';
 import { Problem, SampleCase } from '../models/problem';
 import { Competition } from '../models/competition';
 
-declare var $:any;
+declare var $: any;
 
 @Component({
   selector: 'app-edit-problem',
@@ -22,28 +22,25 @@ declare var $:any;
 })
 export class EditProblemComponent implements OnInit {
 
-  private problem: Problem = new Problem();
-  private competitions: Competition[] = [];
-
-  private userData: UserData = new UserData();
-
-  private updateFailed: boolean = false;
-  private updateSuccess: boolean = false;
-  private disableForm: boolean = true;
-  private createProblem: boolean = false;
-  private showCaseList: boolean = true;
-
-  private failMessage: string = `Failed to ${this.createProblem ? 'create' : 'update'} the problem!`
-  private successMessage: string = `Problem ${this.createProblem ? 'created' : 'updated'} successfully!`
-  private submitButton: string = this.createProblem ? 'Create' : 'Update';
+  public problem: Problem = new Problem();
+  public competitions: Competition[] = [];
+  public userData: UserData = new UserData();
+  public updateFailed = false;
+  public updateSuccess = false;
+  public disableForm = true;
+  public createProblem = false;
+  public showCaseList = true;
+  public failMessage = `Failed to ${this.createProblem ? 'create' : 'update'} the problem!`;
+  public successMessage = `Problem ${this.createProblem ? 'created' : 'updated'} successfully!`;
+  public submitButton = this.createProblem ? 'Create' : 'Update';
 
   // Files
-  private judgeInput: File;
-  private judgeOutput: File;
-  private judgeSolution: File;
+  public judgeInput: File;
+  public judgeOutput: File;
+  public judgeSolution: File;
 
-  private addCaseErrorMsg: string = 'Please fill in the previous case before adding another';
-  private addCaseError: boolean = false;
+  public addCaseErrorMsg = 'Please fill in the previous case before adding another';
+  public addCaseError = false;
 
   constructor(private _userService: UserService, private _problemService: ProblemService,
               private _activeRoute: ActivatedRoute, private _location: Location,
@@ -61,21 +58,21 @@ export class EditProblemComponent implements OnInit {
     this.userData = this._userService.getUserData();
     this.disableForm = this.userData.isAdmin ? false : true;
     this._activeRoute.params.switchMap((params: Params) => params['pid']
-        ? this._problemService.getProblemByPid(+params['pid']) 
+        ? this._problemService.getProblemByPid(+params['pid'])
         : Observable.of(undefined)).subscribe(problem => {
-      if (problem == undefined) {
+      if (problem === undefined) {
         this.createProblem = true;
       } else {
         this.problem = problem;
       }
     });
     $(document).ready(function(){
-        $('[data-toggle="tooltip"]').tooltip(); 
+        $('[data-toggle="tooltip"]').tooltip();
     });
     this._competitionService.getAllCompetitions().then(competitions => {
       this.competitions = competitions['upcoming'];
-    })
-  };
+    });
+  }
 
   save() {
     if (this.createProblem) {
@@ -101,30 +98,28 @@ export class EditProblemComponent implements OnInit {
         }
       });
     }
-  };
+  }
 
   back() {
     this._location.back();
-  };
+  }
 
   addCase() {
-    var len = this.problem.sampleCases.length;
-    if (this.problem.sampleCases.length > 0 && (this.problem.sampleCases[len-1].input.length === 0 && this.problem.sampleCases[len-1].output.length === 0)) {
-      console.log('Previous case not filled in!');
+    const len = this.problem.sampleCases.length;
+    if (this.problem.sampleCases.length > 0 && (this.problem.sampleCases[len - 1].input.length === 0
+        && this.problem.sampleCases[len - 1].output.length === 0)) {
       this.addCaseError = true;
       return;
-    };
+    }
     this.showCaseList = false;
     this.addCaseError = false;
     this.problem.sampleCases.push(new SampleCase());
-    console.log(this.problem.sampleCases);
     this.showCaseList = true;
-  };
+  }
 
   removeCase() {
     this.showCaseList = false;
     this.problem.sampleCases.pop();
-    console.log(this.problem.sampleCases);
     this.showCaseList = true;
-  };
+  }
 }

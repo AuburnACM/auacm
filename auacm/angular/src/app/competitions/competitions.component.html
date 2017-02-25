@@ -9,8 +9,8 @@
           <th class="col-md-3">Name</th>
           <th class="col-md-3">Start Time</th>
           <th class="col-md-2">Length</th>
-          <th [ngClass]="user.loggedIn ? 'col-md-2' : 'col-md-4'">Remaining</th>
-          <th class="col-md-2" *ngIf="user.loggedIn">Register</th>
+          <th [ngClass]="userData.loggedIn ? 'col-md-2' : 'col-md-4'">Remaining</th>
+          <th class="col-md-2" *ngIf="userData.loggedIn">Register</th>
         </tr>
       </thead>
       <tbody>
@@ -19,11 +19,11 @@
           <td>{{ competition.startTime | secondsToDateTime | date:"medium" }}</td>
           <td>{{ competition.length | secondsToHours }}</td>
           <td>{{ competition.timeRemaining | secondsToHours }}</td>
-          <td *ngIf="user.loggedIn">
+          <td *ngIf="userData.loggedIn">
             <div *ngIf="competition.registered">Registered</div>
-            <a *ngIf="!competition.registered && (user.isAdmin || !competition.closed)"
+            <a *ngIf="!competition.registered && (userData.isAdmin || !competition.closed)"
                  (click)="register(competition)" class="hover-pointer">Register</a>
-            <div *ngIf="!competition.registered && !user.isAdmin && competition.closed">Closed</div>
+            <div *ngIf="!competition.registered && !userData.isAdmin && competition.closed">Closed</div>
           </td>
         </tr>
       </tbody>
@@ -38,8 +38,8 @@
         <tr>
           <th class="col-md-3">Name</th>
           <th class="col-md-3">Start Time</th>
-          <th ng-class="loggedIn ? 'col-md-4' : 'col-md-6'">Length</th>
-          <th class="col-md-2" *ngIf="loggedIn">Register</th>
+          <th [ngClass]="userData.loggedIn ? 'col-md-4' : 'col-md-6'">Length</th>
+          <th class="col-md-2" *ngIf="userData.loggedIn">Register</th>
         </tr>
       </thead>
       <tbody>
@@ -47,11 +47,11 @@
           <td><a [routerLink]="['/competition/' + competition.cid]">{{ competition.name }}</a></td>
           <td>{{ competition.startTime | secondsToDateTime | date:"medium" }}</td>
           <td>{{ competition.length | secondsToHours }}</td>
-          <td *ngIf="user.loggedIn">
+          <td *ngIf="userData.loggedIn">
             <div *ngIf="competition.registered">Registered</div>
-            <a *ngIf="!competition.registered && (user.isAdmin || !competition.closed)"
+            <a *ngIf="!competition.registered && (userData.isAdmin || !competition.closed)"
                 class="hover-pointer" (click)="register(competition)">Register</a>
-            <div *ngIf="!competition.registered && !user.isAdmin && competition.closed">Closed</div>
+            <div *ngIf="!competition.registered && !userData.isAdmin && competition.closed">Closed</div>
           </td>
         </tr>
       </tbody>

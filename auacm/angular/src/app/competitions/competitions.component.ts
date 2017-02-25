@@ -13,24 +13,23 @@ import { UserData } from '../models/user';
 })
 export class CompetitionsComponent implements OnInit, OnDestroy {
 
-  private competitions: Map<string, Competition[]> = new Map<string, Competition[]>(); 
-  private timer: NodeJS.Timer = undefined;
-
-  user: UserData = new UserData();
+  public competitions: Map<string, Competition[]> = new Map<string, Competition[]>();
+  public timer: NodeJS.Timer = undefined;
+  public userData: UserData = new UserData();
 
   // Needs sorting eventually
   constructor(private _competitionService: CompetitionService,
-              private _userService: UserService) { 
+              private _userService: UserService) {
     this.competitions['ongoing'] = [];
     this.competitions['upcoming'] = [];
     this.competitions['past'] = [];
     this._userService.userData$.subscribe(data => {
-      this.user = data;
-    })
+      this.userData = data;
+    });
   }
 
   ngOnInit() {
-    this.user = this._userService.getUserData();
+    this.userData = this._userService.getUserData();
     this.getCompetitions();
     this.startTimer();
   }
@@ -44,17 +43,17 @@ export class CompetitionsComponent implements OnInit, OnDestroy {
   getCompetitions() {
     this._competitionService.getAllCompetitions().then(competitions => {
       this.competitions = competitions;
-      for (var comp of this.competitions['ongoing']) {
+      for (const comp of this.competitions['ongoing']) {
         comp.timeRemaining = this.getRemainingTime(comp);
       }
     });
   }
 
   startTimer() {
-    var self = this;
+    const self = this;
     this.timer = setInterval(function() {
       if (self.competitions['ongoing'].length > 0) {
-        for (var comp of self.competitions['ongoing']) {
+        for (const comp of self.competitions['ongoing']) {
           if (comp.timeRemaining < 0) {
             self.getCompetitions();
             self.competitions['ongoing'].splice(self.competitions['ongoing'].indexOf(comp), 1);
@@ -71,14 +70,11 @@ export class CompetitionsComponent implements OnInit, OnDestroy {
     this._competitionService.register(competition.cid).then(success => {
       if (success) {
         competition.registered = true;
-      } else {
-        console.log('Failed to register you!');
       }
     });
-  };
+  }
 
   getRemainingTime(competition: Competition): number {
     return competition.startTime + competition.length - (Date.now() / 1000);
   }
-
 }

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Http, Request, Response, Headers, URLSearchParams } from '@angular/http';
-import { Subject } from 'rxjs';
+import { Subject } from 'rxjs/Subject';
 
-import { WebsocketService } from './websocket.service'; 
+import { WebsocketService } from './websocket.service';
 
 import { CompetitionProblem, Competition, CompetitionTeam, TeamProblemData } from './models/competition';
 import { RecentSubmission } from './models/submission';
@@ -14,7 +14,7 @@ import { SimpleUser, WebsocketRegisteredUser } from './models/user';
  * This class manages the connection to the competition part of the backend.
  * You can add, edit, or remove competitions, update teams, and handle websocket
  * messages about competitions.
- * 
+ *
  * Websocket messages:
  *   - system_time
  *   - status
@@ -24,15 +24,15 @@ import { SimpleUser, WebsocketRegisteredUser } from './models/user';
 export class CompetitionService {
 
   // Websocket subject for client time offset
-  private clientTimeOffset: number = 0;
-  timeOffsetSource: Subject<number> = new Subject<number>();
+  public clientTimeOffset = 0;
+  public timeOffsetSource: Subject<number> = new Subject<number>();
 
   // Websocket subject for competition data
-  private competition: Competition = new Competition();
-  competitionSource: Subject<Competition> = new Subject<Competition>();
+  public competition: Competition = new Competition();
+  public competitionSource: Subject<Competition> = new Subject<Competition>();
 
   // Websocket subject for competition teams
-  competitionTeamSource: Subject<WebsocketRegisteredUser> = new Subject<WebsocketRegisteredUser>();
+  public competitionTeamSource: Subject<WebsocketRegisteredUser> = new Subject<WebsocketRegisteredUser>();
 
   /**
    * The constructor for CompetitionService. This handles initializing the
@@ -43,14 +43,14 @@ export class CompetitionService {
   constructor(private _http: Http, private _websocketService: WebsocketService) {
     this._websocketService.connect(window.location.host + '/websocket').subscribe(data => {
         // update the client's time offset and scoreboard data
-        var response = JSON.parse(data.data);
-        var responseData = response.data;
-        var viewed = [];
+        const response = JSON.parse(data.data);
+        const responseData = response.data;
+        const viewed = [];
         if (response.eventType === 'system_time') {
-          this.clientTimeOffset = -Date.now() + responseData.milliseconds;
+          this.clientTimeOffset = responseData.milliseconds - Date.now();
           this.timeOffsetSource.next(this.clientTimeOffset);
         } else if (response.eventType === 'status' && this.competition.cid > 0) {
-          if (viewed.indexOf(responseData.submissionId) > -1 
+          if (viewed.indexOf(responseData.submissionId) > -1
               || !this.problemIsInComp(responseData.problemId)
               || responseData.submitTime > this.competition.startTime + this.competition.length) {
             // The scoreboard ignores the problem for any of the following
@@ -63,10 +63,10 @@ export class CompetitionService {
           if (responseData.status !== 'running') {        // if the verdict isn't "running"
             viewed.push(responseData.submissionId);       // note that we've seen this
           }
-          for (var team of this.competition.teams) {
-            if (team.users.indexOf(responseData.username) != -1) {
+          for (const team of this.competition.teams) {
+            if (team.users.indexOf(responseData.username) !== -1) {
               // If the user that submitted the problem was on this team
-              var problem: TeamProblemData = team.problemData[responseData.problemId];
+              const problem: TeamProblemData = team.problemData[responseData.problemId];
               if (problem.status !== 'correct') {
                 if (responseData.status === 'correct') {
                   problem.submitCount++;
@@ -85,17 +85,17 @@ export class CompetitionService {
             }
           }
           this.competitionSource.next(this.competition);
-        } else if (response.eventType == 'new_user') {
+        } else if (response.eventType === 'new_user') {
           // Handles a new user registering for a competition
           // Probably should be renamed to comp_register or something
-          var tempRegisteredUser = new WebsocketRegisteredUser();
+          const tempRegisteredUser = new WebsocketRegisteredUser();
           tempRegisteredUser.cid = responseData.cid;
           tempRegisteredUser.display = responseData.user.display;
           tempRegisteredUser.username = responseData.user.username;
           this.competitionTeamSource.next(tempRegisteredUser);
         }
     });
-    var self = this;
+    const self = this;
     setTimeout(function() {
       self._websocketService.send({eventType: 'system_time'});
     }, 2000);
@@ -108,11 +108,11 @@ export class CompetitionService {
   resetScoreboard() {
     this.competition = new Competition();
     this.competitionSource.next(this.competition);
-  };
+  }
 
   /**
    * Fetches the competition details for a competition.
-   * 
+   *
    * @param cid - the competition id
    */
   fetchCompetition(cid: number) {
@@ -120,34 +120,34 @@ export class CompetitionService {
       this.competition = competition;
       this.competitionSource.next(this.competition);
     });
-  };
+  }
 
   /**
    * Returns the client time offset for a competition.
-   * 
+   *
    * @returns the client-side time offset of a competition.
    */
   getClientTimeOffset(): number {
     return this.clientTimeOffset;
-  };
+  }
 
   /**
    * Creates a new competition.
-   * 
+   *
    * @param competition - the competition to create
    * @param problems - the problems for the competition
-   * 
+   *
    * @returns the new competition
    */
-  createCompetition(competition: Competition, problems: Problem[]) : Promise<Competition> {
-    var problemData = [];
-    for (var i = 0; i < problems.length; i++) {
+  createCompetition(competition: Competition, problems: Problem[]): Promise<Competition> {
+    const problemData = [];
+    for (let i = 0; i < problems.length; i++) {
       problemData.push({
-        label: String.fromCharCode("A".charCodeAt(0) + i),
+        label: String.fromCharCode('A'.charCodeAt(0) + i),
         pid: problems[i].pid
       });
     }
-    var formData = new URLSearchParams();
+    const formData = new URLSearchParams();
     formData.append('name', competition.name);
     formData.append('start_time', competition.startTime.toString());
     formData.append('length', competition.length.toString());
@@ -156,7 +156,7 @@ export class CompetitionService {
     // while an empty string will be false.
     formData.append('closed', competition.closed ? '1' : '');
 
-    var headers = new Headers();
+    const headers = new Headers();
     headers.append('Content-Type', 'application/x-www-form-urlencoded');
 
     return new Promise((resolve, reject) => {
@@ -168,64 +168,83 @@ export class CompetitionService {
         }
       }, (err: Response) => {
         resolve(undefined);
-      })
+      });
     });
-  };
+  }
 
   /**
    * Returns a map of comptitions and their data.
-   * 
+   *
    * @returns a map of competitions
    */
-  getAllCompetitions() : Promise<Map<string, Competition[]>> {
+  getAllCompetitions(): Promise<Map<string, Competition[]>> {
     return new Promise((resolve, reject) => {
       this._http.get('/api/competitions').subscribe((res: Response) => {
-        var competitions = new Map<string, Competition[]>();
-        var data = res.json().data;
-        if (res.status == 200) {
-          for (var competitionType in data) {
+        const competitions = new Map<string, Competition[]>();
+        const data = res.json().data;
+        if (res.status === 200) {
+          const competitionTypes = Object.keys(data);
+          for (let i = 0; i < competitionTypes.length; i++) {
+            const competitionType = competitionTypes[i];
             competitions[competitionType] = [];
-            for (var i = 0; i < data[competitionType].length; i++) {
+            for (let j = 0; j < data[competitionType].length; j++) {
               // I'm unsure what is returned, going to check for all parameters     - John
-              var competition = new Competition();
-              if (data[competitionType][i]['cid'] !== undefined) competition['cid'] = data[competitionType][i]['cid'];
-              if (data[competitionType][i]['closed'] !== undefined) competition['closed'] = data[competitionType][i]['closed'];
-              if (data[competitionType][i]['length'] !== undefined) competition['length'] = data[competitionType][i]['length'];
-              if (data[competitionType][i]['name'] !== undefined) competition['name'] = data[competitionType][i]['name'];
-              if (data[competitionType][i]['registered'] !== undefined) competition['registered'] = data[competitionType][i]['registered'];
-              if (data[competitionType][i]['startTime'] !== undefined) competition['startTime'] = data[competitionType][i]['startTime'];
-              if (data[competitionType][i]['stop'] !== undefined) competition['stop'] = data[competitionType][i]['stop'];
-              if (data[competitionType][i]['compProblems'] !== undefined) competition['compProblems'] = data[competitionType][i]['compProblems'];
+              const competition = new Competition();
+              if (data[competitionType][j]['cid'] !== undefined) {
+                competition['cid'] = data[competitionType][j]['cid'];
+              }
+              if (data[competitionType][j]['closed'] !== undefined) {
+                competition['closed'] = data[competitionType][j]['closed'];
+              }
+              if (data[competitionType][j]['length'] !== undefined) {
+                competition['length'] = data[competitionType][j]['length'];
+              }
+              if (data[competitionType][j]['name'] !== undefined) {
+                competition['name'] = data[competitionType][j]['name'];
+              }
+              if (data[competitionType][j]['registered'] !== undefined) {
+                competition['registered'] = data[competitionType][j]['registered'];
+              }
+              if (data[competitionType][j]['startTime'] !== undefined) {
+                competition['startTime'] = data[competitionType][j]['startTime'];
+              }
+              if (data[competitionType][j]['stop'] !== undefined) {
+                competition['stop'] = data[competitionType][j]['stop'];
+              }
+              if (data[competitionType][j]['compProblems'] !== undefined) {
+                competition['compProblems'] = data[competitionType][j]['compProblems'];
+              }
               competitions[competitionType].push(competition);
             }
           }
         }
         resolve(competitions);
       }, (err: Response) => {
-        var competitions = new Map<string, Competition[]>();
+        const competitions = new Map<string, Competition[]>();
         competitions['ongoing'] = [];
         competitions['upcoming'] = [];
         competitions['past'] = [];
         resolve(competitions);
       });
-    })
-  };
+    });
+  }
 
-  getCompetition(cid: number) : Promise<Competition> {
+  getCompetition(cid: number): Promise<Competition> {
     return new Promise((resolve, reject) => {
       this._http.get(`/api/competitions/${cid}`).subscribe((res: Response) => {
         if (res.status === 200) {
-          var competition = new Competition();
-          var data = res.json().data;
+          const competition = new Competition();
+          const data = res.json().data;
 
           // Parse competition compProblems
-          for (var key in data.compProblems) {
-            var tempData = data.compProblems[key];
-            var tempCompProblem = new CompetitionProblem();
+          const keys = Object.keys(data.compProblems);
+          for (let i = 0; i < keys.length; i++) {
+            const tempData = data.compProblems[keys[i]];
+            const tempCompProblem = new CompetitionProblem();
             tempCompProblem.name = tempData.name;
             tempCompProblem.pid = tempData.pid;
             tempCompProblem.shortName = tempData.shortname;
-            competition.compProblems[key] = tempCompProblem;
+            competition.compProblems[keys[i]] = tempCompProblem;
           }
 
           // Parse general competition data
@@ -237,9 +256,9 @@ export class CompetitionService {
           competition.startTime = data.competition.startTime;
 
           // Parse team data
-          for (var i = 0; i < data.teams.length; i++) {
-            var tempTeam = data.teams[i];
-            var tempTeamData = new CompetitionTeam();
+          for (let i = 0; i < data.teams.length; i++) {
+            const tempTeam = data.teams[i];
+            const tempTeamData = new CompetitionTeam();
             tempTeamData.displayNames = tempTeam.display_names;
             tempTeamData.name = tempTeam.name;
             tempTeamData.problemData = tempTeam.problemData;
@@ -255,17 +274,17 @@ export class CompetitionService {
         resolve(new Competition());
       });
     });
-  };
+  }
 
-  updateCompetition(competition: Competition, problems: Problem[]) : Promise<Competition> {
-    var problemData = [];
-    for (var i = 0; i < problems.length; i++) {
+  updateCompetition(competition: Competition, problems: Problem[]): Promise<Competition> {
+    const problemData = [];
+    for (let i = 0; i < problems.length; i++) {
       problemData.push({
-        label: String.fromCharCode("A".charCodeAt(0) + i),
+        label: String.fromCharCode('A'.charCodeAt(0) + i),
         pid: problems[i].pid
       });
     }
-    var formData = new URLSearchParams();
+    const formData = new URLSearchParams();
     formData.append('name', competition.name);
     formData.append('start_time', competition.startTime.toString());
     formData.append('length', competition.length.toString());
@@ -274,11 +293,12 @@ export class CompetitionService {
     // while an empty string will be false.
     formData.append('closed', competition.closed ? '1' : '');
 
-    var headers = new Headers();
+    const headers = new Headers();
     headers.append('Content-Type', 'application/x-www-form-urlencoded');
 
     return new Promise((resolve, reject) => {
-      this._http.put(`/api/competitions/${competition.cid}`, formData.toString(), { headers: headers }).subscribe((res: Response) => {
+      this._http.put(`/api/competitions/${competition.cid}`,
+          formData.toString(), { headers: headers }).subscribe((res: Response) => {
         if (res.status === 200) {
           resolve(new Competition());
         } else {
@@ -286,16 +306,16 @@ export class CompetitionService {
         }
       }, (err: Response) => {
         resolve(undefined);
-      })
+      });
     });
-  };
+  }
 
-  deleteCompetition(cid: number) : Promise<boolean> {
-    // TODO Add this functionallity to the front and backend 
+  deleteCompetition(cid: number): Promise<boolean> {
+    // TODO Add this functionallity to the front and backend
     return undefined;
-  };
+  }
 
-  register(cid: number) : Promise<boolean> {
+  register(cid: number): Promise<boolean> {
     return new Promise((resolve, reject) => {
       this._http.post(`/api/competitions/${cid}/register`, '').subscribe((res: Response) => {
         if (res.status === 200) {
@@ -307,9 +327,9 @@ export class CompetitionService {
         resolve(false);
       });
     });
-  };
+  }
 
-  unregister(cid: number) : Promise<boolean> {
+  unregister(cid: number): Promise<boolean> {
     return new Promise((resolve, reject) => {
       this._http.post(`/api/competitions/${cid}/unregister`, '').subscribe((res: Response) => {
         if (res.status === 200) {
@@ -321,31 +341,31 @@ export class CompetitionService {
         resolve(false);
       });
     });
-  };
+  }
 
-  getCompetitionTeams(cid: number) : Promise<Map<string, SimpleUser[]>> {
+  getCompetitionTeams(cid: number): Promise<Map<string, SimpleUser[]>> {
     return new Promise((resolve, reject) => {
       this._http.get(`/api/competitions/${cid}/teams`).subscribe((res: Response) => {
         if (res.status === 200) {
-          var data = res.json().data;
-          var map = new Map<string, SimpleUser[]>();
-          for (var team in data) {
-            map[team] = data[team];
+          const data = res.json().data;
+          const map = new Map<string, SimpleUser[]>();
+          const teams = Object.keys(data);
+          for (let i = 0; i < teams.length; i++) {
+            map[teams[i]] = data[teams[i]];
           }
           resolve(map);
         } else {
           resolve(new Map<string, SimpleUser[]>());
         }
       }, (err: Response) => {
-        console.log('Failed to fetch the teams for the competition!');
         resolve(new Map<string, SimpleUser[]>());
       });
     });
-  };
+  }
 
   updateCompetitionTeams(cid: number, team: Map<string, string[]>): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      var formData = new FormData();
+      const formData = new FormData();
       formData.append('teams', JSON.stringify(team));
       this._http.put(`/api/competitions/${cid}/teams`, formData).subscribe((res: Response) => {
         if (res.status === 200) {
@@ -354,18 +374,17 @@ export class CompetitionService {
           resolve(false);
         }
       }, (err: Response) => {
-        console.log('Failed to update the teams for the competition!');
         resolve(false);
       });
     });
   }
 
   private problemIsInComp(problemId: number): boolean {
-    for (var problem in this.competition.compProblems) {
+    for (const problem in this.competition.compProblems) {
       if (problemId === this.competition.compProblems[problem].pid) {
         return true;
       }
     }
     return false;
-  };
+  }
 }

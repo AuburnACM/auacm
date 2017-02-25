@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
 import { UserService } from '../user.service';
@@ -11,23 +11,24 @@ import { CompetitionService } from '../competition.service';
 import { SimpleUser, UserData, WebsocketRegisteredUser } from '../models/user';
 import { Competition } from '../models/competition';
 
+const DRAG_BOX_NAME = 'members';
+
 @Component({
   selector: 'app-edit-teams',
   templateUrl: './edit-teams.component.html',
   styleUrls: ['./edit-teams.component.css']
 })
 export class EditTeamsComponent implements OnInit {
-
-  private userData: UserData = new UserData();
-  private teams: Map<string, SimpleUser[]> = new Map<string, SimpleUser[]>();
-  private teamNames: string[] = [];
-  private individuals: SimpleUser[] = [];
-  private teamName: string = "";
-  private competitionId: number = 0;
-
-  private responseFailed: boolean = false;
-  private responseSuccess: boolean = false;
-  private responseMessage: string = '';
+  public userData: UserData = new UserData();
+  public teams: Map<string, SimpleUser[]> = new Map<string, SimpleUser[]>();
+  public teamNames: string[] = [];
+  public individuals: SimpleUser[] = [];
+  public teamName = '';
+  public DND_BOX_NAME = DRAG_BOX_NAME;
+  public competitionId = 0;
+  public responseFailed = false;
+  public responseSuccess = false;
+  public responseMessage = '';
 
   constructor(private _router: Router, private _userService: UserService,
               private _competitionService: CompetitionService, private _activeRoute: ActivatedRoute,
@@ -41,7 +42,7 @@ export class EditTeamsComponent implements OnInit {
       }
     });
     this._competitionService.competitionTeamSource.subscribe(socketData => {
-      var newUser = new SimpleUser();
+      const newUser = new SimpleUser();
       newUser.display = socketData.display;
       newUser.username = socketData.username;
       this.individuals.push(newUser);
@@ -50,7 +51,7 @@ export class EditTeamsComponent implements OnInit {
       // if a team with the same name as the user exists, and if so, break
       // it down into individuals.
       this.removeTeam(socketData.display);
-    })
+    });
   }
 
   ngOnInit() {
@@ -65,7 +66,7 @@ export class EditTeamsComponent implements OnInit {
       if (data === undefined) {
         this._router.navigate(['404']);
       } else {
-        for (var team in data) {
+        for (const team in data) {
           if (data[team].length === 1 && data[team][0].display === team) {
             this.individuals.push(data[team][0]);
           } else {
@@ -83,51 +84,53 @@ export class EditTeamsComponent implements OnInit {
 
   removeTeam(name: string): void {
     if (this.teams[name] !== undefined) {
-      for (var user of this.teams[name]) {
+      for (const user of this.teams[name]) {
         this.individuals.push(user);
       }
       this.teamNames.splice(this.teamNames.indexOf(name), 1);
       delete this.teams[name];
     }
-  };
+  }
 
   addTeam(): void {
     if (!this.teamExists()) {
       this.teams[this.teamName] = [];
       this.teamNames.push(this.teamName);
     }
-  };
+  }
 
   teamExists(): boolean {
-    if (this.teamName === '') return true;
+    if (this.teamName === '') {
+      return true;
+    }
     // Check individuals
-    for (var teamName in this.individuals) {
+    for (const teamName in this.individuals) {
       if (teamName === this.teamName) {
         return true;
       }
     }
     // Check team
-    for (var teamName in this.teams) {
+    for (const teamName in this.teams) {
       if (teamName === this.teamName) {
         return true;
       }
     }
     return false;
-  };
+  }
 
   save(): void {
-    var map = new Map<string, string[]>();
+    const map = new Map<string, string[]>();
 
-    for (var teamName in this.teams) {
+    for (const teamName in this.teams) {
       if (this.teams[teamName].length > 0) {
-        map[teamName] = []
-        for (var user1 of this.teams[teamName]) {
+        map[teamName] = [];
+        for (const user1 of this.teams[teamName]) {
           map[teamName].push(user1.username);
         }
       }
     };
 
-    for (var user of this.individuals) {
+    for (const user of this.individuals) {
       map[user.display] = [];
       map[user.display].push(user.username);
     };

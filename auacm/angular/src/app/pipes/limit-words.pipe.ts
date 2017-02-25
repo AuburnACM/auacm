@@ -9,11 +9,11 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class LimitWordsPipe implements PipeTransform {
 
   transform(words: string, amount: number): string {
-    var finalString = '';
-    var allWords = words.split(' ');
-    var count = 0;
-    for (var i = 0; i < amount && i < allWords.length; i++) {
-      finalString += allWords[i] + " ";
+    let finalString = '';
+    const allWords = words.split(' ');
+    let count = 0;
+    for (let i = 0; i < amount && i < allWords.length; i++) {
+      finalString += allWords[i] + ' ';
       count++;
     };
     if (count === amount) {
@@ -22,5 +22,4 @@ export class LimitWordsPipe implements PipeTransform {
       return finalString.trim();
     }
   }
-
 }

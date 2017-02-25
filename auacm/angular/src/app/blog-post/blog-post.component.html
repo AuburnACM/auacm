@@ -3,7 +3,7 @@
   <div class="col-md-8 col-md-offset-2">
     <div>
       <h2>{{ post.title }} <small>{{ post.subtitle }}</small></h2>
-      <h5><small>Posted on {{ post.postTime | date : short }} by {{ post.author.display }}</small></h5>
+      <h5><small>Posted on {{ post.postTime | date:'short' }} by {{ post.author.display }}</small></h5>
       <div *ngIf="post.body !== ''" class="text-left" [innerHTML]="converter.makeHtml(post.body)"></div>
       <div *ngIf="user.isAdmin">
         <a [routerLink]="['/blog/' + post.id + '/edit']"><button class="btn btn-info pull-right">Edit Post</button></a>

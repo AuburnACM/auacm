@@ -6,7 +6,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class SecondsToDateTimePipe implements PipeTransform {
 
   transform(seconds: number): any {
-      if (seconds === undefined) return 0;
+      if (seconds === undefined) {
+        return 0;
+      }
       return new Date(seconds * 1000);
   }
 

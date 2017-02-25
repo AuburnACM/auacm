@@ -4,7 +4,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Converter } from 'showdown';
 
 import 'rxjs/add/operator/switchMap';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 
 import { UserService } from '../user.service';
 import { BlogService } from '../blog.service';
@@ -19,14 +19,14 @@ import { BlogPost } from '../models/blog';
 })
 export class EditBlogComponent implements OnInit {
 
-  private converter: Converter = new Converter();
-  private userData: UserData;
-  private oldBlogPost: BlogPost = new BlogPost();
-  private newBlogPost: BlogPost = new BlogPost();
-  private tabSelect: string = "edit";
-  private formDisabled: boolean = false;
-  private success: boolean = false;
-  private failed: boolean = false;
+  public converter: Converter = new Converter();
+  public userData: UserData;
+  public oldBlogPost: BlogPost = new BlogPost();
+  public newBlogPost: BlogPost = new BlogPost();
+  public tabSelect = 'edit';
+  public formDisabled = false;
+  public success = false;
+  public failed = false;
 
   constructor(private _router: Router, private _activeRoute: ActivatedRoute,
               private _userService: UserService, private _blogService: BlogService,
@@ -43,7 +43,7 @@ export class EditBlogComponent implements OnInit {
 
   ngOnInit() {
     this.userData = this._userService.getUserData();
-    this._activeRoute.params.switchMap((params: Params) => params['id'] ? this._blogService.getBlogPost(params['id']) 
+    this._activeRoute.params.switchMap((params: Params) => params['id'] ? this._blogService.getBlogPost(params['id'])
         : Observable.of(new BlogPost())).subscribe(post => {
       this.oldBlogPost.title = post.title;
       this.oldBlogPost.subtitle = post.subtitle;
@@ -52,7 +52,6 @@ export class EditBlogComponent implements OnInit {
       this.oldBlogPost.postTime = post.postTime;
       this.oldBlogPost.author.display = post.author.display;
       this.oldBlogPost.author.username = post.author.username;
-
       this.newBlogPost = post;
     });
   }
@@ -69,8 +68,10 @@ export class EditBlogComponent implements OnInit {
 
   updatePost() {
     this.formDisabled = true;
-    this._blogService.updateBlogPost(this.newBlogPost.id, this.newBlogPost.title, this.newBlogPost.subtitle, this.newBlogPost.body).then(post => {
-      if (post != undefined) {
+    this._blogService.updateBlogPost(this.newBlogPost.id,
+        this.newBlogPost.title, this.newBlogPost.subtitle,
+        this.newBlogPost.body).then(post => {
+      if (post !== undefined) {
         this.oldBlogPost.title = post.title;
         this.oldBlogPost.subtitle = post.subtitle;
         this.oldBlogPost.body = post.body;
@@ -78,7 +79,6 @@ export class EditBlogComponent implements OnInit {
         this.oldBlogPost.postTime = post.postTime;
         this.oldBlogPost.author.display = post.author.display;
         this.oldBlogPost.author.username = post.author.username;
-
         this.newBlogPost = post;
         this.formDisabled = false;
         this.success = true;

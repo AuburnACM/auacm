@@ -14,14 +14,13 @@ import { UserData } from '../models/user';
 export class EditUserComponent implements OnInit {
 
   private userData: UserData = new UserData();
-  private oldPassword: string = '';
-  private newPassword: string = '';
-  private confirmPassword: string = '';
+  private oldPassword = '';
+  private newPassword = '';
+  private confirmPassword = '';
   private settingsForm: FormGroup;
-
-  private responseSuccess: boolean = false;
-  private responseFailed: boolean = false;
-  private responseMessage: string = '';
+  private responseSuccess = false;
+  private responseFailed = false;
+  private responseMessage = '';
 
   constructor(private _userService: UserService, private _router: Router,
               private _formBuilder: FormBuilder) {
@@ -36,7 +35,7 @@ export class EditUserComponent implements OnInit {
       oldPassword: [this.oldPassword, Validators.required],
       newPassword: [this.newPassword, Validators.required],
       confirmPassword: [this.confirmPassword, Validators.required],
-    }, {validator: this.validatePassword('oldPassword', 'newPassword' ,'confirmPassword')});
+    }, {validator: this.validatePassword('oldPassword', 'newPassword' , 'confirmPassword')});
   }
 
   ngOnInit() {
@@ -44,7 +43,8 @@ export class EditUserComponent implements OnInit {
   }
 
   changePassword(): void {
-    this._userService.changePassword(this.settingsForm.controls['oldPassword'].value, this.settingsForm.controls['newPassword'].value).then(success => {
+    this._userService.changePassword(this.settingsForm.controls['oldPassword'].value,
+        this.settingsForm.controls['newPassword'].value).then(success => {
       if (success) {
         this.responseSuccess = true;
         this.responseFailed = false;
@@ -54,25 +54,25 @@ export class EditUserComponent implements OnInit {
         this.responseFailed = true;
         this.responseMessage = 'Failed to update your settings.';
       }
-    })
+    });
   }
 
   validatePassword(oldPasswordKey, newPasswordKey, confirmPasswordKey) {
     return (group: FormGroup): {[key: string]: any} => {
-      var oldPassword = group.controls[oldPasswordKey];
-      var newPassword = group.controls[newPasswordKey];
-      var confirmPassword = group.controls[confirmPasswordKey];
+      const oldPassword = group.controls[oldPasswordKey];
+      const newPassword = group.controls[newPasswordKey];
+      const confirmPassword = group.controls[confirmPasswordKey];
       if (oldPassword.value === newPassword.value) {
         return {
           passwordsMatch: true
-        }
+        };
       }
       if (confirmPassword.value !== newPassword.value) {
         return {
           missmatchedPasswords: true
-        }
+        };
       }
       return null;
-    }
-  };
+    };
+  }
 }

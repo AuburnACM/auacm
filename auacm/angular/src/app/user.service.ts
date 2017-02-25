@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Request, Response, Headers, URLSearchParams } from '@angular/http';
-import { Subject } from 'rxjs';
+import { Subject } from 'rxjs/Subject';
 
 import { UserData, RankData } from './models/user';
 import { SimpleResponse } from './models/response';
@@ -20,28 +20,28 @@ export class UserService {
   constructor(private _http: Http) {
   }
 
-  updateUserData(userData: UserData) : void {
+  updateUserData(userData: UserData): void {
     this.userData = userData;
     this.userDataSource.next(userData);
-  };
+  }
 
-  refreshUserData() : void {
+  refreshUserData(): void {
     this.me().then(data => {
       this.updateUserData(data);
     });
-  };
+  }
 
-  login(username: string, password: string) : Promise<boolean> {
-    var self = this;
+  login(username: string, password: string): Promise<boolean> {
+    const self = this;
     return new Promise((resolve, reject) => {
-      var headers = new Headers();
+      const headers = new Headers();
       headers.append('Content-Type', 'application/x-www-form-urlencoded');
-      var params = new URLSearchParams();
+      const params = new URLSearchParams();
       params.append('username', username);
       params.append('password', password);
       this._http.post('/api/login', params.toString(), {headers: headers}).subscribe((res: Response) => {
         self.refreshUserData();
-        if (res.status == 200) {
+        if (res.status === 200) {
           resolve(true);
         } else {
           resolve(false);
@@ -50,15 +50,15 @@ export class UserService {
         self.refreshUserData();
         resolve(false);
       });
-    })
-  };
+    });
+  }
 
-  logout() : Promise<boolean> {
-    var self = this;
+  logout(): Promise<boolean> {
+    const self = this;
     return new Promise((resolve, reject) => {
       this._http.get('/api/logout').subscribe((res: Response) => {
         self.updateUserData(new UserData());
-        if (res.status == 200) {
+        if (res.status === 200) {
           resolve(true);
         } else {
           resolve(false);
@@ -70,17 +70,17 @@ export class UserService {
     });
   }
 
-  getUserData() : UserData {
+  getUserData(): UserData {
     return this.userData;
   }
-  
-  me() : Promise<UserData> {
+
+  me(): Promise<UserData> {
     return new Promise((resolve, reject) => {
-      var self = this;
+      const self = this;
       this._http.get('/api/me').subscribe((res: Response) => {
-        if (res.status == 200) {
-          var data = res.json().data;
-          var userData = new UserData();
+        if (res.status === 200) {
+          const data = res.json().data;
+          const userData = new UserData();
           userData.displayName = data.displayName;
           userData.isAdmin = data.isAdmin === 1;
           userData.loggedIn = true;
@@ -94,27 +94,27 @@ export class UserService {
         resolve(new UserData());
       });
     });
-  };
+  }
 
-  createUser(username: string, password: string, displayName: string) : Promise<SimpleResponse> {
+  createUser(username: string, password: string, displayName: string): Promise<SimpleResponse> {
     return new Promise((resolve, reject) => {
-      var params = new URLSearchParams();
+      const params = new URLSearchParams();
       params.append('username', username);
       params.append('password', password);
       params.append('display', displayName);
 
-      var headers = new Headers();
+      const headers = new Headers();
       headers.append('Content-Type', 'application/x-www-form-urlencoded');
 
       this._http.post('/api/create_user', params.toString(), { headers: headers }).subscribe((res: Response) => {
         if (res.status === 200) {
-          resolve(new SimpleResponse(true, 'User created successfully.'))
+          resolve(new SimpleResponse(true, 'User created successfully.'));
         } else {
           resolve(new SimpleResponse(false, res.json().error));
         }
       }, (err: Response) => {
         if (err.status === 401) {
-          resolve(new SimpleResponse(false, 'You need to be an admin to do this.'))
+          resolve(new SimpleResponse(false, 'You need to be an admin to do this.'));
         } else if (err.status === 400) {
           resolve(new SimpleResponse(false, 'That user already exists.'));
         } else {
@@ -122,15 +122,15 @@ export class UserService {
         }
       });
     });
-  };
+  }
 
-  changePassword(oldPassword: string, newPassword: string) : Promise<boolean> {
+  changePassword(oldPassword: string, newPassword: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      var params = new URLSearchParams();
+      const params = new URLSearchParams();
       params.append('oldPassword', oldPassword);
       params.append('newPassword', newPassword);
 
-      var headers = new Headers();
+      const headers = new Headers();
       headers.append('Content-Type', 'application/x-www-form-urlencoded');
 
       this._http.post('/api/change_password', params.toString(), { headers: headers }).subscribe((res: Response) => {
@@ -141,26 +141,26 @@ export class UserService {
         }
       }, (err: Response) => {
         resolve(false);
-      })
-    })
-  };
+      });
+    });
+  }
 
   /**
    * We should implement this sometime in the future so that we don't have to edit the
    * database manually if we want to make someone an admin.
    */
-  updateAdminStatus(username: string) : Promise<SimpleResponse> {
+  updateAdminStatus(username: string): Promise<SimpleResponse> {
     return undefined;
   }
 
-  getRanking(timeframe: string) : Promise<RankData[]> {
+  getRanking(timeframe: string): Promise<RankData[]> {
     return new Promise((resolve, reject) => {
-      var time = timeframe === undefined ? 'all' : timeframe;
+      const time = timeframe === undefined ? 'all' : timeframe;
       this._http.get(`/api/ranking/${time}`).subscribe((res: Response) => {
-        var data = res.json().data;
-        var rankings = [];
-        if (res.status == 200) {
-          for (var i = 0; i < data.length; i++) {
+        const data = res.json().data;
+        const rankings = [];
+        if (res.status === 200) {
+          for (let i = 0; i < data.length; i++) {
             rankings.push(data[i]);
           }
         }
@@ -173,9 +173,9 @@ export class UserService {
 }
 
 export class TimeFrame {
-	public DAY: string = "day";
-	public WEEK: string = "week";
-	public MONTH: string = "month";
-	public YEAR: string = "year";
-	public ALL: string = "all";
+  public DAY = 'day';
+  public WEEK = 'week';
+  public MONTH = 'month';
+  public YEAR = 'year';
+  public ALL = 'all';
 }

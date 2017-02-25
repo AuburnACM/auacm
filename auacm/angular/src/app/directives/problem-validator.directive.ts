@@ -8,19 +8,18 @@ import { Validator, AbstractControl, NG_VALIDATORS } from '@angular/forms';
   ]
 })
 export class ProblemValidatorDirective implements Validator {
-
-  constructor() { }
-
   validate(c: AbstractControl) {
-    if (c.value === null) return null
-    var value = c.value.trim();
-    var numRegex = new RegExp('^[0-9 -]+$');
+    if (c.value === null) {
+      return null;
+    }
+    const value = c.value.trim();
+    const numRegex = new RegExp('^[0-9 -]+$');
     if (numRegex.test(value)) {
       return {
         appProblemValidator: {
           valid: false
         }
-      }
+      };
     }
     return null;
   }

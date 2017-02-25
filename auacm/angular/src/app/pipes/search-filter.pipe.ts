@@ -8,11 +8,13 @@ import { Problem } from '../models/problem';
 export class SearchFilterPipe implements PipeTransform {
 
   transform(array: Problem[], search: string): any {
-    if (search === "") {return array};
-    var validMatches = [];
-    for (var i = 0; i < array.length; i++) {
-      if (array[i].name.toLowerCase().startsWith(search.toLowerCase()) 
-          || array[i].appeared.toLowerCase().startsWith(search.toLowerCase()) 
+    if (search === '') {
+      return array;
+    }
+    const validMatches = [];
+    for (let i = 0; i < array.length; i++) {
+      if (array[i].name.toLowerCase().startsWith(search.toLowerCase())
+          || array[i].appeared.toLowerCase().startsWith(search.toLowerCase())
           || array[i].difficulty.toString().startsWith(search.toLowerCase())) {
         validMatches.push(array[i]);
       }

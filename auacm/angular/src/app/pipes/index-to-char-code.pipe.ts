@@ -6,7 +6,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class IndexToCharCodePipe implements PipeTransform {
 
   transform(value: number): any {
-    return String.fromCharCode("A".charCodeAt(0) + value);
+    return String.fromCharCode('A'.charCodeAt(0) + value);
   }
-
 }

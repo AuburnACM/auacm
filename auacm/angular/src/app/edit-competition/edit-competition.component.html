@@ -44,7 +44,7 @@
         <label for="startTime" class="col-sm-2 control-label">Start Time</label>
         <div class="col-sm-4 input-group">
           <input [disabled]="formDisabled" class="form-control" id="startTime" name="startTime"
-              placeholder="MM-DD-YYYY HH:mm" [(ngModel)]="startTime" required dateFormatValidator #competitionTime="ngModel">
+              placeholder="MM-DD-YYYY HH:mm" [(ngModel)]="startTime" required appDateFormatValidator #competitionTime="ngModel">
           <div class="input-group-addon">24h CDT</div>
         </div>
         <div class="col-sm-offset-2" *ngIf="competitionTime.errors && (competitionTime.dirty || competitionTime.touched)">
@@ -58,7 +58,7 @@
         <label for="compLength" class="col-sm-2 control-label">Competition Length</label>
         <div class="col-sm-4 input-group">
           <input [disabled]="formDisabled" class="form-control" id="compLength" name="compLength"
-              placeholder="h:mm" [(ngModel)]="compLength" required contestLengthValidator #competitionLength="ngModel">
+              placeholder="h:mm" [(ngModel)]="compLength" required appContestLengthValidator #competitionLength="ngModel">
           <div class="input-group-addon">h:mm</div>
         </div>
         <div class="col-sm-offset-2" *ngIf="competitionLength.errors && (competitionLength.dirty || competitionLength.touched)">

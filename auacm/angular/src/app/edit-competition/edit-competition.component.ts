@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
 import { UserService } from '../user.service';
@@ -19,28 +19,30 @@ import { Problem } from '../models/problem';
 })
 export class EditCompetitionComponent implements OnInit {
 
-  private title: string = ""; 
-  private userData: UserData = new UserData();
-  private competition: Competition = new Competition();
-  private problems: Problem[] = [];
-  private selectedProblems: Problem[] = [];
-  private selected: Problem;
+  public title = '';
+  public userData: UserData = new UserData();
+  public competition: Competition = new Competition();
+  public problems: Problem[] = [];
+  public selectedProblems: Problem[] = [];
+  public selected: Problem;
 
-  private responseMessage: string = '';
-  private startTime: string = '';
-  private compLength: string = '';
-  private createComp: boolean = false;
-  private responseFailed: boolean = false;
-  private responseSuccess: boolean = false;
-  private formDisabled: boolean = false;
+  public responseMessage = '';
+  public startTime = '';
+  public compLength = '';
+  public createComp = false;
+  public responseFailed = false;
+  public responseSuccess = false;
+  public formDisabled = false;
 
   constructor(private _router: Router, private _activeRoute: ActivatedRoute,
-              private _userService: UserService, private _competitionService: CompetitionService, 
+              private _userService: UserService, private _competitionService: CompetitionService,
               private _problemService: ProblemService) {
     this._userService.userData$.subscribe(newData => {
       this.userData = newData;
       if (!this.userData.loggedIn || !this.userData.isAdmin) {
-        if ((this._router.url.startsWith('/competition') && this._router.url.endsWith('/edit')) || (this._router.url === '/competitions/create')) {
+        if ((this._router.url.startsWith('/competition')
+            && this._router.url.endsWith('/edit'))
+            || (this._router.url === '/competitions/create')) {
           this._router.navigate(['404']);
         }
       }
@@ -60,13 +62,15 @@ export class EditCompetitionComponent implements OnInit {
     } else {
       this.title = 'Edit Competition';
       this.createComp = false;
-      this._activeRoute.params.switchMap((params: Params) => params['cid'] ? this._competitionService.getCompetition(+params['cid']) : Observable.of<Competition>(undefined)).subscribe(competition => {
+      this._activeRoute.params.switchMap((params: Params) => params['cid']
+          ? this._competitionService.getCompetition(+params['cid'])
+          : Observable.of<Competition>(undefined)).subscribe(competition => {
         if (competition === undefined) {
           this._router.navigate(['404']);
         } else {
           this.competition = competition;
-          var date = new Date(competition.startTime * 1000);
-          var startTime = '';
+          const date = new Date(competition.startTime * 1000);
+          let startTime = '';
           startTime += (date.getMonth() + 1) + '-' + date.getDate() +
                   '-' + date.getFullYear();
           startTime += ' ' + date.getHours() + ':';
@@ -83,9 +87,10 @@ export class EditCompetitionComponent implements OnInit {
           this.compLength += competition.length % 60;
           this._problemService.getAllProblems().then(problems => {
             this.problems = problems;
-            for (var label in competition.compProblems) {
-              for (var problem of problems) {
-                if (problem.pid === competition.compProblems[label].pid) {
+            const labelKeys = Object.keys(competition.compProblems);
+            for (let i = 0; i < labelKeys.length; i++) {
+              for (const problem of problems) {
+                if (problem.pid === competition.compProblems[labelKeys[i]].pid) {
                   this.selectedProblems.push(problem);
                   break;
                 }
@@ -95,13 +100,13 @@ export class EditCompetitionComponent implements OnInit {
         }
       });
     }
-  };
+  }
 
   defaultStartTime() {
-    var date = new Date(Date.now() + (24 * 3600 * 1000));
-    return (date.getMonth() + 1) + "-" + date.getDate() + "-" +
-      (date.getFullYear()) + " 10:00";
-  };
+    const date = new Date(Date.now() + (24 * 3600 * 1000));
+    return (date.getMonth() + 1) + '-' + date.getDate() + '-' +
+      (date.getFullYear()) + ' 10:00';
+  }
 
   addProblem(problem: Problem) {
     this.selectedProblems.push(problem);
@@ -111,30 +116,30 @@ export class EditCompetitionComponent implements OnInit {
     this.selectedProblems.splice(this.selectedProblems.indexOf(problem), 1);
   };
 
-  getStartTimeSeconds() {
+  getStartTimeSeconds(): number {
     // get the string from scope and split it into its parts
-    var parts = this.startTime.split(' ');
+    const parts = this.startTime.split(' ');
 
     // The parts consists of the day and time
-    var day = parts[0].split('-');
-    var time = parts[1].split(':');
+    const day = parts[0].split('-');
+    const time = parts[1].split(':');
 
     // Parse the parts into Numbers so that we can get the time from it.
-    var month = parseInt(day[0]) - 1;
-    var dayOfMonth = parseInt(day[1]);
-    var year = parseInt(day[2]);
-    var hourOfDay = parseInt(time[0]);
-    var minute = parseInt(time[1]);
+    const month = parseInt(day[0], 10) - 1;
+    const dayOfMonth = parseInt(day[1], 10);
+    const year = parseInt(day[2], 10);
+    const hourOfDay = parseInt(time[0], 10);
+    const minute = parseInt(time[1], 10);
 
     // return the seconds of the date that the user entered.
     return new Date(year, month, dayOfMonth, hourOfDay, minute).valueOf() /
       1000; // to seconds instead of milliseconds.
-  };
+  }
 
   getLengthSeconds() {
-    var parts = this.compLength.split(':');
-    return parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60;
-  };
+    const parts = this.compLength.split(':');
+    return parseInt(parts[0], 10) * 3600 + parseInt(parts[1], 10) * 60;
+  }
 
   createCompetition(): void {
     this.formDisabled = true;
@@ -165,7 +170,7 @@ export class EditCompetitionComponent implements OnInit {
           this.responseFailed = false;
           this.responseSuccess = true;
         }
-      })
+      });
     }
   }
 }

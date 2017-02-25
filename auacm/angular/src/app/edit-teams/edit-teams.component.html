@@ -25,7 +25,7 @@
                 (click)="removeTeam(team)"></span>
           </div>
         </div>
-        <div class="panel-body" [dragula]="members" [dragulaModel]='teams[team]'>
+        <div class="panel-body" [dragula]="DND_BOX_NAME" [dragulaModel]='teams[team]'>
           <div class="panel panel-default movable" *ngFor="let user of teams[team]">
             <div class="panel-body">
               {{ user.display }}
@@ -54,7 +54,7 @@
       <div class="panel-heading">
         <div class="panel-title">Individuals</div>
       </div>
-      <div class="panel-body" [dragula]="members" [dragulaModel]='individuals'>
+      <div class="panel-body" [dragula]="DND_BOX_NAME" [dragulaModel]='individuals'>
         <div class="panel panel-default" *ngFor="let user of individuals">
           <div class="panel-body">
             {{ user.display }}

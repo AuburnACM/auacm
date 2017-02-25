@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
 import { CompetitionService } from '../competition.service';
@@ -17,14 +17,13 @@ import { UserData } from '../models/user';
   styleUrls: ['./view-scoreboard.component.css']
 })
 export class ViewScoreboardComponent implements OnInit, OnDestroy {
-
   private userData: UserData = new UserData();
   private competition: Competition = new Competition();
-  private timeUntil: number = 0;
-  private timeLeft: number = 0;
-  private ended: boolean = false; 
-  private active: boolean = false; 
-  private clientTimeOffset: number = 0;
+  private timeUntil = 0;
+  private timeLeft = 0;
+  private ended = false;
+  private active = false;
+  private clientTimeOffset = 0;
   private scoreboardTimer: NodeJS.Timer[] = [];
 
   constructor(private _activeRoute: ActivatedRoute, private _competitionService: CompetitionService,
@@ -51,7 +50,7 @@ export class ViewScoreboardComponent implements OnInit, OnDestroy {
       if (this.competition.cid > 0) {
         this._competitionService.fetchCompetition(this.competition.cid);
       }
-    })
+    });
   }
 
   ngOnInit() {
@@ -67,10 +66,10 @@ export class ViewScoreboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // You need to clear the timer when the component is destroyed 
+    // You need to clear the timer when the component is destroyed
     // otherwise the client will build up 1 billion timers. xD
     if (this.scoreboardTimer !== undefined && this.scoreboardTimer !== null) {
-      for (var timer of this.scoreboardTimer) {
+      for (const timer of this.scoreboardTimer) {
         clearInterval(timer);
       }
     }
@@ -79,16 +78,16 @@ export class ViewScoreboardComponent implements OnInit, OnDestroy {
   }
 
   refreshScoreboard() {
-    for (var team of this.competition.teams) {
-      var solved = 0;
-      var time = 0;
-      for (var key in team.problemData) {
+    for (const team of this.competition.teams) {
+      let solved = 0;
+      let time = 0;
+      for (const key in team.problemData) {
         if (team.problemData[key].status === 'correct') {
           solved++;
           team.problemData[key].penaltyTime = (team.problemData[key].submitCount - 1) * 20;
           time += team.problemData[key].submitTime + team.problemData[key].penaltyTime;
         } else {
-          team.problemData[key].penaltyTime = team.problemData[key].submitCount * 20
+          team.problemData[key].penaltyTime = team.problemData[key].submitCount * 20;
         }
       }
       team.solved = solved;
@@ -96,7 +95,7 @@ export class ViewScoreboardComponent implements OnInit, OnDestroy {
     }
 
     this.competition.teams.sort(function(a, b) {
-      if (a.solved != b.solved) {
+      if (a.solved !== b.solved) {
         return b.solved - a.solved;
       } else {
         return a.time - b.time;
@@ -104,16 +103,16 @@ export class ViewScoreboardComponent implements OnInit, OnDestroy {
     });
 
     if (this.competition.teams.length > 0) {
-      var rank = 1;
-      var prevSolved = this.competition.teams[0].solved;
-      var prevTime = this.competition.teams[0].time;
+      let rank = 1;
+      let prevSolved = this.competition.teams[0].solved;
+      let prevTime = this.competition.teams[0].time;
       this.competition.teams[0].rank = rank;
-      for (var i = 1; i < this.competition.teams.length; i++) {
-        var team = this.competition.teams[i];
+      for (let i = 1; i < this.competition.teams.length; i++) {
+        const team = this.competition.teams[i];
         if (team.solved < prevSolved) {
           rank++;
           team.rank = rank;
-        } else if (team.solved == prevSolved && team.time > prevTime) {
+        } else if (team.solved === prevSolved && team.time > prevTime) {
           rank++;
           team.rank = rank;
         } else {
@@ -131,7 +130,7 @@ export class ViewScoreboardComponent implements OnInit, OnDestroy {
   };
 
   problemIsInComp(problemId: number): boolean {
-    for (var problem in this.competition.compProblems) {
+    for (const problem in this.competition.compProblems) {
       if (problemId === this.competition.compProblems[problem].pid) {
         return true;
       }
@@ -141,21 +140,20 @@ export class ViewScoreboardComponent implements OnInit, OnDestroy {
 
   calculateCompetitionProgress() {
     if (this.scoreboardTimer.length < 1) {
-      var clientTime = Math.floor((Date.now() + this.clientTimeOffset) / 1000);
+      let clientTime = Math.floor((Date.now() + this.clientTimeOffset) / 1000);
       if (clientTime < this.competition.startTime + this.competition.length) {
         // only start the timer if the competition is still going or
         // it hasn't yet started
         this.ended = false;
         this.active = false;
-        var self = this;
-        var timer = setInterval(function() {
-          var timeToEnd = self.competition.startTime + self.competition.length - clientTime;
+        const self = this;
+        const timer = setInterval(function() {
+          const timeToEnd = self.competition.startTime + self.competition.length - clientTime;
 
           // Compute the remaining time as the minimum of the time
           // until the compeition is over and the length of the
           // competition.
           self.timeLeft = Math.min(timeToEnd, self.competition.length);
-          
           if (self.timeLeft < self.competition.length) {
             self.active = true;
           } else {

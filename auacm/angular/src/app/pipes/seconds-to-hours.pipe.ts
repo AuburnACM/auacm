@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class SecondsToHoursPipe implements PipeTransform {
 
   transform(seconds: number): any {
-    var date = new Date(null);
+    const date = new Date(null);
     date.setSeconds(seconds);
     return date.toISOString().substring(11, 19);
   }

@@ -14,14 +14,11 @@ import { Problem } from '../models/problem';
 })
 export class ProblemsComponent implements OnInit {
 
-  private user: UserData;
-
-  sortPredicate: string = 'name';
-  sortReverse: boolean = false;
-
-  searchFilter: string = "";
-
-  problems: Problem[] = [];
+  public user: UserData;
+  public sortPredicate = 'name';
+  public searchFilter = '';
+  public sortReverse = false;
+  public problems: Problem[] = [];
 
   constructor(private _problemService: ProblemService, private _userService: UserService,
               private _router: Router) {
@@ -37,7 +34,7 @@ export class ProblemsComponent implements OnInit {
   ngOnInit() {
     this.user = this._userService.getUserData();
     this.getProblems();
-  };
+  }
 
   getProblems() {
     this._problemService.getAllProblems().then(problems => {
@@ -49,17 +46,17 @@ export class ProblemsComponent implements OnInit {
     this.sortReverse = (this.sortPredicate === sortPredicate) ? !this.sortReverse : false;
     this.sortPredicate = sortPredicate;
     this.problems = this.orderBy(this.problems, sortPredicate, this.sortReverse);
-  };
+  }
 
   integerOrder(sortPredicate: string) {
-        this.sortReverse = (this.sortPredicate === sortPredicate) ? !this.sortReverse : false;
-        this.sortPredicate = sortPredicate;
-        var self = this;
-        this.problems.sort(function(a, b) {
-            return self.sortReverse ?
-                    a.difficulty - b.difficulty : b.difficulty - a.difficulty;
-        });
-    };
+    this.sortReverse = (this.sortPredicate === sortPredicate) ? !this.sortReverse : false;
+    this.sortPredicate = sortPredicate;
+    const self = this;
+    this.problems.sort(function(a, b) {
+      return self.sortReverse ?
+        a.difficulty - b.difficulty : b.difficulty - a.difficulty;
+    });
+  }
 
   orderBy(array: Problem[], sortPredicate: string, reverse: boolean) {
     return array.sort(function(a, b) {

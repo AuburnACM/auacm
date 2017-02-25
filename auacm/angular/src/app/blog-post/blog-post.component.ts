@@ -8,7 +8,7 @@ import { BlogService } from '../blog.service';
 import { UserData } from '../models/user';
 import { BlogPost } from '../models/blog';
 
-import {Observable} from 'rxjs';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
 @Component({
@@ -17,12 +17,9 @@ import 'rxjs/add/operator/switchMap';
   styleUrls: ['./blog-post.component.css']
 })
 export class BlogPostComponent implements OnInit {
-
-  converter: Converter = new Converter();
-
-  user: UserData;
-
-  post: BlogPost = new BlogPost();
+  public converter: Converter = new Converter();
+  public user: UserData;
+  public post: BlogPost = new BlogPost();
 
   constructor(private _userService: UserService,
               private _blogService: BlogService,
@@ -34,11 +31,10 @@ export class BlogPostComponent implements OnInit {
 
   ngOnInit() {
     this.user = this._userService.getUserData();
-    this._activeRoute.params.switchMap((params: Params) => params['id'] 
+    this._activeRoute.params.switchMap((params: Params) => params['id']
           ? this._blogService.getBlogPost(params['id']) : Observable.of(new BlogPost()))
           .subscribe(blogPost => {
       this.post = blogPost;
-    })
+    });
   }
-
 }

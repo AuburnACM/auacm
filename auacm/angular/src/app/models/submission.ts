@@ -1,27 +1,28 @@
 export class SubmissionData {
-	problem: string;
-	fileName: string;
-	status: string;
-	statusDescription: string;
+  public problem: string;
+  public fileName: string;
+  public status: string;
+  public statusDescription: string;
 }
 
 export class RecentSubmission {
-	constructor() {
-		this.fileType = '';
-		this.jobId = -1;
-		this.pid = -1;
-		this.status = '';
-		this.submitTime = -1;
-		this.username = '';
-		this.statusDescription = '';
-		this.fileName = '';
-	}
-	fileType: string;
-	jobId: number;
-	pid: number;
-	status: string;
-	submitTime: number;
-	username: string;
-	statusDescription: string;
-	fileName: string;
+  public fileType: string;
+  public jobId: number;
+  public pid: number;
+  public status: string;
+  public submitTime: number;
+  public username: string;
+  public statusDescription: string;
+  public fileName: string;
+
+  constructor() {
+    this.fileType = '';
+    this.jobId = -1;
+    this.pid = -1;
+    this.status = '';
+    this.submitTime = -1;
+    this.username = '';
+    this.statusDescription = '';
+    this.fileName = '';
+  }
 }

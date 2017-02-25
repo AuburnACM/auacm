@@ -10,27 +10,23 @@ import { UserData, RankData } from '../models/user';
   styleUrls: ['./ranking.component.css']
 })
 export class RankingComponent implements OnInit {
-
   user: UserData = new UserData();
-
   ranks: RankData[] = [];
-
-  timeFrame: string = "all";
+  timeFrame = 'all';
 
   constructor(private _userService: UserService) { }
 
   ngOnInit() {
     this.getRankings();
-  };
+  }
 
   getRankings() {
     this._userService.getRanking(this.timeFrame).then(ranks => {
       this.ranks = ranks;
-    })
-  };
+    });
+  }
 
   onTimeFrameChange() {
     this.getRankings();
   }
-
 }

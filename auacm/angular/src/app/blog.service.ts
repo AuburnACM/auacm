@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Request, Response, URLSearchParams, Headers } from '@angular/http';
-import { Subject } from 'rxjs';
+import { Subject } from 'rxjs/Subject';
 
 import { BlogPost, BlogAuthor } from './models/blog';
 
@@ -9,17 +9,18 @@ export class BlogService {
 
   constructor(private _http: Http) { }
 
-  createBlog(title: string, subtitle: string, body: string) : Promise<BlogPost> {
+  createBlog(title: string, subtitle: string, body: string): Promise<BlogPost> {
     return new Promise((resolve, reject) => {
-      var params = new URLSearchParams();
+      const params = new URLSearchParams();
       params.append('title', title);
       params.append('subtitle', subtitle);
       params.append('body', body);
 
-      var headers = new Headers();
+      const headers = new Headers();
       headers.append('Content-Type', 'application/x-www-form-urlencoded');
 
-      this._http.post(`/api/blog`, params.toString(), { headers: headers }).subscribe((res: Response) => {
+      this._http.post(`/api/blog`, params.toString(), { headers: headers })
+          .subscribe((res: Response) => {
         if (res.status === 200) {
           resolve(res.json().data);
         } else {
@@ -27,18 +28,18 @@ export class BlogService {
         }
       }, (err: Response) => {
         resolve(undefined);
-      })
+      });
     });
-  };
+  }
 
-  updateBlogPost(postId: number, title: string, subtitle: string, body: string) : Promise<BlogPost> {
+  updateBlogPost(postId: number, title: string, subtitle: string, body: string): Promise<BlogPost> {
     return new Promise((resolve, reject) => {
-      var params = new URLSearchParams();
+      const params = new URLSearchParams();
       params.append('title', title);
       params.append('subtitle', subtitle);
       params.append('body', body);
 
-      var headers = new Headers();
+      const headers = new Headers();
       headers.append('Content-Type', 'application/x-www-form-urlencoded');
 
       this._http.put(`/api/blog/${postId}`, params.toString(), { headers: headers }).subscribe((res: Response) => {
@@ -49,20 +50,20 @@ export class BlogService {
         }
       }, (err: Response) => {
         resolve(undefined);
-      })
+      });
     });
-  };
+  }
 
   /**
    * Fetches the blog posts from /api/blog.
    */
-  getAllBlogPosts() : Promise<BlogPost[]> {
+  getAllBlogPosts(): Promise<BlogPost[]> {
     return new Promise((resolve, reject) => {
       this._http.get('/api/blog').subscribe((res: Response) => {
-        var posts = [];
+        const posts = [];
         if (res.status === 200) {
-          var data = res.json().data;
-          for (var i = 0; i < data.length; i++) {
+          const data = res.json().data;
+          for (let i = 0; i < data.length; i++) {
             posts.push(data[i]);
           }
         }
@@ -71,9 +72,9 @@ export class BlogService {
         resolve([]);
       });
     });
-  };
+  }
 
-  getBlogPost(blogId: number) : Promise<BlogPost> {
+  getBlogPost(blogId: number): Promise<BlogPost> {
     return new Promise((resolve, reject) => {
       this._http.get(`/api/blog/${blogId}`).subscribe((res: Response) => {
         if (res.status === 200) {
@@ -82,14 +83,13 @@ export class BlogService {
           resolve(new BlogPost());
         }
       }, (err: Response) => {
-        console.log('Failed to fetch a blog post with the id ' + blogId);
         resolve(new BlogPost());
-      })
+      });
     });
-  };
+  }
 
-  deleteBlogPost(blogId: number) : Promise<boolean> {
+  deleteBlogPost(blogId: number): Promise<boolean> {
     // TODO when the backend supports this method.
     return undefined;
-  };
+  }
 }

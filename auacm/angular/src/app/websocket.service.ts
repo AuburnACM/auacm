@@ -21,7 +21,7 @@ export class WebsocketService {
   private create(url: string) {
     this.websocket = new WebSocket(url);
 
-    let subject = new Subject<MessageEvent>();
+    const subject = new Subject<MessageEvent>();
 
     this.websocket.onmessage = event => {
       subject.next(event);

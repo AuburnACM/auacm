@@ -13,10 +13,10 @@ import { SimpleResponse } from '../models/response';
 })
 export class CreateUserComponent implements OnInit {
 
-  private activeUser: UserData = new UserData();
-  private userData: UserData;
-  private confirmPassword: string = '';
-  private serverResponse: SimpleResponse;
+  public activeUser: UserData = new UserData();
+  public userData: UserData;
+  public confirmPassword = '';
+  public serverResponse: SimpleResponse;
 
   constructor(private _userService: UserService, private _router: Router) {
     this._userService.userData$.subscribe(userData => {
@@ -26,21 +26,22 @@ export class CreateUserComponent implements OnInit {
           this._router.navigate(['404']);
         }
       }
-    })
+    });
   }
 
   ngOnInit() {
     this.activeUser = this._userService.getUserData();
     this.userData = new UserData();
-    this.userData.displayName = "";
+    this.userData.displayName = '';
   }
 
   submit(usernameForm, passwordForm, displayNameForm, confirmPassword) {
-    this._userService.createUser(this.userData.username, this.userData.password, this.userData.displayName).then(response => {
+    this._userService.createUser(this.userData.username,
+        this.userData.password, this.userData.displayName).then(response => {
       this.serverResponse = response;
       if (response.success) {
         this.userData = new UserData();
-        this.confirmPassword = "";
+        this.confirmPassword = '';
         usernameForm.reset();
         passwordForm.reset();
         displayNameForm.reset();

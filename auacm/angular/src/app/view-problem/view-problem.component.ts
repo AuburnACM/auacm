@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Converter } from 'showdown';
 
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
 import { UserService } from '../user.service';
@@ -17,12 +17,9 @@ import { Problem } from '../models/problem';
   styleUrls: ['./view-problem.component.css']
 })
 export class ViewProblemComponent implements OnInit {
-
-  private converter: Converter = new Converter();
-
-  private userData: UserData = new UserData();
-
-  private problem: Problem = new Problem();
+  public converter: Converter = new Converter();
+  public userData: UserData = new UserData();
+  public problem: Problem = new Problem();
 
   constructor(private _router: Router, private _userService: UserService,
               private _problemService: ProblemService, private _activeRoute: ActivatedRoute) {
@@ -33,7 +30,9 @@ export class ViewProblemComponent implements OnInit {
 
   ngOnInit() {
     this.userData = this._userService.getUserData();
-    this._activeRoute.params.switchMap((params: Params) => params['shortName'] ? this._problemService.getProblemByShortName(params['shortName']) : Observable.of(undefined)).subscribe(problem => {
+    this._activeRoute.params.switchMap((params: Params) => params['shortName']
+      ? this._problemService.getProblemByShortName(params['shortName'])
+      : Observable.of(undefined)).subscribe(problem => {
       if (problem !== undefined) {
         this.problem = problem;
       } else {
