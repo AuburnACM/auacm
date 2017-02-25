@@ -8,8 +8,6 @@ export class WebsocketService {
   private subject: Subject<MessageEvent>;
   private websocket: WebSocket;
 
-  constructor() { }
-
   connect(url: string): Subject<MessageEvent> {
     if (!this.subject) {
       this.subject = this.create(window.location.protocol === 'http:' ? 'ws://' + url : 'wss://' + url);
@@ -20,7 +18,6 @@ export class WebsocketService {
 
   private create(url: string) {
     this.websocket = new WebSocket(url);
-
     const subject = new Subject<MessageEvent>();
 
     this.websocket.onmessage = event => {

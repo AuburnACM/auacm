@@ -13,7 +13,6 @@ import { Problem } from '../models/problem';
   styleUrls: ['./problems.component.css']
 })
 export class ProblemsComponent implements OnInit {
-
   public user: UserData;
   public sortPredicate = 'name';
   public searchFilter = '';

@@ -1,12 +1,12 @@
 .typeahead-input {
-	width: 100%;
+    width: 100%;
 }
 
 .typeahead {
-	padding: 0px !important;
-	margin: 0px !important;
+    padding: 0px !important;
+    margin: 0px !important;
 }
 
 .highlight {
-	background: #ededed;
+    background: #ededed;
 }

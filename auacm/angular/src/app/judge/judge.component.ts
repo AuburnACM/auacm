@@ -15,6 +15,10 @@ import { RecentSubmission } from '../models/submission';
 
 declare var $: any;
 
+const KEY_UP = 38;
+const KEY_DOWN = 40;
+const KEY_ENTER = 13;
+
 /**
  * This component is a little crazy. It uses some Angular magic to create searchable problems.
  */
@@ -26,7 +30,7 @@ declare var $: any;
 })
 export class JudgeComponent implements OnInit {
   public user: UserData;
-  public file: File = undefined;
+  public file: File;
   public searchFilter = '';
   public problem: Problem = new Problem();
   public problems: Problem[] = [];
@@ -35,7 +39,7 @@ export class JudgeComponent implements OnInit {
   public searchTerms = new Subject<string>();
   public highlightIndex = 0;
   public submitted: RecentSubmission[] = [];
-  public currentHighlight: any = undefined;
+  public currentHighlight: any;
 
   public python: any = {
     version: 'py3'
@@ -65,7 +69,7 @@ export class JudgeComponent implements OnInit {
    * This is needed
    */
   search(event: any, term: string) {
-    if (event.keyCode === 40) {
+    if (event.keyCode === KEY_DOWN) {
       const sub = this.problemsObs.subscribe((value: Problem[]) => {
         if (this.highlightIndex < value.length - 1) {
           this.highlightIndex++;
@@ -74,7 +78,7 @@ export class JudgeComponent implements OnInit {
         }
         sub.unsubscribe();
       });
-    } else if (event.keyCode === 13) {
+    } else if (event.keyCode === KEY_ENTER) {
       const sub = this.problemsObs.subscribe((value: Problem[]) => {
         this.problem = value[this.highlightIndex];
         this.searchFilter = value[this.highlightIndex].name;
@@ -82,7 +86,7 @@ export class JudgeComponent implements OnInit {
         this.highlightIndex = 0;
         sub.unsubscribe();
       });
-    } else if (event.keyCode === 38) {
+    } else if (event.keyCode === KEY_UP) {
       const sub = this.problemsObs.subscribe((value: Problem[]) => {
         if (this.highlightIndex > 0) {
           this.highlightIndex--;
@@ -175,7 +179,6 @@ export class JudgeComponent implements OnInit {
   onSubmit() {
     if (this.submitReady()) {
       this._submissionService.submit(this.file, this.problem, this.python.version, this.user).then(data => {
-        // Do something here...
       });
       return true;
     } else {

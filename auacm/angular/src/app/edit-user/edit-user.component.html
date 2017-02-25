@@ -5,36 +5,53 @@
       <form [formGroup]="settingsForm">
         <div class="form-group">
           <label for="oldPassword" class="control-label">Old password</label>
-          <input class="form-control" id="oldPassword" type="password" placeholder="Old password" formControlName="oldPassword">
-          <div *ngIf="settingsForm.controls['oldPassword'].errors && (settingsForm.controls['oldPassword'].dirty || settingsForm.controls['oldPassword'].touched)">
-            <div *ngIf="settingsForm.controls['oldPassword'].errors.required" class="label label-danger">This field is required.</div>
+          <input class="form-control" id="oldPassword" type="password"
+              placeholder="Old password" formControlName="oldPassword">
+          <div *ngIf="settingsForm.controls['oldPassword'].errors
+              && (settingsForm.controls['oldPassword'].dirty
+              || settingsForm.controls['oldPassword'].touched)">
+            <div *ngIf="settingsForm.controls['oldPassword'].errors.required"
+                class="label label-danger">This field is required.</div>
           </div>
         </div>
 
         <div class="form-group">
           <label for="newPassword" class="control-label">New password</label>
-          <input class="form-control" id="newPassword" type="password" placeholder="New password" formControlName="newPassword">
-          <div *ngIf="(settingsForm.controls['newPassword'].errors) && (settingsForm.controls['newPassword'].dirty || settingsForm.controls['newPassword'].touched)">
-            <div *ngIf="settingsForm.controls['newPassword'].errors.required" class="label label-danger">This field is required.</div>
+          <input class="form-control" id="newPassword" type="password"
+              placeholder="New password" formControlName="newPassword">
+          <div *ngIf="(settingsForm.controls['newPassword'].errors)
+              && (settingsForm.controls['newPassword'].dirty
+              || settingsForm.controls['newPassword'].touched)">
+            <div *ngIf="settingsForm.controls['newPassword'].errors.required"
+                class="label label-danger">This field is required.</div>
           </div>
-          <div *ngIf="settingsForm.errors && (settingsForm.controls['newPassword'].dirty || settingsForm.controls['newPassword'].touched)">
-            <div *ngIf="settingsForm.errors.passwordsMatch" class="label label-danger">Your new password cannot match your old one.</div>
+          <div *ngIf="settingsForm.errors && (settingsForm.controls['newPassword'].dirty
+              || settingsForm.controls['newPassword'].touched)">
+            <div *ngIf="settingsForm.errors.passwordsMatch"
+                class="label label-danger">Your new password cannot match your old one.</div>
           </div>
         </div>
 
         <div class="form-group">
           <label for="confirmPassword" class="control-label">Confirm password</label>
-          <input class="form-control" id="confirmPassword" type="password" placeholder="Confirm password" formControlName="confirmPassword">
+          <input class="form-control" id="confirmPassword" type="password"
+              placeholder="Confirm password" formControlName="confirmPassword">
           <div *ngIf="settingsForm.errors && (settingsForm.dirty || settingsForm.touched)">
-            <div *ngIf="settingsForm.errors.missmatchedPasswords && (settingsForm.controls['confirmPassword'].dirty || settingsForm.controls['confirmPassword'].touched)" class="label label-danger">Passwords do not match.</div>
+            <div *ngIf="settingsForm.errors.missmatchedPasswords
+                && (settingsForm.controls['confirmPassword'].dirty
+                || settingsForm.controls['confirmPassword'].touched)"
+                class="label label-danger">Passwords do not match.</div>
           </div>
         </div>
 
-        <button [disabled]="settingsForm.errors || settingsForm.controls['newPassword'].errors || settingsForm.controls['oldPassword'].errors" class="btn btn-default" type="submit" (click)="changePassword()">
+        <button [disabled]="settingsForm.errors || settingsForm.controls['newPassword'].errors
+            || settingsForm.controls['oldPassword'].errors" class="btn btn-default"
+            type="submit" (click)="changePassword()">
           Change Password
         </button>
         <div *ngIf="responseSuccess || responseFailed">
-          <div [ngClass]="{'label': true, 'label-danger': responseFailed, 'label-success': responseSuccess}">{{responseMessage}}</div>
+          <div [ngClass]="{'label': true, 'label-danger': responseFailed,
+              'label-success': responseSuccess}">{{responseMessage}}</div>
         </div>
       </form>
     </div>

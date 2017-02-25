@@ -15,7 +15,6 @@ const EDIT_ICON_NONE: number = -1;
   templateUrl: './blog-list.component.html',
   styleUrls: ['./blog-list.component.css']
 })
-
 export class BlogListComponent implements OnInit {
   public converter: Converter = new Converter();
   public blogPosts: BlogPost[] = [];

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { UserService } from '../user.service';
@@ -35,7 +36,8 @@ export class CreateUserComponent implements OnInit {
     this.userData.displayName = '';
   }
 
-  submit(usernameForm, passwordForm, displayNameForm, confirmPassword) {
+  submit(usernameForm: FormGroup, passwordForm: FormGroup,
+      displayNameForm: FormGroup, confirmPassword: FormGroup) {
     this._userService.createUser(this.userData.username,
         this.userData.password, this.userData.displayName).then(response => {
       this.serverResponse = response;

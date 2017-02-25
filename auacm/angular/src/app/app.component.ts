@@ -54,7 +54,7 @@ export class AppComponent implements OnInit {
   openDropdownMenu() {
     // Sets the focus on the username form.
     // Needs a slight delay so the username form can be rendered by the *ngIf
-    setTimeout(function() {
+    setTimeout(() => {
       const doc = document.getElementById('username');
       if (doc !== undefined && doc !== null) {
         doc.focus();

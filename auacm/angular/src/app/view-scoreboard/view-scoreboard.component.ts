@@ -94,7 +94,7 @@ export class ViewScoreboardComponent implements OnInit, OnDestroy {
       team.time = time;
     }
 
-    this.competition.teams.sort(function(a, b) {
+    this.competition.teams.sort((a, b) => {
       if (a.solved !== b.solved) {
         return b.solved - a.solved;
       } else {
@@ -122,12 +122,7 @@ export class ViewScoreboardComponent implements OnInit, OnDestroy {
         prevTime = team.time;
       }
     }
-
-    // Can break if an $apply is already in progress, need to check first (???)
-    // if (!$scope.$$phase) {
-    //     $scope.$digest();
-    // }
-  };
+  }
 
   problemIsInComp(problemId: number): boolean {
     for (const problem in this.competition.compProblems) {
@@ -136,7 +131,7 @@ export class ViewScoreboardComponent implements OnInit, OnDestroy {
       }
     }
     return false;
-  };
+  }
 
   calculateCompetitionProgress() {
     if (this.scoreboardTimer.length < 1) {
@@ -147,7 +142,7 @@ export class ViewScoreboardComponent implements OnInit, OnDestroy {
         this.ended = false;
         this.active = false;
         const self = this;
-        const timer = setInterval(function() {
+        const timer = setInterval(() => {
           const timeToEnd = self.competition.startTime + self.competition.length - clientTime;
 
           // Compute the remaining time as the minimum of the time

@@ -7,7 +7,6 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'limitWords'
 })
 export class LimitWordsPipe implements PipeTransform {
-
   transform(words: string, amount: number): string {
     let finalString = '';
     const allWords = words.split(' ');

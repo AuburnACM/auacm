@@ -66,7 +66,7 @@ export class EditProblemComponent implements OnInit {
         this.problem = problem;
       }
     });
-    $(document).ready(function(){
+    $(document).ready(() => {
         $('[data-toggle="tooltip"]').tooltip();
     });
     this._competitionService.getAllCompetitions().then(competitions => {

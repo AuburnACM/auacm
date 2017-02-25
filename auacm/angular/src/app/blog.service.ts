@@ -3,6 +3,7 @@ import { Http, Request, Response, URLSearchParams, Headers } from '@angular/http
 import { Subject } from 'rxjs/Subject';
 
 import { BlogPost, BlogAuthor } from './models/blog';
+import { UrlEncodedHeader } from './models/service.utils';
 
 @Injectable()
 export class BlogService {
@@ -16,10 +17,7 @@ export class BlogService {
       params.append('subtitle', subtitle);
       params.append('body', body);
 
-      const headers = new Headers();
-      headers.append('Content-Type', 'application/x-www-form-urlencoded');
-
-      this._http.post(`/api/blog`, params.toString(), { headers: headers })
+      this._http.post(`/api/blog`, params.toString(), { headers: UrlEncodedHeader })
           .subscribe((res: Response) => {
         if (res.status === 200) {
           resolve(res.json().data);
@@ -39,10 +37,7 @@ export class BlogService {
       params.append('subtitle', subtitle);
       params.append('body', body);
 
-      const headers = new Headers();
-      headers.append('Content-Type', 'application/x-www-form-urlencoded');
-
-      this._http.put(`/api/blog/${postId}`, params.toString(), { headers: headers }).subscribe((res: Response) => {
+      this._http.put(`/api/blog/${postId}`, params.toString(), { headers: UrlEncodedHeader }).subscribe((res: Response) => {
         if (res.status === 200) {
           resolve(res.json().data);
         } else {
@@ -86,10 +81,5 @@ export class BlogService {
         resolve(new BlogPost());
       });
     });
-  }
-
-  deleteBlogPost(blogId: number): Promise<boolean> {
-    // TODO when the backend supports this method.
-    return undefined;
   }
 }

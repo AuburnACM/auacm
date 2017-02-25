@@ -1,10 +1,10 @@
 .button-sort {
-	cursor: pointer;
-	color: #337ab7;
+    cursor: pointer;
+    color: #337ab7;
 }
 
 .button-sort:hover {
-	cursor: pointer;
-	color: #337ab7;
-	text-decoration: underline;
+    cursor: pointer;
+    color: #337ab7;
+    text-decoration: underline;
 }

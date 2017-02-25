@@ -36,11 +36,7 @@ export class CreateBlogComponent implements OnInit {
       this.blogPost.author.display = this.userData.displayName;
       this.blogPost.author.username = this.userData.username;
       this.blogPost.postTime = new Date().getTime();
-      if (!this.userData.isAdmin) {
-        this.formDisabled = true;
-      } else {
-        this.formDisabled = false;
-      }
+      this.formDisabled = !this.userData.isAdmin;
     });
   }
 
@@ -56,7 +52,7 @@ export class CreateBlogComponent implements OnInit {
     }
   }
 
-  postBlog() {
+  makeBlogPost() {
     this.formDisabled = true;
     this._blogService.createBlog(this.blogPost.title,
         this.blogPost.subtitle, this.blogPost.body).then(post => {

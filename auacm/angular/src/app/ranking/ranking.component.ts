@@ -10,9 +10,9 @@ import { UserData, RankData } from '../models/user';
   styleUrls: ['./ranking.component.css']
 })
 export class RankingComponent implements OnInit {
-  user: UserData = new UserData();
-  ranks: RankData[] = [];
-  timeFrame = 'all';
+  public userData: UserData = new UserData();
+  public ranks: RankData[] = [];
+  public timeFrame = 'all';
 
   constructor(private _userService: UserService) { }
 

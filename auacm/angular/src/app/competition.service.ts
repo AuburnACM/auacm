@@ -8,6 +8,7 @@ import { CompetitionProblem, Competition, CompetitionTeam, TeamProblemData } fro
 import { RecentSubmission } from './models/submission';
 import { Problem } from './models/problem';
 import { SimpleUser, WebsocketRegisteredUser } from './models/user';
+import { UrlEncodedHeader } from './models/service.utils';
 
 
 /**
@@ -156,11 +157,8 @@ export class CompetitionService {
     // while an empty string will be false.
     formData.append('closed', competition.closed ? '1' : '');
 
-    const headers = new Headers();
-    headers.append('Content-Type', 'application/x-www-form-urlencoded');
-
     return new Promise((resolve, reject) => {
-      this._http.post('/api/competitions', formData.toString(), { headers: headers }).subscribe((res: Response) => {
+      this._http.post('/api/competitions', formData.toString(), { headers: UrlEncodedHeader }).subscribe((res: Response) => {
         if (res.status === 200) {
           resolve(new Competition());
         } else {
@@ -270,7 +268,6 @@ export class CompetitionService {
           resolve(new Competition());
         }
       }, (err: Response) => {
-        console.log('Failed to get the competition data!');
         resolve(new Competition());
       });
     });
@@ -293,12 +290,9 @@ export class CompetitionService {
     // while an empty string will be false.
     formData.append('closed', competition.closed ? '1' : '');
 
-    const headers = new Headers();
-    headers.append('Content-Type', 'application/x-www-form-urlencoded');
-
     return new Promise((resolve, reject) => {
       this._http.put(`/api/competitions/${competition.cid}`,
-          formData.toString(), { headers: headers }).subscribe((res: Response) => {
+          formData.toString(), { headers: UrlEncodedHeader }).subscribe((res: Response) => {
         if (res.status === 200) {
           resolve(new Competition());
         } else {

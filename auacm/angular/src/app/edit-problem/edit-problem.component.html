@@ -46,14 +46,12 @@
           <div class="form-group" *ngFor="let case of problem.sampleCases; let i = index">
             <label>Sample Case {{ i + 1 }}</label>
             <div class="form-inline">
-              <textarea class="form-control"
+              <textarea class="form-control sample-case-left"
                 placeholder="Sample input"
-                ngDefaultControl [(ngModel)]="case.input" name="{{'caseInput' + i}}"
-                style="width:40%;"></textarea>
-              <textarea class="form-control"
+                ngDefaultControl [(ngModel)]="case.input" name="{{'caseInput' + i}}"></textarea>
+              <textarea class="form-control sample-case-right"
                 placeholder="Sample output"
-                ngDefaultControl [(ngModel)]="case.output" name="{{'caseOutput' + i}}"
-                style="width:40%; margin-left: 10%"></textarea>
+                ngDefaultControl [(ngModel)]="case.output" name="{{'caseOutput' + i}}"></textarea>
             </div>
           </div>
         </div>

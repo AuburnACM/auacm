@@ -1,20 +1,20 @@
 .vertical-center {
-	padding-top: 50%
+    padding-top: 50%
 }
 
 .header-parent {
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 .glyphicon-pencil:hover {
-	color: #7c7c7c;
+    color: #7c7c7c;
 }
 
 .blog-list {
-	padding-right: 15px;
-	padding-left: 15px;
-	padding-bottom: 10px;
-	padding-top: 10px;
+    padding-right: 15px;
+    padding-left: 15px;
+    padding-bottom: 10px;
+    padding-top: 10px;
 }

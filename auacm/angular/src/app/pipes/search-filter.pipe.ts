@@ -6,16 +6,16 @@ import { Problem } from '../models/problem';
   name: 'searchFilter'
 })
 export class SearchFilterPipe implements PipeTransform {
-
   transform(array: Problem[], search: string): any {
     if (search === '') {
       return array;
     }
     const validMatches = [];
+    const searchLowerCase = search.toLowerCase();
     for (let i = 0; i < array.length; i++) {
-      if (array[i].name.toLowerCase().startsWith(search.toLowerCase())
-          || array[i].appeared.toLowerCase().startsWith(search.toLowerCase())
-          || array[i].difficulty.toString().startsWith(search.toLowerCase())) {
+      if (array[i].name.toLowerCase().startsWith(searchLowerCase)
+          || array[i].appeared.toLowerCase().startsWith(searchLowerCase)
+          || array[i].difficulty.toString().startsWith(searchLowerCase)) {
         validMatches.push(array[i]);
       }
     }

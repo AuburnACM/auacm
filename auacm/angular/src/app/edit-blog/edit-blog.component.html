@@ -5,30 +5,39 @@
     </div>
     <div class="panel-body">
       <ul class="nav nav-tabs">
-        <li role="presentation" [ngClass]="{active: tabSelect === 'edit'}"><a (click)="tabSelect = 'edit'" class="hover-pointer">Edit</a></li>
-        <li role="presentation" [ngClass]="{active: tabSelect === 'preview'}"><a (click)="tabSelect = 'preview'" class="hover-pointer">Preview</a></li>
+        <li role="presentation" [ngClass]="{active: tabSelect === 'edit'}">
+          <a (click)="tabSelect = 'edit'" class="hover-pointer">Edit</a>
+        </li>
+        <li role="presentation" [ngClass]="{active: tabSelect === 'preview'}">
+          <a (click)="tabSelect = 'preview'" class="hover-pointer">Preview</a>
+        </li>
       </ul>
       <form *ngIf="tabSelect === 'edit'">
         <div class="form-group">
           <label for="postTitle">Post title</label>
           <input type="text" class="form-control" id="postTitle"
-                 placeholder="Post title" [(ngModel)]="newBlogPost.title" name="blogTitle" [disabled]="formDisabled">
+                 placeholder="Post title" [(ngModel)]="newBlogPost.title"
+                 name="blogTitle" [disabled]="formDisabled">
         </div>
         <div class="form-group">
           <label for="postSubtitle">Subtitle</label>
           <input type="text" class="form-control" id="postSubtitle"
-                 placeholder="Subtitle" [(ngModel)]="newBlogPost.subtitle" name="blogSubtitle" [disabled]="formDisabled">
+                placeholder="Subtitle" [(ngModel)]="newBlogPost.subtitle"
+                name="blogSubtitle" [disabled]="formDisabled">
         </div>
         <div class="form-group">
           <label for="body">Body text (markdown)</label>
           <textarea class="form-control" rows="15" id="body"
-                    [(ngModel)]="newBlogPost.body" name="blogName" [disabled]="formDisabled"></textarea>
+                    [(ngModel)]="newBlogPost.body" name="blogName"
+                    [disabled]="formDisabled"></textarea>
         </div>
       </form>
       <div class="form-group" *ngIf="tabSelect === 'preview'">
         <h2>{{ newBlogPost.title }} <small>{{ newBlogPost.subtitle }}</small></h2>
-        <h5><small>Posted on {{ newBlogPost.postTime | date:'short'' }} by {{ newBlogPost.author.display }}</small></h5>
-        <div *ngIf="newBlogPost.body !== ''" class="text-left" [innerHTML]="converter.makeHtml(newBlogPost.body)"></div>
+        <h5><small>Posted on {{ newBlogPost.postTime | date:'short' }}
+            by {{ newBlogPost.author.display }}</small></h5>
+        <div *ngIf="newBlogPost.body !== ''" class="text-left"
+            [innerHTML]="converter.makeHtml(newBlogPost.body)"></div>
       </div>
       <button type="submit" class="btn btn-default"
               (click)="updatePost()" [disabled]="formDisabled">Update</button>

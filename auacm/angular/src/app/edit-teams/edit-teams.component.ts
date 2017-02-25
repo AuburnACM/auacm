@@ -78,11 +78,11 @@ export class EditTeamsComponent implements OnInit {
     });
   }
 
-  back(): void {
+  back() {
     this._location.back();
   }
 
-  removeTeam(name: string): void {
+  removeTeam(name: string) {
     if (this.teams[name] !== undefined) {
       for (const user of this.teams[name]) {
         this.individuals.push(user);
@@ -92,7 +92,7 @@ export class EditTeamsComponent implements OnInit {
     }
   }
 
-  addTeam(): void {
+  addTeam() {
     if (!this.teamExists()) {
       this.teams[this.teamName] = [];
       this.teamNames.push(this.teamName);
@@ -118,7 +118,7 @@ export class EditTeamsComponent implements OnInit {
     return false;
   }
 
-  save(): void {
+  save() {
     const map = new Map<string, string[]>();
 
     for (const teamName in this.teams) {
@@ -136,7 +136,8 @@ export class EditTeamsComponent implements OnInit {
     };
 
     if (this.competitionId > 0) {
-      this._competitionService.updateCompetitionTeams(this.competitionId, map).then(success => {
+      this._competitionService.updateCompetitionTeams(this.competitionId, map)
+          .then(success => {
         if (success) {
           this.responseSuccess = true;
           this.responseFailed = false;
