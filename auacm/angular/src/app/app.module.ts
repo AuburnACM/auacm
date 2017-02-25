@@ -30,7 +30,6 @@ import { SubmissionService } from './submission.service';
 import { UserService } from './user.service';
 import { WebsocketService } from './websocket.service';
 
-import { IifPipe } from './pipes/iif.pipe';
 import { IndexToCharCodePipe } from './pipes/index-to-char-code.pipe';
 import { LimitWordsPipe } from './pipes/limit-words.pipe';
 import { MapKeysPipe } from './pipes/map-keys.pipe';

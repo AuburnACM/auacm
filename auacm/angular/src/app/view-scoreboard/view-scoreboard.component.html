@@ -68,10 +68,10 @@
                   {{ team.problemData[competition.compProblems[name].pid].submitCount }}
                   <br>
                   <small>
-                    {{team.problemData[competition.compProblems[name].pid].status == 'incorrect'
-                        || team.problemData[competition.compProblems[name].pid].status == 'running' | iif : '--' :
+                    {{team.problemData[competition.compProblems[name].pid].status === 'incorrect'
+                        || team.problemData[competition.compProblems[name].pid].status === 'running' ? '--' :
                         team.problemData[competition.compProblems[name].pid].submitTime
-                    }} {{team.problemData[competition.compProblems[name].pid].penaltyTime > 0 | iif : ' (+' +
+                    }} {{team.problemData[competition.compProblems[name].pid].penaltyTime > 0 ? ' (+' +
                             team.problemData[competition.compProblems[name].pid].penaltyTime + ')' : '' }}
                   </small>
                 </div>
