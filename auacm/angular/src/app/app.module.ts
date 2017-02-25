@@ -58,7 +58,6 @@ import { ProblemValidatorDirective } from './directives/problem-validator.direct
     EditProblemComponent,
     EditTeamsComponent,
     EditUserComponent,
-    IifPipe,
     IndexToCharCodePipe,
     JudgeComponent,
     LimitWordsPipe,
