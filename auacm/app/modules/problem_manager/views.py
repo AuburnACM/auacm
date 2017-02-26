@@ -6,7 +6,7 @@ import os
 import zipfile
 
 # pylint: disable=no-name-in-module, f0401
-from flask import request, redirect
+from flask import request
 from flask.ext.login import current_user
 from app import app
 import app.database as database
@@ -20,17 +20,14 @@ from shutil import rmtree
 from time import time
 
 
-@app.route('/problem/<shortname>/info.pdf', methods=['GET'])
+@app.route('/problems/<shortname>/info.pdf', methods=['GET'])
 def get_problem_info(shortname):
-    """Serve the PDF description of a problem. If it doesn't exist, serve 404."""
-    try:
-        pid = (database.session.query(Problem)
-            .options(load_only('pid', 'shortname'))
-            .filter(Problem.shortname == shortname)
-            .first().pid)
-        return serve_info_pdf(str(pid))
-    except AttributeError:
-        return redirect("//auacm.com/404", code=302)
+    """Serve the PDF description of a problem"""
+    pid = (database.session.query(Problem)
+           .options(load_only('pid', 'shortname'))
+           .filter(Problem.shortname == shortname)
+           .first().pid)
+    return serve_info_pdf(str(pid))
 
 
 @app.route('/api/problems/<identifier>', methods=['GET'])
@@ -258,7 +255,7 @@ def update_problem(identifier):    # pylint: disable=too-many-branches
     data = database.session.query(ProblemData).filter(ProblemData.pid == pid).first()
     if 'name' in request.form:
         problem.name = request.form['name'][:32]
-        problem.shortname = request.form['name'][:32].replace(' ', '').replace('(', '').replace(')', '').lower()
+        problem.shortname = request.form['name'][:32].replace(' ', '').lower()
     if 'description' in request.form:
         data.description = request.form['description']
     if 'input_desc' in request.form:
