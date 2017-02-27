@@ -1,0 +1,134 @@
+<div class="margin-top panel panel-default">
+  <div class="panel-heading">
+    <div class="row">
+      <h1 class="panel-title col-md-10">{{ title }}</h1>
+      <div class="col-md-2 no-pad">
+        <button type="button" class="btn btn-success pull-right col-md-10"
+                (click)="createCompetition()" *ngIf="userData.isAdmin"
+                [disabled]="formDisabled || competitionLength.errors
+                || competitionTime.errors || compTitle.errors">
+          Save
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div *ngIf="responseFailed" class="save-response pull-right">
+          <div class="label label-danger">{{responseMessage}}</div>
+        </div>
+        <div *ngIf="responseSuccess" class="save-response pull-right">
+          <div class="label label-success">{{responseMessage}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="col-md-12">Metadata</h3>
+
+  <div class="panel-body col-md-12">
+
+    <form name="createCompetitionForm" class="form-horizontal well">
+
+      <div class="form-group">
+        <label for="compName" class="col-sm-2 control-label">Competition Name</label>
+        <div class="col-sm-4 input-group">
+          <input [disabled]="formDisabled" class="form-control"
+            id="compName" placeholder="My Competition" 
+            name="competitionTitle" [(ngModel)]="competition.name"
+            minlength="5" required #compTitle="ngModel">
+        </div>
+        <div class="col-sm-offset-2" *ngIf="compTitle.errors
+            && (compTitle.dirty || compTitle.touched)">
+          <div *ngIf="compTitle.errors.required"
+              class="label label-danger">Competition title is required.</div>
+          <div *ngIf="compTitle.errors.minlength"
+              class="label label-danger">The title needs to be at least 5 characters long.</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="startTime" class="col-sm-2 control-label">Start Time</label>
+        <div class="col-sm-4 input-group">
+          <input [disabled]="formDisabled" class="form-control" id="startTime" name="startTime"
+              placeholder="MM-DD-YYYY HH:mm" [(ngModel)]="startTime"
+              required appDateFormatValidator #competitionTime="ngModel">
+          <div class="input-group-addon">24h CDT</div>
+        </div>
+        <div class="col-sm-offset-2" *ngIf="competitionTime.errors
+            && (competitionTime.dirty || competitionTime.touched)">
+          <div *ngIf="competitionTime.errors.required"
+              class="label label-danger">Start time is required.</div>
+          <div *ngIf="competitionTime.errors.problemValidatorFormat"
+              class="label label-danger">Incorrect format</div>
+          <div *ngIf="competitionTime.errors.problemValidatorPassed"
+              class="label label-danger">Date has passed</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="compLength" class="col-sm-2 control-label">Competition Length</label>
+        <div class="col-sm-4 input-group">
+          <input [disabled]="formDisabled" class="form-control"
+              id="compLength" name="compLength"
+              placeholder="h:mm" [(ngModel)]="compLength"
+              required appContestLengthValidator #competitionLength="ngModel">
+          <div class="input-group-addon">h:mm</div>
+        </div>
+        <div class="col-sm-offset-2" *ngIf="competitionLength.errors
+            && (competitionLength.dirty || competitionLength.touched)">
+          <div *ngIf="competitionLength.errors.required"
+              class="label label-danger">Competition length is required.</div>
+          <div *ngIf="competitionLength.errors.contestLengthValidatorFormat"
+              class="label label-danger">Incorrect format</div>
+          <div *ngIf="competitionLength.errors.contestLengthValidatorShort"
+              class="label label-danger">Competition too short</div>
+        </div>
+      </div>
+
+      <div class="checkbox col-sm-offset-2">
+        <label>
+          <input [disabled]="formDisabled" type="checkbox" value=""
+            [(ngModel)]="competition.closed" name="competitionClosed">
+          Closed competition (Only admins can register users)
+        </label>
+      </div>
+    </form>
+  </div>
+
+  <h3 class="col-md-12">Problems</h3>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th class="col-sm-4">Label</th>
+        <th class="col-sm-4">Name</th>
+        <th class="col-sm-4"></th> <!-- This is reserved for the add/remove button -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let problem of selectedProblems; let i = index">
+        <td><b>{{ i | indexToCharCode }}</b></td>
+        <td>{{ problem.name }}</td>
+        <td>
+          <button [disabled]="formDisabled" type="submit" class="btn btn-danger"
+            (click)="removeProblem(problem)">Remove</button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+        </td>
+        <td>
+          <select id="pidSelector" class="form-control" [(ngModel)]="selected">
+              <option *ngFor="let prob of problems" [ngValue]="prob">{{prob.name}}</option>
+          </select>
+        </td>
+        <td>
+          <button type="submit" class="btn btn-success" (click)="addProblem(selected)"
+              [disabled]="formDisabled || !selected || selectedProblems.indexOf(selected) >= 0">
+            Add
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

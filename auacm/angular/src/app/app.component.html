@@ -1,0 +1,97 @@
+<div ng-class="bernitize">
+  <div class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse"
+            data-target="#mainNavList" (click)="navCollapsed = !navCollapsed">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a href="/" class="navbar-brand" id="logo">Auburn ACM</a>
+      </div>
+      <div class="collapse navbar-collapse" id="mainNavList">
+        <ul class="nav navbar-nav navbar-left" data-toggle="collapse"
+            data-target="#mainNavList.in">
+          <li [ngClass]="{active: this._router.url == '/', 'hover-pointer': true}">
+            <a [routerLink]="['']">Blog</a>
+          </li>
+          <li [ngClass]="{active: this._router.url == '/problems', 'hover-pointer': true}">
+            <a [routerLink]="['problems']">Problems</a>
+          </li>
+          <li *ngIf="user.loggedIn" [ngClass]="{active: _router.url == '/judge',
+              'hover-pointer': true}">
+            <a [routerLink]="['judge']">Judge</a>
+          </li>
+          <li [ngClass]="{active: _router.url == '/rankings', 'hover-pointer': true}">
+            <a [routerLink]="['rankings']">Rankings</a>
+          </li>
+          <li [ngClass]="{active: _router.url == '/competitions', 'hover-pointer': true}">
+            <a [routerLink]="['competitions']">Competitions</a>
+          </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+
+          <li *ngIf="user.isAdmin" class="dropdown">
+            <a class="dropdown-toggle hover-pointer" id="dropdownMenu1"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <span class="glyphicon glyphicon-plus"></span>
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a [routerLink]="['/users/create']" class="hover-pointer">New User</a></li>
+              <li><a [routerLink]="['/competitions/create']" class="hover-pointer">New Competition</a></li>
+              <li><a [routerLink]="['/problems/create']" class="hover-pointer">New Problem</a></li>
+              <li><a [routerLink]="['/blogs/create']" class="hover-pointer">New Blog Post</a></li>
+            </ul>
+          </li>
+
+          <!-- Show user options to the user -->
+          <li class="dropdown">
+            <a (click)="openDropdownMenu()"class="dropdown-toggle hover-pointer"
+                id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              {{user.displayName === '' ? 'Log In' : user.displayName}}<span class="caret"></span></a>
+
+            <!-- If the user is logged in, show their options -->
+            <ul *ngIf="user.loggedIn" class="dropdown-menu">
+              <li><a [routerLink]="['/settings']" class="hover-pointer">Settings</a></li>
+              <li><a (click)="logout()" class="hover-pointer">Sign out</a></li>
+            </ul>
+
+            <!-- If the user isn't logged in, show them the login form -->
+            <div *ngIf="!user.loggedIn" (click)="$event.stopPropagation()"
+                class="login-dropdown dropdown-menu" aria-labelledby="dropdownMenu1">
+              <p *ngIf="failedLogin" class="failed-login">
+                Incorrect username or password
+              </p>
+
+              <form name="logInForm" novalidate (ngSubmit)="logIn()">
+                <!-- Username -->
+                <div class="form-group">
+                  <label for="newUserName" class="control-label">Username</label>
+                  <input class="form-control" name="username" id="username"
+                      type="text" placeholder="Username" [(ngModel)]="user.username">
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                  <label for="newUserPassword" class="control-label">Password</label>
+                  <input class="form-control" id="newUserPassword" type="password"
+                      placeholder="Password" [(ngModel)]="user.password" name="password">
+                </div>
+
+                <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
+              </form>
+
+              <button class="btn btn-success" style="width:100%;" (click)="logIn()">Log in</button>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div id="main" class="container">
+    <router-outlet></router-outlet>
+  </div>
+</div>

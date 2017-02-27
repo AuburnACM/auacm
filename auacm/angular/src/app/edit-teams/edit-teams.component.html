@@ -1,0 +1,66 @@
+<div class="row">
+  <div class="col-md-10">
+    <h1 class="pull-left">Teams</h1>
+  </div>
+  <div class="col-md-2">
+    <div class="button-group">
+      <button class="btn btn-default pull-right margin-top" (click)="back()">Back</button>
+      <button class="btn btn-success pull-right margin-top" (click)="save()">Save</button>
+    </div>
+    <div *ngIf="responseFailed" class="save-response pull-right">
+      <div class="label label-danger">{{responseMessage}}</div>
+    </div>
+    <div *ngIf="responseSuccess" class="save-response pull-right">
+      <div class="label label-success">{{responseMessage}}</div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-9 gridded">
+    <div class="col-md-6" *ngFor="let team of teamNames">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="panel-title">{{ team }}
+            <span class="hover-pointer glyphicon glyphicon-remove-circle pull-right"
+                (click)="removeTeam(team)"></span>
+          </div>
+        </div>
+        <div class="panel-body" [dragula]="DND_BOX_NAME" [dragulaModel]='teams[team]'>
+          <div class="panel panel-default movable" *ngFor="let user of teams[team]">
+            <div class="panel-body">
+              {{ user.display }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <form class="form-group" submit="addTeam()">
+            <div class="col-md-8">
+              <input class="form-control" placeholder="New Team"
+                  [(ngModel)]="teamName" name="teamName">
+            </div>
+            <button class="btn btn-default" (click)="addTeam()"
+                [disabled]="teamExists()">Add</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="panel-title">Individuals</div>
+      </div>
+      <div class="panel-body" [dragula]="DND_BOX_NAME" [dragulaModel]='individuals'>
+        <div class="panel panel-default" *ngFor="let user of individuals">
+          <div class="panel-body">
+            {{ user.display }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

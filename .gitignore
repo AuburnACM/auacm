@@ -1,3 +1,23 @@
 **/*.pyc
 .idea
 node_modules/
+.DS_Store
+auacm/app/static/angular/dist/
+auacm/app/static/angular/node_modules/
+auacm/app/data/
+setup/data/
+setup/__MACOSX/
+
+# Angular dependencies
+auacm/angular/.bin/
+auacm/angular/src/assets/showdown.min.js
+auacm/angular/node_modules
+auacm/angular/dist
+auacm/angular/tmp
+auacm/app/static/assets/
+auacm/app/static/favicon.ico
+auacm/app/static/index.html
+auacm/app/static/*.bundle.js
+auacm/app/static/*.bundle.css
+auacm/app/static/*.jpg
+auacm/app/templates/index.html

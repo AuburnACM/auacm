@@ -1,0 +1,81 @@
+<div class="margin-top col-md-10 col-md-offset-1">
+  <div class="panel panel-default" *ngIf="competitions.ongoing.length > 0">
+    <div class="panel-heading">
+      <h2 class="panel-title">Ongoing</h2>
+    </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th class="col-md-3">Name</th>
+          <th class="col-md-3">Start Time</th>
+          <th class="col-md-2">Length</th>
+          <th [ngClass]="userData.loggedIn ? 'col-md-2' : 'col-md-4'">Remaining</th>
+          <th class="col-md-2" *ngIf="userData.loggedIn">Register</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let competition of competitions.ongoing | orderBy:'startTime'">
+          <td><a [routerLink]="['/competition/' + competition.cid]">{{competition.name}}</a></td>
+          <td>{{ competition.startTime | secondsToDateTime | date:"medium" }}</td>
+          <td>{{ competition.length | secondsToHours }}</td>
+          <td>{{ competition.timeRemaining | secondsToHours }}</td>
+          <td *ngIf="userData.loggedIn">
+            <div *ngIf="competition.registered">Registered</div>
+            <a *ngIf="!competition.registered && (userData.isAdmin || !competition.closed)"
+                 (click)="register(competition)" class="hover-pointer">Register</a>
+            <div *ngIf="!competition.registered && !userData.isAdmin && competition.closed">Closed</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="panel panel-default" *ngIf="competitions.upcoming.length > 0">
+    <div class="panel-heading">
+      <h2 class="panel-title">Upcoming</h2>
+    </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th class="col-md-3">Name</th>
+          <th class="col-md-3">Start Time</th>
+          <th [ngClass]="userData.loggedIn ? 'col-md-4' : 'col-md-6'">Length</th>
+          <th class="col-md-2" *ngIf="userData.loggedIn">Register</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let competition of competitions.upcoming | orderBy: 'startTime'">
+          <td><a [routerLink]="['/competition/' + competition.cid]">{{ competition.name }}</a></td>
+          <td>{{ competition.startTime | secondsToDateTime | date:"medium" }}</td>
+          <td>{{ competition.length | secondsToHours }}</td>
+          <td *ngIf="userData.loggedIn">
+            <div *ngIf="competition.registered">Registered</div>
+            <a *ngIf="!competition.registered && (userData.isAdmin || !competition.closed)"
+                class="hover-pointer" (click)="register(competition)">Register</a>
+            <div *ngIf="!competition.registered && !userData.isAdmin && competition.closed">Closed</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="panel panel-default" *ngIf="competitions.past.length > 0">
+    <div class="panel-heading">
+      <h2 class="panel-title">Past</h2>
+    </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th class="col-md-3">Name</th>
+          <th class="col-md-3">Start Time</th>
+          <th class="col-md-6">Length</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let competition of competitions.past | orderBy: 'startTime'">
+          <td><a [routerLink]="['/competition/' + competition.cid]">{{ competition.name }}</a></td>
+          <td>{{ competition.startTime | secondsToDateTime | date:"medium" }}</td>
+          <td>{{ competition.length | secondsToHours }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

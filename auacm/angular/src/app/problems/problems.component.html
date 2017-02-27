@@ -1,0 +1,38 @@
+<div class="body margin-top col-md-10 col-md-offset-1">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="row">
+        <h1 class="panel-title col-md-6">Problems</h1>
+
+        <div class="col-md-6 pull-right">
+          <form class="col-md-8 form-inline pull-right">
+            <div class="input-group no-pad col-md-12">
+              <div class="input-group-addon glyphicon glyphicon-search chrome-glyph-hack"></div>
+              <input type="text" [(ngModel)]="searchFilter" name="searchFilter" placeholder="Search" class="form-control">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <!--<th><a class="button-not-active" href="" (click)="order('name')" id="problem_name">Name</a></th>-->
+          <th><div id="problem_name"><span (click)="order('name')" class="button-sort">Name</span></div></th>
+          <th><div id="appeared"><span (click)="order('appeared')" class="button-sort">Appeared In</span></div></th>
+          <th><div id="difficulty"><span (click)="integerOrder('difficulty')" class="button-sort">Difficulty</span></div></th>
+          <th *ngIf="user.loggedIn">Judge</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr [ngClass]="{'success': problem.solved}" *ngFor="let problem of problems | searchFilter:searchFilter">
+          <td><a class="hover-pointer" [routerLink]="['/problem/' + problem.shortName]">{{problem.name}}</a></td>
+          <td>{{problem.appeared}}</td>
+          <td>{{problem.difficulty}}</td>
+          <td *ngIf="user.loggedIn"><a class="hover-pointer" (click)="navigateTo('/judge/' + problem.pid)">Submit</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

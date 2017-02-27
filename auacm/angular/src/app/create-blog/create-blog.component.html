@@ -1,0 +1,49 @@
+<div class="col-md-8 col-md-offset-2 margin-top">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h2 class="panel-title">Create new blog post</h2>
+    </div>
+    <div class="panel-body">
+      <ul class="nav nav-tabs">
+        <li role="presentation" [ngClass]="{active: tabSelect === 'edit'}">
+          <a (click)="tabSelect = 'edit'" class="hover-pointer">Edit</a>
+        </li>
+        <li role="presentation" [ngClass]="{active: tabSelect === 'preview'}">
+          <a (click)="tabSelect = 'preview'" class="hover-pointer">Preview</a>
+        </li>
+      </ul>
+      <form *ngIf="tabSelect === 'edit'">
+        <div class="form-group">
+          <label for="postTitle">Post title</label>
+          <input type="text" class="form-control" id="postTitle"
+                 placeholder="Post title" [(ngModel)]="blogPost.title" name="blogTitle" [disabled]="formDisabled">
+        </div>
+        <div class="form-group">
+          <label for="postSubtitle">Subtitle</label>
+          <input type="text" class="form-control" id="postSubtitle"
+                 placeholder="Subtitle" [(ngModel)]="blogPost.subtitle" name="blogSubtitle" [disabled]="formDisabled">
+        </div>
+        <div class="form-group">
+          <label for="body">Body text (markdown)</label>
+          <textarea class="form-control" rows="15" id="body"
+                    [(ngModel)]="blogPost.body" name="blogBody" [disabled]="formDisabled"></textarea>
+        </div>
+      </form>
+      <div class="form-group" *ngIf="tabSelect === 'preview'">
+        <h2>{{ blogPost.title }} <small>{{ blogPost.subtitle }}</small></h2>
+        <h5><small>Posted on {{ blogPost.postTime | date:'short' }} by {{ blogPost.author.display }}</small></h5>
+        <div *ngIf="blogPost.body !== ''" class="text-left" [innerHTML]="converter.makeHtml(blogPost.body)"></div>
+      </div>
+      <button type="submit" class="btn btn-default"
+          (click)="makeBlogPost()" [disabled]="formDisabled">Post!</button>
+      <button type="button" class="btn btn-default"
+          (click)="back()">Cancel</button>
+      <div *ngIf="submitFailed">
+        <div class="label label-danger">Failed to create the blog post!</div>
+        </div>
+        <div *ngIf="submitSuccess">
+        <div class="label label-success">Blog post created successfully!</div>
+      </div>
+    </div>
+  </div>
+</div>

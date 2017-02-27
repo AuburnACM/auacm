@@ -1,0 +1,48 @@
+<div class="margin-top col-md-8 col-md-offset-2">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="row">
+        <h1 class="panel-title col-md-10">
+          <a [routerLink]="['/problem/' + problem.shortName + '/info.pdf']"
+              target="_blank">
+            {{ problem.name }}
+          </a>
+          <span *ngIf="userData.isAdmin">– <a class="muted-link" [routerLink]="['/problem/' + problem.pid + '/edit']">Edit</a></span>
+        </h1>
+
+        <!-- Show the button for submission if the user is not an admin -->
+        <div class="col-md-2">
+          <a *ngIf="userData.loggedIn" [routerLink]="['/judge/' + problem.pid]">
+            <button class="btn btn-success no-pad" style="width:100%;">Submit</button>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <!-- Problem Description -->
+      <div class="problemBody" [innerHTML]="converter.makeHtml(problem.description)"></div>
+
+      <!-- Input description -->
+      <h2 class="underlineHeader">Input</h2>
+      <div *ngIf="problem.inputDesc" class="problemBody" [innerHTML]="converter.makeHtml(problem.inputDesc)"></div>
+
+      <!-- Output description -->
+      <h2 class="underlineHeader">Output</h2>
+      <div *ngIf="problem.outputDesc.length > 0" class="problemBody" [innerHTML]="converter.makeHtml(problem.outputDesc)"></div>
+
+      <!-- Sample Input || Sample Output -->
+      <div *ngFor="let case of problem.sampleCases; let i = index" class="clearfix">
+        <h2 class="underlineHeader">Sample Case {{ i + 1 }}</h2>
+        <div class="pull-left" style="width:48%;">
+          <pre>{{ case.input }}</pre>
+        </div>
+        <div class="pull-right" style="width:48%">
+          <pre>{{ case.output }}</pre>
+        </div>
+      </div>
+
+    </div>
+    <div class="panel-footer"
+      *ngIf="problem.appeared">From: {{ problem.appeared }}</div>
+  </div>
+</div>

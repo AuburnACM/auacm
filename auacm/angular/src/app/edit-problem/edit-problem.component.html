@@ -1,0 +1,128 @@
+<div class="margin-top col-md-8 col-md-offset-2">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h1 class="panel-title" *ngIf="!createProblem">Edit "{{ problem.name }}"</h1>
+      <h1 class="panel-title" *ngIf="createProblem">Create New Problem</h1>
+    </div>
+    <div *ngIf="userData.loggedIn" class="panel-body">
+      <form>
+        <!-- Title -->
+        <div class="form-group">
+          <label for="problemTitle">Problem Title</label>
+          <input type="text" class="form-control" id="problemTitle"
+            placeholder="A Super Easy Problem"
+            [(ngModel)]="problem.name" name="problemName" appProblemValidator #problemTitle="ngModel">
+          <div *ngIf="problemTitle.errors && (problemTitle.dirty || problemTitle.touched)">
+            <div *ngIf="problemTitle.errors.appProblemValidator" class="label label-danger">You cannot have a name that is only numbers!</div>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label for="problemDescription">Problem Description</label>
+          <textarea class="form-control" id="problemDescription" rows="6"
+            [(ngModel)]="problem.description" name="problemDescription"
+            placeholder="Some ridiculous plot..."></textarea>
+        </div>
+
+        <!-- Input Description -->
+        <div class="form-group">
+          <label for="inputDescription">Input Description</label>
+          <textarea class="form-control" rows="4"
+            id="inputDescription" placeholder="n can be between -4 and 10,000"
+            [(ngModel)]="problem.inputDesc" name="problemInput"></textarea>
+        </div>
+
+        <!-- Output Description -->
+        <div class="form-group">
+          <label  for="outputDescription">Output Description</label>
+          <textarea class="form-control" rows="4"
+            id="outputDescription" placeholder="Answer should be to 42 decimal places"
+            [(ngModel)]="problem.outputDesc" name="problemOutput"></textarea>
+        </div>
+
+        <!-- Sample Input/Output -->
+        <div *ngIf="showCaseList">
+          <div class="form-group" *ngFor="let case of problem.sampleCases; let i = index">
+            <label>Sample Case {{ i + 1 }}</label>
+            <div class="form-inline">
+              <textarea class="form-control sample-case-left"
+                placeholder="Sample input"
+                ngDefaultControl [(ngModel)]="case.input" name="{{'caseInput' + i}}"></textarea>
+              <textarea class="form-control sample-case-right"
+                placeholder="Sample output"
+                ngDefaultControl [(ngModel)]="case.output" name="{{'caseOutput' + i}}"></textarea>
+            </div>
+          </div>
+        </div>
+        <input type="button" class="btn btn-info"
+          (click)="addCase()" value="Add Test Case" style="margin-bottom: 25px">
+        <input type="button" class="btn btn-default pull-right"
+          (click)="removeCase()" value="Delete" *ngIf="problem.sampleCases.length > 0">
+        <div *ngIf="addCaseError">
+          <div class="label label-danger">{{addCaseErrorMsg}}</div>
+        </div>
+
+        <!-- Judge Input/Output -->
+        <div class="form-group">
+          <div class="form-inline">
+            <label for="inputUpload">Judge Input</label>
+            <input type="file" (change)="judgeInput = $event.target.files[0]" accept=".zip">
+            <p class="help-block">All files should be in an 'in' directory and zipped</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="form-inline">
+            <label for="outputUpload">Judge Output</label>
+            <input type="file" (change)="judgeOutput = $event.target.files[0]" accept=".zip">
+            <p class="help-block">All files should be in an 'out' directory and zipped</p>
+          </div>
+        </div>
+
+        <!-- Judge Solution -->
+        <div class="form-group">
+          <label for="judgeSolution">Judge Solution</label>
+          <input type="file" (change)="judgeSolution = $event.target.files[0]" accept=".c,.cpp,.java,.py,.c++,.cc,.go">
+        </div>
+
+        <!-- Appeared In -->
+        <div class="form-group">
+          <label for="appearedIn">Original Competition</label>
+          <input type="text" class="form-control" name="appeared"
+            placeholder="2014 Mid-Central" [(ngModel)]="problem.appeared">
+        </div>
+
+        <!-- Difficulty -->
+        <div class="form-group">
+          <label for="difficulty">Difficulty</label>
+          <input type="text" class="form-control" placeholder="0-100"
+            [(ngModel)]="problem.difficulty" name="difficulty">
+        </div>
+
+        <!-- Competition Release -->
+        <div class="form-group">
+          <label for="comp_release" data-toggle="tooltip" data-placement="top" 
+              title="Hide this problem until the competition starts">
+            Release with competition:
+          </label>
+          <select [(ngModel)]="problem.compRelease" name="compRelease">
+            <option [value]="0" selected>Select Competition</option>
+            <option *ngFor="let comp of competitions; let i = index;" [value]="comp.cid">{{comp.name}}</option>
+          </select>
+        </div>
+
+        <!-- Submit Button -->
+        <button [disabled]="problemTitle.errors" type="submit" class="btn btn-primary"
+          (click)="save()">{{submitButton}}</button>
+        <button type="button" class="btn btn-default"
+          (click)="back()">Cancel</button>
+        <div *ngIf="updateFailed">
+          <div class="label label-danger">{{failMessage}}</div>
+        </div>
+        <div *ngIf="updateSuccess">
+          <div class="label label-success">{{successMessage}}</div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
