@@ -139,7 +139,13 @@ def create_problem():
             problem.difficulty = request.form['difficulty']
         if 'appeared_in' in request.form:
             problem.appeared = request.form['appeared_in']
-        problem.comp_release = request.form['comp_release'] or None
+        if 'comp_release' in request.form:
+            if int(request.form['comp_release']) < 1:
+                problem.comp_release = None
+            else:
+                problem.comp_release = request.form['comp_release']
+        else:
+            problem.comp_release = None
 
         # Create the problem data and add it to the database
         problem_data = ProblemData(
