@@ -83,7 +83,6 @@ export class EditProblemComponent implements OnInit {
         } else {
           this.updateFailed = false;
           this.updateSuccess = true;
-          this.problem = problem;
         }
       });
     } else {
@@ -94,7 +93,6 @@ export class EditProblemComponent implements OnInit {
         } else {
           this.updateFailed = false;
           this.updateSuccess = true;
-          this.problem = problem;
         }
       });
     }

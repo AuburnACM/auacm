@@ -57,7 +57,7 @@ export class ProblemService {
           }
         }
       };
-      xmlSubmit.open('POST', window.location.protocol + '//' + window.location.host + '/api/problems', true);
+      xmlSubmit.open('POST', window.location.protocol + '//' + window.location.host + '/api/problems/', true);
       xmlSubmit.send(requestForm);
     });
   }
