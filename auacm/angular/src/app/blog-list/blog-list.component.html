@@ -22,7 +22,9 @@
       <!--<a *ngIf="post.resized" class="btn btn-default pull-right"
           [routerLink]="['/blog/' + post.id]" role="button">Continue Reading</a>-->
       <button *ngIf="post.resized" class="btn btn-default pull-right"
-          (click)="toggleBlogPost(post)" role="button">Continue Reading</button>
+          (click)="toggleBlogPost(post)" role="button">{{post.displayToggle ? 'Hide' : 'Continue Reading'}}<span
+              [ngClass]="{'glyphicon': true, 'glyphicon-chevron-up': post.displayToggle,
+              'glyphicon-chevron-down': !post.displayToggle}" aria-hidden="true"></span></button>
     </div>
   </div>
 </div>
