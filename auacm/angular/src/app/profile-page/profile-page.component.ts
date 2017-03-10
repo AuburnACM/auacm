@@ -45,7 +45,6 @@ export class ProfilePageComponent implements OnInit {
       this._profileService.getUserProfile(this.user.username)).subscribe( profileData =>
         {
           this.profile = profileData;
-          console.log(this.profile);
           this.hasRecentActivity = this.profile.recentAttempts.length > 0 ||
               this.profile.recentCompetitions.length > 0 ||
               this.profile.recentBlogPosts.length > 0;
