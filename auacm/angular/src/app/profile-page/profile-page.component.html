@@ -4,7 +4,11 @@
 
     <!-- Basics -->
     <div class="row text-center vcenter">
-      <h2> {{ profile.display }} </h2>
+      <h2> {{ profile.display }} -
+        {{ profile.problemsSolved === 1 ?
+           profile.problemsSolved + ' Problem Solved' :
+           profile.problemsSolved + ' Problems Solved' }}
+      </h2>
     </div>
 
     <!-- Activity Panel -->
