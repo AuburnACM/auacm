@@ -28,15 +28,9 @@
             </thead>
             <tbody>
               <tr *ngFor="let attempt of profile.recentAttempts">
-                <td *ngIf="attempt.submissionCount === 1"
-                    [ngClass]="{'success': attempt.correct, 'danger': !attempt.correct}">
-                  1 submission for
+                <td [ngClass]="{'success': attempt.correct, 'danger': !attempt.correct}">
+                  {{ attempt.submissionCount === 1 ? '1 submission for' : attempt.submissionCount + ' submissions for '}}
                   <a [routerLink]="['/problem/' + attempt.shortname]">{{ attempt.name }}</a>
-                </td>
-                <td *ngIf="attempt.submissionCount !== 1"
-                    [ngClass]="{'success': attempt.correct, 'danger': !attempt.correct}">
-                  {{ attempt.submissionCount }} submissions for
-                  <a [routerLink]="['/problem/' + attempt.shortname]"> {{ attempt.name }}</a>
                 </td>
               </tr>
             </tbody>
@@ -54,16 +48,14 @@
             </thead>
             <tbody>
               <tr *ngFor="let competition of profile.recentCompetitions">
-                <td *ngIf="competition.teamSize > 1">
-                  <a [routerLink]="['/competitions/' + competition.cid]"> {{ competition.compName }} </a>
-                  competing on team "{{ competition.teamName }}"
-                </td>
-                <td *ngIf="competition.teamSize === 1 && competition.teamName !== profile.display">
-                  <a [routerLink]="['/competitions/' + competition.cid]"> {{ competition.compName }} </a>
-                  competing as "{{ competition.teamName }}"
-                </td>
-                <td *ngIf="competition.teamSize === 1 && competition.teamName === profile.display">
-                  <a [routerLink]="['/competitions/' + competition.cid]"> {{ competition.compName }} </a>
+                <td>
+                  <a [routerLink]="['/competition/' + competition.cid]"> {{ competition.compName }} </a>
+                  <ng-container *ngIf="competition.teamSize > 1">
+                    competing on team "{{ competition.teamName }}"
+                  </ng-container>
+                  <ng-container *ngIf="competition.teamSize === 1 && competition.teamName !== profile.display">
+                    competing as "{{ competition.teamName }}"
+                  </ng-container>
                 </td>
               </tr>
             </tbody>

@@ -38,7 +38,9 @@
         <tbody>
           <tr *ngFor="let user of ranks; let i = index">
             <td>{{ (i + 1) }}</td>
-            <td>{{ user.displayName }}</td>
+            <td>
+              <a [routerLink]="['/profile/' + user.username]">{{ user.displayName }}</a>
+            </td>
             <td>{{ user.solved }}</td>
           </tr>
         </tbody>
