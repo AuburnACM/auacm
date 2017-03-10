@@ -18,9 +18,11 @@
           </h4>
         </div>
       </div>
-      <div class="text-left" [innerHTML]="converter.makeHtml(post.body | limitWords : 200)"></div>
-      <a *ngIf="post.resized" class="btn btn-default pull-right"
-          [routerLink]="['/blog/' + post.id]" role="button">Continue Reading</a>
+      <div class="text-left" [innerHTML]="converter.makeHtml(post.expanded ? post.body : post.body | limitWords : 200)"></div>
+      <button *ngIf="post.resized" class="btn btn-default pull-right"
+          (click)="toggleBlogPost(post)" role="button">{{post.expanded ? 'Hide' : 'Continue Reading'}} <span
+              [ngClass]="{'glyphicon': true, 'glyphicon-chevron-up': post.expanded,
+              'glyphicon-chevron-down': !post.expanded}" aria-hidden="true"></span></button>
     </div>
   </div>
 </div>
