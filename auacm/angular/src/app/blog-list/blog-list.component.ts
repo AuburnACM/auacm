@@ -48,4 +48,8 @@ export class BlogListComponent implements OnInit {
   editPost(id: number) {
     this._router.navigate([`/blog/${id}/edit`]);
   }
+
+  toggleBlogPost(post: BlogPost) {
+    post.expanded = !post.expanded;
+  }
 }
