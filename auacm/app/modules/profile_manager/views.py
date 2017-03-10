@@ -87,10 +87,10 @@ def get_profile(username='tester'):
 
     return serve_response({
         'display': user.display,
-        'recent_attempts': get_recent_attempts(username),
-        'recent_competitions': get_recent_competitions(username),
-        'recent_blog_posts': get_recent_blog_posts(username),
-        'problems_solved': problems_solved
+        'recentAttempts': get_recent_attempts(username),
+        'recentCompetitions': get_recent_competitions(username),
+        'recentBlogPosts': get_recent_blog_posts(username),
+        'problemsSolved': problems_solved
     }) 
 
 def get_recent_blog_posts(username):
@@ -106,7 +106,7 @@ def get_recent_blog_posts(username):
         recent_blog_posts.append({
             'title': blog_post.title,
             'subtitle': blog_post.subtitle,
-            'post_time': blog_post.post_time * 1000,
+            'postTime': blog_post.post_time * 1000,
             'id': blog_post.id
         }) 
         if len(recent_blog_posts) >= MAX_RECENT_BLOG_POSTS:
@@ -133,10 +133,10 @@ def get_recent_competitions(username):
         team_size = len(database.session.query(CompUser).filter(and_(
                 CompUser.cid == cid, CompUser.team == comp_user.team)).all())
         recent_competitions.append({
-            'team_name': comp_user.team,
+            'teamName': comp_user.team,
             'cid': cid,
-            'comp_name': comp.name,
-            'team_size': team_size
+            'compName': comp.name,
+            'teamSize': team_size
         })
         if len(recent_competitions) >= MAX_RECENT_COMPETITIONS:
             break;

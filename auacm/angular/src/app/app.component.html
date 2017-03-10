@@ -30,6 +30,9 @@
           <li [ngClass]="{active: _router.url == '/competitions', 'hover-pointer': true}">
             <a [routerLink]="['competitions']">Competitions</a>
           </li>
+          <li *ngIf="user.loggedIn" [ngClass]="{active: _router.url == '/profile', 'hover-pointer': true}">
+            <a [routerLink]="['profile']">Profile</a>
+          </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
 

@@ -36,9 +36,9 @@ class AttemptSession:
     def to_dict(self):
         ''' Return this object as a dictionary.'''
         return {
-            'submission_count': self.count,
+            'submissionCount': self.count,
             'pid': self.pid,
-            'submission_ids': self.job_ids,
+            'submissionIds': self.job_ids,
             'correct': self.correct,
             'shortname': self.shortname,
             'name': self.name

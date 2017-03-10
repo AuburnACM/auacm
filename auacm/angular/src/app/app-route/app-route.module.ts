@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from '../app.component';
 import { BlogListComponent } from '../blog-list/blog-list.component';
 import { ProblemsComponent } from '../problems/problems.component';
+import { ProfilePageComponent } from '../profile-page/profile-page.component';
 import { RankingComponent } from '../ranking/ranking.component';
 import { CompetitionsComponent } from '../competitions/competitions.component';
 import { JudgeComponent } from '../judge/judge.component';
@@ -38,6 +39,7 @@ const appRoutes: Routes = [
   { path: 'problem/:pid/edit', component: EditProblemComponent },
   { path: 'problem/:shortName', component: ViewProblemComponent },
   { path: 'problems/create', component: EditProblemComponent },
+  { path: 'profile', component: ProfilePageComponent },
   { path: 'settings', component: EditUserComponent },
   { path: '404', component: NotFoundComponent }
 ];

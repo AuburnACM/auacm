@@ -1,0 +1,100 @@
+<div class="body">
+  <!-- Container -->
+  <div class="col-md-8 col-md-offset-2">
+
+    <!-- Basics -->
+    <div class="row text-center vcenter">
+      <h2> {{ profile.display }} </h2>
+    </div>
+
+    <!-- Activity Panel -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Activity</h3>
+      </div>
+      <div *ngIf="!hasRecentActivity" class="panel-body">
+        No Recent Activity
+      </div>
+      <div *ngIf="hasRecentActivity" class="panel-body">
+
+        <!-- Recent Submissions -->
+
+        <div *ngIf="profile.recentAttempts.length > 0" class="col-md-12">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Recent Submissions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let attempt of profile.recentAttempts">
+                <td *ngIf="attempt.submissionCount === 1"
+                    [ngClass]="{'success': attempt.correct, 'danger': !attempt.correct}">
+                  1 submission for
+                  <a [routerLink]="['/problem/' + attempt.shortname]">{{ attempt.name }}</a>
+                </td>
+                <td *ngIf="attempt.submissionCount !== 1"
+                    [ngClass]="{'success': attempt.correct, 'danger': !attempt.correct}">
+                  {{ attempt.submissionCount }} submissions for
+                  <a [routerLink]="['/problem/' + attempt.shortname]"> {{ attempt.name }}</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Recent Competitions -->
+
+        <div *ngIf="profile.recentCompetitions.length > 0" class="col-md-12">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Recent Competitions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let competition of profile.recentCompetitions">
+                <td *ngIf="competition.teamSize > 1">
+                  <a [routerLink]="['/competitions/' + competition.cid]"> {{ competition.compName }} </a>
+                  competing on team "{{ competition.teamName }}"
+                </td>
+                <td *ngIf="competition.teamSize === 1 && competition.teamName !== profile.display">
+                  <a [routerLink]="['/competitions/' + competition.cid]"> {{ competition.compName }} </a>
+                  competing as "{{ competition.teamName }}"
+                </td>
+                <td *ngIf="competition.teamSize === 1 && competition.teamName === profile.display">
+                  <a [routerLink]="['/competitions/' + competition.cid]"> {{ competition.compName }} </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Recent Blog Posts -->
+
+        <div *ngIf="profile.recentBlogPosts.length > 0" class="col-md-12">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Recent Blog Posts</th>
+                <th>Posted At</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let blogPost of profile.recentBlogPosts">
+                <td>
+                  <a [routerLink]="['/blog/' + blogPost.id]">{{ blogPost.title }} - {{ blogPost.subtitle }}</a>
+                </td>
+                <td>
+                  <small>{{ blogPost.postTime | date }}</small>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+<div>
