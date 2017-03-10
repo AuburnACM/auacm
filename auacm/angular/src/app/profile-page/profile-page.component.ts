@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { UserService } from '../user.service';
 import { ProfileService } from '../profile.service';
@@ -18,10 +19,17 @@ export class ProfilePageComponent implements OnInit {
   public hasRecentActivity: boolean;
 
   constructor(private _userService: UserService,
-              private _profileService: ProfileService) {
+              private _profileService: ProfileService,
+              private _router: Router) {
     this._userService.userData$.subscribe(data => {
       this.user = data;
-      this.getProfile();
+      if (!this.user.loggedIn) {
+        if (this._router.url === '/profile') {
+          this._router.navigate(['/']);
+        }
+      } else {
+        this.getProfile();
+      }
     });
   }
 
