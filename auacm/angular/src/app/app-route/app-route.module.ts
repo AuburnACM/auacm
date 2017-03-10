@@ -39,6 +39,7 @@ const appRoutes: Routes = [
   { path: 'problem/:pid/edit', component: EditProblemComponent },
   { path: 'problem/:shortName', component: ViewProblemComponent },
   { path: 'problems/create', component: EditProblemComponent },
+  { path: 'profile/:username', component: ProfilePageComponent },
   { path: 'profile', component: ProfilePageComponent },
   { path: 'settings', component: EditUserComponent },
   { path: '404', component: NotFoundComponent }

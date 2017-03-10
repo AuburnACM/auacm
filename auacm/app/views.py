@@ -27,6 +27,10 @@ def get_home():
     logged_in_string = 'true' if logged_in else 'false'
     return render_template('index.html')
 
+@app.route('/profile/<string:username>')
+def get_profile_page(username):
+    return get_home()
+
 @app.route('/blog/<int:id>')
 @app.route('/blog/<int:id>/edit')
 def get_blog_page(id):
