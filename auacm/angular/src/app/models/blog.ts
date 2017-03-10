@@ -6,7 +6,7 @@ export class BlogPost {
   public body: string;
   public author: BlogAuthor;
   public resized: boolean;
-  public displayToggle: boolean;
+  public expanded: boolean;
 
   constructor() {
     this.title = '';
@@ -14,7 +14,7 @@ export class BlogPost {
     this.body = '';
     this.author = new BlogAuthor();
     this.resized = false;
-    this.displayToggle = false;
+    this.expanded = false;
   }
 }
 

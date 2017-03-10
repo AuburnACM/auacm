@@ -50,6 +50,6 @@ export class BlogListComponent implements OnInit {
   }
 
   toggleBlogPost(post: BlogPost) {
-    post.displayToggle = !post.displayToggle;
+    post.expanded = !post.expanded;
   }
 }
