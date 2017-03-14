@@ -52,9 +52,13 @@
 
           <!-- Show user options to the user -->
           <li class="dropdown">
-            <a (click)="openDropdownMenu()"class="dropdown-toggle hover-pointer"
-                id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              {{user.displayName === '' ? 'Log In' : user.displayName}}<span class="caret"></span></a>
+            <a (click)="openDropdownMenu()" class="dropdown-toggle hover-pointer" id="dropdownMenu1"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"
+                [ngClass]="{'user-profile-container': user.loggedIn}">
+              <img *ngIf="user.loggedIn" [src]="'api/profile/image/' + user.username" class="user-profile-image">
+              {{user.displayName === '' ? 'Log In' : user.displayName}}
+              <span class="caret"></span>
+            </a>
 
             <!-- If the user is logged in, show their options -->
             <ul *ngIf="user.loggedIn" class="dropdown-menu">
