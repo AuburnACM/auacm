@@ -173,13 +173,10 @@ export class PictureSelection {
     var writeCanvas = document.createElement("canvas");
     writeCanvas.width = 2 * this.r;
     writeCanvas.height = 2 * this.r;
-    console.log(writeCanvas);
     var imgData = this.ctx.getImageData(this.x - this.r, this.y - this.r, 2 * this.r, 2 * this.r);
     // Get image data.
-    console.log(imgData);
     writeCanvas.getContext("2d").putImageData(imgData, 0, 0);
     // Write image data.
-    console.log(writeCanvas);
     this.resizeImg(writeCanvas);
     this.ctx.restore();
     this.drawSelection(this.canvasRef);

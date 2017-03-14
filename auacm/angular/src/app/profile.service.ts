@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 
 import { UserProfile } from './models/profile';
+import { SimpleResponse } from './models/response';
 
 @Injectable()
 export class ProfileService {
@@ -22,5 +23,22 @@ export class ProfileService {
         resolve(new UserProfile());
       });
     });
+  }
+
+  uploadUserPicture(base64Data: string, username: string): Promise<SimpleResponse> {
+      return new Promise((resolve, reject) => {
+        this._http.put(`/api/profile/image/${username}`, {
+            "data": base64Data,
+            "mimetype": "image/png"
+        }).subscribe((res: Response) => {
+            if (res.status === 200) {
+                resolve(new SimpleResponse(true, "File sent successfully"));
+            } else {
+                resolve(new SimpleResponse(false, "Returned non-200 status code"));
+            }
+        }, (err: Response) => {
+            resolve(new SimpleResponse(false, "Error uploading file"));
+        });
+      });
   }
 }

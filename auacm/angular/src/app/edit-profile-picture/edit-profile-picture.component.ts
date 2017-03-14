@@ -1,6 +1,13 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { ProfileService } from '../profile.service';
+import { UserService } from '../user.service';
 
 import { PictureSelection } from '../models/profile-picture';
+import { UserData } from '../models/user';
+
+
 const UPLOAD_STAGE_SELECT_FILE = 0;
 const UPLOAD_STAGE_DRAW_SELECTION = 1;
 const UPLOAD_STAGE_CONFIRM_SELECTION = 2;
@@ -41,9 +48,19 @@ export class EditProfilePictureComponent implements OnInit {
   private selection: PictureSelection = new PictureSelection(MAX_SELECTED_IMG_WIDTH,
       MAX_SELECTED_IMG_HEIGHT);
 
+  private user: UserData;
 
+  constructor(private _userService: UserService,
+              private _profileService: ProfileService,
+              private _router: Router) {
 
-  constructor() {}
+    this._userService.userData$.subscribe(data => {
+      this.user = data;
+      if (!this.user.loggedIn) {
+        this._router.navigate(['/']);
+      }
+    });
+  }
 
   ngOnInit() {
     this.ctx = this.canvasRef.nativeElement.getContext('2d');
@@ -69,8 +86,15 @@ export class EditProfilePictureComponent implements OnInit {
 
   confirmSelection() {
     console.log("CONFIRM SELECTION!");
-    this.uploadStage = UPLOAD_STAGE_FINISHED;
+    var previewImg = <HTMLImageElement> document.getElementById("confirmSelectionImg");
+    var data = previewImg.src.replace(/^data:image\/(png|jpg);base64,/, "");
     console.log("SEND REQUEST!");
+    this._profileService.uploadUserPicture(data, this.user.username).then( response => {
+        console.log(response);
+        if (response.success) {
+            this.uploadStage = UPLOAD_STAGE_FINISHED;
+        }
+    });
   }
 
   clipSelection() {
