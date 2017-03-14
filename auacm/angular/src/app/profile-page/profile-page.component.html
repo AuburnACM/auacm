@@ -4,11 +4,16 @@
 
     <!-- Basics -->
     <div class="row text-center vcenter">
-      <h2> {{ profile.display }} -
-        {{ profile.problemsSolved === 1 ?
-           profile.problemsSolved + ' Problem Solved' :
-           profile.problemsSolved + ' Problems Solved' }}
-      </h2>
+      <div class="col-md-2 vcenter-inner">
+        <img [src]="'api/profile/image/' + profile.username" class="profile-page-picture">
+      </div>
+      <div class="col-md-10 vcenter-inner">
+        <h2> {{ profile.displayName }} -
+          {{ profile.problemsSolved === 1 ?
+             profile.problemsSolved + ' Problem Solved' :
+             profile.problemsSolved + ' Problems Solved' }}
+        </h2>
+      </div>
     </div>
 
     <!-- Activity Panel -->
@@ -57,7 +62,7 @@
                   <ng-container *ngIf="competition.teamSize > 1">
                     competing on team "{{ competition.teamName }}"
                   </ng-container>
-                  <ng-container *ngIf="competition.teamSize === 1 && competition.teamName !== profile.display">
+                  <ng-container *ngIf="competition.teamSize === 1 && competition.teamName !== profile.displayName">
                     competing as "{{ competition.teamName }}"
                   </ng-container>
                 </td>

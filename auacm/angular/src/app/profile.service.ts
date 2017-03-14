@@ -12,7 +12,9 @@ export class ProfileService {
     return new Promise((resolve, reject) => {
       this._http.get(`/api/profile/userprofile/${username}`).subscribe((res: Response) => {
         if (res.status === 200) {
-          resolve(res.json().data);
+          var result = res.json().data;
+          result.username = username;
+          resolve(result);
         } else {
           resolve(new UserProfile());
         }

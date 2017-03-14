@@ -43,14 +43,16 @@ export class BlogPostActivity {
 }
 
 export class UserProfile {
-  public display: string;
+  public displayName: string;
+  public username: string;
   public problemsSolved: number;
   public recentAttempts: SubmissionActivity[];
   public recentCompetitions: CompetitionActivity[];
   public recentBlogPosts: BlogPostActivity[];
 
   constructor() {
-    this.display = '';
+    this.displayName = '';
+    this.username = '';
     this.problemsSolved = 0;
     this.recentAttempts = [];
     this.recentCompetitions = [];

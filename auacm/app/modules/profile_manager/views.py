@@ -24,7 +24,7 @@ image_dir = join(app.config['DATA_FOLDER'], 'profile')
 @app.route('/api/profile/image/<username>', methods=['GET'])
 def get_profile_image(username='tester'):
     """
-    Return a user's profile picture. 
+    Return a user's profile picture.
     """
 
     imagefile = [filename for filename in os.listdir(join(app.config['DATA_FOLDER'],
@@ -86,12 +86,12 @@ def get_profile(username='tester'):
         ProblemSolved.username == username).all())
 
     return serve_response({
-        'display': user.display,
+        'displayName': user.display,
         'recentAttempts': get_recent_attempts(username),
         'recentCompetitions': get_recent_competitions(username),
         'recentBlogPosts': get_recent_blog_posts(username),
         'problemsSolved': problems_solved
-    }) 
+    })
 
 def get_recent_blog_posts(username):
     '''
@@ -99,7 +99,7 @@ def get_recent_blog_posts(username):
     the given user has made. The maximum number of competitions returned is
     defined by MAX_RECENT_BLOG_POSTS.
     '''
-    
+
     recent_blog_posts = list()
 
     for blog_post in database.session.query(BlogPost).filter(BlogPost.username == username).order_by(BlogPost.post_time.desc()):
@@ -108,7 +108,7 @@ def get_recent_blog_posts(username):
             'subtitle': blog_post.subtitle,
             'postTime': blog_post.post_time * 1000,
             'id': blog_post.id
-        }) 
+        })
         if len(recent_blog_posts) >= MAX_RECENT_BLOG_POSTS:
             break
 
@@ -118,10 +118,10 @@ def get_recent_competitions(username):
     '''
     Returns the data for the competitions most recently participated
     in by the user. The maximum number of competitions returned is
-    defined by MAX_RECENT_COMPETITIONS. 
+    defined by MAX_RECENT_COMPETITIONS.
     '''
 
-    recent_competitions = list()    
+    recent_competitions = list()
 
     for comp_user in database.session.query(CompUser).filter(
             CompUser.username == username).order_by(CompUser.cid.desc()):
@@ -143,10 +143,10 @@ def get_recent_competitions(username):
     return recent_competitions
 
 def get_recent_attempts(username):
-    ''' 
+    '''
     Returns the data for the problems most recently attempted by the user.
     The maximum number of problems returned is defined by MAX_RECENT_ATTEMPTS.
-    ''' 
+    '''
     last_submit = None
     attempt_session = None
     recent_attempts = list()
@@ -164,15 +164,15 @@ def get_recent_attempts(username):
                 # If we hit the limit, break.
                 if len(recent_attempts) >= MAX_RECENT_ATTEMPTS:
                     break;
-            # Create a new attempt session from this submit. 
+            # Create a new attempt session from this submit.
             attempt_session = AttemptSession(recent_submit)
-        
+
         # Otherwise, if this is another submission on the same problem:
         else:
             # Batch it up in the same attempt session.
             attempt_session.add_submission(recent_submit)
         last_submit = recent_submit
-    
+
     # If we haven't hit the cap, but we have an unused attempt session, add it.
     if len(recent_attempts) < MAX_RECENT_ATTEMPTS and attempt_session is not None:
         recent_attempts.append(attempt_session.to_dict())
