@@ -69,29 +69,22 @@ export class EditProfilePictureComponent implements OnInit {
     this.selection.y = 700;
     this.selection.r = SELECTION_RADIUS_MIN;
     this.selection.setCanvasRef(this.canvasRef);
-    console.log(this.uploadStage == this.UPLOAD_STAGE_START);
     this.uploadStage = this.UPLOAD_STAGE_START;
-    console.log(this.uploadStage !== this.UPLOAD_STAGE_START);
   }
 
   // Tie - Ins that allow the view to change upload stages.
   returnToFileSelect() {
-    console.log("RETURN TO FILE SELECT!");
     this.uploadStage = UPLOAD_STAGE_SELECT_FILE;
   }
 
   returnToSelectRegion() {
-    console.log("RETURN TO REGION SELECT!");
     this.uploadStage = UPLOAD_STAGE_DRAW_SELECTION;
   }
 
   confirmSelection() {
-    console.log("CONFIRM SELECTION!");
     var previewImg = <HTMLImageElement> document.getElementById("confirmSelectionImg");
     var data = previewImg.src.replace(/^data:image\/(png|jpg);base64,/, "");
-    console.log("SEND REQUEST!");
     this._profileService.uploadUserPicture(data, this.user.username).then( response => {
-        console.log(response);
         if (response.success) {
             this.uploadStage = UPLOAD_STAGE_FINISHED;
             this._router.navigate(['/profile']);
@@ -100,14 +93,11 @@ export class EditProfilePictureComponent implements OnInit {
   }
 
   clipSelection() {
-    console.log("CLIP SELECTION!");
     this.selection.clipSelection();
     this.uploadStage = UPLOAD_STAGE_CONFIRM_SELECTION;
   }
 
   loadImage(input) {
-    console.log("LOADING IMAGE!");
-    console.log(input);
     this.selection.loadImage(input.srcElement);
     this.uploadStage = UPLOAD_STAGE_DRAW_SELECTION;
   }
