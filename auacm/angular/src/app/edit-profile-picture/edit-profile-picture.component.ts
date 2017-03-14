@@ -63,6 +63,7 @@ export class EditProfilePictureComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.user = this._userService.getUserData();
     this.ctx = this.canvasRef.nativeElement.getContext('2d');
     this.selection.x = 300;
     this.selection.y = 700;
