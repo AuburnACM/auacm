@@ -20,6 +20,7 @@ import { ViewScoreboardComponent } from '../view-scoreboard/view-scoreboard.comp
 import { EditCompetitionComponent } from '../edit-competition/edit-competition.component';
 import { EditTeamsComponent } from '../edit-teams/edit-teams.component';
 import { EditUserComponent } from '../edit-user/edit-user.component';
+import { EditProfilePictureComponent } from '../edit-profile-picture/edit-profile-picture.component';
 
 const appRoutes: Routes = [
   { path: '', component: BlogListComponent },
@@ -42,6 +43,7 @@ const appRoutes: Routes = [
   { path: 'profile/:username', component: ProfilePageComponent },
   { path: 'profile', component: ProfilePageComponent },
   { path: 'settings', component: EditUserComponent },
+  { path: 'settings/picture', component: EditProfilePictureComponent },
   { path: '404', component: NotFoundComponent }
 ];
 

@@ -19,6 +19,7 @@ proper page."""
 @app.route('/users/create')
 @app.route('/404')
 @app.route('/settings')
+@app.route('/settings/picture')
 @app.route('/profile')
 def get_home():
     """Render the home page for the logged in user, if any"""

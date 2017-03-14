@@ -14,6 +14,7 @@ import { CreateUserComponent } from './create-user/create-user.component';
 import { EditBlogComponent } from './edit-blog/edit-blog.component';
 import { EditCompetitionComponent } from './edit-competition/edit-competition.component';
 import { EditProblemComponent } from './edit-problem/edit-problem.component';
+import { EditProfilePictureComponent } from './edit-profile-picture/edit-profile-picture.component';
 import { EditTeamsComponent } from './edit-teams/edit-teams.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
 import { JudgeComponent } from './judge/judge.component';
@@ -58,6 +59,7 @@ import { ProblemValidatorDirective } from './directives/problem-validator.direct
     EditBlogComponent,
     EditCompetitionComponent,
     EditProblemComponent,
+    EditProfilePictureComponent,
     EditTeamsComponent,
     EditUserComponent,
     IndexToCharCodePipe,

@@ -1,0 +1,89 @@
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+
+import { PictureSelection } from '../models/profile-picture';
+const UPLOAD_STAGE_SELECT_FILE = 0;
+const UPLOAD_STAGE_DRAW_SELECTION = 1;
+const UPLOAD_STAGE_CONFIRM_SELECTION = 2;
+const UPLOAD_STAGE_FINISHED = 3;
+const UPLOAD_STAGE_ERROR = 4;
+
+const SELECTION_RADIUS_MIN = 64;
+
+var MAX_SELECTED_IMG_WIDTH  = document.documentElement.clientWidth * 0.65;
+var MAX_SELECTED_IMG_HEIGHT = document.documentElement.clientHeight * 0.85;
+
+@Component({
+  selector: 'app-edit-profile-picture',
+  templateUrl: './edit-profile-picture.component.html',
+  styleUrls: ['./edit-profile-picture.component.css']
+})
+export class EditProfilePictureComponent implements OnInit {
+
+  @ViewChild('imageSelectionCanvas') canvasRef: ElementRef;
+
+  UPLOAD_STAGE_SELECT_FILE = UPLOAD_STAGE_SELECT_FILE;
+  UPLOAD_STAGE_START = UPLOAD_STAGE_SELECT_FILE;
+  UPLOAD_STAGE_DRAW_SELECTION = UPLOAD_STAGE_DRAW_SELECTION;
+  UPLOAD_STAGE_CONFIRM_SELECTION = UPLOAD_STAGE_CONFIRM_SELECTION;
+  UPLOAD_STAGE_FINISHED = UPLOAD_STAGE_FINISHED;
+  UPLOAD_STAGE_ERROR = UPLOAD_STAGE_ERROR;
+
+  private MAX_SELECTED_IMG_WIDTH: number;
+  private MAX_SELECTED_IMG_HEIGHT: number;
+
+  private ctx: CanvasRenderingContext2D;
+  private canvas: HTMLCanvasElement;
+
+  private baseImageReady = false;
+  private baseImage: HTMLImageElement = new Image();
+  public uploadStage = this.UPLOAD_STAGE_START;
+
+  private selection: PictureSelection = new PictureSelection(MAX_SELECTED_IMG_WIDTH,
+      MAX_SELECTED_IMG_HEIGHT);
+
+
+
+  constructor() {}
+
+  ngOnInit() {
+    this.ctx = this.canvasRef.nativeElement.getContext('2d');
+    this.selection.x = 300;
+    this.selection.y = 700;
+    this.selection.r = SELECTION_RADIUS_MIN;
+    this.selection.setCanvasRef(this.canvasRef);
+    console.log(this.uploadStage == this.UPLOAD_STAGE_START);
+    this.uploadStage = this.UPLOAD_STAGE_START;
+    console.log(this.uploadStage !== this.UPLOAD_STAGE_START);
+  }
+
+  // Tie - Ins that allow the view to change upload stages.
+  returnToFileSelect() {
+    console.log("RETURN TO FILE SELECT!");
+    this.uploadStage = UPLOAD_STAGE_SELECT_FILE;
+  }
+
+  returnToSelectRegion() {
+    console.log("RETURN TO REGION SELECT!");
+    this.uploadStage = UPLOAD_STAGE_DRAW_SELECTION;
+  }
+
+  confirmSelection() {
+    console.log("CONFIRM SELECTION!");
+    this.uploadStage = UPLOAD_STAGE_FINISHED;
+    console.log("SEND REQUEST!");
+  }
+
+  clipSelection() {
+    console.log("CLIP SELECTION!");
+    this.selection.clipSelection();
+    this.uploadStage = UPLOAD_STAGE_CONFIRM_SELECTION;
+  }
+
+  loadImage(input) {
+    console.log("LOADING IMAGE!");
+    console.log(input);
+    this.selection.loadImage(input.srcElement);
+    this.uploadStage = UPLOAD_STAGE_DRAW_SELECTION;
+  }
+
+}
