@@ -16,8 +16,8 @@ const UPLOAD_STAGE_ERROR = 4;
 
 const SELECTION_RADIUS_MIN = 64;
 
-var MAX_SELECTED_IMG_WIDTH  = document.documentElement.clientWidth * 0.65;
-var MAX_SELECTED_IMG_HEIGHT = document.documentElement.clientHeight * 0.85;
+const MAX_SELECTED_IMG_WIDTH: number = document.documentElement.clientWidth * 0.65;
+const MAX_SELECTED_IMG_HEIGHT: number = document.documentElement.clientHeight * 0.85;
 
 @Component({
   selector: 'app-edit-profile-picture',
@@ -82,13 +82,13 @@ export class EditProfilePictureComponent implements OnInit {
   }
 
   confirmSelection() {
-    var previewImg = <HTMLImageElement> document.getElementById("confirmSelectionImg");
-    var data = previewImg.src.replace(/^data:image\/(png|jpg);base64,/, "");
+    const previewImg: HTMLImageElement = <HTMLImageElement> document.getElementById('confirmSelectionImg');
+    const data = previewImg.src.replace(/^data:image\/(png|jpg);base64,/, '');
     this._profileService.uploadUserPicture(data, this.user.username).then( response => {
-        if (response.success) {
-            this.uploadStage = UPLOAD_STAGE_FINISHED;
-            this._router.navigate(['/profile']);
-        }
+      if (response.success) {
+        this.uploadStage = UPLOAD_STAGE_FINISHED;
+        this._router.navigate(['/profile']);
+      }
     });
   }
 

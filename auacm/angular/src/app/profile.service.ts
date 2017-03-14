@@ -16,7 +16,7 @@ export class ProfileService {
       } else {
         this._http.get(`/api/profile/userprofile/${username}`).subscribe((res: Response) => {
           if (res.status === 200) {
-            var result = res.json().data;
+            const result: UserProfile = res.json().data;
             result.username = username;
             resolve(result);
           } else {
@@ -30,19 +30,19 @@ export class ProfileService {
   }
 
   uploadUserPicture(base64Data: string, username: string): Promise<SimpleResponse> {
-      return new Promise((resolve, reject) => {
-        this._http.put(`/api/profile/image/${username}`, {
-            "data": base64Data,
-            "mimetype": "image/png"
-        }).subscribe((res: Response) => {
-            if (res.status === 200) {
-                resolve(new SimpleResponse(true, "File sent successfully"));
-            } else {
-                resolve(new SimpleResponse(false, "Returned non-200 status code"));
-            }
-        }, (err: Response) => {
-            resolve(new SimpleResponse(false, "Error uploading file"));
-        });
+    return new Promise((resolve, reject) => {
+      this._http.put(`/api/profile/image/${username}`, {
+        'data': base64Data,
+        'mimetype': 'image/png'
+      }).subscribe((res: Response) => {
+        if (res.status === 200) {
+          resolve(new SimpleResponse(true, 'File sent successfully'));
+        } else {
+          resolve(new SimpleResponse(false, 'Returned non-200 status code'));
+        }
+      }, (err: Response) => {
+        resolve(new SimpleResponse(false, 'Error uploading file'));
       });
+    });
   }
 }

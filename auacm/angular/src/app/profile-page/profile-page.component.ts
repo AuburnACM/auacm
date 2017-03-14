@@ -42,8 +42,7 @@ export class ProfilePageComponent implements OnInit {
     this.user = this._userService.getUserData();
     this._activeRoute.params.switchMap((params: Params) => params['username'] ?
       this._profileService.getUserProfile(params['username']) :
-      this._profileService.getUserProfile(this.user.username)).subscribe( profileData =>
-        {
+      this._profileService.getUserProfile(this.user.username)).subscribe(profileData => {
           this.profile = profileData;
           this.hasRecentActivity = this.profile.recentAttempts.length > 0 ||
               this.profile.recentCompetitions.length > 0 ||

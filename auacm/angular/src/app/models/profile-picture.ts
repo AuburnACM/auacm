@@ -3,13 +3,13 @@ import { ElementRef } from '@angular/core';
 const SELECTION_RADIUS_MIN = 64;
 const PROFILE_PIC_DIMENSION = 256;
 
-var selectionInstance;
+let selectionInstance: PictureSelection;
 
 class MousePos {
   public x: number;
   public y: number;
 
-  constructor(x:number, y:number) {
+  constructor(x: number, y: number) {
     this.x = x;
     this.y = y;
   }
@@ -39,7 +39,7 @@ export class PictureSelection {
   private MAX_SELECTED_IMG_HEIGHT: number;
   private MAX_SELECTED_IMG_WIDTH: number;
 
-  constructor(MAX_SELECTED_IMG_WIDTH:number, MAX_SELECTED_IMG_HEIGHT:number) {
+  constructor(MAX_SELECTED_IMG_WIDTH: number, MAX_SELECTED_IMG_HEIGHT: number) {
     this.MAX_SELECTED_IMG_WIDTH = MAX_SELECTED_IMG_WIDTH;
     this.MAX_SELECTED_IMG_HEIGHT = MAX_SELECTED_IMG_HEIGHT;
     this.x = 0;
@@ -53,15 +53,15 @@ export class PictureSelection {
     this.selectionStartY = 0;
     this.selectionStartR = 0;
     this.baseImageReady = false;
-    let selection: PictureSelection = this;
+    const selection: PictureSelection = this;
     this.baseImage.onload = function() {
       selection.baseImageReady = true;
 
-      var widthRatio = selection.MAX_SELECTED_IMG_WIDTH /
+      const widthRatio: number = selection.MAX_SELECTED_IMG_WIDTH /
         selection.baseImage.width;
-      var heightRatio = selection.MAX_SELECTED_IMG_HEIGHT /
+      const heightRatio: number = selection.MAX_SELECTED_IMG_HEIGHT /
         selection.baseImage.height;
-      var scaleFactor = 1;
+      let scaleFactor = 1;
       if (widthRatio < 1 || heightRatio < 1) {
         scaleFactor = Math.min(widthRatio, heightRatio);
       }
@@ -72,38 +72,38 @@ export class PictureSelection {
       selection.y = selection.canvasRef.height / 2;
       selection.r = Math.min(selection.canvasRef.width, selection.canvasRef.height) / 4;
       selection.drawSelection(selection.canvasRef);
-    }
+    };
     selectionInstance = this;
   }
 
   public setCanvasRef(canvasRef: ElementRef) {
-      this.ctx = canvasRef.nativeElement.getContext('2d');
-      this.canvasRef = (<HTMLCanvasElement> canvasRef.nativeElement);
-      var selection = this;
-      this.canvasRef.addEventListener("mousedown", selection.startSelectionHelper, false);
-      this.canvasRef.addEventListener("mouseup", selection.endSelectionHelper, false);
-      this.canvasRef.addEventListener("mousemove", selection.mutateSelectionHelper, false);
-      this.canvasRef.addEventListener("mouseout", selection.endSelectionHelper, false);
+    this.ctx = canvasRef.nativeElement.getContext('2d');
+    this.canvasRef = (<HTMLCanvasElement> canvasRef.nativeElement);
+    const selection: PictureSelection = this;
+    this.canvasRef.addEventListener('mousedown', selection.startSelectionHelper, false);
+    this.canvasRef.addEventListener('mouseup', selection.endSelectionHelper, false);
+    this.canvasRef.addEventListener('mousemove', selection.mutateSelectionHelper, false);
+    this.canvasRef.addEventListener('mouseout', selection.endSelectionHelper, false);
   }
 
   public loadImage(input) {
-      if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        var selection = this;
+    if (input.files && input.files[0]) {
+      const reader: FileReader = new FileReader();
+      const selection: PictureSelection = this;
 
-        reader.onload = function(e:any) {
-          selection.baseImage.src = e.target.result;
-        };
-        reader.readAsDataURL(input.files[0]);
-        input.value = null;
-      }
+      reader.onload = function(e: any) {
+        selection.baseImage.src = e.target.result;
+      };
+      reader.readAsDataURL(input.files[0]);
+      input.value = null;
     }
+  }
 
   public drawSelection(canvasRef: HTMLCanvasElement) {
     this.drawImage(canvasRef);
-    let ctx: CanvasRenderingContext2D = canvasRef.getContext('2d');
+    const ctx: CanvasRenderingContext2D = canvasRef.getContext('2d');
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.r, 0, 2*Math.PI);
+    ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
     ctx.lineWidth = 2;
     ctx.strokeStyle = 'rgba(50,50,50,0.7)';
     ctx.fillStyle = 'rgba(210,210,210,0.5)';
@@ -112,26 +112,26 @@ export class PictureSelection {
   }
 
   private getMousePos(canvas, evt): MousePos {
-    var rect = canvas.getBoundingClientRect();
+    const rect = canvas.getBoundingClientRect();
     return new MousePos(evt.clientX - rect.left, evt.clientY - rect.top);
   }
 
   private startSelectionHelper(e) {
-      selectionInstance.startSelection(e);
+    selectionInstance.startSelection(e);
   }
 
   private startSelection(e) {
-    var mousePos = this.getMousePos(this.canvasRef, e);
+    const mousePos: MousePos = this.getMousePos(this.canvasRef, e);
     this.startX = mousePos.x;
     this.startY = mousePos.y;
-    var dx = this.startX - this.x;
-    var dy = this.startY - this.y;
+    const dx: number = this.startX - this.x;
+    const dy: number = this.startY - this.y;
     this.selectionStartX = this.x;
     this.selectionStartY = this.y;
     this.selectionStartR = this.r;
 
     // If we are inside the circle.
-    if (dx*dx + dy*dy <= this.r * this.r) {
+    if (dx * dx + dy * dy <= this.r * this.r) {
       this.active = true;
       this.resize = false;
     } else {
@@ -141,7 +141,7 @@ export class PictureSelection {
   }
 
   private endSelectionHelper(e) {
-      selectionInstance.endSelection(e);
+    selectionInstance.endSelection(e);
   }
 
   private endSelection(e) {
@@ -150,7 +150,7 @@ export class PictureSelection {
   }
 
   private mutateSelectionHelper(e) {
-      selectionInstance.mutateSelection(e);
+    selectionInstance.mutateSelection(e);
   }
 
   private resizeSelection(e) {
@@ -161,7 +161,7 @@ export class PictureSelection {
   private mutateSelection(e) {
     if (this.active && !this.resize) {
       this.transposeSelection(e);
-    } else if (this.active && this.resize){
+    } else if (this.active && this.resize) {
       this.resizeSelection(e);
     }
   }
@@ -170,12 +170,12 @@ export class PictureSelection {
     this.ctx.save();
     this.drawImage(this.canvasRef);
     // Create canvas to save to.
-    var writeCanvas = document.createElement("canvas");
+    const writeCanvas: HTMLCanvasElement = document.createElement('canvas');
     writeCanvas.width = 2 * this.r;
     writeCanvas.height = 2 * this.r;
-    var imgData = this.ctx.getImageData(this.x - this.r, this.y - this.r, 2 * this.r, 2 * this.r);
+    const imgData: ImageData = this.ctx.getImageData(this.x - this.r, this.y - this.r, 2 * this.r, 2 * this.r);
     // Get image data.
-    writeCanvas.getContext("2d").putImageData(imgData, 0, 0);
+    writeCanvas.getContext('2d').putImageData(imgData, 0, 0);
     // Write image data.
     this.resizeImg(writeCanvas);
     this.ctx.restore();
@@ -183,25 +183,25 @@ export class PictureSelection {
   }
 
   resizeImg(originalCanvas) {
-    var newImage = new Image();
-    var outCanvas = null;
+    const newImage: HTMLImageElement = new Image();
+    let outCanvas: HTMLCanvasElement = null;
 
     newImage.onload = function() {
-      var resizeCanvas = document.createElement("canvas");
+      const resizeCanvas: HTMLCanvasElement = document.createElement('canvas');
       resizeCanvas.width = PROFILE_PIC_DIMENSION;
       resizeCanvas.height = PROFILE_PIC_DIMENSION;
-      resizeCanvas.getContext("2d").drawImage(newImage, 0, 0,
+      resizeCanvas.getContext('2d').drawImage(newImage, 0, 0,
           PROFILE_PIC_DIMENSION, PROFILE_PIC_DIMENSION);
       outCanvas = resizeCanvas;
-      (<HTMLImageElement>document.getElementById("confirmSelectionImg")).src = outCanvas.toDataURL("image/png");
-    }
-    newImage.src = originalCanvas.toDataURL("image/png");
+      (<HTMLImageElement>document.getElementById('confirmSelectionImg')).src = outCanvas.toDataURL('image/png');
+    };
+    newImage.src = originalCanvas.toDataURL('image/png');
   }
 
   private drawImage(cnv) {
-      if (this.baseImageReady) {
-          cnv.getContext("2d").drawImage(this.baseImage, 0, 0, cnv.width, cnv.height);
-      }
+    if (this.baseImageReady) {
+      cnv.getContext('2d').drawImage(this.baseImage, 0, 0, cnv.width, cnv.height);
+    }
   }
 
   private keepInRange(lo, hi, rad, val) {
@@ -214,27 +214,27 @@ export class PictureSelection {
   }
 
   private transposeSelection(e) {
-    let mousePos: MousePos = this.getMousePos(this.canvasRef, e);
-    var dx = mousePos.x - this.startX;
-    var dy = mousePos.y - this.startY;
+    const mousePos: MousePos = this.getMousePos(this.canvasRef, e);
+    const dx: number = mousePos.x - this.startX;
+    const dy: number = mousePos.y - this.startY;
     this.x = this.keepInRange(0, this.canvasRef.width, this.r, this.selectionStartX + dx);
     this.y = this.keepInRange(0, this.canvasRef.height, this.r, this.selectionStartY + dy);
     this.drawSelection(this.canvasRef);
   }
 
   private getNewRadius(e) {
-    let mousePos: MousePos = this.getMousePos(this.canvasRef, e);
-    var dx = mousePos.x - this.startX;
-    var dy = mousePos.y - this.startY;
+    const mousePos: MousePos = this.getMousePos(this.canvasRef, e);
+    const dx: number = mousePos.x - this.startX;
+    const dy: number = mousePos.y - this.startY;
 
-    var start_dx = this.selectionStartX - this.startX;
-    var start_dy = this.selectionStartY - this.startY;
-    var origDist = Math.sqrt(start_dx * start_dx + start_dy * start_dy);
+    let start_dx: number = this.selectionStartX - this.startX;
+    let start_dy: number = this.selectionStartY - this.startY;
+    const origDist: number = Math.sqrt(start_dx * start_dx + start_dy * start_dy);
 
     start_dx = start_dx / origDist;
     start_dy = start_dy / origDist;
 
-    var dotProduct = (dx * start_dx + dy * start_dy);
+    const dotProduct: number = (dx * start_dx + dy * start_dy);
     return this.selectionStartR - dotProduct;
   }
 
@@ -242,7 +242,7 @@ export class PictureSelection {
     this.x = this.selectionStartX;
     this.y = this.selectionStartY;
     if (2 * newRadius > this.canvasRef.height ||
-            2 * newRadius > this.canvasRef.width) {
+        2 * newRadius > this.canvasRef.width) {
 
       newRadius = Math.min(this.canvasRef.height, this.canvasRef.width) / 2;
 
@@ -258,7 +258,7 @@ export class PictureSelection {
 
     if (this.x - newRadius < 0) {
       this.x = newRadius;
-  } else if (this.x + newRadius > this.canvasRef.width) {
+    } else if (this.x + newRadius > this.canvasRef.width) {
       this.x = this.canvasRef.width - newRadius;
     }
     return newRadius;
