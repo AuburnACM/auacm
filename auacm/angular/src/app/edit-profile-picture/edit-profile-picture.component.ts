@@ -93,6 +93,7 @@ export class EditProfilePictureComponent implements OnInit {
         console.log(response);
         if (response.success) {
             this.uploadStage = UPLOAD_STAGE_FINISHED;
+            this._router.navigate(['/profile']);
         }
     });
   }
