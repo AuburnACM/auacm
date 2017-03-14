@@ -11,17 +11,21 @@ export class ProfileService {
 
   getUserProfile(username: string): Promise<UserProfile> {
     return new Promise((resolve, reject) => {
-      this._http.get(`/api/profile/userprofile/${username}`).subscribe((res: Response) => {
-        if (res.status === 200) {
-          var result = res.json().data;
-          result.username = username;
-          resolve(result);
-        } else {
-          resolve(new UserProfile());
-        }
-      }, (err: Response) => {
+      if (username.length === 0) {
         resolve(new UserProfile());
-      });
+      } else {
+        this._http.get(`/api/profile/userprofile/${username}`).subscribe((res: Response) => {
+          if (res.status === 200) {
+            var result = res.json().data;
+            result.username = username;
+            resolve(result);
+          } else {
+            resolve(new UserProfile());
+          }
+        }, (err: Response) => {
+          resolve(new UserProfile());
+        });
+      }
     });
   }
 
