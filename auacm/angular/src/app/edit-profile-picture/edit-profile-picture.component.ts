@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { ProfileService } from '../profile.service';
 import { UserService } from '../user.service';
 
-import { PictureSelection } from '../models/profile-picture';
+import { PictureSelection, Circle } from '../models/profile-picture';
 import { UserData } from '../models/user';
 
 
@@ -27,6 +27,7 @@ const MAX_SELECTED_IMG_HEIGHT: number = document.documentElement.clientHeight * 
 export class EditProfilePictureComponent implements OnInit {
 
   @ViewChild('imageSelectionCanvas') canvasRef: ElementRef;
+  @ViewChild('confirmSelectionImg') imgRef: ElementRef;
 
   UPLOAD_STAGE_SELECT_FILE = UPLOAD_STAGE_SELECT_FILE;
   UPLOAD_STAGE_START = UPLOAD_STAGE_SELECT_FILE;
@@ -40,13 +41,13 @@ export class EditProfilePictureComponent implements OnInit {
 
   private ctx: CanvasRenderingContext2D;
   private canvas: HTMLCanvasElement;
+  private previewImg: HTMLImageElement;
 
   private baseImageReady = false;
   private baseImage: HTMLImageElement = new Image();
   public uploadStage = this.UPLOAD_STAGE_START;
 
-  private selection: PictureSelection = new PictureSelection(MAX_SELECTED_IMG_WIDTH,
-      MAX_SELECTED_IMG_HEIGHT);
+  private selection: PictureSelection = new PictureSelection();
 
   private user: UserData;
 
@@ -65,11 +66,10 @@ export class EditProfilePictureComponent implements OnInit {
   ngOnInit() {
     this.user = this._userService.getUserData();
     this.ctx = this.canvasRef.nativeElement.getContext('2d');
-    this.selection.x = 300;
-    this.selection.y = 700;
-    this.selection.r = SELECTION_RADIUS_MIN;
+    this.selection.selection = new Circle(300, 700, SELECTION_RADIUS_MIN);
     this.selection.setCanvasRef(this.canvasRef);
     this.uploadStage = this.UPLOAD_STAGE_START;
+    this.previewImg = <HTMLImageElement> this.imgRef.nativeElement;
   }
 
   // Tie - Ins that allow the view to change upload stages.
@@ -82,8 +82,7 @@ export class EditProfilePictureComponent implements OnInit {
   }
 
   confirmSelection() {
-    const previewImg: HTMLImageElement = <HTMLImageElement> document.getElementById('confirmSelectionImg');
-    const data = previewImg.src.replace(/^data:image\/(png|jpg);base64,/, '');
+    const data = this.previewImg.src.replace(/^data:image\/(png|jpg);base64,/, '');
     this._profileService.uploadUserPicture(data, this.user.username).then( response => {
       if (response.success) {
         this.uploadStage = UPLOAD_STAGE_FINISHED;
@@ -93,7 +92,7 @@ export class EditProfilePictureComponent implements OnInit {
   }
 
   clipSelection() {
-    this.selection.clipSelection();
+    this.selection.clipSelection(this.previewImg);
     this.uploadStage = UPLOAD_STAGE_CONFIRM_SELECTION;
   }
 
