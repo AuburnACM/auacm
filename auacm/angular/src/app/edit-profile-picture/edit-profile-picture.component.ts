@@ -47,7 +47,7 @@ export class EditProfilePictureComponent implements OnInit {
   private baseImage: HTMLImageElement = new Image();
   public uploadStage = this.UPLOAD_STAGE_START;
 
-  private selection: PictureSelection = new PictureSelection();
+  private selection: PictureSelection;
 
   private user: UserData;
 
@@ -66,8 +66,7 @@ export class EditProfilePictureComponent implements OnInit {
   ngOnInit() {
     this.user = this._userService.getUserData();
     this.ctx = this.canvasRef.nativeElement.getContext('2d');
-    this.selection.selection = new Circle(300, 700, SELECTION_RADIUS_MIN);
-    this.selection.setCanvasRef(this.canvasRef);
+    this.selection = new PictureSelection(this.canvasRef);
     this.uploadStage = this.UPLOAD_STAGE_START;
     this.previewImg = <HTMLImageElement> this.imgRef.nativeElement;
   }
