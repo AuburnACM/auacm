@@ -60,7 +60,7 @@
         <div class="form-group">
           <label for="newDisplayName" class="control-label">New display name</label>
           <input class="form-control" id="newDisplayName" type="text"
-              placeholder="The Best Ever" formControlName="newDisplayName">
+              placeholder="Aubie" formControlName="newDisplayName">
           <div *ngIf="displayNameForm.controls['newDisplayName'].errors
               && (displayNameForm.controls['newDisplayName'].dirty
               || displayNameForm.controls['newDisplayName'].touched)">
@@ -84,6 +84,8 @@
         </div>
       </form>
     </div>
+  </div>
+  <div class="panel panel-default">
     <div class="panel-heading"><h1 class="panel-title">Profile Settings</h1></div>
     <div class="panel-body">
       <button class="btn btn-default" [routerLink]="['/settings/picture']">Change Profile Picture</button>
