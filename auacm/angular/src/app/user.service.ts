@@ -123,6 +123,20 @@ export class UserService {
     });
   }
 
+  changeDisplayName(newDisplayName: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      const params = new URLSearchParams();
+      params.append('newDisplayName', newDisplayName);
+
+      this._http.post('/api/change_display_name', params.toString(),
+          {headers: UrlEncodedHeader}).subscribe((res: Response) => {
+        resolve(res.status === 200);
+      }, (err: Response) => {
+        resolve(false);
+      });
+    });
+  }
+
   /**
    * We should implement this sometime in the future so that we don't have to edit the
    * database manually if we want to make someone an admin.

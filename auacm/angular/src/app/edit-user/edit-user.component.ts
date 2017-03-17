@@ -69,7 +69,19 @@ export class EditUserComponent implements OnInit {
   }
 
   changeDisplayName() {
-    console.log(this.displayNameForm.controls['newDisplayName'].value);
+    this._userService.changeDisplayName(
+        this.displayNameForm.controls['newDisplayName'].value).then(success => {
+
+      if (success) {
+        this.displayNameResponseSuccess = true;
+        this.displayNameResponseFailed = false;
+        this.displayNameResponseMessage = 'Successfully updated your settings.';
+      } else {
+        this.displayNameResponseSuccess = false;
+        this.displayNameResponseFailed = true;
+        this.displayNameResponseMessage = 'Failed to update your settings.';
+      }
+    });
   }
 
   validateDisplayName(newDisplayNameKey) {
