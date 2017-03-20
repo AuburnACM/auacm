@@ -55,7 +55,7 @@
             <a (click)="openDropdownMenu()" class="dropdown-toggle hover-pointer" id="dropdownMenu1"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"
                 [ngClass]="{'user-profile-container': user.loggedIn}">
-              <img *ngIf="user.loggedIn" [src]="'api/profile/image/' + user.username" class="user-profile-image">
+              <img *ngIf="user.loggedIn" [src]="profilePictureSource" class="user-profile-image">
               {{user.displayName === '' ? 'Log In' : user.displayName}}
               <span class="caret"></span>
             </a>

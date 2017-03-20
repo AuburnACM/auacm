@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { UserService } from './user.service';
+import { ProfileService } from './profile.service';
 
 import { UserData } from './models/user';
 
@@ -17,11 +18,20 @@ export class AppComponent implements OnInit {
   public failedLogin = false;
   public loginOpen = false;
   public navCollapsed = false;
+  public profilePictureSource = '';
 
-  constructor(public _router: Router, private _userService: UserService) {
+  constructor(public _router: Router,
+    private _userService: UserService,
+    private _profileService: ProfileService) {
     this.user = _userService.getUserData();
     _userService.userData$.subscribe(user => {
       this.user = user;
+      this.profilePictureSource = 'api/profile/image/' + user.username + '?' + new Date().getTime();
+    });
+    _profileService.profilePictureObservable().subscribe(update => {
+      if (update) {
+        this.refreshUserProfilePicture();
+      }
     });
   }
 
@@ -61,4 +71,9 @@ export class AppComponent implements OnInit {
       }
     }, 100);
   };
+
+  refreshUserProfilePicture() {
+    this.profilePictureSource = 'api/profile/image/' +
+      this.user.username + '?' + new Date().getTime();
+  }
 }

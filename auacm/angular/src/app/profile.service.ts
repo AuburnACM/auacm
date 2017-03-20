@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 
 import { UserProfile } from './models/profile';
 import { SimpleResponse } from './models/response';
 
 @Injectable()
 export class ProfileService {
+
+  private profilePictureUpdate: Subject<Boolean> = new Subject();
 
   constructor(private _http: Http) { }
 
@@ -36,6 +40,7 @@ export class ProfileService {
         'mimetype': 'image/png'
       }).subscribe((res: Response) => {
         if (res.status === 200) {
+          this.profilePictureUpdate.next(true);
           resolve(new SimpleResponse(true, 'File sent successfully'));
         } else {
           resolve(new SimpleResponse(false, 'Returned non-200 status code'));
@@ -45,4 +50,9 @@ export class ProfileService {
       });
     });
   }
+
+  profilePictureObservable(): Observable<Boolean> {
+    return this.profilePictureUpdate;
+  }
+
 }
