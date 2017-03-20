@@ -8,11 +8,20 @@ import { PictureSelection, Circle } from '../models/profile-picture';
 import { UserData } from '../models/user';
 
 
+
+enum UploadStage {
+  SelectFile = 0,
+  DrawSelection,
+  ConfirmSelection,
+  Finished,
+  Error
+}
+/*
 const UPLOAD_STAGE_SELECT_FILE = 0;
 const UPLOAD_STAGE_DRAW_SELECTION = 1;
 const UPLOAD_STAGE_CONFIRM_SELECTION = 2;
 const UPLOAD_STAGE_FINISHED = 3;
-const UPLOAD_STAGE_ERROR = 4;
+const UPLOAD_STAGE_ERROR = 4;*/
 
 const SELECTION_RADIUS_MIN = 64;
 
@@ -29,12 +38,8 @@ export class EditProfilePictureComponent implements OnInit {
   @ViewChild('imageSelectionCanvas') canvasRef: ElementRef;
   @ViewChild('confirmSelectionImg') imgRef: ElementRef;
 
-  UPLOAD_STAGE_SELECT_FILE = UPLOAD_STAGE_SELECT_FILE;
-  UPLOAD_STAGE_START = UPLOAD_STAGE_SELECT_FILE;
-  UPLOAD_STAGE_DRAW_SELECTION = UPLOAD_STAGE_DRAW_SELECTION;
-  UPLOAD_STAGE_CONFIRM_SELECTION = UPLOAD_STAGE_CONFIRM_SELECTION;
-  UPLOAD_STAGE_FINISHED = UPLOAD_STAGE_FINISHED;
-  UPLOAD_STAGE_ERROR = UPLOAD_STAGE_ERROR;
+  public UploadStage = UploadStage;
+//  public currentStage: UploadStage = UploadStage.SelectFile;
 
   private MAX_SELECTED_IMG_WIDTH: number;
   private MAX_SELECTED_IMG_HEIGHT: number;
@@ -45,7 +50,7 @@ export class EditProfilePictureComponent implements OnInit {
 
   private baseImageReady = false;
   private baseImage: HTMLImageElement = new Image();
-  public uploadStage = this.UPLOAD_STAGE_START;
+  public currentStage: UploadStage = UploadStage.SelectFile;
 
   private selection: PictureSelection;
 
@@ -67,24 +72,24 @@ export class EditProfilePictureComponent implements OnInit {
     this.user = this._userService.getUserData();
     this.ctx = this.canvasRef.nativeElement.getContext('2d');
     this.selection = new PictureSelection(this.canvasRef);
-    this.uploadStage = this.UPLOAD_STAGE_START;
+    this.currentStage = UploadStage.SelectFile;
     this.previewImg = <HTMLImageElement> this.imgRef.nativeElement;
   }
 
   // Tie - Ins that allow the view to change upload stages.
   returnToFileSelect() {
-    this.uploadStage = UPLOAD_STAGE_SELECT_FILE;
+    this.currentStage = UploadStage.SelectFile;
   }
 
   returnToSelectRegion() {
-    this.uploadStage = UPLOAD_STAGE_DRAW_SELECTION;
+    this.currentStage = UploadStage.DrawSelection;
   }
 
   confirmSelection() {
     const data = this.previewImg.src.replace(/^data:image\/(png|jpg);base64,/, '');
     this._profileService.uploadUserPicture(data, this.user.username).then( response => {
       if (response.success) {
-        this.uploadStage = UPLOAD_STAGE_FINISHED;
+        this.currentStage = UploadStage.Finished;
         this._router.navigate(['/profile']);
       }
     });
@@ -92,12 +97,12 @@ export class EditProfilePictureComponent implements OnInit {
 
   clipSelection() {
     this.selection.clipSelection(this.previewImg);
-    this.uploadStage = UPLOAD_STAGE_CONFIRM_SELECTION;
+    this.currentStage = UploadStage.ConfirmSelection;
   }
 
   loadImage(input) {
     this.selection.loadImage(input.srcElement);
-    this.uploadStage = UPLOAD_STAGE_DRAW_SELECTION;
+    this.currentStage = UploadStage.DrawSelection;
   }
 
 }
