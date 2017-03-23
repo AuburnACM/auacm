@@ -15,7 +15,6 @@ import 'rxjs/add/operator/switchMap';
   styleUrls: ['./profile-page.component.css']
 })
 export class ProfilePageComponent implements OnInit {
-
   public profile: UserProfile = new UserProfile();
   public user: UserData;
   public hasRecentActivity: boolean;

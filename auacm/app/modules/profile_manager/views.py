@@ -30,7 +30,6 @@ def get_profile_image(username='tester'):
     imagefile = [filename for filename in os.listdir(join(app.config['DATA_FOLDER'],
         'profile')) if filename.startswith(username + '.')]
 
-
     if len(imagefile) == 0:
         return send_file(join(image_dir, 'default', 'profile.png'),
             mimetype='image/png')
@@ -42,7 +41,7 @@ def get_profile_image(username='tester'):
 @app.route('/api/profile/image/<username>', methods=['PUT'])
 def set_profile_image(username='tester'):
     """
-    Set a user's profile picture. 
+    Set a user's profile picture.
     """
     user = database.session.query(User).filter(
         User.username == username).first()
@@ -75,7 +74,7 @@ def set_profile_image(username='tester'):
 @app.route('/api/profile/userprofile/<username>', methods=['GET'])
 def get_profile(username='tester'):
     """
-    Return a user's profile. 
+    Return a user's profile.
     """
     user = database.session.query(User).filter(
         User.username == username).first()

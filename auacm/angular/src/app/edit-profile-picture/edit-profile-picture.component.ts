@@ -7,8 +7,6 @@ import { UserService } from '../user.service';
 import { PictureSelection, Circle } from '../models/profile-picture';
 import { UserData } from '../models/user';
 
-
-
 enum UploadStage {
   SelectFile = 0,
   DrawSelection,
@@ -16,12 +14,6 @@ enum UploadStage {
   Finished,
   Error
 }
-/*
-const UPLOAD_STAGE_SELECT_FILE = 0;
-const UPLOAD_STAGE_DRAW_SELECTION = 1;
-const UPLOAD_STAGE_CONFIRM_SELECTION = 2;
-const UPLOAD_STAGE_FINISHED = 3;
-const UPLOAD_STAGE_ERROR = 4;*/
 
 const SELECTION_RADIUS_MIN = 64;
 
@@ -39,7 +31,6 @@ export class EditProfilePictureComponent implements OnInit {
   @ViewChild('confirmSelectionImg') imgRef: ElementRef;
 
   public UploadStage = UploadStage;
-//  public currentStage: UploadStage = UploadStage.SelectFile;
 
   private MAX_SELECTED_IMG_WIDTH: number;
   private MAX_SELECTED_IMG_HEIGHT: number;
