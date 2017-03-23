@@ -17,10 +17,17 @@ export class EditUserComponent implements OnInit {
   private oldPassword = '';
   private newPassword = '';
   private confirmPassword = '';
-  private settingsForm: FormGroup;
+  private passwordForm: FormGroup;
   private responseSuccess = false;
   private responseFailed = false;
   private responseMessage = '';
+
+  // Display Name Form
+  private displayNameForm: FormGroup;
+  private newDisplayName = '';
+  private displayNameResponseSuccess = false;
+  private displayNameResponseFailed = false;
+  private displayNameResponseMessage = '';
 
   constructor(private _userService: UserService, private _router: Router,
               private _formBuilder: FormBuilder) {
@@ -31,11 +38,15 @@ export class EditUserComponent implements OnInit {
         this.userData = user;
       }
     });
-    this.settingsForm = _formBuilder.group({
+    this.passwordForm = _formBuilder.group({
       oldPassword: [this.oldPassword, Validators.required],
       newPassword: [this.newPassword, Validators.required],
       confirmPassword: [this.confirmPassword, Validators.required],
     }, {validator: this.validatePassword('oldPassword', 'newPassword' , 'confirmPassword')});
+
+    this.displayNameForm = _formBuilder.group({
+      newDisplayName: [this.newDisplayName, Validators.required]
+    }, {validator: this.validateDisplayName('newDisplayName')});
   }
 
   ngOnInit() {
@@ -43,8 +54,8 @@ export class EditUserComponent implements OnInit {
   }
 
   changePassword() {
-    this._userService.changePassword(this.settingsForm.controls['oldPassword'].value,
-        this.settingsForm.controls['newPassword'].value).then(success => {
+    this._userService.changePassword(this.passwordForm.controls['oldPassword'].value,
+        this.passwordForm.controls['newPassword'].value).then(success => {
       if (success) {
         this.responseSuccess = true;
         this.responseFailed = false;
@@ -55,6 +66,36 @@ export class EditUserComponent implements OnInit {
         this.responseMessage = 'Failed to update your settings.';
       }
     });
+  }
+
+  changeDisplayName() {
+    this._userService.changeDisplayName(
+        this.displayNameForm.controls['newDisplayName'].value).then(success => {
+
+      if (success) {
+        this.displayNameResponseSuccess = true;
+        this.displayNameResponseFailed = false;
+        this.displayNameResponseMessage = 'Successfully updated your settings.';
+      } else {
+        this.displayNameResponseSuccess = false;
+        this.displayNameResponseFailed = true;
+        this.displayNameResponseMessage = 'Failed to update your settings.';
+      }
+    });
+  }
+
+  validateDisplayName(newDisplayNameKey) {
+    return (group: FormGroup): {[key: string]: any} => {
+      const displayNameRegex = /^[a-zA-Z0-9 ',_]+$/;
+      const newDisplayName = group.controls[newDisplayNameKey].value;
+      if (displayNameRegex.test(newDisplayName) || newDisplayName.length === 0) {
+        return null;
+      } else {
+        return {
+          invalidDiplayName: true
+        };
+      }
+    };
   }
 
   validatePassword(oldPasswordKey, newPasswordKey, confirmPasswordKey) {
@@ -69,7 +110,7 @@ export class EditUserComponent implements OnInit {
       }
       if (confirmPassword.value !== newPassword.value) {
         return {
-          missmatchedPasswords: true
+          mismatchedPasswords: true
         };
       }
       return null;

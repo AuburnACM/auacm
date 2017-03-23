@@ -9,7 +9,12 @@
       <div class="row header-parent">
         <div class="col-md-11">
           <a [routerLink]="['/blog/' + post.id]"><h2>{{ post.title }} <small>{{ post.subtitle }}</small></h2></a>
-          <h5><small>Posted on {{ post.postTime | date:'short' }} by {{ post.author.display }}</small></h5>
+          <h5>
+            <small>
+              Posted on {{ post.postTime | date:'short' }} by
+              <a [routerLink]="['/profile/' + post.author.username]">{{ post.author.display }}</a>
+            </small>
+          </h5>
         </div>
         <div class="col-md-1 text-center">
           <h4 (click)="editPost(post.id)" class="vertical-center" 

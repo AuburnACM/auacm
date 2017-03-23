@@ -14,11 +14,13 @@ import { CreateUserComponent } from './create-user/create-user.component';
 import { EditBlogComponent } from './edit-blog/edit-blog.component';
 import { EditCompetitionComponent } from './edit-competition/edit-competition.component';
 import { EditProblemComponent } from './edit-problem/edit-problem.component';
+import { EditProfilePictureComponent } from './edit-profile-picture/edit-profile-picture.component';
 import { EditTeamsComponent } from './edit-teams/edit-teams.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
 import { JudgeComponent } from './judge/judge.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { ProblemsComponent } from './problems/problems.component';
+import { ProfilePageComponent } from './profile-page/profile-page.component';
 import { RankingComponent } from './ranking/ranking.component';
 import { ViewProblemComponent } from './view-problem/view-problem.component';
 import { ViewScoreboardComponent } from './view-scoreboard/view-scoreboard.component';
@@ -26,6 +28,7 @@ import { ViewScoreboardComponent } from './view-scoreboard/view-scoreboard.compo
 import { BlogService } from './blog.service';
 import { CompetitionService } from './competition.service';
 import { ProblemService } from './problem.service';
+import { ProfileService } from './profile.service';
 import { SubmissionService } from './submission.service';
 import { UserService } from './user.service';
 import { WebsocketService } from './websocket.service';
@@ -56,6 +59,7 @@ import { ProblemValidatorDirective } from './directives/problem-validator.direct
     EditBlogComponent,
     EditCompetitionComponent,
     EditProblemComponent,
+    EditProfilePictureComponent,
     EditTeamsComponent,
     EditUserComponent,
     IndexToCharCodePipe,
@@ -66,6 +70,7 @@ import { ProblemValidatorDirective } from './directives/problem-validator.direct
     OrderByPipe,
     ProblemsComponent,
     ProblemValidatorDirective,
+    ProfilePageComponent,
     RankingComponent,
     SearchFilterPipe,
     SecondsToDateTimePipe,
@@ -85,6 +90,7 @@ import { ProblemValidatorDirective } from './directives/problem-validator.direct
     BlogService,
     CompetitionService,
     ProblemService,
+    ProfileService,
     SubmissionService,
     UserService,
     WebsocketService

@@ -82,3 +82,16 @@ body {
     position: relative;
     top: -.5px;
 }
+
+.user-profile-container {
+    padding: 0px !important;
+    margin-left: 5px;
+    margin-top: 5px;
+    display: inline-block !important;
+}
+
+.user-profile-image {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+}

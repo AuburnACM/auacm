@@ -36,9 +36,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let user of ranks; let i = index">
+          <tr *ngFor="let user of ranks; let i = index" class="ranking-row">
             <td>{{ (i + 1) }}</td>
-            <td>{{ user.displayName }}</td>
+            <td>
+              <img [src]="'/api/profile/image/' + user.username" class="ranking-profile-picture">
+              <a [routerLink]="['/profile/' + user.username]">{{ user.displayName }}</a>
+            </td>
             <td>{{ user.solved }}</td>
           </tr>
         </tbody>

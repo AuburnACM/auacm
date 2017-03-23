@@ -19,12 +19,18 @@ proper page."""
 @app.route('/users/create')
 @app.route('/404')
 @app.route('/settings')
+@app.route('/settings/picture')
+@app.route('/profile')
 def get_home():
     """Render the home page for the logged in user, if any"""
     logged_in = not current_user.is_anonymous
     display_name = (current_user.display if logged_in else 'Log in')
     logged_in_string = 'true' if logged_in else 'false'
     return render_template('index.html')
+
+@app.route('/profile/<string:username>')
+def get_profile_page(username):
+    return get_home()
 
 @app.route('/blog/<int:id>')
 @app.route('/blog/<int:id>/edit')

@@ -1,0 +1,102 @@
+<div class="body">
+  <!-- Container -->
+  <div class="col-md-8 col-md-offset-2">
+
+    <!-- Basics -->
+    <div class="row text-center vcenter">
+      <div class="col-md-2 vcenter-inner">
+        <img *ngIf="profile.username.length > 0" [src]="'api/profile/image/' + profile.username"
+          class="profile-page-picture">
+      </div>
+      <div class="col-md-10 vcenter-inner">
+        <h2> {{ profile.displayName }} -
+          {{ profile.problemsSolved === 1 ?
+             profile.problemsSolved + ' Problem Solved' :
+             profile.problemsSolved + ' Problems Solved' }}
+        </h2>
+      </div>
+    </div>
+
+    <!-- Activity Panel -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Activity</h3>
+      </div>
+      <div *ngIf="!hasRecentActivity" class="panel-body">
+        No Recent Activity
+      </div>
+      <div *ngIf="hasRecentActivity" class="panel-body">
+
+        <!-- Recent Submissions -->
+
+        <div *ngIf="profile.recentAttempts.length > 0" class="col-md-12">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Recent Submissions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let attempt of profile.recentAttempts">
+                <td [ngClass]="{'success': attempt.correct, 'danger': !attempt.correct}">
+                  {{ attempt.submissionCount === 1 ? '1 submission for' : attempt.submissionCount + ' submissions for '}}
+                  <a [routerLink]="['/problem/' + attempt.shortname]">{{ attempt.name }}</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Recent Competitions -->
+
+        <div *ngIf="profile.recentCompetitions.length > 0" class="col-md-12">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Recent Competitions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let competition of profile.recentCompetitions">
+                <td>
+                  <a [routerLink]="['/competition/' + competition.cid]"> {{ competition.compName }} </a>
+                  <ng-container *ngIf="competition.teamSize > 1">
+                    competing on team "{{ competition.teamName }}"
+                  </ng-container>
+                  <ng-container *ngIf="competition.teamSize === 1 && competition.teamName !== profile.displayName">
+                    competing as "{{ competition.teamName }}"
+                  </ng-container>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Recent Blog Posts -->
+
+        <div *ngIf="profile.recentBlogPosts.length > 0" class="col-md-12">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Recent Blog Posts</th>
+                <th>Posted At</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let blogPost of profile.recentBlogPosts">
+                <td>
+                  <a [routerLink]="['/blog/' + blogPost.id]">{{ blogPost.title }} - {{ blogPost.subtitle }}</a>
+                </td>
+                <td>
+                  <small>{{ blogPost.postTime | date }}</small>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+<div>

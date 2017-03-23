@@ -2,15 +2,15 @@
   <div class="panel panel-default">
     <div class="panel-heading"><h1 class="panel-title">Account Settings</h1></div>
     <div class="panel-body">
-      <form [formGroup]="settingsForm">
+      <form [formGroup]="passwordForm">
         <div class="form-group">
           <label for="oldPassword" class="control-label">Old password</label>
           <input class="form-control" id="oldPassword" type="password"
               placeholder="Old password" formControlName="oldPassword">
-          <div *ngIf="settingsForm.controls['oldPassword'].errors
-              && (settingsForm.controls['oldPassword'].dirty
-              || settingsForm.controls['oldPassword'].touched)">
-            <div *ngIf="settingsForm.controls['oldPassword'].errors.required"
+          <div *ngIf="passwordForm.controls['oldPassword'].errors
+              && (passwordForm.controls['oldPassword'].dirty
+              || passwordForm.controls['oldPassword'].touched)">
+            <div *ngIf="passwordForm.controls['oldPassword'].errors.required"
                 class="label label-danger">This field is required.</div>
           </div>
         </div>
@@ -19,15 +19,15 @@
           <label for="newPassword" class="control-label">New password</label>
           <input class="form-control" id="newPassword" type="password"
               placeholder="New password" formControlName="newPassword">
-          <div *ngIf="(settingsForm.controls['newPassword'].errors)
-              && (settingsForm.controls['newPassword'].dirty
-              || settingsForm.controls['newPassword'].touched)">
-            <div *ngIf="settingsForm.controls['newPassword'].errors.required"
+          <div *ngIf="(passwordForm.controls['newPassword'].errors)
+              && (passwordForm.controls['newPassword'].dirty
+              || passwordForm.controls['newPassword'].touched)">
+            <div *ngIf="passwordForm.controls['newPassword'].errors.required"
                 class="label label-danger">This field is required.</div>
           </div>
-          <div *ngIf="settingsForm.errors && (settingsForm.controls['newPassword'].dirty
-              || settingsForm.controls['newPassword'].touched)">
-            <div *ngIf="settingsForm.errors.passwordsMatch"
+          <div *ngIf="passwordForm.errors && (passwordForm.controls['newPassword'].dirty
+              || passwordForm.controls['newPassword'].touched)">
+            <div *ngIf="passwordForm.errors.passwordsMatch"
                 class="label label-danger">Your new password cannot match your old one.</div>
           </div>
         </div>
@@ -36,16 +36,16 @@
           <label for="confirmPassword" class="control-label">Confirm password</label>
           <input class="form-control" id="confirmPassword" type="password"
               placeholder="Confirm password" formControlName="confirmPassword">
-          <div *ngIf="settingsForm.errors && (settingsForm.dirty || settingsForm.touched)">
-            <div *ngIf="settingsForm.errors.missmatchedPasswords
-                && (settingsForm.controls['confirmPassword'].dirty
-                || settingsForm.controls['confirmPassword'].touched)"
+          <div *ngIf="passwordForm.errors && (passwordForm.dirty || passwordForm.touched)">
+            <div *ngIf="passwordForm.errors.mismatchedPasswords
+                && (passwordForm.controls['confirmPassword'].dirty
+                || passwordForm.controls['confirmPassword'].touched)"
                 class="label label-danger">Passwords do not match.</div>
           </div>
         </div>
 
-        <button [disabled]="settingsForm.errors || settingsForm.controls['newPassword'].errors
-            || settingsForm.controls['oldPassword'].errors" class="btn btn-default"
+        <button [disabled]="passwordForm.errors || passwordForm.controls['newPassword'].errors
+            || passwordForm.controls['oldPassword'].errors" class="btn btn-default"
             type="submit" (click)="changePassword()">
           Change Password
         </button>
@@ -54,6 +54,41 @@
               'label-success': responseSuccess}">{{responseMessage}}</div>
         </div>
       </form>
+    </div>
+    <div class="panel-body">
+      <form [formGroup]="displayNameForm">
+        <div class="form-group">
+          <label for="newDisplayName" class="control-label">New display name</label>
+          <input class="form-control" id="newDisplayName" type="text"
+              placeholder="Aubie" formControlName="newDisplayName">
+          <div *ngIf="displayNameForm.controls['newDisplayName'].errors
+              && (displayNameForm.controls['newDisplayName'].dirty
+              || displayNameForm.controls['newDisplayName'].touched)">
+            <div *ngIf="displayNameForm.controls['newDisplayName'].errors.required"
+                class="label label-danger">This field is required.</div>
+          </div>
+          <div *ngIf="displayNameForm.errors && (displayNameForm.controls['newDisplayName'].dirty
+              || displayNameForm.controls['newDisplayName'].touched)">
+            <div *ngIf="displayNameForm.errors.invalidDiplayName"
+                class="label label-danger">Your new display name is invalid.</div>
+          </div>
+        </div>
+        <button [disabled]="displayNameForm.errors ||
+            displayNameForm.controls['newDisplayName'].errors" class="btn btn-default"
+            type="submit" (click)="changeDisplayName()">
+          Change Display Name
+        </button>
+        <div *ngIf="displayNameResponseSuccess || displayNameResponseFailed">
+          <div [ngClass]="{'label': true, 'label-danger': displayNameResponseFailed,
+              'label-success': displayNameResponseSuccess}">{{displayNameResponseMessage}}</div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading"><h1 class="panel-title">Profile Settings</h1></div>
+    <div class="panel-body">
+      <button class="btn btn-default" [routerLink]="['/settings/picture']">Change Profile Picture</button>
     </div>
   </div>
 </div>

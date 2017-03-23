@@ -8,6 +8,7 @@ from app.modules.user_manager.models import User
 from app.modules.submission_manager.models import Submission, ProblemSolved
 import app.database as database
 from time import time
+import re
 
 
 @app.route('/api/login', methods=['POST'])
@@ -57,6 +58,18 @@ def change_password():
         return serve_response({})
     return serve_error('old password does not match', 401)
 
+@app.route('/api/change_display_name', methods=['POST'])
+@login_required
+def change_display_name():
+    """Change the display name of an existing user"""
+    newDisplayName = request.form['newDisplayName']
+    displayNameRegex = re.compile('^[a-zA-Z0-9 \',_]+$')
+    validName = displayNameRegex.match(newDisplayName)
+    if len(newDisplayName) > 0 and len(newDisplayName) <= 32 and validName:
+        current_user.display = newDisplayName
+        current_user.commit_to_session()
+        return serve_response({})
+    return serve_error('invalid display name', 400)
 
 @app.route('/api/logout')
 @login_required
@@ -121,4 +134,3 @@ def get_ranking(timeframe='all'):
         rank += 1
 
     return serve_response(ranks)
-

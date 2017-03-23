@@ -18,6 +18,7 @@ auacm/app/static/assets/
 auacm/app/static/favicon.ico
 auacm/app/static/index.html
 auacm/app/static/*.bundle.js
+auacm/app/static/*.bundle.js.map
 auacm/app/static/*.bundle.css
 auacm/app/static/*.jpg
 auacm/app/templates/index.html
