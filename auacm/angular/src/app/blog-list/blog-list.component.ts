@@ -38,7 +38,7 @@ export class BlogListComponent implements OnInit {
       const tempPipe = new LimitWordsPipe();
       this.blogPosts = blogs;
       for (let i = 0; i < this.blogPosts.length; i++) {
-        if (tempPipe.transform(this.blogPosts[i].body, 200).trim().length < this.blogPosts[i].body.trim().length) {
+        if (tempPipe.transform(this.blogPosts[i].body, 200).trim().length < this.converter.makeHtml(this.blogPosts[i].body.trim()).length) {
           this.blogPosts[i].resized = true;
         }
       }
