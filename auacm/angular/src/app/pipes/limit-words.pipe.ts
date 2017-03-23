@@ -12,13 +12,13 @@ export class LimitWordsPipe implements PipeTransform {
 
   /**
    * This transforms a Markdown string into HTML and shortens it based on the amount.
-   * 
+   *
    * @param words - the markdown text that needs to be shortened
    * @param amount - the maximum word count of the returned string
    */
   transform(words: string, amount: number): string {
     const htmlWords = this.converter.makeHtml(words);
-    var parsedHtml = document.createElement( 'html' );
+    const parsedHtml = document.createElement( 'html' );
     parsedHtml.innerHTML = htmlWords;
 
     const tempChildren = parsedHtml.children[1].childNodes;
@@ -40,7 +40,7 @@ export class LimitWordsPipe implements PipeTransform {
 
   /**
    * Recursively searches through an HTML element and tries to shorten it to the maxSize.
-   * 
+   *
    * @param htmlElement - the element to shorten
    * @param currentString - the current string that has been shortened
    * @param currentSize - the size of the currentString
