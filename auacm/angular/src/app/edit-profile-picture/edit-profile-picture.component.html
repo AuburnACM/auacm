@@ -13,7 +13,7 @@
         <div class="row text-center" [ngClass]="{'ng-cloak': currentStage !== UploadStage.SelectFile}">
           <label class="btn btn-default btn-file">
             Select File <input type="file" style="display: none;"  ng-model="input"
-              (change)="loadImage($event)">
+              (change)="loadImage($event)" accept=".png,.jpg,.jpeg,.gif">
           </label>
         </div>
         <div class="row text-center" [ngClass]="{'ng-cloak': currentStage !== UploadStage.DrawSelection}">
