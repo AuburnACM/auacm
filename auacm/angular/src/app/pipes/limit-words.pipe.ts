@@ -45,8 +45,11 @@ export class LimitWordsPipe implements PipeTransform {
    */
   getStringForElement(htmlElement: any, currentString: string,
       currentSize: number, maxSize: number): CustomString {
-    if (currentSize >= maxSize || htmlElement.textContent.trim() === '') {
+    if (currentSize >= maxSize) {
       return new CustomString(currentString, currentSize);
+    }
+    if (htmlElement.textContent.trim() === '') {
+      return new CustomString(currentString + htmlElement.textContent, currentSize);
     }
     const size = htmlElement.textContent.split(' ').length;
     if (size + currentSize <= maxSize) {
@@ -90,7 +93,7 @@ export class LimitWordsPipe implements PipeTransform {
       customString.size++;
     }
     customString.value += '...';
-    htmlElement.textContent = customString.value.trim();
+    htmlElement.textContent = customString.value;
     if (htmlElement.nodeName === '#text') {
       customString.value = htmlElement.textContent;
     } else {
