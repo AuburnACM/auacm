@@ -93,7 +93,7 @@ export class LimitWordsPipe implements PipeTransform {
       customString.size++;
     }
     customString.value += '...';
-    htmlElement.textContent = customString.value.trim();
+    htmlElement.textContent = customString.value;
     if (htmlElement.nodeName === '#text') {
       customString.value = htmlElement.textContent;
     } else {
