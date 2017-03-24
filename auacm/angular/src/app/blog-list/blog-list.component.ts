@@ -10,6 +10,7 @@ import { BlogPost } from '../models/blog';
 import { UserData } from '../models/user';
 
 const EDIT_ICON_NONE: number = -1;
+const WORD_LIMIT_SIZE = 200;
 
 @Component({
   templateUrl: './blog-list.component.html',
@@ -20,6 +21,7 @@ export class BlogListComponent implements OnInit {
   public blogPosts: BlogPost[] = [];
   public user: UserData;
   public hoverId: number = EDIT_ICON_NONE;
+  public wordLimitSize = WORD_LIMIT_SIZE;
 
   constructor(private _blogService: BlogService, private _userService: UserService,
               private _router: Router) {
@@ -38,7 +40,8 @@ export class BlogListComponent implements OnInit {
       const tempPipe = new LimitWordsPipe();
       this.blogPosts = blogs;
       for (let i = 0; i < this.blogPosts.length; i++) {
-        if (tempPipe.transform(this.blogPosts[i].body, 200).trim().length < this.blogPosts[i].body.trim().length) {
+        if (tempPipe.transform(this.converter.makeHtml(this.blogPosts[i].body),
+            this.wordLimitSize).trim().length < this.converter.makeHtml(this.blogPosts[i].body.trim()).length) {
           this.blogPosts[i].resized = true;
         }
       }

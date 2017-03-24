@@ -23,7 +23,8 @@
           </h4>
         </div>
       </div>
-      <div class="text-left" [innerHTML]="converter.makeHtml(post.expanded ? post.body : post.body | limitWords : 200)"></div>
+      <div class="text-left" [innerHTML]="post.expanded ? converter.makeHtml(post.body)
+          : converter.makeHtml(post.body) | limitWords : wordLimitSize"></div>
       <button *ngIf="post.resized" class="btn btn-default pull-right"
           (click)="toggleBlogPost(post)" role="button">{{post.expanded ? 'Hide' : 'Continue Reading'}} <span
               [ngClass]="{'glyphicon': true, 'glyphicon-chevron-up': post.expanded,
