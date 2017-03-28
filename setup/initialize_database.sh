@@ -19,6 +19,7 @@ read CREATE_EMPTY
 if [ $CREATE_EMPTY = 'y' ]
 then
   echo "Creating an empty database..."
+  sudo mysql -uroot -e "CREATE DATABASE IF NOT EXISTS acm"
   sudo mysql -uroot -D acm < acm_blank.sql
 else
   echo "Creating database with data..."
