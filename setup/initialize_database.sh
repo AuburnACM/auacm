@@ -4,7 +4,7 @@ echo "Setting up mysql database..."
 printf "Create default MySQL acm user? [y/n]: "
 read CREATE_ACM
 
-if [ $CREATE_ACM == 'y' ]
+if [ $CREATE_ACM = 'y' ]
 then
   mysql -u root -e "create user 'acm'@'localhost'"
   mysql -u root -e "grant all on acm.* to 'acm'@'localhost'"
@@ -16,7 +16,7 @@ fi
 printf "Create empty database? [y/n]: "
 read CREATE_EMPTY
 
-if [ $CREATE_EMPTY == 'y' ]
+if [ $CREATE_EMPTY = 'y' ]
 then
   echo "Creating an empty database..."
   mysql -uroot -D acm < acm_blank.sql
@@ -28,7 +28,7 @@ fi
 printf "Create new AUACM admin? [y/n]: "
 read CREATE_ADMIN
 
-if [ $CREATE_ADMIN == 'y' ]
+if [ $CREATE_ADMIN = 'y' ]
 then
   # Create an admin user
   echo "Creating AUACM admin user..."
