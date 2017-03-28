@@ -11,6 +11,7 @@ if dpkg -l nodejs > /dev/null
 then
 	curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 fi
+apt-get install nodejs
 
 DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server
 apt-get install -y libmysqlclient-dev
