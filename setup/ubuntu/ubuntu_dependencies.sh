@@ -13,6 +13,16 @@ then
 fi
 apt-get install nodejs
 
+# Check if @angular/cli is installed
+ng --version > /dev/null
+if [ $? != 0 ]
+then
+	echo "Installing @angular/cli"
+	npm install -g @angular/cli
+else
+	echo "@angular/cli already installed"
+fi
+
 DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server
 apt-get install -y libmysqlclient-dev
 apt-get install -y build-essential
