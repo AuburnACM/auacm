@@ -5,3 +5,7 @@ cd ../auacm/
 virtualenv -p $(which python3) flask
 CFLAGS="-std=c99" ./flask/bin/pip install -r requirements.txt
 echo "Setting up nodejs."
+cd ./angular
+npm install
+cd ../../
+make
