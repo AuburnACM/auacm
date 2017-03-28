@@ -6,9 +6,9 @@ read CREATE_ACM
 
 if [ $CREATE_ACM = 'y' ]
 then
-  mysql -u root -e "create user 'acm'@'localhost'"
-  mysql -u root -e "grant all on acm.* to 'acm'@'localhost'"
-  mysql -u root -e "flush privileges"
+  sudo mysql -u root -e "create user 'acm'@'localhost'"
+  sudo mysql -u root -e "grant all on acm.* to 'acm'@'localhost'"
+  sudo mysql -u root -e "flush privileges"
 else
   echo "Skipping create acm user"
 fi
@@ -19,10 +19,10 @@ read CREATE_EMPTY
 if [ $CREATE_EMPTY = 'y' ]
 then
   echo "Creating an empty database..."
-  mysql -uroot -D acm < acm_blank.sql
+  sudo mysql -uroot -D acm < acm_blank.sql
 else
   echo "Creating database with data..."
-  mysql -uroot < acm.sql
+  sudo mysql -uroot < acm.sql
 fi
 
 printf "Create new AUACM admin? [y/n]: "
@@ -39,7 +39,7 @@ then
   printf "Enter a username for the user: "
   read USER_NAME
 
-  mysql -u root -D acm -e "insert into users values ('$USER_NAME', '$USER_PWD', '$USER_DISPLAY', 1);"
+  sudo mysql -u root -D acm -e "insert into users values ('$USER_NAME', '$USER_PWD', '$USER_DISPLAY', 1);"
   printf "You can log into AUACM with the username '$USER_NAME' and the password 'password'.\n"
   sleep 3
 fi
