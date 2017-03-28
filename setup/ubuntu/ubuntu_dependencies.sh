@@ -8,11 +8,8 @@ apt-get install -y python3-pip
 apt-get install -y virtualenv
 apt-get install -y libffi-dev
 
-if dpkg -l nodejs > /dev/null
-then
-	curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-fi
-apt-get install nodejs
+curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+apt-get install -y nodejs
 
 # Check if @angular/cli is installed
 ng --version > /dev/null
