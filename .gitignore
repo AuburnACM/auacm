@@ -7,6 +7,8 @@ auacm/app/static/angular/node_modules/
 auacm/app/data/
 setup/data/
 setup/__MACOSX/
+setup/acm_test.sql
+setup/acm_bak.sql
 
 # Angular dependencies
 auacm/angular/.bin/
