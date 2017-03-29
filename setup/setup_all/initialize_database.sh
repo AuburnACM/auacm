@@ -45,17 +45,24 @@ then
   sleep 3
 fi
 
-# echo "Setting up test database..."
-# if [ ! -e acm_test.sql ]
-# then
-#   echo "Please back up the databse first using backup_database.sh."
-#   echo "That will create the necessary acm_test.sql file"
-#   exit
-# fi
-# echo "DROP DATABASE IF EXISTS acm_test;" | mysql -uroot -p
-# echo "CREATE DATABASE acm_test;" | mysql -uroot -p
-# echo "DROP DATABASE IF EXISTS acm_test; CREATE DATABASE acm_test; \n" | mysql -uroot acm_test < acm_test.sql
-# mysql -uroot acm_test < acm_test.sql
+printf "Create test database? [y/n]: "
+read CREATE_TEST
+
+if [ $CREATE_TEST = 'y' ]
+then
+  sh setup_all/backup_database.sh
+
+  echo "Setting up test database..."
+  if [ ! -e acm_test.sql ]
+  then
+    echo "Please back up the databse first using backup_database.sh."
+    echo "That will create the necessary acm_test.sql file"
+    exit
+  fi
+  sudo mysql -u root -e "DROP DATABASE IF EXISTS acm_test"
+  sudo mysql -u root -e "CREATE DATABASE acm_test"
+  sudo mysql -u root -D acm_test < acm_test.sql
+fi
 
 # Ask to purge the data directory if it exists
 if [ -e ../auacm/app/data ]
