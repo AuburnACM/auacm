@@ -7,6 +7,7 @@ apt-get install -y python3-dev
 apt-get install -y python3-pip
 apt-get install -y virtualenv
 apt-get install -y libffi-dev
+apt-get install -y zip unzip
 
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 apt-get install -y nodejs
