@@ -8,4 +8,5 @@ echo "Setting up nodejs."
 cd ./angular
 npm install
 cd ../../
+echo "Building the front-end...";
 make

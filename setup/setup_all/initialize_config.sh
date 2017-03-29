@@ -26,7 +26,7 @@ cd ../auacm/
 
 if [ -f app/config.py ]
 then
-	echo "Reset config file? [y/n]: "
+	printf "Reset config file? [y/n]: "
 	read RESET_CONFIG
 	if [ $RESET_CONFIG = 'y' ]
 	then
