@@ -48,7 +48,7 @@ else
 	brew install python3
 fi
 
-# Check if python3 is installed
+# Check if mysql is installed
 if brew ls --versions mysql > /dev/null
 then
 	echo "mysql already installed"
