@@ -11,7 +11,7 @@ create_config() {
 	read TEST_PASSWORD
 
 	printf "# This file holds constants for configuration.
-EXPOSE THIS TO GITHUB.
+# DO NOT EXPOSE THIS TO GITHUB.
 DEBUG = True
 SECRET_KEY = '$SECRET_KEY'
 DATA_FOLDER = '$DATA_FOLDER'

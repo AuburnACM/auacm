@@ -1,6 +1,6 @@
 #!/bin/sh
 echo "This script will set up AUACM."
-sudo sh ubuntu/ubuntu_dependencies.sh
+sudo sh setup_ubuntu/ubuntu_dependencies.sh
 sh setup_all/initialize_database.sh
 sh setup_all/initialize_virtualenv.sh
 sh setup_all/initialize_config.sh
