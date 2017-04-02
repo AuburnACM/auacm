@@ -180,6 +180,7 @@ export class JudgeComponent implements OnInit {
     if (this.submitReady()) {
       this._submissionService.submit(this.file, this.problem, this.python.version, this.user).then(data => {
       });
+      this._submissionService.refreshSubmits(this.user.username, 10);
       return true;
     } else {
       return false;
