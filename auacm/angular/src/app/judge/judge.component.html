@@ -61,7 +61,9 @@
                 [ngClass]="{ success: submission.status=='correct', danger: submission.status=='incorrect'
                             || submission.status=='runtime' || submission.status=='compile'
                             || submission.status=='timeout'}">
-              <td *ngIf="problemsMap[submission.pid]">{{ problemsMap[submission.pid].name }}</td>
+              <td *ngIf="problemsMap[submission.pid]"><a class="hover-pointer"
+                [routerLink]="['/problem/' + problemsMap[submission.pid].shortName]">
+                {{problemsMap[submission.pid].name}}</a></td>
               <td>{{ submission.fileName }}</td>
               <td>{{ submission.statusDescription }}</td>
             </tr>
