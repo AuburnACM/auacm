@@ -1,12 +1,12 @@
-'''The heart of the backend. Run this file to start it.'''
 #!flask/bin/python
+'''The heart of the backend. Run this file to start it.'''
 from __future__ import print_function
 from tornado.wsgi import WSGIContainer
 from tornado.web import Application, FallbackHandler
 from tornado.ioloop import IOLoop
 
-from APP.modules import APP
-from APP.modules.flasknado.flasknado import Flasknado
+from app.modules import APP
+from app.modules.flasknado.flasknado import Flasknado
 
 if __name__ == "__main__":
     def main():
