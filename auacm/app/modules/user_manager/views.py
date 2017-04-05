@@ -1,17 +1,19 @@
-"""User-related routes and methods"""
+"""
+User-related routes and methods
+"""
+
+import re
+from time import time
 
 from flask import request
 from flask.ext.login import login_user, logout_user, current_user, login_required
-from app import app
-from app.util import bcrypt, login_manager, serve_response, serve_error, load_user, admin_required
-from app.modules.user_manager.models import User
-from app.modules.submission_manager.models import Submission, ProblemSolved
-import app.database as database
-from time import time
-import re
+from ...util import BCRYPT_CONST, serve_response, serve_error, load_user, admin_required
+from ..user_manager.models import User
+from ..submission_manager.models import ProblemSolved
+from ...database import commit_to_session, DATABASE_SESSION
+from ...modules import APP
 
-
-@app.route('/api/login', methods=['POST'])
+@APP.route('/api/login', methods=['POST'])
 def log_in():
     """Log in a user as the current user"""
     username = request.form['username']
@@ -19,14 +21,14 @@ def log_in():
     user = load_user(username)
     if user:
         hashed = user.passw
-        if bcrypt.check_password_hash(hashed, password):
+        if BCRYPT_CONST.check_password_hash(hashed, password):
             # everything's gucci
             login_user(user)
             return serve_response({})
     return serve_error('invalid username or password', 401)
 
 
-@app.route('/api/create_user', methods=['POST'])
+@APP.route('/api/create_user', methods=['POST'])
 @admin_required
 def create_user():
     """Create a new user"""
@@ -38,40 +40,40 @@ def create_user():
     # Create the user if doesn't already exist
     user = load_user(username)
     if user is None:
-        hashed = bcrypt.generate_password_hash(password)
+        hashed = BCRYPT_CONST.generate_password_hash(password)
         user = User(username=username, passw=hashed, display=display, admin=0)
-        user.commit_to_session()
+        commit_to_session(user)
         return serve_response({})
     return serve_error('username already exists', 400)
 
 
-@app.route('/api/change_password', methods=['POST'])
+@APP.route('/api/change_password', methods=['POST'])
 @login_required
 def change_password():
     """Change the password of an existing user"""
-    oldPassword = request.form['oldPassword']
-    newPassword = request.form['newPassword']
-    if bcrypt.check_password_hash(current_user.passw, oldPassword):
-        hashed = bcrypt.generate_password_hash(newPassword)
+    old_password = request.form['oldPassword']
+    new_password = request.form['newPassword']
+    if BCRYPT_CONST.check_password_hash(current_user.passw, old_password):
+        hashed = BCRYPT_CONST.generate_password_hash(new_password)
         current_user.passw = hashed
-        current_user.commit_to_session()
+        commit_to_session(current_user)
         return serve_response({})
     return serve_error('old password does not match', 401)
 
-@app.route('/api/change_display_name', methods=['POST'])
+@APP.route('/api/change_display_name', methods=['POST'])
 @login_required
 def change_display_name():
     """Change the display name of an existing user"""
-    newDisplayName = request.form['newDisplayName']
-    displayNameRegex = re.compile('^[a-zA-Z0-9 \',_]+$')
-    validName = displayNameRegex.match(newDisplayName)
-    if len(newDisplayName) > 0 and len(newDisplayName) <= 32 and validName:
-        current_user.display = newDisplayName
-        current_user.commit_to_session()
+    new_display_name = request.form['newDisplayName']
+    display_name_regex = re.compile('^[a-zA-Z0-9 \',_]+$')
+    valid_name = display_name_regex.match(new_display_name)
+    if len(new_display_name) > 0 and len(new_display_name) <= 32 and valid_name:
+        current_user.display = new_display_name
+        commit_to_session(current_user)
         return serve_response({})
     return serve_error('invalid display name', 400)
 
-@app.route('/api/logout')
+@APP.route('/api/logout')
 @login_required
 def log_out():
     """Logout the current user"""
@@ -79,7 +81,7 @@ def log_out():
     return serve_response({})
 
 
-@app.route('/api/me')
+@APP.route('/api/me')
 @login_required
 def get_me():
     """Obtain data about the current user"""
@@ -90,8 +92,8 @@ def get_me():
     })
 
 
-@app.route('/api/ranking', methods=['GET'])
-@app.route('/api/ranking/<timeframe>', methods=['GET'])
+@APP.route('/api/ranking', methods=['GET'])
+@APP.route('/api/ranking/<timeframe>', methods=['GET'])
 def get_ranking(timeframe='all'):
     """
     Return the users in order of how many problems are solved in the time frame
@@ -110,8 +112,8 @@ def get_ranking(timeframe='all'):
 
     ranks = list()
     for username, display in [(u.username, u.display) for u in
-                              database.session.query(User).all()]:
-        solves = (database.session.query(ProblemSolved)
+                              DATABASE_SESSION.query(User).all()]:
+        solves = (DATABASE_SESSION.query(ProblemSolved)
                   .filter(ProblemSolved.username == username).all())
 
         # Only count solves if they meet the time criteria
@@ -129,8 +131,8 @@ def get_ranking(timeframe='all'):
     # Sort the ranks by problems solved
     rank = 1
     ranks = sorted(ranks, key=lambda k: k['solved'])[::-1]
-    for r in ranks:
-        r['rank'] = rank
+    for user in ranks:
+        user['rank'] = rank
         rank += 1
 
     return serve_response(ranks)

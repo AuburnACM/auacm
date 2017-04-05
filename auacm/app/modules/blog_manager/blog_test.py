@@ -1,19 +1,17 @@
 """Test for AUACM blog manager """
 
-import unittest, json
+import json
 
-from app import app, test_app
-from app.util import AUACMTest
-from app.modules.blog_manager.models import BlogPost
-import app.database as database
-
-session = database.session
+from ...modules import TEST_APP
+from ...util import AUACMTest
+from ..blog_manager.models import BlogPost
+from ...database import DATABASE_SESSION
 
 
 class AUACMBlogTests(AUACMTest):
     """Test cases for the AUACM blog manager"""
 
-    def testCreate(self):
+    def test_create(self):
         """Test creating a new blog post"""
         post = {
             'title': 'Test Post',
@@ -23,7 +21,7 @@ class AUACMBlogTests(AUACMTest):
         }
         self.login()
 
-        response = json.loads(test_app.post('/api/blog', data=post)
+        response = json.loads(TEST_APP.post('/api/blog', data=post)
                               .data.decode())
         self.assertEqual(200, response['status'])
         post_response = response['data']
@@ -35,19 +33,18 @@ class AUACMBlogTests(AUACMTest):
                 self.assertEqual(post[key], post_response[key])
 
         # Delete the post from the test database
-        session.flush()
-        post = session.query(BlogPost).filter(
-            BlogPost.id == post_response['id']).first()
-        session.delete(post)
-        session.commit()
+        DATABASE_SESSION.flush()
+        post = DATABASE_SESSION.query(BlogPost).filter(
+            BlogPost.post_id == post_response['id']).first()
+        DATABASE_SESSION.delete(post)
+        DATABASE_SESSION.commit()
 
-    def testGetAll(self):
+    def test_get_all(self):
         """Test getting all the blog posts"""
         # Put some posts in the test database
         posts = self._insert_test_post(3)
-        post_ids = [post.id for post in posts]
 
-        response = json.loads(test_app.get('/api/blog').data.decode())
+        response = json.loads(TEST_APP.get('/api/blog').data.decode())
         post_response = response['data']
 
         self.assertEqual(200, response['status'])
@@ -55,39 +52,38 @@ class AUACMBlogTests(AUACMTest):
             self._assert_posts_equal(resp, post)
 
         for post in posts:
-            session.delete(post)
-        session.commit()
+            DATABASE_SESSION.delete(post)
+        DATABASE_SESSION.commit()
 
-    def testGetOne(self):
+    def test_get_one(self):
         """Test getting just one blog post"""
-        post =  self._insert_test_post()[0]
+        post = self._insert_test_post()[0]
         post_id = post.id
 
-        response = json.loads(test_app.get('/api/blog/{}'.format(post_id))
+        response = json.loads(TEST_APP.get('/api/blog/{}'.format(post_id))
                               .data.decode())
         post_response = response['data']
 
         self.assertEqual(200, response['status'])
         self._assert_posts_equal(post_response, post)
 
-        session.delete(post)
-        session.commit()
+        DATABASE_SESSION.delete(post)
+        DATABASE_SESSION.commit()
 
-    def testDelete(self):
+    def test_delete(self):
         """Test deleteing a blog post"""
         post = self._insert_test_post()[0]
         post_id = post.id
-        session.expunge(post)
+        DATABASE_SESSION.expunge(post)
 
-        response = json.loads(test_app.delete('/api/blog/{}'.format(post_id))
+        response = json.loads(TEST_APP.delete('/api/blog/{}'.format(post_id))
                               .data.decode())
-        response_data = response['data']
 
         self.assertEqual(200, response['status'])
-        self.assertIsNone(session.query(BlogPost)
+        self.assertIsNone(DATABASE_SESSION.query(BlogPost)
                           .filter_by(id=post_id).first())
 
-    def testEdit(self):
+    def test_edit(self):
         """Test editing a blog post"""
         post = self._insert_test_post()[0]
         post_id = post.id
@@ -98,17 +94,17 @@ class AUACMBlogTests(AUACMTest):
             'body': new_body,
             'username': post.username
         }
-        session.expunge(post)
+        DATABASE_SESSION.expunge(post)
 
-        response = json.loads(test_app.put('/api/blog/{}'.format(post_id),
+        response = json.loads(TEST_APP.put('/api/blog/{}'.format(post_id),
                                            data=post_json).data.decode())
         response_data = response['data']
 
-        self.assertEquals(200, response['status'])
-        self.assertEquals(new_body, response_data['body'])
+        self.assertEqual(200, response['status'])
+        self.assertEqual(new_body, response_data['body'])
 
-        session.delete(session.query(BlogPost).filter_by(id=post.id).first())
-        session.commit()
+        DATABASE_SESSION.delete(DATABASE_SESSION.query(BlogPost).filter_by(id=post.id).first())
+        DATABASE_SESSION.commit()
 
 
     def _assert_posts_equal(self, return_blog, create_blog):
@@ -119,11 +115,11 @@ class AUACMBlogTests(AUACMTest):
         :param return_blog: the blog post returned from the API
         :param create_blog: the ORM object used to create the blog post
         """
-        self.assertEquals(return_blog['title'], create_blog.title)
-        self.assertEquals(return_blog['subtitle'], create_blog.subtitle)
-        self.assertEquals(return_blog['author']['username'],
-                          create_blog.username)
-        self.assertEquals(return_blog['body'], create_blog.body)
+        self.assertEqual(return_blog['title'], create_blog.title)
+        self.assertEqual(return_blog['subtitle'], create_blog.subtitle)
+        self.assertEqual(return_blog['author']['username'],
+                         create_blog.username)
+        self.assertEqual(return_blog['body'], create_blog.body)
 
     def _insert_test_post(self, num=1):
         """
@@ -140,7 +136,6 @@ class AUACMBlogTests(AUACMTest):
         ) for i in range(num)]
 
         for post in posts:
-            post.commit_to_session(session)
+            post.commit_to_session(DATABASE_SESSION)
 
         return posts
-

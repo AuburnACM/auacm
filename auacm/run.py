@@ -1,15 +1,17 @@
+'''The heart of the backend. Run this file to start it.'''
 #!flask/bin/python
 from __future__ import print_function
 from tornado.wsgi import WSGIContainer
 from tornado.web import Application, FallbackHandler
 from tornado.ioloop import IOLoop
 
-from app import app
-from app.modules.flasknado.flasknado import Flasknado
+from APP.modules import APP
+from APP.modules.flasknado.flasknado import Flasknado
 
 if __name__ == "__main__":
     def main():
-        container = WSGIContainer(app)
+        '''The entry point of the backend.'''
+        container = WSGIContainer(APP)
         server = Application([
             (r'/websocket', Flasknado),
             (r'.*', FallbackHandler, dict(fallback=container))
@@ -17,7 +19,7 @@ if __name__ == "__main__":
         server.listen(5000)
         IOLoop.instance().start()
 
-    if app.config['DEBUG']:
+    if APP.config['DEBUG']:
         from reloader import run_with_reloader
         run_with_reloader(main)
     else:

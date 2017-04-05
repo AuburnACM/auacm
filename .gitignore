@@ -1,5 +1,6 @@
 **/*.pyc
 .idea
+.vscode/
 node_modules/
 .DS_Store
 auacm/app/static/angular/dist/

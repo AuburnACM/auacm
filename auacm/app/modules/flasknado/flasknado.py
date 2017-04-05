@@ -1,6 +1,10 @@
-from tornado.websocket import WebSocketHandler
+# pylint: disable=I0011,C0103,C0202,W0702
+"""
+Handles the websockets for the site.
+"""
 from json import loads
-from app import app
+from tornado.websocket import WebSocketHandler
+from ...modules import APP
 
 def make_flasknado():
     """ Creates a new class instance of Flasknado
@@ -62,6 +66,7 @@ class Flasknado(WebSocketHandler):
         :param message: the name of the message to register the callback for
         """
         def wrapped(function):
+            '''Add message to callbacks if it does not exist.'''
             if message not in self.callbacks:
                 self.callbacks[message] = function
         return wrapped
@@ -86,7 +91,7 @@ class Flasknado(WebSocketHandler):
             if message['eventType'] in self.callbacks:
                 self.callbacks[message['eventType']](self)
         except:
-            app.logger.error('Could not parse JSON from socket message: ' +
+            APP.logger.error('Could not parse JSON from socket message: ' +
                              message)
 
     def data_received(self, data):

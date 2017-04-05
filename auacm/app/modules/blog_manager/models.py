@@ -1,7 +1,10 @@
+"""
+Contains the model of a blog post.
+"""
 from time import time
-from app.database import Base, session
+from ...database import DATABASE_BASE
 
-class BlogPost(Base):
+class BlogPost(DATABASE_BASE):
     """Reflects a blog post in the database"""
 
     __tablename__ = 'blog_posts'
@@ -15,12 +18,4 @@ class BlogPost(Base):
             'post_time': kwargs.get('post_time', time()),
             'username': kwargs.get('username')
         }
-        Base.__init__(self, **defaults)
-
-    def commit_to_session(self, session=session):
-        """Commit this blog post to the database"""
-        session.add(self)
-        session.flush()
-        session.commit()
-        session.refresh(self)
-        return self.id
+        DATABASE_BASE.__init__(self, **defaults)

@@ -1,7 +1,9 @@
-'''Reflection and utilities for the users database table.'''
+"""
+Reflection and utilities for the users database table.
+"""
 
-from app.modules.problem_manager.models import Problem
-import app.database as database
+from ..problem_manager.models import Problem
+from ...database import DATABASE_SESSION
 
 class AttemptSession:
     '''Object that represents a user's work on a single problem.
@@ -19,8 +21,8 @@ class AttemptSession:
         self.job_ids = list()
         self.job_ids.append(submission.job)
         self.correct = (submission.result == 'good')
-        problem = database.session.query(Problem).filter(
-                Problem.pid == self.pid).first()
+        problem = DATABASE_SESSION.query(Problem).filter(
+            Problem.pid == self.pid).first()
         self.shortname = problem.shortname
         self.name = problem.name
 

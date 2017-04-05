@@ -1,10 +1,13 @@
+"""
+Calculates the time length for each problem.
+"""
 import math
 import os
 import shutil
 import sys
 
 from app import config
-from app import database
+from app.database import DATABASE_SESSION
 from app.modules.problem_manager import models
 from app.modules.submission_manager import judge
 from app.modules.submission_manager.models import MockSubmission
@@ -63,7 +66,7 @@ class Timer:
 
         judged_count = 0
         found_max = 0
-        problem_details = (database.session.query(models.Problem)
+        problem_details = (DATABASE_SESSION.query(models.Problem)
                            .filter(models.Problem.pid == self.problem.pid).first())
         print('Judging', problem_details.name, '...', file=sys.stderr)
         for fname in files:
@@ -91,7 +94,7 @@ class Timer:
             if status == judge.CORRECT_ANSWER:
                 judged_count += 1
                 time_limit = int(math.ceil(
-                        time * 1.5 / judge.TIMEOUT_MULTIPLIER[file_type]))
+                    time * 1.5 / judge.TIMEOUT_MULTIPLIER[file_type]))
                 found_max = max(found_max, time_limit)
                 self.problem.time_limit = found_max
                 self.problem.commit_to_session()
@@ -105,14 +108,14 @@ class Timer:
         self._create_temp_directory()
         try:
             self._run()
-        except NoJudgeSolutionsError as e:
-            print(str(e), file=sys.stderr)
+        except NoJudgeSolutionsError as error:
+            print(str(error), file=sys.stderr)
         finally:
             self._remove_temp_files()
 
 
 class NoJudgeSolutionsError(Exception):
-
+    """An error that is thrown when a judge solution does not exist for a problem."""
     def __init__(self, value, name):
         Exception.__init__(self)
         self.value = value
@@ -124,7 +127,7 @@ class NoJudgeSolutionsError(Exception):
 
 
 class UnsupportedFileTypeError(Exception):
-
+    """An error that is thrown when a problem file type is not supported."""
     def __init__(self, file_type, pid):
         Exception.__init__(self)
         self.file_type = file_type

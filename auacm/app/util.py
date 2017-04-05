@@ -1,38 +1,41 @@
-"""Utility functions and objects for the auacm server."""
+"""
+Utility functions and objects for the auacm server.
+"""
+
+from functools import wraps
+import json
+from os.path import join
+import unittest
 
 from flask import send_from_directory, jsonify
 from flask.ext.login import LoginManager, current_user
 from flask.ext.bcrypt import Bcrypt
-from app import app, test_app
-from app.database import session
-from app.modules.user_manager.models import User
-from os.path import join
-from functools import wraps
-import unittest
-import json
-
+from .modules import APP, TEST_APP
+from .database import DATABASE_SESSION
+from .modules.user_manager.models import User
 
 # bcrypt setup
-bcrypt = Bcrypt(app)
+BCRYPT_CONST = Bcrypt(APP)
 
 # login session setup
-login_manager = LoginManager()
-login_manager.init_app(app)
+LOGIN_MANAGER = LoginManager()
+LOGIN_MANAGER.init_app(APP)
 
-@login_manager.user_loader
+@LOGIN_MANAGER.user_loader
 def load_user(user_id):
-    '''Log a user into the app.'''
-    return session.query(User).filter(User.username==user_id).first()
+    '''Log a user into the APP.'''
+    return DATABASE_SESSION.query(User)\
+        .filter(User.username == user_id).first()
 
 # Functions for serving responses
 def serve_html(filename):
     '''Serve static HTML pages.'''
-    return send_from_directory(app.static_folder+"/html/", filename)
+    return send_from_directory(APP.static_folder+"/html/", filename)
 
 
 def serve_info_pdf(pid):
     '''Serve static PDFs.'''
-    return send_from_directory(join(app.config['DATA_FOLDER'],
+    return send_from_directory(join(APP.config['DATA_FOLDER'],
                                     'problems', pid), 'info.pdf')
 
 
@@ -46,11 +49,14 @@ def serve_error(error, response_code):
     return jsonify({'status': response_code, 'error': error}), response_code
 
 def admin_required(function):
+    '''Checks to see if a user has to be an admin to access a certain part of the api.'''
     @wraps(function)
     def wrap(*args, **kwargs):
+        '''Wraps the function passed to admin_required and returns
+           if the current user is an admin.'''
         if current_user.is_anonymous or current_user.admin == 0:
             return serve_error('You need to be an admin to do that.',
-                    response_code=401)
+                               response_code=401)
         else:
             return function(*args, **kwargs)
     return wrap
@@ -62,28 +68,28 @@ class AUACMTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """One time setup for the class of tests"""
-        cls.username = app.config['TEST_USERNAME']
-        cls.password = app.config['TEST_PASSWORD']
+        cls.username = APP.config['TEST_USERNAME']
+        cls.password = APP.config['TEST_PASSWORD']
 
     def login(self):
-        """Log the test user into the app"""
-        response = json.loads(test_app.post(
+        """Log the test user into the APP"""
+        response = json.loads(TEST_APP.post(
             '/api/login',
             data=dict(username=self.username, password=self.password)
         ).data.decode())
-        assert 200 == response['status']
+        assert response['status'] == 200
 
     def logout(self):
-        """Log the test user out of the app"""
-        response = json.loads(test_app.get('/api/logout').data.decode())
-        assert 200 == response['status']
+        """Log the test user out of the APP"""
+        response = json.loads(TEST_APP.get('/api/logout').data.decode())
+        assert response['status'] == 200
 
-    def insert_into_db(session, model, args_list):
+    def insert_into_db(self, session_test, model, args_list):
         """
         Insert a number of ORM objects into the session for testing. The number
         of objects inserted is equal to the length of the args_list parameter.
 
-        :param session: the database session to insert into
+        :param session_test: the database session to insert into
         :param model: the model class of the objects to be added
         :param args: a list of the arguments to pass to the model constructor
         :param num: the number of ORM objects to create and insert
@@ -92,10 +98,10 @@ class AUACMTest(unittest.TestCase):
         results = list()
         for args in args_list:
             model_object = model(**args)
-            session.add(model_object)
-            session.flush()
-            session.commit(self)
-            session.refresh(model_object)
+            session_test.add(model_object)
+            session_test.flush()
+            session_test.commit(self)
+            session_test.refresh(model_object)
             results.append(model_object)
 
         return results

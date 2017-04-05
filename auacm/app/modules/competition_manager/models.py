@@ -1,10 +1,14 @@
-from app.database import Base, session
+"""
+This model file contains the model for competitions.
+"""
+from ...database import DATABASE_BASE
 
-
-class Competition(Base):
+class Competition(DATABASE_BASE):
+    '''The competition model.'''
     __tablename__ = 'comp_names'
 
     def to_dict(self, user_registered=False):
+        '''Returns the competition as a dictionary'''
         return {
             'cid': self.cid,
             'name': self.name,
@@ -14,33 +18,15 @@ class Competition(Base):
             'registered': user_registered
         }
 
-    def commit_to_session(self, session=session):
-        """Commit this Competition to the database.
-
-        This is useful for adding a newly-created Competition to the database.
-        """
-        session.add(self)
-        session.flush()
-        session.commit()
-        session.refresh(self)
-        self._problem = None
-        return self.cid
-
-
-class CompProblem(Base):
+class CompProblem(DATABASE_BASE):
+    '''The competition problem model.'''
     __tablename__ = 'comp_problems'
+    cid = None
 
 
-class CompUser(Base):
+class CompUser(DATABASE_BASE):
+    '''The competition user model.'''
     __tablename__ = 'comp_users'
-
-    def commit_to_session(self, session=session):
-        """Commit this CompUser to the database.
-
-        This is useful for adding a newly-created CompUser to the database.
-        """
-        session.add(self)
-        session.flush()
-        session.commit()
-        session.refresh(self)
-        self._problem = None
+    cid = None
+    team = None
+    username = ''

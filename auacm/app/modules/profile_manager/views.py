@@ -1,49 +1,53 @@
-"""Profile-related routes and methods"""
+"""
+Profile-related routes and methods.
+"""
+
+import os
+from os.path import join
+import mimetypes
+import base64
 
 from sqlalchemy import and_
 from flask import send_file, request
-from app import app
-from app.util import serve_response, serve_error
-from app.modules.user_manager.models import User
-from app.modules.submission_manager.models import Submission, ProblemSolved
-from app.modules.profile_manager.models import AttemptSession
-from app.modules.competition_manager.models import CompUser, Competition
-from app.modules.blog_manager.models import BlogPost
-from os.path import join
-import app.database as database
-import os
-import mimetypes
-import base64
+
+from ...modules import APP
+from ...util import serve_response, serve_error
+from ..user_manager.models import User
+from ..submission_manager.models import Submission, ProblemSolved
+from ..profile_manager.models import AttemptSession
+from ..competition_manager.models import CompUser, Competition
+from ..blog_manager.models import BlogPost
+from ...database import DATABASE_SESSION
 
 MAX_RECENT_ATTEMPTS = 5
 MAX_RECENT_COMPETITIONS = 5
 MAX_RECENT_BLOG_POSTS = 3
 
-image_dir = join(app.config['DATA_FOLDER'], 'profile')
+IMAGE_DIR = join(APP.config['DATA_FOLDER'], 'profile')
 
-@app.route('/api/profile/image/<username>', methods=['GET'])
+@APP.route('/api/profile/image/<username>', methods=['GET'])
 def get_profile_image(username='tester'):
     """
     Return a user's profile picture.
     """
 
-    imagefile = [filename for filename in os.listdir(join(app.config['DATA_FOLDER'],
+    imagefile = [filename for filename in os.listdir(join(APP.config['DATA_FOLDER'],\
         'profile')) if filename.startswith(username + '.')]
 
     if len(imagefile) == 0:
-        return send_file(join(image_dir, 'default', 'profile.png'),
-            mimetype='image/png')
+        return send_file(join(IMAGE_DIR, 'default', 'profile.png'),
+                         mimetype='image/png')
     else:
         file_ext = '.' + imagefile[0].split('.', 1)[1]
         mime_type = mimetypes.types_map[file_ext]
-        return send_file(join(image_dir, imagefile[0]), mimetype=mime_type)
+        return send_file(join(IMAGE_DIR, imagefile[0]), mimetype=mime_type)
 
-@app.route('/api/profile/image/<username>', methods=['PUT'])
+@APP.route('/api/profile/image/<username>', methods=['PUT'])
 def set_profile_image(username='tester'):
     """
     Set a user's profile picture.
     """
-    user = database.session.query(User).filter(
+    user = DATABASE_SESSION.query(User).filter(
         User.username == username).first()
     if user is None:
         return serve_error('user does not exist', 404)
@@ -52,36 +56,36 @@ def set_profile_image(username='tester'):
     mimetype = request_json['mimetype']
     filedata = request_json['data'].encode('utf-8')
 
-    fileExt = mimetypes.guess_extension(mimetype)
-    if fileExt is None:
+    file_ext = mimetypes.guess_extension(mimetype)
+    if file_ext is None:
         return serve_error('invalid mime type', 400)
 
-    imagefiles = [filename for filename in os.listdir(image_dir)
-        if filename.startswith(username + '.')]
+    imagefiles = [filename for filename in os.listdir(IMAGE_DIR)
+                  if filename.startswith(username + '.')]
 
     for filename in imagefiles:
-        os.remove(join(image_dir, filename))
+        os.remove(join(IMAGE_DIR, filename))
 
-    filename = join(image_dir, username + fileExt)
+    filename = join(IMAGE_DIR, username + file_ext)
 
     with open(filename, "wb") as writefile:
-        writefile.write(base64.decodestring(filedata))
+        writefile.write(base64.decodebytes(filedata))
 
     return serve_response({
         'message': 'Image saved'
     })
 
-@app.route('/api/profile/userprofile/<username>', methods=['GET'])
+@APP.route('/api/profile/userprofile/<username>', methods=['GET'])
 def get_profile(username='tester'):
     """
     Return a user's profile.
     """
-    user = database.session.query(User).filter(
+    user = DATABASE_SESSION.query(User).filter(
         User.username == username).first()
     if user is None:
         return serve_error('user does not exist', 404)
 
-    problems_solved = len(database.session.query(ProblemSolved).filter(
+    problems_solved = len(DATABASE_SESSION.query(ProblemSolved).filter(
         ProblemSolved.username == username).all())
 
     return serve_response({
@@ -101,7 +105,8 @@ def get_recent_blog_posts(username):
 
     recent_blog_posts = list()
 
-    for blog_post in database.session.query(BlogPost).filter(BlogPost.username == username).order_by(BlogPost.post_time.desc()):
+    for blog_post in DATABASE_SESSION.query(BlogPost)\
+            .filter(BlogPost.username == username).order_by(BlogPost.post_time.desc()):
         recent_blog_posts.append({
             'title': blog_post.title,
             'subtitle': blog_post.subtitle,
@@ -122,15 +127,15 @@ def get_recent_competitions(username):
 
     recent_competitions = list()
 
-    for comp_user in database.session.query(CompUser).filter(
+    for comp_user in DATABASE_SESSION.query(CompUser).filter(
             CompUser.username == username).order_by(CompUser.cid.desc()):
 
         cid = comp_user.cid
-        comp = database.session.query(Competition).filter(
-                Competition.cid == cid).first()
+        comp = DATABASE_SESSION.query(Competition).filter(
+            Competition.cid == cid).first()
 
-        team_size = len(database.session.query(CompUser).filter(and_(
-                CompUser.cid == cid, CompUser.team == comp_user.team)).all())
+        team_size = len(DATABASE_SESSION.query(CompUser).filter(and_(
+            CompUser.cid == cid, CompUser.team == comp_user.team)).all())
         recent_competitions.append({
             'teamName': comp_user.team,
             'cid': cid,
@@ -138,7 +143,7 @@ def get_recent_competitions(username):
             'teamSize': team_size
         })
         if len(recent_competitions) >= MAX_RECENT_COMPETITIONS:
-            break;
+            break
     return recent_competitions
 
 def get_recent_attempts(username):
@@ -151,7 +156,7 @@ def get_recent_attempts(username):
     recent_attempts = list()
 
     # For each of the user's most recent submissions:
-    for recent_submit in database.session.query(Submission).filter(
+    for recent_submit in DATABASE_SESSION.query(Submission).filter(
             Submission.username == username).order_by(Submission.job.desc()):
 
         # If this is the most recent or different from the previous:
@@ -162,7 +167,7 @@ def get_recent_attempts(username):
                 recent_attempts.append(attempt_session.to_dict())
                 # If we hit the limit, break.
                 if len(recent_attempts) >= MAX_RECENT_ATTEMPTS:
-                    break;
+                    break
             # Create a new attempt session from this submit.
             attempt_session = AttemptSession(recent_submit)
 

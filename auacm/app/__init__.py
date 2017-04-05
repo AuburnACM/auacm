@@ -1,17 +1,21 @@
-from flask import Flask, Response
+"""
+This is the main module of the python project.
+"""
 import time
-
-# Create the God-objects to be used everywhere
-app = Flask(__name__)
-app.config.from_pyfile('config.py')
-test_app = app.test_client()
-
-# Initialize handler functions.
+from app import database
 from app import util
-from app import views
-from app.modules.user_manager import views
-from app.modules.submission_manager import views
-from app.modules.competition_manager import views
-from app.modules.blog_manager import views
-from app.modules.problem_manager import views
-from app.modules.profile_manager import views
+import app.views
+import app.modules.user_manager.views
+import app.modules.submission_manager.views
+import app.modules.competition_manager.views
+import app.modules.blog_manager.views
+import app.modules.problem_manager.views
+import app.modules.profile_manager.views
+
+from app.modules.user_manager.models import User
+from app.modules.submission_manager.models import Submission, MockSubmission
+from app.modules.competition_manager.models import Competition, CompUser, CompProblem
+from app.modules.problem_manager.models import Problem, ProblemData, SampleCase
+from app.modules.blog_manager.models import BlogPost
+from app.database import DATABASE_BASE, DATABASE_ENGINE
+DATABASE_BASE.prepare(DATABASE_ENGINE, reflect=True)
