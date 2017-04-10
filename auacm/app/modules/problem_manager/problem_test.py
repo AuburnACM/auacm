@@ -1,4 +1,4 @@
-"""Tests for problem CRUD-ing
+'''Tests for problem CRUD-ing
 
 To run these tests, execute the following at the app level:
 
@@ -11,18 +11,18 @@ access to the test database.
 
 Interesting fact, Benjamin Franklin was the oldest signer of the Declaration
 of Independence at 70 years old.
-"""
+'''
 
 import unittest
 import json
 import copy
 from time import time
 
-from ...modules import TEST_APP
-from ..problem_manager.models import Problem, ProblemData, SampleCase
-from ..competition_manager.models import Competition
-from ...util import AUACMTest
-from ...database import DATABASE_SESSION
+from app.database import DATABASE_SESSION
+from app.modules import test_app
+from app.modules.problem_manager.models import Problem, ProblemData, SampleCase
+from app.modules.competition_manager.models import Competition
+from app.util import AUACMTest
 
 # TODO: Test invalid requests to problem(s)
 # TODO: Problem subtests (different arguments, etc)
@@ -83,10 +83,10 @@ def _reinsert_test_problem(test_prob, test_prob_data):
     DATABASE_SESSION.commit()
 
 class ProblemGetTests(AUACMTest):
-    """Tests functionality for GET-ing problems from the API"""
+    '''Tests functionality for GET-ing problems from the API'''
 
     def setUp(self):
-        """Manually add a problem to the test database"""
+        '''Manually add a problem to the test database'''
         self.problem = Problem(**TEST_PROBLEM)
         self.problem_data = ProblemData(**TEST_PROBLEM_DATA)
         self.cases = list()
@@ -108,7 +108,7 @@ class ProblemGetTests(AUACMTest):
         self.login()
 
     def tearDown(self):
-        """Manually remove test problem from the test database"""
+        '''Manually remove test problem from the test database'''
         for case in self.cases:
             DATABASE_SESSION.delete(case)
         DATABASE_SESSION.delete(self.problem_data)
@@ -119,9 +119,9 @@ class ProblemGetTests(AUACMTest):
         self.logout()
 
     def test_get_all(self):
-        """Should get basic info about all the problems"""
+        '''Should get basic info about all the problems'''
         # Check that the request went through
-        resp = TEST_APP.get('/api/problems')
+        resp = test_app.get('/api/problems')
         self.assertEqual(200, resp.status_code)
         response_data = json.loads(resp.data.decode())
         self.assertFalse('Please log in' in str(response_data))
@@ -140,8 +140,8 @@ class ProblemGetTests(AUACMTest):
             self.assertEqual(str(TEST_PROBLEM[k]), str(found[k]))
 
     def test_get_one(self):
-        """Should get detailed info about one specific problem"""
-        resp = TEST_APP.get('/api/problems/' + str(TEST_PROBLEM['pid']))
+        '''Should get detailed info about one specific problem'''
+        resp = test_app.get('/api/problems/' + str(TEST_PROBLEM['pid']))
         self.assertEqual(200, resp.status_code)
 
         response_data = json.loads(resp.data.decode())
@@ -159,21 +159,21 @@ class ProblemGetTests(AUACMTest):
             self.assertEqual(str(TEST_PROBLEM_DATA[key]), str(prob[key]))
 
     def test_hide_unreleased_problem(self):
-        """Test that GET-ting an unreleased problem returns a 404"""
+        '''Test that GET-ting an unreleased problem returns a 404'''
         unreleased_cid = self._setUpUnreleasedComp()
 
-        resp = TEST_APP.get('/api/problems/{}'.format(self.problem.pid))
+        resp = test_app.get('/api/problems/{}'.format(self.problem.pid))
         self.assertEqual(404, resp.status_code)
 
         self._tearDownComp(unreleased_cid)
 
     def test_hide_unreleased_problems(self):
-        """
+        '''
         Test that GET-ting all problems doesn't return unreleased problems
-        """
+        '''
         unreleased_cid = self._setUpUnreleasedComp()
 
-        resp = TEST_APP.get('/api/problems')
+        resp = test_app.get('/api/problems')
         self.assertEqual(200, resp.status_code)
         response_data = json.loads(resp.data.decode())['data']
 
@@ -184,11 +184,11 @@ class ProblemGetTests(AUACMTest):
         self._tearDownComp(unreleased_cid)
 
     def _set_up_unreleased_comp(self):
-        """
+        '''
         Creates an unreleased competition and associates the test's problem with it
 
         :return: the cid of the new competition
-        """
+        '''
         unreleased_cid = Competition(
             name='Test Competition',
             start=int(time() + 10000),
@@ -202,7 +202,7 @@ class ProblemGetTests(AUACMTest):
         return unreleased_cid
 
     def _tear_down_comp(self, cid):
-        """Removes a competition from the database by its cid"""
+        '''Removes a competition from the database by its cid'''
         DATABASE_SESSION.delete(
             DATABASE_SESSION.query(Competition)
             .filter_by(cid=cid)
@@ -212,10 +212,10 @@ class ProblemGetTests(AUACMTest):
 
 
 class ProblemEditTests(AUACMTest):
-    """Tests functionality for editing an existing problem"""
+    '''Tests functionality for editing an existing problem'''
 
     def setUp(self):
-        """Prepare test database for tests"""
+        '''Prepare test database for tests'''
         self.problem = Problem(**TEST_PROBLEM)
         self.problem_data = ProblemData(**TEST_PROBLEM_DATA)
         self.cases = list()
@@ -237,9 +237,9 @@ class ProblemEditTests(AUACMTest):
         self.login()
 
     def test_problem_edit(self):
-        """Tests to ensure problem information can be updated."""
+        '''Tests to ensure problem information can be updated.'''
         new_name = 'A Different Test Problem'
-        resp = TEST_APP.put(
+        resp = test_app.put(
             '/api/problems/' + str(TEST_PROBLEM['pid']),
             data={'name':new_name})
         self.assertEqual(200, resp.status_code)
@@ -249,7 +249,7 @@ class ProblemEditTests(AUACMTest):
         self.assertEqual(new_name, prob['name'])
 
     def tearDown(self):
-        """Tie up loose ends from test"""
+        '''Tie up loose ends from test'''
         for case in self.cases:
             DATABASE_SESSION.delete(case)
         DATABASE_SESSION.delete(self.problem_data)
@@ -261,10 +261,10 @@ class ProblemEditTests(AUACMTest):
 
 
 class ProblemDeleteTests(AUACMTest):
-    """Tests deleting a problem via the API"""
+    '''Tests deleting a problem via the API'''
 
     def setUp(self):
-        """Add the problem to be deleted to the database"""
+        '''Add the problem to be deleted to the database'''
         self.problem = Problem(**TEST_PROBLEM)
         DATABASE_SESSION.add(self.problem)
         self.problem_data = ProblemData(**TEST_PROBLEM_DATA)
@@ -284,8 +284,8 @@ class ProblemDeleteTests(AUACMTest):
         self.login()
 
     def test_delete_problem(self):
-        """Tests to ensure a problem can be deleted."""
-        resp = TEST_APP.delete('api/problems/' + str(TEST_PROBLEM['pid']))
+        '''Tests to ensure a problem can be deleted.'''
+        resp = test_app.delete('api/problems/' + str(TEST_PROBLEM['pid']))
         self.assertEqual(200, resp.status_code)
         response_data = json.loads(resp.data.decode())
         self.assertEqual(str(TEST_PROBLEM['pid']), (response_data['data']['deleted_pid']))
@@ -296,7 +296,7 @@ class ProblemDeleteTests(AUACMTest):
         self.assertIsNone(prob)
 
     def tearDown(self):
-        """Delete the test problem only if unsuccessful"""
+        '''Delete the test problem only if unsuccessful'''
         prob = DATABASE_SESSION.query(Problem).\
             filter(Problem.pid == TEST_PROBLEM['pid']).first()
         if prob is not None:

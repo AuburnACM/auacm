@@ -1,23 +1,23 @@
-"""
+'''
 This is the controller for the competition manager.
-"""
+'''
 from json import loads
 from time import time
 
 from flask import request
 from flask.ext.login import current_user, login_required
 from sqlalchemy import asc
-from ...modules import APP
-from ...util import serve_response, serve_error, admin_required
-from ..flasknado.flasknado import Flasknado
-from ..submission_manager.models import Submission
-from ..problem_manager.models import Problem
-from ..user_manager.models import User
-from ...database import DATABASE_SESSION, commit_to_session
-from .models import Competition, CompProblem, CompUser
+from app.database import DATABASE_SESSION, commit_to_session
+from app.modules import app
+from app.modules.flasknado.flasknado import Flasknado
+from app.modules.submission_manager.models import Submission
+from app.modules.problem_manager.models import Problem
+from app.modules.user_manager.models import User
+from app.modules.competition_manager.models import Competition, CompProblem, CompUser
+from app.util import serve_response, serve_error, admin_required
 
 
-@APP.route('/api/competitions')
+@app.route('/api/competitions')
 def get_competitions():
     '''Returns a list of competitions.'''
     ongoing = list()
@@ -49,7 +49,7 @@ def get_competitions():
     })
 
 
-@APP.route('/api/competitions', methods=['POST'])
+@app.route('/api/competitions', methods=['POST'])
 @admin_required
 def create_competition():
     '''Creates a new competition.'''
@@ -87,17 +87,17 @@ def create_competition():
     return serve_response(competition.to_dict())
 
 
-@APP.route('/api/competitions/<int:cid>', methods=['PUT'])
+@app.route('/api/competitions/<int:cid>', methods=['PUT'])
 @admin_required
 def update_competition_data(cid):
-    """ Adds problems to a competition
+    ''' Adds problems to a competition
 
     Doing a POST request adds that problem to the competition whereas
     a PUT request will remove all problems that were previously associated
     with that competition and add all of the ones in the form body.
 
     TODO: form validation to make sure that no duplicates are added.
-    """
+    '''
 
     data = request.form
 
@@ -137,7 +137,7 @@ def update_competition_data(cid):
     return serve_response(competition.to_dict())
 
 
-@APP.route('/api/competitions/<int:cid>')
+@app.route('/api/competitions/<int:cid>')
 def get_competition_data(cid):
     '''Returns information about the competition using the cid.'''
     competition = DATABASE_SESSION.query(Competition).filter(
@@ -225,9 +225,9 @@ def get_scoreboard(team_users, comp_problems, submissions, competition, team_dis
         scoreboard.append(team_row)
     return scoreboard
 
-@APP.route('/api/competitions/<int:cid>', methods=['DELETE'])
+@app.route('/api/competitions/<int:cid>', methods=['DELETE'])
 def delete_competition(cid):
-    """Delete a competition and all the data associated with it"""
+    '''Delete a competition and all the data associated with it'''
     competition = (DATABASE_SESSION.query(Competition)
                    .filter_by(cid=cid).first())
 
@@ -253,10 +253,10 @@ def delete_competition(cid):
     return serve_response('Successfully deleted', 204)
 
 
-@APP.route('/api/competitions/<int:cid>/register', methods=['POST'])
+@app.route('/api/competitions/<int:cid>/register', methods=['POST'])
 @login_required
 def register_for_competition(cid):
-    """ Called when a user wants to register for a competition.
+    ''' Called when a user wants to register for a competition.
 
     All the user has to do is submit a post to this url with no form data.
     From their logged-in status, we'll go ahead and add them to the competiton
@@ -268,7 +268,7 @@ def register_for_competition(cid):
     Specifying this will not register the admin, but it will register all users
     that are listed. A 400 error will be returned if any of the users are
     already registered for the competition.
-    """
+    '''
     if DATABASE_SESSION.query(Competition).filter(\
          Competition.cid == cid).first() is None:
         return serve_error('Competition does not exist', response_code=404)
@@ -313,10 +313,10 @@ def register_for_competition(cid):
     return serve_response({})
 
 
-@APP.route('/api/competitions/<int:cid>/unregister', methods=['POST'])
+@app.route('/api/competitions/<int:cid>/unregister', methods=['POST'])
 @login_required
 def unregister_for_competition(cid):
-    """ Called when a user wants to unregister for a competition.
+    ''' Called when a user wants to unregister for a competition.
 
     All the user has to do is submit a post to this url with no form data.
     From their logged-in status, we'll go ahead and remove them from the
@@ -324,7 +324,7 @@ def unregister_for_competition(cid):
 
     Similar to the <code>/register</code> endpoint, an admin can post a list of
     users to unregister from the competition.
-    """
+    '''
     if DATABASE_SESSION.query(Competition).filter(
             Competition.cid == cid).first() is None:
         return serve_error('Competition does not exist', response_code=404)
@@ -348,13 +348,13 @@ def unregister_for_competition(cid):
     return serve_response({})
 
 
-@APP.route('/api/competitions/<int:cid>/teams', methods=['GET'])
+@app.route('/api/competitions/<int:cid>/teams', methods=['GET'])
 @admin_required
 def get_competition_teams(cid):
-    """ Get all of the teams in a competition.
+    ''' Get all of the teams in a competition.
 
     Returns all of the teams, their users, and those users' display names.
-    """
+    '''
     comp_users = (DATABASE_SESSION.query(CompUser, User)
                   .join(User, User.username == CompUser.username)
                   .filter(CompUser.cid == cid)
@@ -373,17 +373,17 @@ def get_competition_teams(cid):
     return serve_response(teams)
 
 
-@APP.route('/api/competitions/<int:cid>/teams', methods=['PUT'])
+@app.route('/api/competitions/<int:cid>/teams', methods=['PUT'])
 @admin_required
 def put_competition_teams(cid):
-    """ Update the teams for a competition
+    ''' Update the teams for a competition
 
     If a user is an admin, they can update the competition's users, doing a PUT.
     This will take the JSON data in the 'teams' part of the request form and
     store it to the database. Any teams or users not included in the JSON data
     will not be a part of the competition and will have to re-register; however
     it should not be used for the solely purpose of de-registering participants.
-    """
+    '''
     try:
         teams = loads(request.form['teams'])
     except KeyError as _err:

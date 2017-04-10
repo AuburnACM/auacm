@@ -1,17 +1,17 @@
-"""
+'''
 This is the controller for the blog manager.
-"""
+'''
 from time import time
 
 from flask import request
 from flask.ext.login import current_user
 from sqlalchemy import desc
-from ..user_manager.models import User
-from ...database import DATABASE_SESSION
-from ..blog_manager.models import BlogPost
-from ...modules import APP
-from ...database import commit_to_session
-from ...util import serve_error, serve_response, admin_required
+from app.modules.user_manager.models import User
+from app.database import DATABASE_SESSION
+from app.modules.blog_manager.models import BlogPost
+from app.modules import app
+from app.database import commit_to_session
+from app.util import serve_error, serve_response, admin_required
 
 def create_blog_object(post):
     '''Creates a new blog post.'''
@@ -30,7 +30,7 @@ def create_blog_object(post):
         }
     }
 
-@APP.route('/api/blog')
+@app.route('/api/blog')
 def get_blog_posts():
     '''Returns all blog posts.'''
     posts = DATABASE_SESSION.query(BlogPost)\
@@ -41,9 +41,9 @@ def get_blog_posts():
     return serve_response(post_list)
 
 
-@APP.route('/api/blog/<int:bid>')
+@app.route('/api/blog/<int:bid>')
 def get_one_blog_post(bid):
-    """Retrieve a single blog post by its blog id (bid)"""
+    '''Retrieve a single blog post by its blog id (bid)'''
     post = DATABASE_SESSION.query(BlogPost)\
             .filter(BlogPost.id == bid).first()
     if not post:
@@ -52,9 +52,9 @@ def get_one_blog_post(bid):
     return serve_response(create_blog_object(post))
 
 
-@APP.route('/api/blog/<int:bid>', methods=['PUT'])
+@app.route('/api/blog/<int:bid>', methods=['PUT'])
 def update_blog_post(bid):
-    """Modify a blog post"""
+    '''Modify a blog post'''
     post = DATABASE_SESSION.query(BlogPost)\
             .filter(BlogPost.id == bid).first()
     if not post:
@@ -69,7 +69,7 @@ def update_blog_post(bid):
     return serve_response(create_blog_object(post))
 
 
-@APP.route('/api/blog', methods=["POST"])
+@app.route('/api/blog', methods=["POST"])
 @admin_required
 def create_blog_post():
     '''Creates a new blog post'''
@@ -87,9 +87,9 @@ def create_blog_post():
     return serve_response(create_blog_object(post))
 
 
-@APP.route('/api/blog/<int:bid>', methods=['DELETE'])
+@app.route('/api/blog/<int:bid>', methods=['DELETE'])
 def delete_blog_post(bid):
-    """Delete a blog post from the database"""
+    '''Delete a blog post from the database'''
     post = DATABASE_SESSION.query(BlogPost).filter_by(id=bid).first()
     if not post:
         return serve_error('No blog post id: {}'.format(bid), 404)

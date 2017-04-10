@@ -7,13 +7,13 @@ from time import time
 
 from flask import request
 from flask.ext.login import login_user, logout_user, current_user, login_required
-from ...util import BCRYPT_CONST, serve_response, serve_error, load_user, admin_required
-from ..user_manager.models import User
-from ..submission_manager.models import ProblemSolved
-from ...database import commit_to_session, DATABASE_SESSION
-from ...modules import APP
+from app.database import commit_to_session, DATABASE_SESSION
+from app.modules import app
+from app.modules.submission_manager.models import ProblemSolved
+from app.modules.user_manager.models import User
+from app.util import BCRYPT_CONST, serve_response, serve_error, load_user, admin_required
 
-@APP.route('/api/login', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 def log_in():
     """Log in a user as the current user"""
     username = request.form['username']
@@ -28,7 +28,7 @@ def log_in():
     return serve_error('invalid username or password', 401)
 
 
-@APP.route('/api/create_user', methods=['POST'])
+@app.route('/api/create_user', methods=['POST'])
 @admin_required
 def create_user():
     """Create a new user"""
@@ -47,7 +47,7 @@ def create_user():
     return serve_error('username already exists', 400)
 
 
-@APP.route('/api/change_password', methods=['POST'])
+@app.route('/api/change_password', methods=['POST'])
 @login_required
 def change_password():
     """Change the password of an existing user"""
@@ -60,7 +60,7 @@ def change_password():
         return serve_response({})
     return serve_error('old password does not match', 401)
 
-@APP.route('/api/change_display_name', methods=['POST'])
+@app.route('/api/change_display_name', methods=['POST'])
 @login_required
 def change_display_name():
     """Change the display name of an existing user"""
@@ -73,7 +73,7 @@ def change_display_name():
         return serve_response({})
     return serve_error('invalid display name', 400)
 
-@APP.route('/api/logout')
+@app.route('/api/logout')
 @login_required
 def log_out():
     """Logout the current user"""
@@ -81,7 +81,7 @@ def log_out():
     return serve_response({})
 
 
-@APP.route('/api/me')
+@app.route('/api/me')
 @login_required
 def get_me():
     """Obtain data about the current user"""
@@ -92,8 +92,8 @@ def get_me():
     })
 
 
-@APP.route('/api/ranking', methods=['GET'])
-@APP.route('/api/ranking/<timeframe>', methods=['GET'])
+@app.route('/api/ranking', methods=['GET'])
+@app.route('/api/ranking/<timeframe>', methods=['GET'])
 def get_ranking(timeframe='all'):
     """
     Return the users in order of how many problems are solved in the time frame

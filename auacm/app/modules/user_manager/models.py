@@ -1,6 +1,6 @@
 '''Reflection and utilities for the users database table.'''
 
-from ...database import DATABASE_BASE
+from app.database import DATABASE_BASE
 
 class User(DATABASE_BASE):
     '''Model object for entries in the users database table.'''

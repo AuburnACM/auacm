@@ -1,16 +1,16 @@
-"""
+'''
 Contains the model of a blog post.
-"""
+'''
 from time import time
-from ...database import DATABASE_BASE
+from app.database import DATABASE_BASE
 
 class BlogPost(DATABASE_BASE):
-    """Reflects a blog post in the database"""
+    '''Reflects a blog post in the database'''
 
     __tablename__ = 'blog_posts'
 
     def __init__(self, **kwargs):
-        """Initialize a new blog post"""
+        '''Initialize a new blog post'''
         defaults = {
             'title': kwargs.get('title'),
             'subtitle': kwargs.get('subtitle'),

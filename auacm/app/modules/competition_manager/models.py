@@ -1,7 +1,7 @@
-"""
+'''
 This model file contains the model for competitions.
-"""
-from ...database import DATABASE_BASE
+'''
+from app.database import DATABASE_BASE
 
 class Competition(DATABASE_BASE):
     '''The competition model.'''

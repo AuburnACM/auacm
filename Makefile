@@ -2,9 +2,13 @@ ifndef VERBOSE
 .SILENT:
 endif
 
-lint:
+lint: nglint pylint
+
+nglint:
 	echo "Linting Angular..."
 	cd auacm/angular/ && ng lint
+
+pylint:
 	echo "Linting Python"
 	pylint --load-plugins=pylint_flask auacm/app
 

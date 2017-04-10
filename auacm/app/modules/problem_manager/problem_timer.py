@@ -1,6 +1,6 @@
-"""
+'''
 Calculates the time length for each problem.
-"""
+'''
 import math
 import os
 import shutil
@@ -19,7 +19,7 @@ PROBLEMS_DIR = os.path.join(config.DATA_FOLDER, 'problems')
 
 
 class Timer:
-    """Timer times all of the judge solutions for a problem."""
+    '''Timer times all of the judge solutions for a problem.'''
 
     def __init__(self, problem):
         self.problem = problem
@@ -27,25 +27,25 @@ class Timer:
         self.submission_path = os.path.join(config.TEMP_DIRECTORY, 'submits')
 
     def _create_temp_directory(self):
-        """Attempts to create a temp directory.
+        '''Attempts to create a temp directory.
 
         In the event that we can't create the temp directory, an OSError will
         be raised. In that case, you probably want to specify a different
         directory to create the temp files in in config.py.
-        """
+        '''
         os.makedirs(os.path.join(self.submission_path, str(self.problem.pid)))
 
     def _remove_temp_files(self):
-        """Removes the temporary files.
+        '''Removes the temporary files.
 
         In the event that we can't remove the file tree that was created, an
         OSError will be raised. In that case, you should probably choose a new
         temp directory as well as delete the old temp directory yourself.
-        """
+        '''
         shutil.rmtree(self.submission_path)
 
     def _run(self):
-        """Times all of the problems in the problem's test folder.
+        '''Times all of the problems in the problem's test folder.
 
         This will iterate through all of the files in the problem's test
         folder. For each file, it creates a mock submission (so that it does
@@ -61,7 +61,7 @@ class Timer:
 
         :raises NoJudgeSolutionError: in the event that no judge solution is
             found for the given problem.
-        """
+        '''
         files = os.listdir(self.path)
 
         judged_count = 0
@@ -104,7 +104,7 @@ class Timer:
         print('Judged', problem_details.name, 'with time', found_max)
 
     def run(self):
-        """Executes the problem timer."""
+        '''Executes the problem timer.'''
         self._create_temp_directory()
         try:
             self._run()
@@ -115,7 +115,7 @@ class Timer:
 
 
 class NoJudgeSolutionsError(Exception):
-    """An error that is thrown when a judge solution does not exist for a problem."""
+    '''An error that is thrown when a judge solution does not exist for a problem.'''
     def __init__(self, value, name):
         Exception.__init__(self)
         self.value = value
@@ -127,7 +127,7 @@ class NoJudgeSolutionsError(Exception):
 
 
 class UnsupportedFileTypeError(Exception):
-    """An error that is thrown when a problem file type is not supported."""
+    '''An error that is thrown when a problem file type is not supported.'''
     def __init__(self, file_type, pid):
         Exception.__init__(self)
         self.file_type = file_type

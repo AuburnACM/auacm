@@ -1,7 +1,7 @@
 # pylint: disable=I0011,W0212
 """Tests for the judge.
 
-To run these tests, execute the following command on the APP level:
+To run these tests, execute the following command on the app level:
 
 <code>
 ./test.py
@@ -15,9 +15,8 @@ import os
 import os.path
 import unittest
 
-from ...modules import APP
-from ..submission_manager import judge
-from ..submission_manager import models
+from app.modules.submission_manager import models, judge
+from app.modules import app
 
 
 class JudgeTest(unittest.TestCase, object):
@@ -38,8 +37,8 @@ class JudgeTest(unittest.TestCase, object):
         1. Reconfigure app to go to the directory app/test_data
         2. Empty the submits directory
         """
-        APP.config['DATA_FOLDER'] = os.getcwd() + '/judge_tests'
-        directory = os.path.join(APP.config['DATA_FOLDER'], 'submits', '*')
+        app.config['DATA_FOLDER'] = os.getcwd() + '/judge_tests'
+        directory = os.path.join(app.config['DATA_FOLDER'], 'submits', '*')
         self._purge_directory(directory)
         self.submit, self.submit_file = None, None
 
@@ -67,7 +66,7 @@ class JudgeTest(unittest.TestCase, object):
             app/test_data/<problem>/solutions/ to run.
         :return: None
         """
-        data_folder = APP.config['DATA_FOLDER']
+        data_folder = app.config['DATA_FOLDER']
         _, ext = filename.rsplit('.', 1)
         submit = models.MockSubmission(
             username='Test User',
@@ -79,7 +78,7 @@ class JudgeTest(unittest.TestCase, object):
         )
         file_path = os.path.join(
             data_folder, 'problems', problem, 'solutions', filename)
-        submit_directory = os.path.join(APP.config['DATA_FOLDER'], 'submits',
+        submit_directory = os.path.join(app.config['DATA_FOLDER'], 'submits',
                                         str(submit.job))
         if not os.path.exists(submit_directory):
             os.mkdir(submit_directory)
@@ -131,7 +130,7 @@ class JudgeTest(unittest.TestCase, object):
         """
         if self.submit_file:
             self.submit_file.close()
-        directory = os.path.join(APP.config['DATA_FOLDER'], 'submits', '*')
+        directory = os.path.join(app.config['DATA_FOLDER'], 'submits', '*')
         self._purge_directory(directory)
 
     def test_no_compile(self):

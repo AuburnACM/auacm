@@ -6,7 +6,7 @@ import subprocess
 import threading
 import time
 
-from ...modules import APP
+from app.modules import app
 
 
 ALLOWED_EXTENSIONS = ['java', 'c', 'cpp', 'py', 'go']
@@ -81,7 +81,7 @@ class Judge:
         self.time_limit = (time_limit * TIMEOUT_MULTIPLIER[self.file_type])
         self.on_status = on_status
         problem_path = os.path.join(
-            APP.config['DATA_FOLDER'], 'problems', str(self.pid))
+            app.config['DATA_FOLDER'], 'problems', str(self.pid))
         self.submission_path = submission_path
         self.prob_input_path = os.path.join(problem_path, 'in')
         self.prob_output_path = os.path.join(problem_path, 'out')

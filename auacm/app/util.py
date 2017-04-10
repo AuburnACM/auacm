@@ -10,32 +10,32 @@ import unittest
 from flask import send_from_directory, jsonify
 from flask.ext.login import LoginManager, current_user
 from flask.ext.bcrypt import Bcrypt
-from .modules import APP, TEST_APP
-from .database import DATABASE_SESSION
-from .modules.user_manager.models import User
+from app.modules import app, test_app
+from app.database import DATABASE_SESSION
+from app.modules.user_manager.models import User
 
 # bcrypt setup
-BCRYPT_CONST = Bcrypt(APP)
+BCRYPT_CONST = Bcrypt(app)
 
 # login session setup
 LOGIN_MANAGER = LoginManager()
-LOGIN_MANAGER.init_app(APP)
+LOGIN_MANAGER.init_app(app)
 
 @LOGIN_MANAGER.user_loader
 def load_user(user_id):
-    '''Log a user into the APP.'''
+    '''Log a user into the app.'''
     return DATABASE_SESSION.query(User)\
         .filter(User.username == user_id).first()
 
 # Functions for serving responses
 def serve_html(filename):
     '''Serve static HTML pages.'''
-    return send_from_directory(APP.static_folder+"/html/", filename)
+    return send_from_directory(app.static_folder+"/html/", filename)
 
 
 def serve_info_pdf(pid):
     '''Serve static PDFs.'''
-    return send_from_directory(join(APP.config['DATA_FOLDER'],
+    return send_from_directory(join(app.config['DATA_FOLDER'],
                                     'problems', pid), 'info.pdf')
 
 
@@ -68,20 +68,20 @@ class AUACMTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """One time setup for the class of tests"""
-        cls.username = APP.config['TEST_USERNAME']
-        cls.password = APP.config['TEST_PASSWORD']
+        cls.username = app.config['TEST_USERNAME']
+        cls.password = app.config['TEST_PASSWORD']
 
     def login(self):
-        """Log the test user into the APP"""
-        response = json.loads(TEST_APP.post(
+        """Log the test user into the app"""
+        response = json.loads(test_app.post(
             '/api/login',
             data=dict(username=self.username, password=self.password)
         ).data.decode())
         assert response['status'] == 200
 
     def logout(self):
-        """Log the test user out of the APP"""
-        response = json.loads(TEST_APP.get('/api/logout').data.decode())
+        """Log the test user out of the app"""
+        response = json.loads(test_app.get('/api/logout').data.decode())
         assert response['status'] == 200
 
     def insert_into_db(self, session_test, model, args_list):

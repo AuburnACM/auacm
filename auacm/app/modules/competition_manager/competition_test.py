@@ -1,19 +1,19 @@
-"""Tests for AUACM competition manager"""
+'''Tests for AUACM competition manager'''
 
 import json
 import time
 
-from ...modules import TEST_APP
-from ...util import AUACMTest
-from ..competition_manager.models import Competition, CompProblem, CompUser
+from app.modules import test_app
+from app.util import AUACMTest
+from app.modules.competition_manager.models import Competition, CompProblem, CompUser
 
 from ...database import DATABASE_SESSION
 
 class AUACMCompetitionTests(AUACMTest):
-    """Test cases for the AUACM competition manager"""
+    '''Test cases for the AUACM competition manager'''
 
     def test_create_comp(self):
-        """Test creating a new competition"""
+        '''Test creating a new competition'''
         self.login()
         post_form = {
             'name': 'Test Competition',
@@ -23,7 +23,7 @@ class AUACMCompetitionTests(AUACMTest):
             'length': 10,
         }
 
-        response = json.loads(TEST_APP.post('/api/competitions',\
+        response = json.loads(test_app.post('/api/competitions',\
                               data=post_form).data.decode())
 
         self.assertEqual(200, response['status'])
@@ -42,10 +42,10 @@ class AUACMCompetitionTests(AUACMTest):
         DATABASE_SESSION.commit()
 
     def test_get_one_comp(self):
-        """Test retrieving a single competition by id"""
+        '''Test retrieving a single competition by id'''
         competition = self._insert_comp_into_db()[0]
 
-        response = TEST_APP.get('/api/competitions/{}'.format(competition.cid))
+        response = test_app.get('/api/competitions/{}'.format(competition.cid))
         self.assertIsNotNone(response)
         self.assertEqual(200, response.status_code)
         response_body = json.loads(response.data.decode())['data']
@@ -60,10 +60,10 @@ class AUACMCompetitionTests(AUACMTest):
         DATABASE_SESSION.commit()
 
     def test_get_all_comp(self):
-        """Test retrieving all competitions"""
+        '''Test retrieving all competitions'''
         competitions = self._insert_comp_into_db(3)
 
-        response = TEST_APP.get('/api/competitions')
+        response = test_app.get('/api/competitions')
         response_body = json.loads(response.data.decode())['data']
 
         self.assertEqual(200, response.status_code)
@@ -80,7 +80,7 @@ class AUACMCompetitionTests(AUACMTest):
         DATABASE_SESSION.commit()
 
     def test_edit_comp(self):
-        """Test modifying a competition"""
+        '''Test modifying a competition'''
         self.login()
         competition = self._insert_comp_into_db()[0]
         competition_data = {
@@ -91,7 +91,7 @@ class AUACMCompetitionTests(AUACMTest):
             'problems': '[{"label": "A", "pid": 1}]',
         }
 
-        response = TEST_APP.put('/api/competitions/{}'.format(competition.cid),
+        response = test_app.put('/api/competitions/{}'.format(competition.cid),
                                 data=competition_data)
 
         self.assertEqual(200, response.status_code)
@@ -105,26 +105,26 @@ class AUACMCompetitionTests(AUACMTest):
         DATABASE_SESSION.commit()
 
     def test_delete_comp(self):
-        """Test deleting a competition"""
+        '''Test deleting a competition'''
         self.login()
         competition = self._insert_comp_into_db()[0]
         cid = competition.cid
         DATABASE_SESSION.expunge(competition)
 
-        response = TEST_APP.delete('/api/competitions/{}'.format(cid))
+        response = test_app.delete('/api/competitions/{}'.format(cid))
         self.assertEqual(204, response.status_code)
         self.assertIsNone(DATABASE_SESSION.query(Competition)
                           .filter_by(cid=cid).first())
 
 
     def test_get_comp_teams(self):
-        """Test retreiving the teams for a competition"""
+        '''Test retreiving the teams for a competition'''
         competition = self._insert_comp_into_db()[0]
         cid = competition.cid
         user = CompUser(cid=cid, username=self.username, team='Team Test')
         user.commit_to_session(DATABASE_SESSION)
 
-        response = TEST_APP.get('/api/competitions/{}/teams'.format(cid))
+        response = test_app.get('/api/competitions/{}/teams'.format(cid))
         self.assertEqual(200, response.status_code)
         response_data = json.loads(response.data.decode())['data']
 
@@ -139,7 +139,7 @@ class AUACMCompetitionTests(AUACMTest):
         DATABASE_SESSION.commit()
 
     def test_edit_comp_teams(self):
-        """Test editing the teams for a competition"""
+        '''Test editing the teams for a competition'''
         self.login()
         teams = {
             'teams': json.dumps({
@@ -158,7 +158,7 @@ class AUACMCompetitionTests(AUACMTest):
         DATABASE_SESSION.expunge(competition)
         DATABASE_SESSION.commit()
 
-        response = TEST_APP.put('/api/competitions/{}/teams'.format(cid),
+        response = test_app.put('/api/competitions/{}/teams'.format(cid),
                                 data=teams)
         self.assertEqual(200, response.status_code)
         response_body = json.loads(response.data.decode())['data']
@@ -173,14 +173,14 @@ class AUACMCompetitionTests(AUACMTest):
         DATABASE_SESSION.commit()
 
     def _insert_comp_into_db(self, num=1):
-        """
+        '''
         Inserts a number of competitions into the database. The problems of
         each competition are inserted as well, but those objects are not
         returned.
 
         :param num: the number of competitions to inser
         :returns: a list of the new competition ORM objects
-        """
+        '''
         competitions = list()
         for i in range(num):
             competition = Competition(

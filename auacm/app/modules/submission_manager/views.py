@@ -9,17 +9,17 @@ from flask import request
 from flask.ext.login import current_user, login_required
 
 from sqlalchemy.orm import load_only
-from ...modules import APP
-from ...util import serve_response, serve_error
-from ..submission_manager import models
-from ..submission_manager import judge
-from ..problem_manager.models import ProblemData
-from ...database import DATABASE_SESSION
-from ..flasknado.flasknado import Flasknado
+from app.database import DATABASE_SESSION
+from app.modules import app
+from app.modules.flasknado.flasknado import Flasknado
+from app.modules.problem_manager.models import ProblemData
+from app.modules.submission_manager import models
+from app.modules.submission_manager import judge
+from app.util import serve_response, serve_error
 
 
 
-@APP.route("/api/submit", methods=["POST"])
+@app.route("/api/submit", methods=["POST"])
 @login_required
 def submit():
     """
@@ -61,7 +61,7 @@ def submit():
 
     attempt.commit_to_session()
 
-    submission_path = os.path.join(APP.config['DATA_FOLDER'],
+    submission_path = os.path.join(app.config['DATA_FOLDER'],
                                    'submits', str(attempt.job))
     os.mkdir(submission_path)
     uploaded_file.save(os.path.join(submission_path, uploaded_file.filename))
@@ -88,7 +88,7 @@ def submit():
     })
 
 
-@APP.route('/api/submit')
+@app.route('/api/submit')
 def get_submits():
     """
     Return one or more submissions. Can be filtered by user or id, and limited
@@ -120,7 +120,7 @@ def get_submits():
     return serve_response([s.to_dict() for s in result])
 
 
-@APP.route('/api/submit/<int:job_id>')
+@app.route('/api/submit/<int:job_id>')
 def get_submit_for_id(job_id):
     """Return the submission with this id"""
     submit_id = (DATABASE_SESSION.query(models.Submission)

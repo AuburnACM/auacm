@@ -1,9 +1,9 @@
-"""
+'''
 Reflection and utilities for the users database table.
-"""
+'''
 
-from ..problem_manager.models import Problem
-from ...database import DATABASE_SESSION
+from app.modules.problem_manager.models import Problem
+from app.database import DATABASE_SESSION
 
 class AttemptSession:
     '''Object that represents a user's work on a single problem.

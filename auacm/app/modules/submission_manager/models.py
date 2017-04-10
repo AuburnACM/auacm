@@ -1,8 +1,8 @@
 '''Provide a model object for handling submits.'''
 import threading
 
-from ...database import DATABASE_BASE, DATABASE_SESSION
-from ..problem_manager.models import Problem
+from app.database import DATABASE_BASE, DATABASE_SESSION
+from app.modules.problem_manager.models import Problem
 
 DATABASE_LOCK = threading.Lock()
 

@@ -1,6 +1,6 @@
-"""
+'''
 Profile-related routes and methods.
-"""
+'''
 
 import os
 from os.path import join
@@ -10,28 +10,28 @@ import base64
 from sqlalchemy import and_
 from flask import send_file, request
 
-from ...modules import APP
-from ...util import serve_response, serve_error
-from ..user_manager.models import User
-from ..submission_manager.models import Submission, ProblemSolved
-from ..profile_manager.models import AttemptSession
-from ..competition_manager.models import CompUser, Competition
-from ..blog_manager.models import BlogPost
-from ...database import DATABASE_SESSION
+from app.database import DATABASE_SESSION
+from app.modules import app
+from app.modules.blog_manager.models import BlogPost
+from app.modules.competition_manager.models import CompUser, Competition
+from app.modules.profile_manager.models import AttemptSession
+from app.modules.submission_manager.models import Submission, ProblemSolved
+from app.modules.user_manager.models import User
+from app.util import serve_response, serve_error
 
 MAX_RECENT_ATTEMPTS = 5
 MAX_RECENT_COMPETITIONS = 5
 MAX_RECENT_BLOG_POSTS = 3
 
-IMAGE_DIR = join(APP.config['DATA_FOLDER'], 'profile')
+IMAGE_DIR = join(app.config['DATA_FOLDER'], 'profile')
 
-@APP.route('/api/profile/image/<username>', methods=['GET'])
+@app.route('/api/profile/image/<username>', methods=['GET'])
 def get_profile_image(username='tester'):
-    """
+    '''
     Return a user's profile picture.
-    """
+    '''
 
-    imagefile = [filename for filename in os.listdir(join(APP.config['DATA_FOLDER'],\
+    imagefile = [filename for filename in os.listdir(join(app.config['DATA_FOLDER'],\
         'profile')) if filename.startswith(username + '.')]
 
     if len(imagefile) == 0:
@@ -42,11 +42,11 @@ def get_profile_image(username='tester'):
         mime_type = mimetypes.types_map[file_ext]
         return send_file(join(IMAGE_DIR, imagefile[0]), mimetype=mime_type)
 
-@APP.route('/api/profile/image/<username>', methods=['PUT'])
+@app.route('/api/profile/image/<username>', methods=['PUT'])
 def set_profile_image(username='tester'):
-    """
+    '''
     Set a user's profile picture.
-    """
+    '''
     user = DATABASE_SESSION.query(User).filter(
         User.username == username).first()
     if user is None:
@@ -75,11 +75,11 @@ def set_profile_image(username='tester'):
         'message': 'Image saved'
     })
 
-@APP.route('/api/profile/userprofile/<username>', methods=['GET'])
+@app.route('/api/profile/userprofile/<username>', methods=['GET'])
 def get_profile(username='tester'):
-    """
+    '''
     Return a user's profile.
-    """
+    '''
     user = DATABASE_SESSION.query(User).filter(
         User.username == username).first()
     if user is None:
