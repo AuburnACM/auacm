@@ -7,7 +7,7 @@ from time import time
 
 from flask import request
 from flask.ext.login import login_user, logout_user, current_user, login_required
-from app.database import commit_to_session, DATABASE_SESSION
+from app.database import commit_to_session, database_session
 from app.modules import app
 from app.modules.submission_manager.models import ProblemSolved
 from app.modules.user_manager.models import User
@@ -112,8 +112,8 @@ def get_ranking(timeframe='all'):
 
     ranks = list()
     for username, display in [(u.username, u.display) for u in
-                              DATABASE_SESSION.query(User).all()]:
-        solves = (DATABASE_SESSION.query(ProblemSolved)
+                              database_session.query(User).all()]:
+        solves = (database_session.query(ProblemSolved)
                   .filter(ProblemSolved.username == username).all())
 
         # Only count solves if they meet the time criteria

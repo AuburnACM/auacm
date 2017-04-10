@@ -17,5 +17,5 @@ from app.modules.submission_manager.models import Submission, MockSubmission
 from app.modules.competition_manager.models import Competition, CompUser, CompProblem
 from app.modules.problem_manager.models import Problem, ProblemData, SampleCase
 from app.modules.blog_manager.models import BlogPost
-from app.database import DATABASE_BASE, DATABASE_ENGINE
-DATABASE_BASE.prepare(DATABASE_ENGINE, reflect=True)
+from app.database import database_base, database_engine
+database_base.prepare(database_engine, reflect=True)

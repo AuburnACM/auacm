@@ -1,4 +1,5 @@
 #!flask/bin/python
+# pylint: disable=I0011,C0103
 '''Run all tests in the project, or specific test modules
 
 Usage:
@@ -22,13 +23,13 @@ import unittest
 from sys import argv
 import sqlalchemy
 
-import APP.database as db
+import app.database as db
 
 # Switch the database session variable to point to the test database
-TEST_ENGINE = sqlalchemy.create_engine(
+test_engine = sqlalchemy.create_engine(
     'mysql+pymysql://root@localhost/acm_test?charset=utf8')
-TEST_CONN = TEST_ENGINE.connect()
-db.session = sqlalchemy.orm.Session(TEST_ENGINE)
+test_conn = test_engine.connect()
+db.session = sqlalchemy.orm.Session(test_engine)
 
 
 if __name__ == "__main__":

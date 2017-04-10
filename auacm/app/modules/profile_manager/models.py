@@ -3,7 +3,7 @@ Reflection and utilities for the users database table.
 '''
 
 from app.modules.problem_manager.models import Problem
-from app.database import DATABASE_SESSION
+from app.database import database_session
 
 class AttemptSession:
     '''Object that represents a user's work on a single problem.
@@ -21,7 +21,7 @@ class AttemptSession:
         self.job_ids = list()
         self.job_ids.append(submission.job)
         self.correct = (submission.result == 'good')
-        problem = DATABASE_SESSION.query(Problem).filter(
+        problem = database_session.query(Problem).filter(
             Problem.pid == self.pid).first()
         self.shortname = problem.shortname
         self.name = problem.name

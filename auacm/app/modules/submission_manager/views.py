@@ -9,7 +9,7 @@ from flask import request
 from flask.ext.login import current_user, login_required
 
 from sqlalchemy.orm import load_only
-from app.database import DATABASE_SESSION
+from app.database import database_session
 from app.modules import app
 from app.modules.flasknado.flasknado import Flasknado
 from app.modules.problem_manager.models import ProblemData
@@ -42,7 +42,7 @@ def submit():
                            response_code=400)
 
     # Obtain the time limit for the problem
-    time_limit = DATABASE_SESSION.query(ProblemData).\
+    time_limit = database_session.query(ProblemData).\
             options(load_only("pid", "time_limit")).\
             filter(ProblemData.pid == request.form['pid']).\
             first().time_limit
@@ -104,7 +104,7 @@ def get_submits():
     # Default and max limit is 100
     limit = min(int(request.args.get('limit') or 100), 100)
 
-    submits = (DATABASE_SESSION.query(models.Submission)
+    submits = (database_session.query(models.Submission)
                .order_by(models.Submission.submit_time.desc()))
 
     # Filter by user if provided
@@ -123,7 +123,7 @@ def get_submits():
 @app.route('/api/submit/<int:job_id>')
 def get_submit_for_id(job_id):
     """Return the submission with this id"""
-    submit_id = (DATABASE_SESSION.query(models.Submission)
+    submit_id = (database_session.query(models.Submission)
                  .filter(models.Submission.job == job_id).first())
     if not submit_id:
         return serve_error('Submission with id ' + str(job_id) +

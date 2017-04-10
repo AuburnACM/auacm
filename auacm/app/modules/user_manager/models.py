@@ -1,8 +1,8 @@
 '''Reflection and utilities for the users database table.'''
 
-from app.database import DATABASE_BASE
+from app.database import database_base
 
-class User(DATABASE_BASE):
+class User(database_base):
     '''Model object for entries in the users database table.'''
 
     __tablename__ = 'users'

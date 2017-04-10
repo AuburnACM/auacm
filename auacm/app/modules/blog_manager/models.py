@@ -2,9 +2,9 @@
 Contains the model of a blog post.
 '''
 from time import time
-from app.database import DATABASE_BASE
+from app.database import database_base
 
-class BlogPost(DATABASE_BASE):
+class BlogPost(database_base):
     '''Reflects a blog post in the database'''
 
     __tablename__ = 'blog_posts'
@@ -18,4 +18,4 @@ class BlogPost(DATABASE_BASE):
             'post_time': kwargs.get('post_time', time()),
             'username': kwargs.get('username')
         }
-        DATABASE_BASE.__init__(self, **defaults)
+        database_base.__init__(self, **defaults)

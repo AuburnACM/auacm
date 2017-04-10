@@ -11,7 +11,7 @@ from flask import send_from_directory, jsonify
 from flask.ext.login import LoginManager, current_user
 from flask.ext.bcrypt import Bcrypt
 from app.modules import app, test_app
-from app.database import DATABASE_SESSION
+from app.database import database_session
 from app.modules.user_manager.models import User
 
 # bcrypt setup
@@ -24,7 +24,7 @@ LOGIN_MANAGER.init_app(app)
 @LOGIN_MANAGER.user_loader
 def load_user(user_id):
     '''Log a user into the app.'''
-    return DATABASE_SESSION.query(User)\
+    return database_session.query(User)\
         .filter(User.username == user_id).first()
 
 # Functions for serving responses

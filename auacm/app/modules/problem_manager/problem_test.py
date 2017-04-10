@@ -18,7 +18,7 @@ import json
 import copy
 from time import time
 
-from app.database import DATABASE_SESSION
+from app.database import database_session
 from app.modules import test_app
 from app.modules.problem_manager.models import Problem, ProblemData, SampleCase
 from app.modules.competition_manager.models import Competition
@@ -59,28 +59,28 @@ TEST_CASES = [{
 
 def _reinsert_test_problem(test_prob, test_prob_data):
     # Find the problem
-    cases = DATABASE_SESSION.query(SampleCase).\
+    cases = database_session.query(SampleCase).\
         filter(SampleCase.pid == TEST_PROBLEM['pid']).all()
-    data = DATABASE_SESSION.query(ProblemData).\
+    data = database_session.query(ProblemData).\
         filter(ProblemData.pid == TEST_PROBLEM['pid']).first()
-    problem = DATABASE_SESSION.query(Problem).\
+    problem = database_session.query(Problem).\
         filter(Problem.pid == TEST_PROBLEM['pid']).first()
 
     # Remove it (if it was actually in there)
     for case in cases:
-        DATABASE_SESSION.delete(case)
+        database_session.delete(case)
     if data:
-        DATABASE_SESSION.delete(data)
+        database_session.delete(data)
     if problem:
-        DATABASE_SESSION.delete(problem)
-    DATABASE_SESSION.commit()
+        database_session.delete(problem)
+    database_session.commit()
 
     # Put in the fresh test problem
-    DATABASE_SESSION.add(test_prob)
-    DATABASE_SESSION.add(test_prob_data)
+    database_session.add(test_prob)
+    database_session.add(test_prob_data)
     for test in TEST_CASES:
-        DATABASE_SESSION.add(test)
-    DATABASE_SESSION.commit()
+        database_session.add(test)
+    database_session.commit()
 
 class ProblemGetTests(AUACMTest):
     '''Tests functionality for GET-ing problems from the API'''
@@ -95,13 +95,13 @@ class ProblemGetTests(AUACMTest):
 
         # Ship it off to the db
         try:
-            DATABASE_SESSION.add(self.problem)
-            DATABASE_SESSION.add(self.problem_data)
+            database_session.add(self.problem)
+            database_session.add(self.problem_data)
             for case in self.cases:
-                DATABASE_SESSION.add(case)
-            DATABASE_SESSION.commit()
+                database_session.add(case)
+            database_session.commit()
         except:
-            DATABASE_SESSION.rollback()
+            database_session.rollback()
             _reinsert_test_problem(self.problem, self.problem_data)
 
         # Log in
@@ -110,12 +110,12 @@ class ProblemGetTests(AUACMTest):
     def tearDown(self):
         '''Manually remove test problem from the test database'''
         for case in self.cases:
-            DATABASE_SESSION.delete(case)
-        DATABASE_SESSION.delete(self.problem_data)
-        DATABASE_SESSION.delete(self.problem)
-        DATABASE_SESSION.commit()
+            database_session.delete(case)
+        database_session.delete(self.problem_data)
+        database_session.delete(self.problem)
+        database_session.commit()
 
-        # Log out of this DATABASE_SESSION too
+        # Log out of this database_session too
         self.logout()
 
     def test_get_all(self):
@@ -194,21 +194,21 @@ class ProblemGetTests(AUACMTest):
             start=int(time() + 10000),
             stop=int(time() + 20000),
             closed=0
-        ).commit_to_session(DATABASE_SESSION)
+        ).commit_to_session(database_session)
 
         self.problem.comp_release = unreleased_cid
-        self.problem.commit_to_session(DATABASE_SESSION)
+        self.problem.commit_to_session(database_session)
 
         return unreleased_cid
 
     def _tear_down_comp(self, cid):
         '''Removes a competition from the database by its cid'''
-        DATABASE_SESSION.delete(
-            DATABASE_SESSION.query(Competition)
+        database_session.delete(
+            database_session.query(Competition)
             .filter_by(cid=cid)
             .first()
         )
-        DATABASE_SESSION.commit()
+        database_session.commit()
 
 
 class ProblemEditTests(AUACMTest):
@@ -224,13 +224,13 @@ class ProblemEditTests(AUACMTest):
 
         # Ship it off to the db
         try:
-            DATABASE_SESSION.add(self.problem)
-            DATABASE_SESSION.add(self.problem_data)
+            database_session.add(self.problem)
+            database_session.add(self.problem_data)
             for case in self.cases:
-                DATABASE_SESSION.add(case)
-            DATABASE_SESSION.commit()
+                database_session.add(case)
+            database_session.commit()
         except:
-            DATABASE_SESSION.rollback()
+            database_session.rollback()
             _reinsert_test_problem(self.problem, self.problem_data)
 
         # Log in
@@ -251,12 +251,12 @@ class ProblemEditTests(AUACMTest):
     def tearDown(self):
         '''Tie up loose ends from test'''
         for case in self.cases:
-            DATABASE_SESSION.delete(case)
-        DATABASE_SESSION.delete(self.problem_data)
-        DATABASE_SESSION.delete(self.problem)
-        DATABASE_SESSION.commit()
+            database_session.delete(case)
+        database_session.delete(self.problem_data)
+        database_session.delete(self.problem)
+        database_session.commit()
 
-        # Log out of this DATABASE_SESSION too
+        # Log out of this database_session too
         self.logout()
 
 
@@ -266,18 +266,18 @@ class ProblemDeleteTests(AUACMTest):
     def setUp(self):
         '''Add the problem to be deleted to the database'''
         self.problem = Problem(**TEST_PROBLEM)
-        DATABASE_SESSION.add(self.problem)
+        database_session.add(self.problem)
         self.problem_data = ProblemData(**TEST_PROBLEM_DATA)
-        DATABASE_SESSION.add(self.problem_data)
+        database_session.add(self.problem_data)
         self.cases = list()
         for case in TEST_CASES:
             self.cases.append(SampleCase(**case))
-            DATABASE_SESSION.add(self.cases[len(self.cases)-1])
+            database_session.add(self.cases[len(self.cases)-1])
 
         try:
-            DATABASE_SESSION.commit()
+            database_session.commit()
         except:
-            DATABASE_SESSION.rollback()
+            database_session.rollback()
             _reinsert_test_problem(self.problem, self.problem_data)
 
         # Log in as well
@@ -291,24 +291,24 @@ class ProblemDeleteTests(AUACMTest):
         self.assertEqual(str(TEST_PROBLEM['pid']), (response_data['data']['deleted_pid']))
 
         # Ensure problem was removed from the database
-        prob = DATABASE_SESSION.query(Problem).\
+        prob = database_session.query(Problem).\
             filter(Problem.pid == TEST_PROBLEM['pid']).first()
         self.assertIsNone(prob)
 
     def tearDown(self):
         '''Delete the test problem only if unsuccessful'''
-        prob = DATABASE_SESSION.query(Problem).\
+        prob = database_session.query(Problem).\
             filter(Problem.pid == TEST_PROBLEM['pid']).first()
         if prob is not None:
-            prob_data = DATABASE_SESSION.query(ProblemData).\
+            prob_data = database_session.query(ProblemData).\
                 filter(ProblemData.pid == TEST_PROBLEM['pid']).first()
-            cases = DATABASE_SESSION.query(SampleCase).\
+            cases = database_session.query(SampleCase).\
                 filter(SampleCase.pid == TEST_PROBLEM['pid']).all()
-            DATABASE_SESSION.delete(prob_data)
+            database_session.delete(prob_data)
             for case in cases:
-                DATABASE_SESSION.delete(case)
-            DATABASE_SESSION.delete(prob)
-            DATABASE_SESSION.commit()
+                database_session.delete(case)
+            database_session.delete(prob)
+            database_session.commit()
 
         # Log out as well
         self.logout()

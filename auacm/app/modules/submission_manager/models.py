@@ -1,13 +1,13 @@
 '''Provide a model object for handling submits.'''
 import threading
 
-from app.database import DATABASE_BASE, DATABASE_SESSION
+from app.database import database_base, database_session
 from app.modules.problem_manager.models import Problem
 
 DATABASE_LOCK = threading.Lock()
 
 
-class Submission(DATABASE_BASE):
+class Submission(database_base):
     '''Submission class that we build by reflecting the mysql database.
 
     This class also has some methods for adjusting its status.
@@ -16,7 +16,7 @@ class Submission(DATABASE_BASE):
     __tablename__ = "submits"
 
     def __init__(self, **kwargs):
-        DATABASE_BASE.__init__(self, **kwargs)
+        database_base.__init__(self, **kwargs)
 
     def commit_to_session(self):
         '''Commit this Submission to the database.
@@ -24,10 +24,10 @@ class Submission(DATABASE_BASE):
         This is useful for adding a newly-created Submission to the database.
         '''
         DATABASE_LOCK.acquire()
-        DATABASE_SESSION.add(self)
-        DATABASE_SESSION.flush()
-        DATABASE_SESSION.commit()
-        DATABASE_SESSION.refresh(self)
+        database_session.add(self)
+        database_session.flush()
+        database_session.commit()
+        database_session.refresh(self)
         DATABASE_LOCK.release()
         self._problem = None
 
@@ -41,21 +41,21 @@ class Submission(DATABASE_BASE):
         DATABASE_LOCK.acquire()
 
         # Add to problem_solved if solved for first time
-        if status == 'good' and not (DATABASE_SESSION.query(ProblemSolved)
+        if status == 'good' and not (database_session.query(ProblemSolved)
                                      .filter(ProblemSolved.pid == self.pid)
                                      .filter(ProblemSolved.username == self.username).all()):
-            DATABASE_SESSION.add(ProblemSolved(username=self.username, pid=self.pid,
+            database_session.add(ProblemSolved(username=self.username, pid=self.pid,
                                                submit_time=self.submit_time))
 
-        DATABASE_SESSION.flush()
-        DATABASE_SESSION.commit()
+        database_session.flush()
+        database_session.commit()
         DATABASE_LOCK.release()
 
     def get_problem(self):
         '''Find the problem that this submit is associated with.'''
         if self._problem is None:
             self._problem = (
-                DATABASE_SESSION.query(Problem)
+                database_session.query(Problem)
                 .filter(Problem.pid == self.pid)
                 .first())
         return self._problem
@@ -71,11 +71,11 @@ class Submission(DATABASE_BASE):
             'status': self.result
         }
 
-class ProblemSolved(DATABASE_BASE):
+class ProblemSolved(database_base):
     """Reflects problem_solved table of the database"""
 
     def __init__(self, *_args, **kwargs):
-        DATABASE_BASE.__init__(self, **kwargs)
+        database_base.__init__(self, **kwargs)
 
     __tablename__ = 'problem_solved'
 
@@ -83,7 +83,7 @@ class ProblemSolved(DATABASE_BASE):
 MOCK_PROBLEM_TIMEOUT = 1
 
 
-class MockSubmission(DATABASE_BASE):
+class MockSubmission(database_base):
     '''Mock submissions class to use in tests.
 
     This class contains all the data that Submission does, however it doesn't
@@ -93,7 +93,7 @@ class MockSubmission(DATABASE_BASE):
     __tablename__ = "submits"
 
     def __init__(self, **kwargs):
-        DATABASE_BASE.__init__(self, **kwargs)
+        database_base.__init__(self, **kwargs)
         # The MockSubmission will also mock relevant data about the problem.
         self.time_limit = MOCK_PROBLEM_TIMEOUT
         if not self.job:

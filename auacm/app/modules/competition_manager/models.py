@@ -1,9 +1,9 @@
 '''
 This model file contains the model for competitions.
 '''
-from app.database import DATABASE_BASE
+from app.database import database_base
 
-class Competition(DATABASE_BASE):
+class Competition(database_base):
     '''The competition model.'''
     __tablename__ = 'comp_names'
 
@@ -18,13 +18,13 @@ class Competition(DATABASE_BASE):
             'registered': user_registered
         }
 
-class CompProblem(DATABASE_BASE):
+class CompProblem(database_base):
     '''The competition problem model.'''
     __tablename__ = 'comp_problems'
     cid = None
 
 
-class CompUser(DATABASE_BASE):
+class CompUser(database_base):
     '''The competition user model.'''
     __tablename__ = 'comp_users'
     cid = None
