@@ -1,7 +1,7 @@
-'''
+"""
 Manages problems within the app, including their creation, deletion,
 updating, and retreival.
-'''
+"""
 from json import loads
 import os
 from shutil import rmtree
@@ -21,7 +21,7 @@ from app.util import serve_response, serve_error, serve_info_pdf, admin_required
 
 @app.route('/problems/<shortname>/info.pdf', methods=['GET'])
 def get_problem_info(shortname):
-    '''Serve the PDF description of a problem'''
+    """Serve the PDF description of a problem"""
     pid = (database_session.query(Problem)
            .options(load_only('pid', 'shortname'))
            .filter(Problem.shortname == shortname)
@@ -31,12 +31,12 @@ def get_problem_info(shortname):
 
 @app.route('/api/problems/<identifier>', methods=['GET'])
 def get_problem(identifier):
-    '''
+    """
     Returns the JSON representation of a specific problem
 
     If the problem is meant to be released with a competition that has not
     started yet, a 404 error is returned.
-    '''
+    """
     problem = database_session.query(Problem, ProblemData).join(ProblemData)
 
     if is_pid(identifier):
@@ -77,7 +77,7 @@ def get_problem(identifier):
 
 @app.route('/api/problems')
 def get_problems():
-    '''Obtain basic information of all the problems in the database'''
+    """Obtain basic information of all the problems in the database"""
     problems = list()
     solved_set = set()
     competitions = dict()
@@ -116,7 +116,7 @@ def get_problems():
 @app.route('/api/problems/', methods=['POST'])
 @admin_required
 def create_problem():
-    '''Add a new problem to the database and data folder'''
+    """Add a new problem to the database and data folder"""
     try:
         # Convert the JSON to python array of dictionaries
         cases = request.form['cases']
@@ -204,7 +204,7 @@ def create_problem():
 @app.route('/api/problems/<identifier>', methods=['DELETE'])
 @admin_required
 def delete_problem(identifier):
-    '''Delete a specified problem in the database and data folder'''
+    """Delete a specified problem in the database and data folder"""
     pid, problem = None, database_session.query(Problem)
     if is_pid(identifier):
         pid = identifier
@@ -245,7 +245,7 @@ def delete_problem(identifier):
 @app.route('/api/problems/<identifier>', methods=['PUT'])
 @admin_required
 def update_problem(identifier):
-    '''Modify a problem in the database and data folder'''
+    """Modify a problem in the database and data folder"""
     pid, problem = None, database_session.query(Problem)
     if is_pid(identifier):
         pid = identifier
@@ -311,7 +311,7 @@ def update_problem(identifier):
     })
 
 def create_problem_directory(files, pid):
-    '''Creates the problem directory.'''
+    """Creates the problem directory."""
     directory = os.path.join(app.config['DATA_FOLDER'], 'problems', pid)
     if not os.path.exists(directory):
         os.mkdir(directory)
@@ -334,15 +334,15 @@ def create_problem_directory(files, pid):
 
 
 def url_for_problem(problem):
-    '''Return the path of the pdf description of a problem'''
+    """Return the path of the pdf description of a problem"""
     return os.path.join('problems', str(problem.shortname),
                         'info.pdf')
 
 
 def is_pid(identifier):
-    '''
+    """
     Returns true if identifier is an integer (representing the problem id)
-    '''
+    """
     try:
         int(identifier)
         return True
@@ -351,7 +351,7 @@ def is_pid(identifier):
 
 
 def comp_not_released(cid):
-    '''Returns true if a competition has not yet begun'''
+    """Returns true if a competition has not yet begun"""
     if cid is None:
         return False
     comp = database_session.query(Competition).filter_by(cid=cid).first()

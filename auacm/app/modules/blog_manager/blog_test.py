@@ -71,7 +71,7 @@ class AUACMBlogTests(AUACMTest):
         database_session.commit()
 
     def test_delete(self):
-        '''Test deleteing a blog post'''
+        '''Test deleting a blog post'''
         post = self._insert_test_post()[0]
         post_id = post.id
         database_session.expunge(post)

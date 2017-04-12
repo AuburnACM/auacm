@@ -88,6 +88,7 @@ def create_blog_post():
 
 
 @app.route('/api/blog/<int:bid>', methods=['DELETE'])
+@admin_required
 def delete_blog_post(bid):
     '''Delete a blog post from the database'''
     post = database_session.query(BlogPost).filter_by(id=bid).first()

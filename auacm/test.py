@@ -1,6 +1,6 @@
 #!flask/bin/python
 # pylint: disable=I0011,C0103
-'''Run all tests in the project, or specific test modules
+"""Run all tests in the project, or specific test modules
 
 Usage:
     To test everything, simply use
@@ -18,7 +18,7 @@ Usage:
     "problem_test.py".
 
 This will take all files that include *_test.py and run them.
-'''
+"""
 import unittest
 from sys import argv
 import sqlalchemy

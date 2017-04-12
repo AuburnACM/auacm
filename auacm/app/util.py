@@ -23,37 +23,37 @@ LOGIN_MANAGER.init_app(app)
 
 @LOGIN_MANAGER.user_loader
 def load_user(user_id):
-    '''Log a user into the app.'''
+    """Log a user into the app."""
     return database_session.query(User)\
         .filter(User.username == user_id).first()
 
 # Functions for serving responses
 def serve_html(filename):
-    '''Serve static HTML pages.'''
+    """Serve static HTML pages."""
     return send_from_directory(app.static_folder+"/html/", filename)
 
 
 def serve_info_pdf(pid):
-    '''Serve static PDFs.'''
+    """Serve static PDFs."""
     return send_from_directory(join(app.config['DATA_FOLDER'],
                                     'problems', pid), 'info.pdf')
 
 
 def serve_response(response, response_code=200):
-    '''Serve json containing a response to a request.'''
+    """Serve json containing a response to a request."""
     return jsonify({'status': response_code, 'data': response}), response_code
 
 
 def serve_error(error, response_code):
-    '''Serve an error in response to a request.'''
+    """Serve an error in response to a request."""
     return jsonify({'status': response_code, 'error': error}), response_code
 
 def admin_required(function):
-    '''Checks to see if a user has to be an admin to access a certain part of the api.'''
+    """Checks to see if a user has to be an admin to access a certain part of the api."""
     @wraps(function)
     def wrap(*args, **kwargs):
-        '''Wraps the function passed to admin_required and returns
-           if the current user is an admin.'''
+        """Wraps the function passed to admin_required and returns
+           if the current user is an admin."""
         if current_user.is_anonymous or current_user.admin == 0:
             return serve_error('You need to be an admin to do that.',
                                response_code=401)

@@ -1,4 +1,4 @@
-'''Tests for AUACM competition manager'''
+"""Tests for AUACM competition manager."""
 
 import json
 import time
@@ -10,10 +10,10 @@ from app.util import AUACMTest
 
 
 class AUACMCompetitionTests(AUACMTest):
-    '''Test cases for the AUACM competition manager'''
+    """Test cases for the AUACM competition manager"""
 
     def test_create_comp(self):
-        '''Test creating a new competition'''
+        """Test creating a new competition"""
         self.login()
         post_form = {
             'name': 'Test Competition',
@@ -42,7 +42,7 @@ class AUACMCompetitionTests(AUACMTest):
         database_session.commit()
 
     def test_get_one_comp(self):
-        '''Test retrieving a single competition by id'''
+        """Test retrieving a single competition by id"""
         competition = self._insert_comp_into_db()[0]
 
         response = test_app.get('/api/competitions/{}'.format(competition.cid))
@@ -60,7 +60,7 @@ class AUACMCompetitionTests(AUACMTest):
         database_session.commit()
 
     def test_get_all_comp(self):
-        '''Test retrieving all competitions'''
+        """Test retrieving all competitions"""
         competitions = self._insert_comp_into_db(3)
 
         response = test_app.get('/api/competitions')
@@ -80,7 +80,7 @@ class AUACMCompetitionTests(AUACMTest):
         database_session.commit()
 
     def test_edit_comp(self):
-        '''Test modifying a competition'''
+        """Test modifying a competition"""
         self.login()
         competition = self._insert_comp_into_db()[0]
         competition_data = {
@@ -105,7 +105,7 @@ class AUACMCompetitionTests(AUACMTest):
         database_session.commit()
 
     def test_delete_comp(self):
-        '''Test deleting a competition'''
+        """Test deleting a competition"""
         self.login()
         competition = self._insert_comp_into_db()[0]
         cid = competition.cid
@@ -118,7 +118,7 @@ class AUACMCompetitionTests(AUACMTest):
 
 
     def test_get_comp_teams(self):
-        '''Test retreiving the teams for a competition'''
+        """Test retreiving the teams for a competition"""
         competition = self._insert_comp_into_db()[0]
         cid = competition.cid
         user = CompUser(cid=cid, username=self.username, team='Team Test')
@@ -139,7 +139,7 @@ class AUACMCompetitionTests(AUACMTest):
         database_session.commit()
 
     def test_edit_comp_teams(self):
-        '''Test editing the teams for a competition'''
+        """Test editing the teams for a competition"""
         self.login()
         teams = {
             'teams': json.dumps({
@@ -173,14 +173,14 @@ class AUACMCompetitionTests(AUACMTest):
         database_session.commit()
 
     def _insert_comp_into_db(self, num=1):
-        '''
+        """
         Inserts a number of competitions into the database. The problems of
         each competition are inserted as well, but those objects are not
         returned.
 
         :param num: the number of competitions to inser
         :returns: a list of the new competition ORM objects
-        '''
+        """
         competitions = list()
         for i in range(num):
             competition = Competition(

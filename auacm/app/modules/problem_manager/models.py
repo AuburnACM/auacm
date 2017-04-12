@@ -1,10 +1,10 @@
-'''Provide model objects for representing problems.'''
+"""Provide model objects for representing problems."""
 import time
 
 from app.database import database_base, database_session
 
 class Problem(database_base):
-    '''Problem class that we build by reflecting the mysql database.
+    """Problem class that we build by reflecting the mysql database.
 
     Problems obey the following structure in the database:
     pid             Integer (primary key)
@@ -14,7 +14,7 @@ class Problem(database_base):
     difficulty      "
     added           Integer (date)
     comp_release    Integer
-    '''
+    """
 
     __tablename__ = "problems"
 
@@ -31,7 +31,7 @@ class Problem(database_base):
         database_base.__init__(self, **defaults)
 
     def commit_to_session(self, session=database_session):
-        '''Commit this problem to the database as a new problem.'''
+        """Commit this problem to the database as a new problem."""
         session.add(self)
         session.flush()
         session.commit()
@@ -39,7 +39,7 @@ class Problem(database_base):
         return self.pid
 
     def to_dict(self):
-        '''Returns the problem as a dictionary'''
+        """Returns the problem as a dictionary"""
         return {
             'pid': self.pid,
             'name': self.name,
@@ -52,7 +52,7 @@ class Problem(database_base):
 
 
 class ProblemData(database_base):
-    '''Problem Data class that reflects mysql database
+    """Problem Data class that reflects mysql database
 
     Problem Data obeys the following structure:
     pid             Integer (foreign key, references Problem table)
@@ -60,7 +60,7 @@ class ProblemData(database_base):
     input_desc      "
     output_desc     "
     time_limit      Integer
-    '''
+    """
 
     __tablename__ = 'problem_data'
 
@@ -80,14 +80,14 @@ class ProblemData(database_base):
 
 
 class SampleCase(database_base):
-    '''Test case class that reflects the mysql database.
+    """Test case class that reflects the mysql database.
 
     Sample Cases obey the following structure:
     pid             Integer (foreign key, references Problem table)
     case_num        Integer
     input           String
     output          String
-    '''
+    """
 
     __tablename__ = 'sample_cases'
 
@@ -95,7 +95,7 @@ class SampleCase(database_base):
         database_base.__init__(self, **kwargs)
 
     def commit_to_session(self, session=database_session):
-        '''Commit this sample case to the database.'''
+        """Commit this sample case to the database."""
         session.add(self)
         session.flush()
         session.commit()

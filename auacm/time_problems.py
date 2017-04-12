@@ -1,4 +1,4 @@
-'''Runs the problems and calculates the run time for them.'''
+"""Runs the problems and calculates the run time for them."""
 #!flask/bin/python
 import sys
 
@@ -8,13 +8,13 @@ from app.modules.problem_manager import problem_timer
 
 
 def time_problems():
-    '''Runs the problems and calculates the run time for them.'''
+    """Runs the problems and calculates the run time for them."""
     problems = database_session.query(ProblemData).all()
     for problem in problems:
         problem_timer.Timer(problem).run()
 
 def time_problem(problem_pid):
-    '''Runs the problems and calculates the run time for them.'''
+    """Runs the problems and calculates the run time for them."""
     problem = (database_session.query(ProblemData)
                .filter(ProblemData.pid == problem_pid).first())
     problem_timer.Timer(problem).run()

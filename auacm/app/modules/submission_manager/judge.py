@@ -1,4 +1,4 @@
-'''Runs the problems submitted by users on the site.'''
+"""Runs the problems submitted by users on the site."""
 import os
 import os.path
 import shlex
