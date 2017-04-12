@@ -63,7 +63,8 @@ class Judge:
     problem.
     """
 
-    def __init__(self, pid, submission_path, uploaded_file, time_limit, on_status=None):
+    def __init__(self, pid, submission_path,
+                 uploaded_file, time_limit, on_status=None):
         """Create a new Judgement instance.
 
         :param pid: the problem identifier
@@ -204,8 +205,10 @@ class Judge:
                     if len(submission_lines) != len(correct_lines):
                         return WRONG_ANSWER, test_number, max_time
 
-                    for judge_line, submission_line in zip(correct_lines, submission_lines):
-                        if judge_line.rstrip('\r\n') != submission_line.rstrip('\r\n'):
+                    for judge_line, submission_line in zip(correct_lines,
+                                                           submission_lines):
+                        if (judge_line.rstrip('\r\n')
+                                != submission_line.rstrip('\r\n')):
                             return WRONG_ANSWER, test_number, max_time
 
         # The answer is correct if all the tests complete without any failure.

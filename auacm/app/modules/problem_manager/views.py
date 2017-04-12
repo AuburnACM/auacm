@@ -138,7 +138,8 @@ def create_problem():
             problem.difficulty = request.form['difficulty']
         if 'appeared_in' in request.form:
             problem.appeared = request.form['appeared_in']
-        if 'comp_release' not in request.form or int(request.form['comp_release']) < 1:
+        if 'comp_release' not in request.form or int(
+                request.form['comp_release']) < 1:
             problem.comp_release = None
         else:
             problem.comp_release = request.form['comp_release']
@@ -254,7 +255,8 @@ def update_problem(identifier):
         problem = problem.filter(Problem.shortname == identifier).first()
         pid = problem.pid
 
-    data = database_session.query(ProblemData).filter(ProblemData.pid == pid).first()
+    data = database_session.query(ProblemData).filter(
+        ProblemData.pid == pid).first()
     if 'name' in request.form:
         problem.name = request.form['name'][:32]
         problem.shortname = request.form['name'][:32].replace(' ', '').lower()

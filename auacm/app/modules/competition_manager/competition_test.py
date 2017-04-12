@@ -5,7 +5,8 @@ import time
 
 from app.database import database_session
 from app.modules import test_app
-from app.modules.competition_manager.models import Competition, CompProblem, CompUser
+from app.modules.competition_manager.models import (
+    Competition, CompProblem, CompUser)
 from app.util import AUACMTest
 
 
@@ -35,7 +36,8 @@ class AUACMCompetitionTests(AUACMTest):
                )
         self.assertIsNotNone(comp)
 
-        comp_problems = database_session.query(CompProblem).filter_by(cid=cid).all()
+        comp_problems = database_session.query(
+            CompProblem).filter_by(cid=cid).all()
         for comp_problem in comp_problems:
             database_session.delete(comp_problem)
         database_session.delete(comp)
@@ -168,8 +170,10 @@ class AUACMCompetitionTests(AUACMTest):
         self.assertEqual('Team Test Edited', new_team.team)
         self.assertEqual(self.username, new_team.username)
 
-        database_session.delete(database_session.query(CompUser).filter_by(cid=cid).first())
-        database_session.delete(database_session.query(Competition).filter_by(cid=cid).first())
+        database_session.delete(database_session.query(
+            CompUser).filter_by(cid=cid).first())
+        database_session.delete(database_session.query(
+            Competition).filter_by(cid=cid).first())
         database_session.commit()
 
     def _insert_comp_into_db(self, num=1):

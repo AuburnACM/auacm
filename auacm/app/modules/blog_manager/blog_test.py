@@ -103,7 +103,8 @@ class AUACMBlogTests(AUACMTest):
         self.assertEqual(200, response['status'])
         self.assertEqual(new_body, response_data['body'])
 
-        database_session.delete(database_session.query(BlogPost).filter_by(id=post.id).first())
+        database_session.delete(database_session.query(BlogPost).filter_by(
+            id=post.id).first())
         database_session.commit()
 
 

@@ -6,7 +6,8 @@ from sqlalchemy.ext.automap import automap_base
 
 # Create global database variables
 database_base = automap_base()
-database_engine = create_engine('mysql+pymysql://acm@localhost/acm?charset=utf8')
+database_engine = create_engine(
+    'mysql+pymysql://acm@localhost/acm?charset=utf8')
 database_connection = database_engine.connect()
 database_session = Session(database_engine)
 

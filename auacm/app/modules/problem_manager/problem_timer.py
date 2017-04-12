@@ -67,7 +67,8 @@ class Timer:
         judged_count = 0
         found_max = 0
         problem_details = (database_session.query(models.Problem)
-                           .filter(models.Problem.pid == self.problem.pid).first())
+                           .filter(models.Problem.pid
+                                   == self.problem.pid).first())
         print('Judging', problem_details.name, '...', file=sys.stderr)
         for fname in files:
             source = os.path.join(self.path, fname)
@@ -88,7 +89,8 @@ class Timer:
             upload = MockUploadFile(source)
             upload.save(os.path.join(submission_path, fname))
 
-            judgement = judge.Judge(sub.pid, submission_path, upload, TIME_LIMIT)
+            judgement = judge.Judge(sub.pid,
+                                    submission_path, upload, TIME_LIMIT)
             status, time = judgement.run()
 
             if status == judge.CORRECT_ANSWER:
@@ -115,7 +117,8 @@ class Timer:
 
 
 class NoJudgeSolutionsError(Exception):
-    """An error that is thrown when a judge solution does not exist for a problem."""
+    """An error that is thrown when a judge
+    solution does not exist for a problem."""
     def __init__(self, value, name):
         Exception.__init__(self)
         self.value = value

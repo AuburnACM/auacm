@@ -32,7 +32,8 @@ def get_profile_image(username='tester'):
     """
 
     imagefile = [filename for filename in os.listdir(
-        join(app.config['DATA_FOLDER'], 'profile')) if filename.startswith(username + '.')]
+        join(app.config['DATA_FOLDER'], 'profile')) if
+                 filename.startswith(username + '.')]
 
     if len(imagefile) == 0:
         return send_file(join(IMAGE_DIR, 'default', 'profile.png'),
@@ -178,7 +179,8 @@ def get_recent_attempts(username):
         last_submit = recent_submit
 
     # If we haven't hit the cap, but we have an unused attempt session, add it.
-    if len(recent_attempts) < MAX_RECENT_ATTEMPTS and attempt_session is not None:
+    if (len(recent_attempts) < MAX_RECENT_ATTEMPTS
+            and attempt_session is not None):
         recent_attempts.append(attempt_session.to_dict())
 
     return recent_attempts

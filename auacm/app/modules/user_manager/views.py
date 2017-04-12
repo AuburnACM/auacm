@@ -6,12 +6,14 @@ import re
 from time import time
 
 from flask import request
-from flask.ext.login import login_user, logout_user, current_user, login_required
+from flask.ext.login import (login_user, logout_user,
+                             current_user, login_required)
 from app.database import commit_to_session, database_session
 from app.modules import app
 from app.modules.submission_manager.models import ProblemSolved
 from app.modules.user_manager.models import User
-from app.util import BCRYPT_CONST, serve_response, serve_error, load_user, admin_required
+from app.util import (BCRYPT_CONST, serve_response,
+                      serve_error, load_user, admin_required)
 
 @app.route('/api/login', methods=['POST'])
 def log_in():

@@ -185,7 +185,8 @@ class ProblemGetTests(AUACMTest):
 
     def _set_up_unreleased_comp(self):
         """
-        Creates an unreleased competition and associates the test's problem with it
+        Creates an unreleased competition and
+        associates the test's problem with it
 
         :return: the cid of the new competition
         """
@@ -288,7 +289,8 @@ class ProblemDeleteTests(AUACMTest):
         resp = test_app.delete('api/problems/' + str(TEST_PROBLEM['pid']))
         self.assertEqual(200, resp.status_code)
         response_data = json.loads(resp.data.decode())
-        self.assertEqual(str(TEST_PROBLEM['pid']), (response_data['data']['deleted_pid']))
+        self.assertEqual(str(TEST_PROBLEM['pid']),
+                         (response_data['data']['deleted_pid']))
 
         # Ensure problem was removed from the database
         prob = database_session.query(Problem).filter(

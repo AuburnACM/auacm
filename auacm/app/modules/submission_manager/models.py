@@ -41,11 +41,13 @@ class Submission(database_base):
         DATABASE_LOCK.acquire()
 
         # Add to problem_solved if solved for first time
-        if status == 'good' and not (database_session.query(ProblemSolved)
-                                     .filter(ProblemSolved.pid == self.pid)
-                                     .filter(ProblemSolved.username == self.username).all()):
-            database_session.add(ProblemSolved(username=self.username, pid=self.pid,
-                                               submit_time=self.submit_time))
+        if status == 'good' and not (
+                database_session.query(ProblemSolved).filter(
+                    ProblemSolved.pid == self.pid).filter(
+                        ProblemSolved.username == self.username).all()):
+            database_session.add(ProblemSolved(
+                username=self.username, pid=self.pid,
+                submit_time=self.submit_time))
 
         database_session.flush()
         database_session.commit()

@@ -49,7 +49,8 @@ def serve_error(error, response_code):
     return jsonify({'status': response_code, 'error': error}), response_code
 
 def admin_required(function):
-    """Checks to see if a user has to be an admin to access a certain part of the api."""
+    """Checks to see if a user has to
+    be an admin to access a certain part of the api."""
     @wraps(function)
     def wrap(*args, **kwargs):
         """Wraps the function passed to admin_required and returns

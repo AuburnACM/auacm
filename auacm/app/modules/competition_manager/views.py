@@ -13,7 +13,8 @@ from app.modules.flasknado.flasknado import Flasknado
 from app.modules.submission_manager.models import Submission
 from app.modules.problem_manager.models import Problem
 from app.modules.user_manager.models import User
-from app.modules.competition_manager.models import Competition, CompProblem, CompUser
+from app.modules.competition_manager.models import (
+    Competition, CompProblem, CompUser)
 from app.util import serve_response, serve_error, admin_required
 
 
@@ -66,8 +67,9 @@ def create_competition():
 
         comp_problems = loads(data['problems'])
     except KeyError as err:
-        return serve_error('You must specify name, startTime, length, and'
-                           ' problem attributes. ' + err.args[0] + ' not found.',
+        return serve_error('You must specify name, startTime, length, and' +
+                           ' problem attributes. ' +
+                           err.args[0] + ' not found.',
                            response_code=400)
     except ValueError:
         return serve_error('JSON data for \'problems\' not properly formatted',
@@ -119,7 +121,8 @@ def update_competition_data(cid):
         comp_problems = loads(data['problems'])
     except KeyError as err:
         return serve_error('You must specify name, startTime, length, and'
-                           ' and problem attributes. ' + err.args[0] + ' not found.',
+                           ' and problem attributes. ' +
+                           err.args[0] + ' not found.',
                            response_code=400)
     except ValueError:
         return serve_error('JSON data for \'problems\' not properly formatted',
@@ -184,7 +187,8 @@ def get_competition_data(cid):
                                 submissions, competition, team_display_names)
     })
 
-def get_scoreboard(team_users, comp_problems, submissions, competition, team_display_names):
+def get_scoreboard(team_users, comp_problems,
+                   submissions, competition, team_display_names):
     """Calculates the scoreboard data."""
     scoreboard = list()
     for team in team_users:
@@ -201,7 +205,8 @@ def get_scoreboard(team_users, comp_problems, submissions, competition, team_dis
                 elif status['correct'] > 0:
                     break
                 elif submission.result == 'good':
-                    status['correct'] = submission.submit_time - competition.start
+                    status['correct'] = (submission.submit_time
+                                         - competition.start)
                 else:
                     status['incorrect'] += 1
             submit_time = status['correct'] // 60
