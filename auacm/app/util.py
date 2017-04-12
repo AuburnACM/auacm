@@ -24,8 +24,8 @@ LOGIN_MANAGER.init_app(app)
 @LOGIN_MANAGER.user_loader
 def load_user(user_id):
     """Log a user into the app."""
-    return database_session.query(User)\
-        .filter(User.username == user_id).first()
+    return database_session.query(User).filter(
+        User.username == user_id).first()
 
 # Functions for serving responses
 def serve_html(filename):

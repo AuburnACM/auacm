@@ -23,8 +23,8 @@ class AUACMCompetitionTests(AUACMTest):
             'length': 10,
         }
 
-        response = json.loads(test_app.post('/api/competitions',\
-                              data=post_form).data.decode())
+        response = json.loads(test_app.post('/api/competitions',
+                                            data=post_form).data.decode())
 
         self.assertEqual(200, response['status'])
 

@@ -59,12 +59,12 @@ TEST_CASES = [{
 
 def _reinsert_test_problem(test_prob, test_prob_data):
     # Find the problem
-    cases = database_session.query(SampleCase).\
-        filter(SampleCase.pid == TEST_PROBLEM['pid']).all()
-    data = database_session.query(ProblemData).\
-        filter(ProblemData.pid == TEST_PROBLEM['pid']).first()
-    problem = database_session.query(Problem).\
-        filter(Problem.pid == TEST_PROBLEM['pid']).first()
+    cases = database_session.query(SampleCase).filter(
+        SampleCase.pid == TEST_PROBLEM['pid']).all()
+    data = database_session.query(ProblemData).filter(
+        ProblemData.pid == TEST_PROBLEM['pid']).first()
+    problem = database_session.query(Problem).filter(
+        Problem.pid == TEST_PROBLEM['pid']).first()
 
     # Remove it (if it was actually in there)
     for case in cases:
@@ -291,19 +291,19 @@ class ProblemDeleteTests(AUACMTest):
         self.assertEqual(str(TEST_PROBLEM['pid']), (response_data['data']['deleted_pid']))
 
         # Ensure problem was removed from the database
-        prob = database_session.query(Problem).\
-            filter(Problem.pid == TEST_PROBLEM['pid']).first()
+        prob = database_session.query(Problem).filter(
+            Problem.pid == TEST_PROBLEM['pid']).first()
         self.assertIsNone(prob)
 
     def tearDown(self):
         """Delete the test problem only if unsuccessful"""
-        prob = database_session.query(Problem).\
-            filter(Problem.pid == TEST_PROBLEM['pid']).first()
+        prob = database_session.query(Problem).filter(
+            Problem.pid == TEST_PROBLEM['pid']).first()
         if prob is not None:
-            prob_data = database_session.query(ProblemData).\
-                filter(ProblemData.pid == TEST_PROBLEM['pid']).first()
-            cases = database_session.query(SampleCase).\
-                filter(SampleCase.pid == TEST_PROBLEM['pid']).all()
+            prob_data = database_session.query(ProblemData).filter(
+                ProblemData.pid == TEST_PROBLEM['pid']).first()
+            cases = database_session.query(SampleCase).filter(
+                SampleCase.pid == TEST_PROBLEM['pid']).all()
             database_session.delete(prob_data)
             for case in cases:
                 database_session.delete(case)

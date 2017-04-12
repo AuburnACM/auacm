@@ -31,8 +31,8 @@ def get_profile_image(username='tester'):
     Return a user's profile picture.
     """
 
-    imagefile = [filename for filename in os.listdir(join(app.config['DATA_FOLDER'],\
-        'profile')) if filename.startswith(username + '.')]
+    imagefile = [filename for filename in os.listdir(
+        join(app.config['DATA_FOLDER'], 'profile')) if filename.startswith(username + '.')]
 
     if len(imagefile) == 0:
         return send_file(join(IMAGE_DIR, 'default', 'profile.png'),
@@ -105,8 +105,8 @@ def get_recent_blog_posts(username):
 
     recent_blog_posts = list()
 
-    for blog_post in database_session.query(BlogPost)\
-            .filter(BlogPost.username == username).order_by(BlogPost.post_time.desc()):
+    for blog_post in database_session.query(BlogPost).filter(
+            BlogPost.username == username).order_by(BlogPost.post_time.desc()):
         recent_blog_posts.append({
             'title': blog_post.title,
             'subtitle': blog_post.subtitle,

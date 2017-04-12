@@ -160,8 +160,7 @@ def get_competition_data(cid):
     submissions = (database_session.query(Submission)
                    .filter(Submission.submit_time > competition.start,
                            Submission.submit_time < competition.stop)
-                   .order_by(asc(Submission.submit_time))\
-                   .all())
+                   .order_by(asc(Submission.submit_time)).all())
 
     team_users = dict()
     team_display_names = dict()
@@ -181,8 +180,8 @@ def get_competition_data(cid):
     return serve_response({
         'competition': competition.to_dict(),
         'compProblems': comp_problems,
-        'teams': get_scoreboard(team_users, comp_problems,\
-            submissions, competition, team_display_names)
+        'teams': get_scoreboard(team_users, comp_problems,
+                                submissions, competition, team_display_names)
     })
 
 def get_scoreboard(team_users, comp_problems, submissions, competition, team_display_names):
@@ -196,8 +195,8 @@ def get_scoreboard(team_users, comp_problems, submissions, competition, team_dis
             status['correct'] = 0
             status['incorrect'] = 0
             for submission in submissions:
-                if not submission.pid == problem['pid'] or\
-                        submission.username not in team_users[team]:
+                if (not submission.pid == problem['pid'] or
+                        submission.username not in team_users[team]):
                     continue
                 elif status['correct'] > 0:
                     break
@@ -214,8 +213,8 @@ def get_scoreboard(team_users, comp_problems, submissions, competition, team_dis
                 'label': name,
                 'submitTime': submit_time,
                 'submitCount': submit_count,
-                'status': 'correct' if status['correct'] > 0 else\
-                    'unattempted' if submit_count == 0 else 'incorrect'
+                'status': 'correct' if status['correct'] > 0 else
+                          'unattempted' if submit_count == 0 else 'incorrect'
             }
         team_row = dict()
         team_row['name'] = team
@@ -270,8 +269,8 @@ def register_for_competition(cid):
     that are listed. A 400 error will be returned if any of the users are
     already registered for the competition.
     """
-    if database_session.query(Competition).filter(\
-         Competition.cid == cid).first() is None:
+    if database_session.query(Competition).filter(
+            Competition.cid == cid).first() is None:
         return serve_error('Competition does not exist', response_code=404)
 
     if current_user.admin == 1 and 'users' in request.form:
@@ -288,8 +287,8 @@ def register_for_competition(cid):
         if database_session.query(CompUser).filter(
                 CompUser.cid == cid, CompUser.username == user
             ).first() is not None:
-            return serve_error('User ' + user + ' already registered for '\
-                    'competition', response_code=400)
+            return serve_error('User ' + user + ' already registered for ' +
+                               'competition', response_code=400)
 
     for username in registrants:
         user = database_session.query(User).filter(
@@ -334,8 +333,8 @@ def unregister_for_competition(cid):
         try:
             registrants = loads(request.form['users'])
         except ValueError:
-            return serve_error('JSON data for \'users\' not properly formatted',\
-                response_code=400)
+            return serve_error('JSON data for \'users\' not properly formatted',
+                               response_code=400)
     else:
         registrants = [current_user.username]
 

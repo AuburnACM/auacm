@@ -1,4 +1,4 @@
-'''Test for AUACM blog manager '''
+"""Test for AUACM blog manager """
 
 import json
 
@@ -9,10 +9,10 @@ from app.database import database_session
 
 
 class AUACMBlogTests(AUACMTest):
-    '''Test cases for the AUACM blog manager'''
+    """Test cases for the AUACM blog manager"""
 
     def test_create(self):
-        '''Test creating a new blog post'''
+        """Test creating a new blog post"""
         post = {
             'title': 'Test Post',
             'subtitle': 'Testy',
@@ -40,7 +40,7 @@ class AUACMBlogTests(AUACMTest):
         database_session.commit()
 
     def test_get_all(self):
-        '''Test getting all the blog posts'''
+        """Test getting all the blog posts"""
         # Put some posts in the test database
         posts = self._insert_test_post(3)
 
@@ -56,7 +56,7 @@ class AUACMBlogTests(AUACMTest):
         database_session.commit()
 
     def test_get_one(self):
-        '''Test getting just one blog post'''
+        """Test getting just one blog post"""
         post = self._insert_test_post()[0]
         post_id = post.id
 
@@ -71,7 +71,7 @@ class AUACMBlogTests(AUACMTest):
         database_session.commit()
 
     def test_delete(self):
-        '''Test deleting a blog post'''
+        """Test deleting a blog post"""
         post = self._insert_test_post()[0]
         post_id = post.id
         database_session.expunge(post)
@@ -84,7 +84,7 @@ class AUACMBlogTests(AUACMTest):
                           .filter_by(id=post_id).first())
 
     def test_edit(self):
-        '''Test editing a blog post'''
+        """Test editing a blog post"""
         post = self._insert_test_post()[0]
         post_id = post.id
         new_body = 'This is different!'
@@ -108,13 +108,13 @@ class AUACMBlogTests(AUACMTest):
 
 
     def _assert_posts_equal(self, return_blog, create_blog):
-        '''
+        """
         Assert that a JSON blog post returned from the API is equal to the
         ORM object used to create it
 
         :param return_blog: the blog post returned from the API
         :param create_blog: the ORM object used to create the blog post
-        '''
+        """
         self.assertEqual(return_blog['title'], create_blog.title)
         self.assertEqual(return_blog['subtitle'], create_blog.subtitle)
         self.assertEqual(return_blog['author']['username'],
@@ -122,12 +122,12 @@ class AUACMBlogTests(AUACMTest):
         self.assertEqual(return_blog['body'], create_blog.body)
 
     def _insert_test_post(self, num=1):
-        '''
+        """
         Manually insert blog posts into the test database
 
         :param num: the number of posts to insert
         :returns: the list of ORM objects created
-        '''
+        """
         posts = [BlogPost(
             title='Test post {}'.format(i),
             subtitle='Test post {}'.format(i),

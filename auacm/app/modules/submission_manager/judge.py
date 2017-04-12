@@ -196,9 +196,9 @@ class Judge:
 
                 # The execution is completed.  Check its correctness.
                 with open(os.path.join(
-                    self.prob_output_path, out_file)) as correct, \
-                     open(os.path.join(
-                         self.sub_output_path, out_file)) as sub_result:
+                    self.prob_output_path, out_file)) as correct, open(
+                        os.path.join(
+                            self.sub_output_path, out_file)) as sub_result:
                     correct_lines = correct.readlines()
                     submission_lines = sub_result.readlines()
                     if len(submission_lines) != len(correct_lines):

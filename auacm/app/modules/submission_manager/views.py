@@ -42,10 +42,9 @@ def submit():
                            response_code=400)
 
     # Obtain the time limit for the problem
-    time_limit = database_session.query(ProblemData).\
-            options(load_only("pid", "time_limit")).\
-            filter(ProblemData.pid == request.form['pid']).\
-            first().time_limit
+    time_limit = database_session.query(ProblemData).options(
+        load_only("pid", "time_limit")).filter(
+            ProblemData.pid == request.form['pid']).first().time_limit
 
     ext = uploaded_file.filename.rsplit('.')[1].lower()
     if 'python' in request.form:
