@@ -1,3 +1,4 @@
+"""Runs the problems submitted by users on the site."""
 import os
 import os.path
 import shlex
@@ -5,7 +6,7 @@ import subprocess
 import threading
 import time
 
-from app import app
+from app.modules import app
 
 
 ALLOWED_EXTENSIONS = ['java', 'c', 'cpp', 'py', 'go']
@@ -62,7 +63,8 @@ class Judge:
     problem.
     """
 
-    def __init__(self, pid, submission_path, uploaded_file, time_limit, on_status=None):
+    def __init__(self, pid, submission_path,
+                 uploaded_file, time_limit, on_status=None):
         """Create a new Judgement instance.
 
         :param pid: the problem identifier
@@ -169,14 +171,14 @@ class Judge:
         max_time = 0
         # Iterate over all the input files.
         for fname in os.listdir(self.prob_input_path):
-            f = os.path.join(self.prob_input_path, fname)
-            if os.path.isfile(f):
+            file = os.path.join(self.prob_input_path, fname)
+            if os.path.isfile(file):
                 # Prepare to run the test file.
                 test_number = int(fname.split('.')[0].strip('in'))
                 out_file = 'out{0}.txt'.format(test_number)
 
                 start_time = time.time()
-                process = self._create_process(f, out_file)
+                process = self._create_process(file, out_file)
                 try:
                     # Set a time limit for the process's execution and wait for
                     # it to terminate.
@@ -195,16 +197,18 @@ class Judge:
 
                 # The execution is completed.  Check its correctness.
                 with open(os.path.join(
-                          self.prob_output_path, out_file)) as correct, \
-                     open(os.path.join(
-                          self.sub_output_path, out_file)) as sub_result:
+                    self.prob_output_path, out_file)) as correct, open(
+                        os.path.join(
+                            self.sub_output_path, out_file)) as sub_result:
                     correct_lines = correct.readlines()
                     submission_lines = sub_result.readlines()
                     if len(submission_lines) != len(correct_lines):
                         return WRONG_ANSWER, test_number, max_time
 
-                    for gl, sl in zip(correct_lines, submission_lines):
-                        if gl.rstrip('\r\n') != sl.rstrip('\r\n'):
+                    for judge_line, submission_line in zip(correct_lines,
+                                                           submission_lines):
+                        if (judge_line.rstrip('\r\n')
+                                != submission_line.rstrip('\r\n')):
                             return WRONG_ANSWER, test_number, max_time
 
         # The answer is correct if all the tests complete without any failure.

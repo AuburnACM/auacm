@@ -2,28 +2,27 @@
 Manages problems within the app, including their creation, deletion,
 updating, and retreival.
 """
-import os
-import zipfile
-
-# pylint: disable=no-name-in-module, f0401
-from flask import request
-from flask.ext.login import current_user
-from app import app
-import app.database as database
-from app.util import serve_response, serve_error, serve_info_pdf, admin_required
-from app.modules.submission_manager.models import Submission
-from app.modules.problem_manager.models import Problem, ProblemData, SampleCase
-from app.modules.competition_manager.models import Competition
-from sqlalchemy.orm import load_only
 from json import loads
+import os
 from shutil import rmtree
 from time import time
+import zipfile
+
+from flask import request
+from flask.ext.login import current_user
+from sqlalchemy.orm import load_only
+from app.database import database_session
+from app.modules import app
+from app.modules.competition_manager.models import Competition
+from app.modules.problem_manager.models import Problem, ProblemData, SampleCase
+from app.modules.submission_manager.models import Submission
+from app.util import serve_response, serve_error, serve_info_pdf, admin_required
 
 
 @app.route('/problems/<shortname>/info.pdf', methods=['GET'])
 def get_problem_info(shortname):
     """Serve the PDF description of a problem"""
-    pid = (database.session.query(Problem)
+    pid = (database_session.query(Problem)
            .options(load_only('pid', 'shortname'))
            .filter(Problem.shortname == shortname)
            .first().pid)
@@ -38,7 +37,7 @@ def get_problem(identifier):
     If the problem is meant to be released with a competition that has not
     started yet, a 404 error is returned.
     """
-    problem = database.session.query(Problem, ProblemData).join(ProblemData)
+    problem = database_session.query(Problem, ProblemData).join(ProblemData)
 
     if is_pid(identifier):
         problem = problem.filter(Problem.pid == identifier).first()
@@ -52,7 +51,7 @@ def get_problem(identifier):
         return serve_error('404: Problem Not Found', 404)
 
     cases = list()
-    for case in (database.session.query(SampleCase)
+    for case in (database_session.query(SampleCase)
                  .filter(SampleCase.pid == problem.Problem.pid)
                  .all()):
         cases.append({
@@ -83,11 +82,11 @@ def get_problems():
     solved_set = set()
     competitions = dict()
     is_admin = not current_user.is_anonymous and current_user.admin == 1
-    for comp in database.session.query(Competition).all():
+    for comp in database_session.query(Competition).all():
         competitions[comp.cid] = comp.start
 
     if not current_user.is_anonymous:
-        solved = (database.session.query(Submission)
+        solved = (database_session.query(Submission)
                   .filter(Submission.username == current_user.username)
                   .filter(Submission.result == 'good')
                   .all())
@@ -95,9 +94,9 @@ def get_problems():
             solved_set.add(solve.pid)
 
     now = time()
-    for problem in database.session.query(Problem).all():
+    for problem in database_session.query(Problem).all():
         if is_admin or (problem.comp_release and
-                competitions[problem.comp_release] < now):
+                        competitions[problem.comp_release] < now):
             problems.append({
                 'pid': problem.pid,
                 'name': problem.name,
@@ -139,7 +138,8 @@ def create_problem():
             problem.difficulty = request.form['difficulty']
         if 'appeared_in' in request.form:
             problem.appeared = request.form['appeared_in']
-        if 'comp_release' not in request.form or int(request.form['comp_release']) < 1:
+        if 'comp_release' not in request.form or int(
+                request.form['comp_release']) < 1:
             problem.comp_release = None
         else:
             problem.comp_release = request.form['comp_release']
@@ -171,7 +171,7 @@ def create_problem():
 
     # If any required values were missing, serve an error
     except KeyError as err:
-        return serve_error('Form field not found: ' + err[0],
+        return serve_error('Form field not found: ' + err.args[0],
                            response_code=400)
 
     # Commit everything to the database
@@ -206,7 +206,7 @@ def create_problem():
 @admin_required
 def delete_problem(identifier):
     """Delete a specified problem in the database and data folder"""
-    pid, problem = None, database.session.query(Problem)
+    pid, problem = None, database_session.query(Problem)
     if is_pid(identifier):
         pid = identifier
         problem = problem.filter(Problem.pid == pid).first()
@@ -215,24 +215,24 @@ def delete_problem(identifier):
         pid = problem.pid
 
     # Delete from problem_data table first to satisfy foreign key constraint
-    problem_data = (database.session.query(ProblemData)
+    problem_data = (database_session.query(ProblemData)
                     .filter(ProblemData.pid == pid))
     if not problem_data.first():
         return serve_error('Could not find problem data with pid ' +
                            pid, response_code=401)
-    database.session.delete(problem_data.first())
+    database_session.delete(problem_data.first())
 
     # Delete any and all sample cases associated w/ problem
-    for case in (database.session.query(SampleCase)
+    for case in (database_session.query(SampleCase)
                  .filter(SampleCase.pid == pid).all()):
-        database.session.delete(case)
+        database_session.delete(case)
 
     # Delete from problem table
-    database.session.delete(problem)
+    database_session.delete(problem)
 
     # Commit changes
-    database.session.flush()
-    database.session.commit()
+    database_session.flush()
+    database_session.commit()
 
     # Delete judge data
     directory = os.path.join(app.config['DATA_FOLDER'], 'problems', pid)
@@ -245,9 +245,9 @@ def delete_problem(identifier):
 # Update a problem in the database
 @app.route('/api/problems/<identifier>', methods=['PUT'])
 @admin_required
-def update_problem(identifier):    # pylint: disable=too-many-branches
+def update_problem(identifier):
     """Modify a problem in the database and data folder"""
-    pid, problem = None, database.session.query(Problem)
+    pid, problem = None, database_session.query(Problem)
     if is_pid(identifier):
         pid = identifier
         problem = problem.filter(Problem.pid == pid).first()
@@ -255,7 +255,8 @@ def update_problem(identifier):    # pylint: disable=too-many-branches
         problem = problem.filter(Problem.shortname == identifier).first()
         pid = problem.pid
 
-    data = database.session.query(ProblemData).filter(ProblemData.pid == pid).first()
+    data = database_session.query(ProblemData).filter(
+        ProblemData.pid == pid).first()
     if 'name' in request.form:
         problem.name = request.form['name'][:32]
         problem.shortname = request.form['name'][:32].replace(' ', '').lower()
@@ -271,17 +272,17 @@ def update_problem(identifier):    # pylint: disable=too-many-branches
         problem.difficulty = request.form['difficulty']
 
     # Save the changes
-    problem.commit_to_session(database.session)
-    data.commit_to_session(database.session)
+    problem.commit_to_session(database_session)
+    data.commit_to_session(database_session)
 
     # If sample cases were uploaded, delete cases and go with the new ones
     case_lst = list()
     if 'cases' in request.form:
-        for old_case in (database.session.query(SampleCase)
+        for old_case in (database_session.query(SampleCase)
                          .filter(SampleCase.pid == pid).all()):
-            database.session.delete(old_case)
-            database.session.flush()
-            database.session.commit()
+            database_session.delete(old_case)
+            database_session.flush()
+            database_session.commit()
         case_num = 1
         cases = loads(request.form['cases'])
         for case in cases:
@@ -298,25 +299,7 @@ def update_problem(identifier):    # pylint: disable=too-many-branches
             })
             case_num += 1
 
-    directory = os.path.join(app.config['DATA_FOLDER'], 'problems', pid)
-    if not os.path.exists(directory):
-        os.mkdir(directory)
-
-    # Add judge data if supplied
-    if 'in_file' in request.files:
-        in_file = zipfile.ZipFile(request.files['in_file'])
-        in_file.extractall(directory)
-
-    if 'out_file' in request.files:
-        out_file = zipfile.ZipFile(request.files['out_file'])
-        out_file.extractall(directory)
-
-    if 'sol_file' in request.files:
-        if os.path.exists(directory + '/test'):
-            rmtree(directory + '/test')
-        os.mkdir(os.path.join(directory, 'test'))
-        request.files['sol_file'].save(
-            os.path.join(directory, 'test', request.files['sol_file'].filename))
+    create_problem_directory(request.files, problem.pid)
 
     return serve_response({
         'pid': problem.pid,
@@ -328,6 +311,28 @@ def update_problem(identifier):    # pylint: disable=too-many-branches
         'difficulty' : problem.difficulty,
         'cases': case_lst
     })
+
+def create_problem_directory(files, pid):
+    """Creates the problem directory."""
+    directory = os.path.join(app.config['DATA_FOLDER'], 'problems', pid)
+    if not os.path.exists(directory):
+        os.mkdir(directory)
+
+    # Add judge data if supplied
+    if 'in_file' in files:
+        in_file = zipfile.ZipFile(files['in_file'])
+        in_file.extractall(directory)
+
+    if 'out_file' in files:
+        out_file = zipfile.ZipFile(files['out_file'])
+        out_file.extractall(directory)
+
+    if 'sol_file' in files:
+        if os.path.exists(directory + '/test'):
+            rmtree(directory + '/test')
+        os.mkdir(os.path.join(directory, 'test'))
+        files['sol_file'].save(
+            os.path.join(directory, 'test', files['sol_file'].filename))
 
 
 def url_for_problem(problem):
@@ -349,6 +354,7 @@ def is_pid(identifier):
 
 def comp_not_released(cid):
     """Returns true if a competition has not yet begun"""
-    if cid is None: return False
-    comp = database.session.query(Competition).filter_by(cid=cid).first()
+    if cid is None:
+        return False
+    comp = database_session.query(Competition).filter_by(cid=cid).first()
     return comp.start > time()

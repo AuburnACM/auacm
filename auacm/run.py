@@ -1,14 +1,16 @@
 #!flask/bin/python
+"""The heart of the backend. Run this file to start it."""
 from __future__ import print_function
 from tornado.wsgi import WSGIContainer
 from tornado.web import Application, FallbackHandler
 from tornado.ioloop import IOLoop
 
-from app import app
+from app.modules import app
 from app.modules.flasknado.flasknado import Flasknado
 
 if __name__ == "__main__":
     def main():
+        """The entry point of the backend."""
         container = WSGIContainer(app)
         server = Application([
             (r'/websocket', Flasknado),

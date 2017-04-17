@@ -1,19 +1,19 @@
-"""Tests for AUACM competition manager"""
+"""Tests for AUACM competition manager."""
 
-import json, time
+import json
+import time
 
-from app import app, test_app
+from app.database import database_session
+from app.modules import test_app
+from app.modules.competition_manager.models import (
+    Competition, CompProblem, CompUser)
 from app.util import AUACMTest
-from app.modules.competition_manager.models import Competition, CompProblem, CompUser
-
-import app.database as database
-session = database.session
 
 
 class AUACMCompetitionTests(AUACMTest):
     """Test cases for the AUACM competition manager"""
 
-    def testCreateComp(self):
+    def test_create_comp(self):
         """Test creating a new competition"""
         self.login()
         post_form = {
@@ -25,24 +25,25 @@ class AUACMCompetitionTests(AUACMTest):
         }
 
         response = json.loads(test_app.post('/api/competitions',
-                              data=post_form).data.decode())
+                                            data=post_form).data.decode())
 
         self.assertEqual(200, response['status'])
 
         cid = response['data']['cid']
-        comp = (session.query(Competition)
-            .filter_by(cid=cid).
-            first()
-        )
+        comp = (database_session.query(Competition)
+                .filter_by(cid=cid).
+                first()
+               )
         self.assertIsNotNone(comp)
 
-        comp_problems = session.query(CompProblem).filter_by(cid=cid).all()
+        comp_problems = database_session.query(
+            CompProblem).filter_by(cid=cid).all()
         for comp_problem in comp_problems:
-            session.delete(comp_problem)
-        session.delete(comp)
-        session.commit()
+            database_session.delete(comp_problem)
+        database_session.delete(comp)
+        database_session.commit()
 
-    def testGetOneComp(self):
+    def test_get_one_comp(self):
         """Test retrieving a single competition by id"""
         competition = self._insert_comp_into_db()[0]
 
@@ -57,10 +58,10 @@ class AUACMCompetitionTests(AUACMTest):
         self.assertIn('teams', response_body)
         self.assertEqual(competition.to_dict(), response_body['competition'])
 
-        session.delete(competition)
-        session.commit()
+        database_session.delete(competition)
+        database_session.commit()
 
-    def testGetAllComp(self):
+    def test_get_all_comp(self):
         """Test retrieving all competitions"""
         competitions = self._insert_comp_into_db(3)
 
@@ -77,10 +78,10 @@ class AUACMCompetitionTests(AUACMTest):
             )
 
         for competition in competitions:
-            session.delete(competition)
-        session.commit()
+            database_session.delete(competition)
+        database_session.commit()
 
-    def testEditComp(self):
+    def test_edit_comp(self):
         """Test modifying a competition"""
         self.login()
         competition = self._insert_comp_into_db()[0]
@@ -102,28 +103,28 @@ class AUACMCompetitionTests(AUACMTest):
                          response_data['startTime'])
         self.assertEqual(competition_data['length'], response_data['length'])
 
-        session.delete(competition)
-        session.commit()
+        database_session.delete(competition)
+        database_session.commit()
 
-    def testDeleteComp(self):
+    def test_delete_comp(self):
         """Test deleting a competition"""
         self.login()
         competition = self._insert_comp_into_db()[0]
         cid = competition.cid
-        session.expunge(competition)
+        database_session.expunge(competition)
 
         response = test_app.delete('/api/competitions/{}'.format(cid))
         self.assertEqual(204, response.status_code)
-        self.assertIsNone(session.query(Competition)
+        self.assertIsNone(database_session.query(Competition)
                           .filter_by(cid=cid).first())
 
 
-    def testGetCompTeams(self):
+    def test_get_comp_teams(self):
         """Test retreiving the teams for a competition"""
         competition = self._insert_comp_into_db()[0]
         cid = competition.cid
         user = CompUser(cid=cid, username=self.username, team='Team Test')
-        user.commit_to_session(session)
+        user.commit_to_session(database_session)
 
         response = test_app.get('/api/competitions/{}/teams'.format(cid))
         self.assertEqual(200, response.status_code)
@@ -135,11 +136,11 @@ class AUACMCompetitionTests(AUACMTest):
             response_data['Team Test'][0]['username']
         )
 
-        session.delete(user)
-        session.delete(competition)
-        session.commit()
+        database_session.delete(user)
+        database_session.delete(competition)
+        database_session.commit()
 
-    def testEditCompTeams(self):
+    def test_edit_comp_teams(self):
         """Test editing the teams for a competition"""
         self.login()
         teams = {
@@ -149,29 +150,31 @@ class AUACMCompetitionTests(AUACMTest):
         }
         competition = self._insert_comp_into_db()[0]
         cid = competition.cid
-        session.add(
+        database_session.add(
             CompUser(
                 cid=cid,
                 username=self.username,
                 team='Team Test'
             )
         )
-        session.expunge(competition)
-        session.commit()
+        database_session.expunge(competition)
+        database_session.commit()
 
         response = test_app.put('/api/competitions/{}/teams'.format(cid),
-                                 data=teams)
+                                data=teams)
         self.assertEqual(200, response.status_code)
         response_body = json.loads(response.data.decode())['data']
 
         self.assertEqual({}, response_body)
-        new_team = session.query(CompUser).filter_by(cid=cid).first()
+        new_team = database_session.query(CompUser).filter_by(cid=cid).first()
         self.assertEqual('Team Test Edited', new_team.team)
         self.assertEqual(self.username, new_team.username)
 
-        session.delete(session.query(CompUser).filter_by(cid=cid).first())
-        session.delete(session.query(Competition).filter_by(cid=cid).first())
-        session.commit()
+        database_session.delete(database_session.query(
+            CompUser).filter_by(cid=cid).first())
+        database_session.delete(database_session.query(
+            Competition).filter_by(cid=cid).first())
+        database_session.commit()
 
     def _insert_comp_into_db(self, num=1):
         """
@@ -190,8 +193,8 @@ class AUACMCompetitionTests(AUACMTest):
                 stop=int(time.time()) + 10,
                 closed=0
             )
-            cid = competition.commit_to_session(session)
-            session.add(
+            cid = competition.commit_to_session(database_session)
+            database_session.add(
                 CompProblem(
                     label='A',
                     cid=cid,
@@ -199,7 +202,6 @@ class AUACMCompetitionTests(AUACMTest):
                 )
             )
             competitions.append(competition)
-        session.commit()
+        database_session.commit()
 
         return competitions
-

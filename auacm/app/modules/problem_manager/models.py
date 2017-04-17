@@ -1,11 +1,9 @@
 """Provide model objects for representing problems."""
 import time
 
-from app.database import Base, session
+from app.database import database_base, database_session
 
-# Problem = Base.classes.problems
-
-class Problem(Base):
+class Problem(database_base):
     """Problem class that we build by reflecting the mysql database.
 
     Problems obey the following structure in the database:
@@ -30,9 +28,9 @@ class Problem(Base):
         # Override defaults if provided
         defaults.update(kwargs)
 
-        Base.__init__(self, **defaults)
+        database_base.__init__(self, **defaults)
 
-    def commit_to_session(self, session=session):
+    def commit_to_session(self, session=database_session):
         """Commit this problem to the database as a new problem."""
         session.add(self)
         session.flush()
@@ -41,6 +39,7 @@ class Problem(Base):
         return self.pid
 
     def to_dict(self):
+        """Returns the problem as a dictionary"""
         return {
             'pid': self.pid,
             'name': self.name,
@@ -52,7 +51,7 @@ class Problem(Base):
         }
 
 
-class ProblemData(Base):
+class ProblemData(database_base):
     """Problem Data class that reflects mysql database
 
     Problem Data obeys the following structure:
@@ -70,17 +69,17 @@ class ProblemData(Base):
         defaults = {'time_limit': 90}
         # Override defaults if provided
         defaults.update(kwargs)
-        Base.__init__(self, **defaults)
+        database_base.__init__(self, **defaults)
 
-    def commit_to_session(self, session=session):
-        """Commit this problem data object to the database."""
+    def commit_to_session(self, session=database_session):
+        '''Commit this problem data object to the database.'''
         session.add(self)
         session.flush()
         session.commit()
         session.refresh(self)
 
 
-class SampleCase(Base):
+class SampleCase(database_base):
     """Test case class that reflects the mysql database.
 
     Sample Cases obey the following structure:
@@ -93,9 +92,9 @@ class SampleCase(Base):
     __tablename__ = 'sample_cases'
 
     def __init__(self, **kwargs):
-        Base.__init__(self, **kwargs)
+        database_base.__init__(self, **kwargs)
 
-    def commit_to_session(self, session=session):
+    def commit_to_session(self, session=database_session):
         """Commit this sample case to the database."""
         session.add(self)
         session.flush()

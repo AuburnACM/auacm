@@ -1,9 +1,9 @@
-'''Reflection and utilities for the users database table.'''
+"""Reflection and utilities for the users database table."""
 
-from app.database import Base, session
+from app.database import database_base
 
-class User(Base):
-    '''Model object for entries in the users database table.'''
+class User(database_base):
+    """Model object for entries in the users database table."""
 
     __tablename__ = 'users'
     is_authenticated = True
@@ -11,10 +11,5 @@ class User(Base):
     is_anonymous = False
 
     def get_id(self):
+        """Returns the username of the user."""
         return self.username
-
-    def commit_to_session(self):
-        session.add(self)
-        session.flush()
-        session.commit()
-        session.refresh(self)

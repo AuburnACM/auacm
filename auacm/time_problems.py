@@ -1,19 +1,22 @@
+"""Runs the problems and calculates the run time for them."""
 #!flask/bin/python
 import sys
 
-from app import database
-from app.modules.problem_manager import models
+from app.database import database_session
+from app.modules.problem_manager.models import ProblemData
 from app.modules.problem_manager import problem_timer
 
 
 def time_problems():
-    problems = database.session.query(models.ProblemData).all()
+    """Runs the problems and calculates the run time for them."""
+    problems = database_session.query(ProblemData).all()
     for problem in problems:
         problem_timer.Timer(problem).run()
 
-def time_problem(pid):
-    problem = (database.session.query(models.ProblemData)
-               .filter(models.ProblemData.pid == pid).first())
+def time_problem(problem_pid):
+    """Runs the problems and calculates the run time for them."""
+    problem = (database_session.query(ProblemData)
+               .filter(ProblemData.pid == problem_pid).first())
     problem_timer.Timer(problem).run()
 
 

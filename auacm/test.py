@@ -1,5 +1,6 @@
 #!flask/bin/python
-'''Run all tests in the project, or specific test modules
+# pylint: disable=I0011,C0103
+"""Run all tests in the project, or specific test modules
 
 Usage:
     To test everything, simply use
@@ -17,12 +18,11 @@ Usage:
     "problem_test.py".
 
 This will take all files that include *_test.py and run them.
-'''
+"""
 import unittest
-import sqlalchemy
 from sys import argv
+import sqlalchemy
 
-import app
 import app.database as db
 
 # Switch the database session variable to point to the test database
@@ -33,14 +33,14 @@ db.session = sqlalchemy.orm.Session(test_engine)
 
 
 if __name__ == "__main__":
-    loader = unittest.defaultTestLoader
+    LOADER = unittest.defaultTestLoader
     if len(argv) > 1:
         print('Using custom tests')
         for arg in argv[1:]:
             pattern = arg + '_test.py'
             print('Testing with ' + pattern)
-            suite = loader.discover(start_dir='.', pattern=pattern)
+            suite = LOADER.discover(start_dir='.', pattern=pattern)
             unittest.TextTestRunner().run(suite)
     else:
-        suite = loader.discover(start_dir='.', pattern='*_test.py')
+        SUITE = LOADER.discover(start_dir='.', pattern='*_test.py')
         unittest.TextTestRunner().run(suite)
