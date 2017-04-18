@@ -101,6 +101,8 @@ A few key style notes:
   * Docstrings are required for every Python method
   * Python and JavaScript lines should not exceed 80 characters in length
 
+You can run `make lint` to ensure that the code you added followed the style guides.
+
 ---
 
 If you have any questions or comments, feel free to email a member, leave a
