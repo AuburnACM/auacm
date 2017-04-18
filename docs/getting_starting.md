@@ -19,6 +19,16 @@ Also you will want to enable VSC to start using a terminal. To do this, open VSC
 
 After slecting `install 'code' command in PATH`, you will be able to open projects straight from the terminal using `code project/folder`.
 
+Before opening the project inside VSC, it's a good idea to make sure that the project's virtualenv is the python being used. To do this, you need to source the `activate` file found in the virtualenv directory (which is the `flask` directory inside the `auacm` directory).
+
+1. Navigate to the main directory: `cd /../auacm`
+
+2. Source the `activate` file: `source auacm/flask/bin/activate`
+
+At this point, you can open up the project with `code .`
+
+To exit from virtualenv, just execute `deactivate`
+
 ## Useful Commands
 
 In the main directory of the project, we have a Makefile with a few useful commands for building and linting the project. Here are the most important ones:
