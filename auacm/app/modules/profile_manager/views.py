@@ -30,7 +30,6 @@ def get_profile_image(username='tester'):
     """
     Return a user's profile picture.
     """
-    session = get_session()
 
     imagefile = [filename for filename in os.listdir(
         join(app.config['DATA_FOLDER'], 'profile')) if

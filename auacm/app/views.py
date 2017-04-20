@@ -7,6 +7,7 @@ proper page.
 """
 from flask import render_template, redirect
 from app.modules import app
+from app import config
 
 @app.route('/')
 @app.route('/404')
@@ -35,4 +36,4 @@ def api_404(_path=''):
 @app.errorhandler(404)
 def general_404(_error):
     """A catch all 404 for non-api requests"""
-    return redirect("//127.0.0.1/404", code=302)
+    return redirect(config.SITE_DOMAIN + "/404", code=302)

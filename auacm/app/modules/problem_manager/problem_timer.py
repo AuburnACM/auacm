@@ -25,6 +25,7 @@ class Timer:
         self.problem = problem
         self.path = os.path.join(PROBLEMS_DIR, str(problem.pid), 'test')
         self.submission_path = os.path.join(config.TEMP_DIRECTORY, 'submits')
+        self.session = get_session()
 
     def _create_temp_directory(self):
         """Attempts to create a temp directory.
@@ -62,12 +63,11 @@ class Timer:
         :raises NoJudgeSolutionError: in the event that no judge solution is
             found for the given problem.
         """
-        session = get_session()
         files = os.listdir(self.path)
 
         judged_count = 0
         found_max = 0
-        problem_details = (session.query(models.Problem)
+        problem_details = (self.session.query(models.Problem)
                            .filter(models.Problem.pid
                                    == self.problem.pid).first())
         print('Judging', problem_details.name, '...', file=sys.stderr)
