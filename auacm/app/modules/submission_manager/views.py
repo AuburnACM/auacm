@@ -9,7 +9,7 @@ from flask import request
 from flask.ext.login import current_user, login_required
 
 from sqlalchemy.orm import load_only
-from app.database import database_session
+from app.database import get_session
 from app.modules import app
 from app.modules.flasknado.flasknado import Flasknado
 from app.modules.problem_manager.models import ProblemData
@@ -32,6 +32,8 @@ def submit():
             fields are missing.
     """
 
+    session = get_session()
+
     uploaded_file = request.files['file']
     if not uploaded_file:
         return serve_error('file must be uploaded', response_code=400)
@@ -42,7 +44,7 @@ def submit():
                            response_code=400)
 
     # Obtain the time limit for the problem
-    time_limit = database_session.query(ProblemData).options(
+    time_limit = session.query(ProblemData).options(
         load_only("pid", "time_limit")).filter(
             ProblemData.pid == request.form['pid']).first().time_limit
 
@@ -100,10 +102,12 @@ def get_submits():
     :param limit:    The number of submits to pull, max 100
     """
 
+    session = get_session()
+
     # Default and max limit is 100
     limit = min(int(request.args.get('limit') or 100), 100)
 
-    submits = (database_session.query(models.Submission)
+    submits = (session.query(models.Submission)
                .order_by(models.Submission.submit_time.desc()))
 
     # Filter by user if provided
@@ -122,7 +126,8 @@ def get_submits():
 @app.route('/api/submit/<int:job_id>')
 def get_submit_for_id(job_id):
     """Return the submission with this id"""
-    submit_id = (database_session.query(models.Submission)
+    session = get_session()
+    submit_id = (session.query(models.Submission)
                  .filter(models.Submission.job == job_id).first())
     if not submit_id:
         return serve_error('Submission with id ' + str(job_id) +

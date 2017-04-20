@@ -1,7 +1,7 @@
 """Provide model objects for representing problems."""
 import time
 
-from app.database import database_base, database_session
+from app.database import database_base, get_session
 
 class Problem(database_base):
     """Problem class that we build by reflecting the mysql database.
@@ -30,7 +30,7 @@ class Problem(database_base):
 
         database_base.__init__(self, **defaults)
 
-    def commit_to_session(self, session=database_session):
+    def commit_to_session(self, session=get_session()):
         """Commit this problem to the database as a new problem."""
         session.add(self)
         session.flush()
@@ -71,7 +71,7 @@ class ProblemData(database_base):
         defaults.update(kwargs)
         database_base.__init__(self, **defaults)
 
-    def commit_to_session(self, session=database_session):
+    def commit_to_session(self, session=get_session()):
         '''Commit this problem data object to the database.'''
         session.add(self)
         session.flush()
@@ -94,7 +94,7 @@ class SampleCase(database_base):
     def __init__(self, **kwargs):
         database_base.__init__(self, **kwargs)
 
-    def commit_to_session(self, session=database_session):
+    def commit_to_session(self, session=get_session()):
         """Commit this sample case to the database."""
         session.add(self)
         session.flush()

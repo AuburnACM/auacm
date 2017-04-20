@@ -7,7 +7,7 @@ import shutil
 import sys
 
 from app import config
-from app.database import database_session
+from app.database import get_session
 from app.modules.problem_manager import models
 from app.modules.submission_manager import judge
 from app.modules.submission_manager.models import MockSubmission
@@ -62,11 +62,12 @@ class Timer:
         :raises NoJudgeSolutionError: in the event that no judge solution is
             found for the given problem.
         """
+        session = get_session()
         files = os.listdir(self.path)
 
         judged_count = 0
         found_max = 0
-        problem_details = (database_session.query(models.Problem)
+        problem_details = (session.query(models.Problem)
                            .filter(models.Problem.pid
                                    == self.problem.pid).first())
         print('Judging', problem_details.name, '...', file=sys.stderr)

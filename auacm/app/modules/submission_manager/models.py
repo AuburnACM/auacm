@@ -1,7 +1,7 @@
 """Provide a model object for handling submits."""
 import threading
 
-from app.database import database_base, database_session
+from app.database import database_base, get_session
 from app.modules.problem_manager.models import Problem
 
 DATABASE_LOCK = threading.Lock()
@@ -13,6 +13,8 @@ class Submission(database_base):
     This class also has some methods for adjusting its status.
     """
 
+    session = get_session()
+
     __tablename__ = "submits"
 
     def __init__(self, **kwargs):
@@ -23,11 +25,12 @@ class Submission(database_base):
 
         This is useful for adding a newly-created Submission to the database.
         """
+        session = get_session()
         DATABASE_LOCK.acquire()
-        database_session.add(self)
-        database_session.flush()
-        database_session.commit()
-        database_session.refresh(self)
+        session.add(self)
+        session.flush()
+        session.commit()
+        session.refresh(self)
         DATABASE_LOCK.release()
         self._problem = None
 
@@ -37,27 +40,29 @@ class Submission(database_base):
         :param status: the status of the submission
         :return: None
         """
+        session = get_session()
         self.result = status
         DATABASE_LOCK.acquire()
 
         # Add to problem_solved if solved for first time
         if status == 'good' and not (
-                database_session.query(ProblemSolved).filter(
+                session.query(ProblemSolved).filter(
                     ProblemSolved.pid == self.pid).filter(
                         ProblemSolved.username == self.username).all()):
-            database_session.add(ProblemSolved(
+            session.add(ProblemSolved(
                 username=self.username, pid=self.pid,
                 submit_time=self.submit_time))
 
-        database_session.flush()
-        database_session.commit()
+        session.flush()
+        session.commit()
         DATABASE_LOCK.release()
 
     def get_problem(self):
         """Find the problem that this submit is associated with."""
+        session = get_session()
         if self._problem is None:
             self._problem = (
-                database_session.query(Problem)
+                session.query(Problem)
                 .filter(Problem.pid == self.pid)
                 .first())
         return self._problem

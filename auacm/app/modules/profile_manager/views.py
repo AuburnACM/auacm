@@ -10,7 +10,7 @@ import base64
 from sqlalchemy import and_
 from flask import send_file, request
 
-from app.database import database_session
+from app.database import get_session
 from app.modules import app
 from app.modules.blog_manager.models import BlogPost
 from app.modules.competition_manager.models import CompUser, Competition
@@ -30,6 +30,7 @@ def get_profile_image(username='tester'):
     """
     Return a user's profile picture.
     """
+    session = get_session()
 
     imagefile = [filename for filename in os.listdir(
         join(app.config['DATA_FOLDER'], 'profile')) if
@@ -48,7 +49,8 @@ def set_profile_image(username='tester'):
     """
     Set a user's profile picture.
     """
-    user = database_session.query(User).filter(
+    session = get_session()
+    user = session.query(User).filter(
         User.username == username).first()
     if user is None:
         return serve_error('user does not exist', 404)
@@ -81,12 +83,13 @@ def get_profile(username='tester'):
     """
     Return a user's profile.
     """
-    user = database_session.query(User).filter(
+    session = get_session()
+    user = session.query(User).filter(
         User.username == username).first()
     if user is None:
         return serve_error('user does not exist', 404)
 
-    problems_solved = len(database_session.query(ProblemSolved).filter(
+    problems_solved = len(session.query(ProblemSolved).filter(
         ProblemSolved.username == username).all())
 
     return serve_response({
@@ -103,10 +106,10 @@ def get_recent_blog_posts(username):
     the given user has made. The maximum number of competitions returned is
     defined by MAX_RECENT_BLOG_POSTS.
     """
-
+    session = get_session()
     recent_blog_posts = list()
 
-    for blog_post in database_session.query(BlogPost).filter(
+    for blog_post in session.query(BlogPost).filter(
             BlogPost.username == username).order_by(BlogPost.post_time.desc()):
         recent_blog_posts.append({
             'title': blog_post.title,
@@ -125,17 +128,17 @@ def get_recent_competitions(username):
     in by the user. The maximum number of competitions returned is
     defined by MAX_RECENT_COMPETITIONS.
     """
-
+    session = get_session()
     recent_competitions = list()
 
-    for comp_user in database_session.query(CompUser).filter(
+    for comp_user in session.query(CompUser).filter(
             CompUser.username == username).order_by(CompUser.cid.desc()):
 
         cid = comp_user.cid
-        comp = database_session.query(Competition).filter(
+        comp = session.query(Competition).filter(
             Competition.cid == cid).first()
 
-        team_size = len(database_session.query(CompUser).filter(and_(
+        team_size = len(session.query(CompUser).filter(and_(
             CompUser.cid == cid, CompUser.team == comp_user.team)).all())
         recent_competitions.append({
             'teamName': comp_user.team,
@@ -152,12 +155,13 @@ def get_recent_attempts(username):
     Returns the data for the problems most recently attempted by the user.
     The maximum number of problems returned is defined by MAX_RECENT_ATTEMPTS.
     """
+    session = get_session()
     last_submit = None
     attempt_session = None
     recent_attempts = list()
 
     # For each of the user's most recent submissions:
-    for recent_submit in database_session.query(Submission).filter(
+    for recent_submit in session.query(Submission).filter(
             Submission.username == username).order_by(Submission.job.desc()):
 
         # If this is the most recent or different from the previous:

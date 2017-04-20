@@ -11,7 +11,7 @@ import zipfile
 from flask import request
 from flask.ext.login import current_user
 from sqlalchemy.orm import load_only
-from app.database import database_session
+from app.database import get_session
 from app.modules import app
 from app.modules.competition_manager.models import Competition
 from app.modules.problem_manager.models import Problem, ProblemData, SampleCase
@@ -22,7 +22,8 @@ from app.util import serve_response, serve_error, serve_info_pdf, admin_required
 @app.route('/problems/<shortname>/info.pdf', methods=['GET'])
 def get_problem_info(shortname):
     """Serve the PDF description of a problem"""
-    pid = (database_session.query(Problem)
+    session = get_session()
+    pid = (session.query(Problem)
            .options(load_only('pid', 'shortname'))
            .filter(Problem.shortname == shortname)
            .first().pid)
@@ -37,7 +38,8 @@ def get_problem(identifier):
     If the problem is meant to be released with a competition that has not
     started yet, a 404 error is returned.
     """
-    problem = database_session.query(Problem, ProblemData).join(ProblemData)
+    session = get_session()
+    problem = session.query(Problem, ProblemData).join(ProblemData)
 
     if is_pid(identifier):
         problem = problem.filter(Problem.pid == identifier).first()
@@ -51,7 +53,7 @@ def get_problem(identifier):
         return serve_error('404: Problem Not Found', 404)
 
     cases = list()
-    for case in (database_session.query(SampleCase)
+    for case in (session.query(SampleCase)
                  .filter(SampleCase.pid == problem.Problem.pid)
                  .all()):
         cases.append({
@@ -78,15 +80,16 @@ def get_problem(identifier):
 @app.route('/api/problems')
 def get_problems():
     """Obtain basic information of all the problems in the database"""
+    session = get_session()
     problems = list()
     solved_set = set()
     competitions = dict()
     is_admin = not current_user.is_anonymous and current_user.admin == 1
-    for comp in database_session.query(Competition).all():
+    for comp in session.query(Competition).all():
         competitions[comp.cid] = comp.start
 
     if not current_user.is_anonymous:
-        solved = (database_session.query(Submission)
+        solved = (session.query(Submission)
                   .filter(Submission.username == current_user.username)
                   .filter(Submission.result == 'good')
                   .all())
@@ -94,7 +97,7 @@ def get_problems():
             solved_set.add(solve.pid)
 
     now = time()
-    for problem in database_session.query(Problem).all():
+    for problem in session.query(Problem).all():
         if is_admin or (problem.comp_release and
                         competitions[problem.comp_release] < now):
             problems.append({
@@ -206,7 +209,8 @@ def create_problem():
 @admin_required
 def delete_problem(identifier):
     """Delete a specified problem in the database and data folder"""
-    pid, problem = None, database_session.query(Problem)
+    session = get_session()
+    pid, problem = None, session.query(Problem)
     if is_pid(identifier):
         pid = identifier
         problem = problem.filter(Problem.pid == pid).first()
@@ -215,24 +219,24 @@ def delete_problem(identifier):
         pid = problem.pid
 
     # Delete from problem_data table first to satisfy foreign key constraint
-    problem_data = (database_session.query(ProblemData)
+    problem_data = (session.query(ProblemData)
                     .filter(ProblemData.pid == pid))
     if not problem_data.first():
         return serve_error('Could not find problem data with pid ' +
                            pid, response_code=401)
-    database_session.delete(problem_data.first())
+    session.delete(problem_data.first())
 
     # Delete any and all sample cases associated w/ problem
-    for case in (database_session.query(SampleCase)
+    for case in (session.query(SampleCase)
                  .filter(SampleCase.pid == pid).all()):
-        database_session.delete(case)
+        session.delete(case)
 
     # Delete from problem table
-    database_session.delete(problem)
+    session.delete(problem)
 
     # Commit changes
-    database_session.flush()
-    database_session.commit()
+    session.flush()
+    session.commit()
 
     # Delete judge data
     directory = os.path.join(app.config['DATA_FOLDER'], 'problems', pid)
@@ -247,7 +251,8 @@ def delete_problem(identifier):
 @admin_required
 def update_problem(identifier):
     """Modify a problem in the database and data folder"""
-    pid, problem = None, database_session.query(Problem)
+    session = get_session()
+    pid, problem = None, session.query(Problem)
     if is_pid(identifier):
         pid = identifier
         problem = problem.filter(Problem.pid == pid).first()
@@ -255,7 +260,7 @@ def update_problem(identifier):
         problem = problem.filter(Problem.shortname == identifier).first()
         pid = problem.pid
 
-    data = database_session.query(ProblemData).filter(
+    data = session.query(ProblemData).filter(
         ProblemData.pid == pid).first()
     if 'name' in request.form:
         problem.name = request.form['name'][:32]
@@ -272,17 +277,17 @@ def update_problem(identifier):
         problem.difficulty = request.form['difficulty']
 
     # Save the changes
-    problem.commit_to_session(database_session)
-    data.commit_to_session(database_session)
+    problem.commit_to_session(session)
+    data.commit_to_session(session)
 
     # If sample cases were uploaded, delete cases and go with the new ones
     case_lst = list()
     if 'cases' in request.form:
-        for old_case in (database_session.query(SampleCase)
+        for old_case in (session.query(SampleCase)
                          .filter(SampleCase.pid == pid).all()):
-            database_session.delete(old_case)
-            database_session.flush()
-            database_session.commit()
+            session.delete(old_case)
+            session.flush()
+            session.commit()
         case_num = 1
         cases = loads(request.form['cases'])
         for case in cases:
@@ -354,7 +359,8 @@ def is_pid(identifier):
 
 def comp_not_released(cid):
     """Returns true if a competition has not yet begun"""
+    session = get_session()
     if cid is None:
         return False
-    comp = database_session.query(Competition).filter_by(cid=cid).first()
+    comp = session.query(Competition).filter_by(cid=cid).first()
     return comp.start > time()

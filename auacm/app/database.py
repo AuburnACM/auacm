@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy import event
 from sqlalchemy import exc
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.automap import automap_base
 
 # Create global database variables
@@ -34,11 +34,30 @@ def ping_connection(connection, branch):
     finally:
         connection.should_close_with_result = save_should_close_with_result
 
-database_session = Session(database_engine)
+# Configure the session maker
+session_maker = sessionmaker()
+session_maker.configure(bind=database_engine)
+
+_database_session = None
 
 def commit_to_session(base):
     """Add an object to the session and refresh the session."""
-    database_session.add(base)
-    database_session.flush()
-    database_session.commit()
-    database_session.refresh(base)
+    session = get_session()
+    session.add(base)
+    session.flush()
+    session.commit()
+    session.refresh(base)
+
+def get_session():
+    """Checks to see if a valid session exists and returns it. If
+    a session does not exist, one is created."""
+    current_session = _database_session
+    if current_session is None:
+        current_session = session_maker()
+    else:
+        try:
+            # Test the session first
+            current_session.execute("SELECT 1")
+        except exc.DBAPIError:
+            current_session = session_maker()
+    return current_session
