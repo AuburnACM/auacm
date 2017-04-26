@@ -14,7 +14,7 @@ Just a quick note: we only support Ubuntu and MacOS for development. If you use 
 
 1. cd to the `/../auacm/setup/` directory
 
-2. execute the script `./macos_setup.py`. This will walk you through setting up the development environment for the site.
+2. execute the script `./macos_setup.sh`. This will walk you through setting up the development environment for the site.
 
    To see more detailed instructions, view the [Installation docs](https://github.com/AuburnACM/auacm/blob/master/docs/installation.md)
 
@@ -22,7 +22,7 @@ Just a quick note: we only support Ubuntu and MacOS for development. If you use 
 
 1. cd to the `/../auacm/setup/` directory
 
-2. execute the script `./ubuntu_setup.py`. This will walk you through setting up the development environment for the site.
+2. execute the script `./ubuntu_setup.sh`. This will walk you through setting up the development environment for the site.
 
    To see more detailed instructions, view the [Installation docs](https://github.com/AuburnACM/auacm/blob/master/docs/installation.md)
 
