@@ -6,11 +6,14 @@ from sqlalchemy import exc
 from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.automap import automap_base
+from app.config import DATABASE_USERNAME, DATABASE_PASSWORD
 
 # Create global database variables
 database_base = automap_base()
 database_engine = create_engine(
-    'mysql+pymysql://acm@localhost/acm?charset=utf8', pool_recycle=7200)
+    'mysql+pymysql://'+ DATABASE_USERNAME
+    + '@localhost/acm?charset=utf8&password='
+    + DATABASE_PASSWORD, pool_recycle=7200)
 
 @event.listens_for(database_engine, 'engine_connect')
 def ping_connection(connection, branch):
