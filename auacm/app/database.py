@@ -1,4 +1,4 @@
-# pylint: disable=I0011,C0103
+# pylint: disable=I0011,C0103,W0603
 """Creates the database."""
 from sqlalchemy import create_engine
 from sqlalchemy import event
@@ -51,13 +51,14 @@ def commit_to_session(base):
 def get_session():
     """Checks to see if a valid session exists and returns it. If
     a session does not exist, one is created."""
-    current_session = _database_session
-    if current_session is None:
-        current_session = session_maker()
+    global _database_session
+    if _database_session is None:
+        _database_session = session_maker()
     else:
         try:
             # Test the session first
-            current_session.execute("SELECT 1")
+            _database_session.execute("SELECT 1")
         except exc.DBAPIError:
-            current_session = session_maker()
-    return current_session
+            _database_session.close()
+            _database_session = session_maker()
+    return _database_session
