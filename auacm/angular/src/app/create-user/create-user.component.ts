@@ -22,11 +22,6 @@ export class CreateUserComponent implements OnInit {
   constructor(private _userService: UserService, private _router: Router) {
     this._userService.userData$.subscribe(userData => {
       this.activeUser = userData;
-      if (!this.activeUser.loggedIn || !this.activeUser.isAdmin) {
-        if (this._router.url === '/users/create') {
-          this._router.navigate(['404']);
-        }
-      }
     });
   }
 

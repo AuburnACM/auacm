@@ -13,7 +13,7 @@ from app.modules import app
 from app.modules.submission_manager.models import ProblemSolved
 from app.modules.user_manager.models import User
 from app.util import (BCRYPT_CONST, serve_response,
-                      serve_error, load_user, admin_required)
+                      serve_error, load_user)
 
 @app.route('/api/login', methods=['POST'])
 def log_in():
@@ -31,7 +31,6 @@ def log_in():
 
 
 @app.route('/api/create_user', methods=['POST'])
-@admin_required
 def create_user():
     """Create a new user"""
     # Get form contents

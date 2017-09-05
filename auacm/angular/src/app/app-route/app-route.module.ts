@@ -34,6 +34,7 @@ const appRoutes: Routes = [
   { path: 'judge/:problem', component: JudgeComponent },
   { path: 'judge', component: JudgeComponent },
   { path: 'users/create', component: CreateUserComponent },
+  { path: 'register', component: CreateUserComponent },
   { path: 'blogs/create', component: CreateBlogComponent },
   { path: 'blog/:id/edit', component: EditBlogComponent },
   { path: 'blog/:id', component: BlogPostComponent },
