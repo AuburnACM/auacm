@@ -56,7 +56,7 @@
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"
                 [ngClass]="{'user-profile-container': user.loggedIn}">
               <img *ngIf="user.loggedIn" [src]="profilePictureSource" class="user-profile-image">
-              {{user.displayName === '' ? 'Log In' : user.displayName}}
+              {{user.displayName === '' ? 'Log In / Register' : user.displayName}}
               <span class="caret"></span>
             </a>
 
