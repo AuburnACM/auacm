@@ -17,12 +17,12 @@ import { UserData } from '../models/user';
   styleUrls: ['./view-scoreboard.component.css']
 })
 export class ViewScoreboardComponent implements OnInit, OnDestroy {
-  private userData: UserData = new UserData();
-  private competition: Competition = new Competition();
-  private timeUntil = 0;
-  private timeLeft = 0;
-  private ended = false;
-  private active = false;
+  public userData: UserData = new UserData();
+  public competition: Competition = new Competition();
+  public timeUntil = 0;
+  public timeLeft = 0;
+  public ended = false;
+  public active = false;
   private clientTimeOffset = 0;
   private scoreboardTimer: NodeJS.Timer[] = [];
 

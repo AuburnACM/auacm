@@ -14,20 +14,20 @@ import { UserData } from '../models/user';
 export class EditUserComponent implements OnInit {
 
   private userData: UserData = new UserData();
-  private oldPassword = '';
-  private newPassword = '';
-  private confirmPassword = '';
-  private passwordForm: FormGroup;
-  private responseSuccess = false;
-  private responseFailed = false;
-  private responseMessage = '';
+  public oldPassword = '';
+  public newPassword = '';
+  public confirmPassword = '';
+  public passwordForm: FormGroup;
+  public responseSuccess = false;
+  public responseFailed = false;
+  public responseMessage = '';
 
   // Display Name Form
-  private displayNameForm: FormGroup;
-  private newDisplayName = '';
-  private displayNameResponseSuccess = false;
-  private displayNameResponseFailed = false;
-  private displayNameResponseMessage = '';
+  public displayNameForm: FormGroup;
+  public newDisplayName = '';
+  public displayNameResponseSuccess = false;
+  public displayNameResponseFailed = false;
+  public displayNameResponseMessage = '';
 
   constructor(private _userService: UserService, private _router: Router,
               private _formBuilder: FormBuilder) {

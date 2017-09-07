@@ -12,11 +12,11 @@
             maxlength="32" #displayName="ngModel" autocomplete="false">
           <!-- Messages for form validation -->
           <div *ngIf="displayName.errors && (displayName.dirty || displayName.touched)">
-            <div *ngIf="displayName.errors.minlength"
+            <div *ngIf="displayName.hasError('minlength')"
               class="label label-danger">Display name is too short</div>
-            <div *ngIf="displayName.errors.maxlength"
+            <div *ngIf="displayName.hasError('maxlength')"
               class="label label-danger">Display name is too long</div>
-            <div *ngIf="displayName.errors.required"
+            <div *ngIf="displayName.hasError('required')"
               class="label label-danger">Display name is required</div>
           </div>
         </div>
@@ -29,9 +29,9 @@
             minlength="2" #username="ngModel" autocomplete="false">
           <!-- Bit 'o validation -->
           <div *ngIf="username.errors && (username.dirty || username.touched)">
-            <div *ngIf="username.errors.minlength" class="label label-danger">Username is too short</div>
-            <div *ngIf="username.errors.maxlength" class="label label-danger">Username is too long</div>
-            <div *ngIf="username.errors.required" class="label label-danger">Username is required</div>
+            <div *ngIf="username.hasError('minlength')" class="label label-danger">Username is too short</div>
+            <div *ngIf="username.hasError('maxlength')" class="label label-danger">Username is too long</div>
+            <div *ngIf="username.hasError('required')" class="label label-danger">Username is required</div>
           </div>
         </div>
 
@@ -43,9 +43,9 @@
               maxlength="32" #password="ngModel" autocomplete="false">
           <!-- Bit 'o validation -->
           <div *ngIf="password.errors && (password.dirty || password.touched)">
-            <div *ngIf="password.errors.minlength" class="label label-danger">Password is too short</div>
-            <div *ngIf="password.errors.maxlength" class="label label-danger">Password is too long</div>
-            <div *ngIf="password.errors.required" class="label label-danger">Password is required</div>
+            <div *ngIf="password.hasError('minlength')" class="label label-danger">Password is too short</div>
+            <div *ngIf="password.hasError('maxlength')" class="label label-danger">Password is too long</div>
+            <div *ngIf="password.hasError('required')" class="label label-danger">Password is required</div>
           </div>
         </div>
 

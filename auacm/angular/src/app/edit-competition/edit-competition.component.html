@@ -39,9 +39,9 @@
         </div>
         <div class="col-sm-offset-2" *ngIf="compTitle.errors
             && (compTitle.dirty || compTitle.touched)">
-          <div *ngIf="compTitle.errors.required"
+          <div *ngIf="compTitle.hasError('required')"
               class="label label-danger">Competition title is required.</div>
-          <div *ngIf="compTitle.errors.minlength"
+          <div *ngIf="compTitle.hasError('minlength')"
               class="label label-danger">The title needs to be at least 5 characters long.</div>
         </div>
       </div>
@@ -56,11 +56,11 @@
         </div>
         <div class="col-sm-offset-2" *ngIf="competitionTime.errors
             && (competitionTime.dirty || competitionTime.touched)">
-          <div *ngIf="competitionTime.errors.required"
+          <div *ngIf="competitionTime.hasError('required')"
               class="label label-danger">Start time is required.</div>
-          <div *ngIf="competitionTime.errors.problemValidatorFormat"
+          <div *ngIf="competitionTime.hasError('problemValidatorFormat')"
               class="label label-danger">Incorrect format</div>
-          <div *ngIf="competitionTime.errors.problemValidatorPassed"
+          <div *ngIf="competitionTime.hasError('problemValidatorPassed')"
               class="label label-danger">Date has passed</div>
         </div>
       </div>
@@ -76,11 +76,11 @@
         </div>
         <div class="col-sm-offset-2" *ngIf="competitionLength.errors
             && (competitionLength.dirty || competitionLength.touched)">
-          <div *ngIf="competitionLength.errors.required"
+          <div *ngIf="competitionLength.hasError('required')"
               class="label label-danger">Competition length is required.</div>
-          <div *ngIf="competitionLength.errors.contestLengthValidatorFormat"
+          <div *ngIf="competitionLength.hasError('contestLengthValidatorFormat')"
               class="label label-danger">Incorrect format</div>
-          <div *ngIf="competitionLength.errors.contestLengthValidatorShort"
+          <div *ngIf="competitionLength.hasError('contestLengthValidatorShort')"
               class="label label-danger">Competition too short</div>
         </div>
       </div>

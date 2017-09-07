@@ -13,7 +13,7 @@
             placeholder="A Super Easy Problem"
             [(ngModel)]="problem.name" name="problemName" appProblemValidator #problemTitle="ngModel">
           <div *ngIf="problemTitle.errors && (problemTitle.dirty || problemTitle.touched)">
-            <div *ngIf="problemTitle.errors.appProblemValidator" class="label label-danger">You cannot have a name that is only numbers!</div>
+            <div *ngIf="problemTitle.hasError('appProblemValidator')" class="label label-danger">You cannot have a name that is only numbers!</div>
           </div>
         </div>
 
