@@ -20,9 +20,9 @@ export class CompetitionsComponent implements OnInit, OnDestroy {
   // Needs sorting eventually
   constructor(private _competitionService: CompetitionService,
               private _userService: UserService) {
-    this.competitions.set('ongoing', []);
-    this.competitions.set('upcoming', []);
-    this.competitions.set('past', []);
+    this.competitions['ongoing'] = [];
+    this.competitions['upcoming'] = [];
+    this.competitions['past'] = [];
     this._userService.userData$.subscribe(data => {
       this.userData = data;
     });
@@ -43,7 +43,7 @@ export class CompetitionsComponent implements OnInit, OnDestroy {
   getCompetitions() {
     this._competitionService.getAllCompetitions().then(competitions => {
       this.competitions = competitions;
-      for (const comp of this.competitions.get('ongoing')) {
+      for (const comp of this.competitions['ongoing']) {
         comp.timeRemaining = this.getRemainingTime(comp);
       }
     });
@@ -53,10 +53,10 @@ export class CompetitionsComponent implements OnInit, OnDestroy {
     const self = this;
     this.timer = setInterval(function() {
       if (self.competitions['ongoing'].length > 0) {
-        for (const comp of self.competitions.get('ongoing')) {
+        for (const comp of self.competitions['ongoing']) {
           if (comp.timeRemaining < 0) {
             self.getCompetitions();
-            self.competitions.get('ongoing').splice(self.competitions.get('ongoing').indexOf(comp), 1);
+            self.competitions['ongoing'].splice(self.competitions['ongoing'].indexOf(comp), 1);
             break;
           } else {
             comp.timeRemaining--;
