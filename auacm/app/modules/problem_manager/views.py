@@ -235,7 +235,7 @@ def delete_problem(identifier):
     database_session.commit()
 
     # Delete judge data
-    directory = os.path.join(app.config['DATA_FOLDER'], 'problems', pid)
+    directory = os.path.join(app.config['DATA_FOLDER'], 'problems', str(pid))
     rmtree(directory)
 
     return serve_response({
@@ -314,7 +314,7 @@ def update_problem(identifier):
 
 def create_problem_directory(files, pid):
     """Creates the problem directory."""
-    directory = os.path.join(app.config['DATA_FOLDER'], 'problems', pid)
+    directory = os.path.join(app.config['DATA_FOLDER'], 'problems', str(pid))
     if not os.path.exists(directory):
         os.mkdir(directory)
 
