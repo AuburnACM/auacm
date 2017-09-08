@@ -20,7 +20,7 @@ from app.modules import app
 @app.route('/problems')
 @app.route('/problems/<path:_path>')
 @app.route('/problem/<path:_path>')
-@app.route('profile')
+@app.route('/profile')
 @app.route('/profile/<path:_path>')
 @app.route('/rankings')
 @app.route('/settings/<path:_path>')
