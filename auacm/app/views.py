@@ -17,7 +17,7 @@ from app.modules import app
 @app.route('/competition/<path:_path>')
 @app.route('/index')
 @app.route('/judge')
-@app.rout('/problems')
+@app.route('/problems')
 @app.route('/problems/<path:_path>')
 @app.route('/problem/<path:_path>')
 @app.route('profile')
