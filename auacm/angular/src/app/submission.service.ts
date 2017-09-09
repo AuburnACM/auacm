@@ -50,7 +50,7 @@ export class SubmissionService {
     // TODO Handle the bernization of the problem
 
     const submitForm = new FormData();
-    submitForm.append('pid', problem.pid);
+    submitForm.append('pid', `${problem.pid}`);
     submitForm.append('file', file);
     if (file.name.endsWith('.py')) {
       submitForm.append('python', pythonVersion);
@@ -89,7 +89,7 @@ export class SubmissionService {
       xmlSubmit.open('POST', window.location.protocol + '//' + window.location.host + '/api/submit', true);
       xmlSubmit.send(submitForm);
     });
-  };
+  }
 
   getRecentSubmits(username: string, amount: number): Promise<RecentSubmission[]> {
     return new Promise((resolve, reject) => {

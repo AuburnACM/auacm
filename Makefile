@@ -6,7 +6,7 @@ lint: nglint pylint
 
 nglint:
 	echo "Linting Angular..."
-	cd auacm/angular/ && ng lint
+	cd auacm/angular/ && ng lint --type-check
 
 pylint:
 	echo "Linting Python"

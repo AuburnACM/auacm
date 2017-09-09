@@ -110,11 +110,11 @@ export class EditCompetitionComponent implements OnInit {
 
   addProblem(problem: Problem) {
     this.selectedProblems.push(problem);
-  };
+  }
 
   removeProblem(problem: Problem) {
     this.selectedProblems.splice(this.selectedProblems.indexOf(problem), 1);
-  };
+  }
 
   getStartTimeSeconds(): number {
     // get the string from scope and split it into its parts

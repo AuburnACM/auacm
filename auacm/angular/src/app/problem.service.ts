@@ -12,14 +12,14 @@ export class ProblemService {
   // Returns a copy of itself if successful
   createProblem(problem: Problem, judgeInput: File, judgeOutput: File, judgeSolution: File): Promise<Problem> {
     const requestForm = new FormData();
-    requestForm.append('pid', problem.pid);
+    requestForm.append('pid', `${problem.pid}`);
     requestForm.append('name', problem.name);
     requestForm.append('description', problem.description);
     requestForm.append('input_desc', problem.inputDesc);
     requestForm.append('output_desc', problem.outputDesc);
     requestForm.append('cases', JSON.stringify(problem.sampleCases));
     if (problem.difficulty >= 0) {
-      requestForm.append('difficulty', problem.difficulty);
+      requestForm.append('difficulty', `${problem.difficulty}`);
     }
     if (judgeInput !== undefined) {
       requestForm.append('in_file', judgeInput);
@@ -31,7 +31,7 @@ export class ProblemService {
       requestForm.append('sol_file', judgeSolution);
     }
     requestForm.append('appeared_in', problem.appeared);
-    requestForm.append('comp_release', problem.compRelease);
+    requestForm.append('comp_release', `${problem.compRelease}`);
 
     return new Promise((resolve, reject) => {
       const xmlSubmit = new XMLHttpRequest();
@@ -64,14 +64,14 @@ export class ProblemService {
 
   updateProblem(problem: Problem, judgeInput: File, judgeOutput: File, judgeSolution: File): Promise<Problem> {
     const requestForm = new FormData();
-    requestForm.append('pid', problem.pid);
+    requestForm.append('pid', `${problem.pid}`);
     requestForm.append('name', problem.name);
     requestForm.append('description', problem.description);
     requestForm.append('input_desc', problem.inputDesc);
     requestForm.append('output_desc', problem.outputDesc);
     requestForm.append('cases', JSON.stringify(problem.sampleCases));
     if (problem.difficulty >= 0) {
-      requestForm.append('difficulty', problem.difficulty);
+      requestForm.append('difficulty', `${problem.difficulty}`);
     }
     if (judgeInput !== undefined) {
       requestForm.append('in_file', judgeInput);
@@ -83,7 +83,7 @@ export class ProblemService {
       requestForm.append('sol_file', judgeSolution);
     }
     requestForm.append('appeared_in', problem.appeared);
-    requestForm.append('comp_release', problem.compRelease);
+    requestForm.append('comp_release', `${problem.compRelease}`);
 
     return new Promise((resolve, reject) => {
       const xmlSubmit = new XMLHttpRequest();

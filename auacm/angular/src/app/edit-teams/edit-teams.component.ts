@@ -128,12 +128,12 @@ export class EditTeamsComponent implements OnInit {
           map[teamName].push(user1.username);
         }
       }
-    };
+    }
 
     for (const user of this.individuals) {
       map[user.display] = [];
       map[user.display].push(user.username);
-    };
+    }
 
     if (this.competitionId > 0) {
       this._competitionService.updateCompetitionTeams(this.competitionId, map)

@@ -1,6 +1,16 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Converter } from 'showdown';
 
+class CustomString {
+  public value: string;
+  public size: number;
+
+  constructor(value: string, size: number) {
+    this.value = value;
+    this.size = size;
+  }
+}
+
 /**
  * This pipe limits the words in a string to a certain amount.
  */
@@ -127,15 +137,5 @@ export class LimitWordsPipe implements PipeTransform {
     htmlElement.innerHTML = newString;
     currentString += htmlElement.outerHTML;
     return new CustomString(currentString, currentSize);
-  }
-}
-
-class CustomString {
-  public value: string;
-  public size: number;
-
-  constructor(value: string, size: number) {
-    this.value = value;
-    this.size = size;
   }
 }

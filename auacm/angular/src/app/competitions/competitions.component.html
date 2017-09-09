@@ -1,5 +1,5 @@
 <div class="margin-top col-md-10 col-md-offset-1">
-  <div class="panel panel-default" *ngIf="competitions.ongoing.length > 0">
+  <div class="panel panel-default" *ngIf="competitions['ongoing'].length > 0">
     <div class="panel-heading">
       <h2 class="panel-title">Ongoing</h2>
     </div>
@@ -14,7 +14,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let competition of competitions.ongoing | orderBy:'startTime'">
+        <tr *ngFor="let competition of competitions['ongoing'] | orderBy:'startTime'">
           <td><a [routerLink]="['/competition/' + competition.cid]">{{competition.name}}</a></td>
           <td>{{ competition.startTime | secondsToDateTime | date:"medium" }}</td>
           <td>{{ competition.length | secondsToHours }}</td>
@@ -29,7 +29,7 @@
       </tbody>
     </table>
   </div>
-  <div class="panel panel-default" *ngIf="competitions.upcoming.length > 0">
+  <div class="panel panel-default" *ngIf="competitions['upcoming'].length > 0">
     <div class="panel-heading">
       <h2 class="panel-title">Upcoming</h2>
     </div>
@@ -43,7 +43,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let competition of competitions.upcoming | orderBy: 'startTime'">
+        <tr *ngFor="let competition of competitions['upcoming'] | orderBy: 'startTime'">
           <td><a [routerLink]="['/competition/' + competition.cid]">{{ competition.name }}</a></td>
           <td>{{ competition.startTime | secondsToDateTime | date:"medium" }}</td>
           <td>{{ competition.length | secondsToHours }}</td>
@@ -57,7 +57,7 @@
       </tbody>
     </table>
   </div>
-  <div class="panel panel-default" *ngIf="competitions.past.length > 0">
+  <div class="panel panel-default" *ngIf="competitions['past'].length > 0">
     <div class="panel-heading">
       <h2 class="panel-title">Past</h2>
     </div>
@@ -70,7 +70,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let competition of competitions.past | orderBy: 'startTime'">
+        <tr *ngFor="let competition of competitions['past'] | orderBy: 'startTime'">
           <td><a [routerLink]="['/competition/' + competition.cid]">{{ competition.name }}</a></td>
           <td>{{ competition.startTime | secondsToDateTime | date:"medium" }}</td>
           <td>{{ competition.length | secondsToHours }}</td>
