@@ -1,10 +1,11 @@
 package io.github.auburnacm.auacm.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "sample_cases")
-public class SampleCase {
+public class SampleCase implements Serializable {
     @Id
     private long pid;
 
@@ -14,6 +15,10 @@ public class SampleCase {
     private String input;
 
     private String output;
+
+    @ManyToOne(targetEntity = Problem.class, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "pid")
+    private Problem problem;
 
     public long getPid() {
         return pid;
@@ -45,5 +50,13 @@ public class SampleCase {
 
     public void setOutput(String output) {
         this.output = output;
+    }
+
+    public Problem getProblem() {
+        return problem;
+    }
+
+    public void setProblem(Problem problem) {
+        this.problem = problem;
     }
 }

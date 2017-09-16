@@ -11,6 +11,7 @@ setup/__MACOSX/
 setup/acm_test.sql
 setup/acm_bak.sql
 *.iml
+target/
 
 # Angular dependencies
 auacm/angular/.bin/

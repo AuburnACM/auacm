@@ -1,14 +1,13 @@
 package io.github.auburnacm.auacm.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Mac on 9/13/17.
- */
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
 
     @Id
     private String username;
@@ -25,6 +24,15 @@ public class User {
 
     @OneToMany(targetEntity = BlogPost.class, fetch = FetchType.LAZY)
     private List<BlogPost> blogPosts;
+
+    public User() {
+        this.username = "";
+        this.password = "";
+        this.display = "";
+        this.admin = false;
+        submissions = new ArrayList<Submission>();
+        blogPosts = new ArrayList<BlogPost>();
+    }
 
 
     public String getUsername() {

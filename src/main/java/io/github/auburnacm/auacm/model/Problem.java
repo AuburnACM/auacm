@@ -1,10 +1,12 @@
 package io.github.auburnacm.auacm.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "problems")
-public class Problem {
+public class Problem implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long pid;
@@ -22,6 +24,14 @@ public class Problem {
 
     @Column(name = "comp_release")
     private int competitionId;
+
+    @OneToMany(targetEntity = SampleCase.class, fetch = FetchType.EAGER)
+//    @JoinColumn(name = "pid", nullable = false, )
+    private List<SampleCase> sampleCases;
+
+    @OneToOne(targetEntity = ProblemData.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "pid", nullable = false)
+    private List<ProblemData> problemData;
 
     public long getPid() {
         return pid;
@@ -77,5 +87,21 @@ public class Problem {
 
     public void setCompetitionId(int competitionId) {
         this.competitionId = competitionId;
+    }
+
+    public List<SampleCase> getSampleCases() {
+        return sampleCases;
+    }
+
+    public void setSampleCases(List<SampleCase> sampleCases) {
+        this.sampleCases = sampleCases;
+    }
+
+    public List<ProblemData> getProblemData() {
+        return problemData;
+    }
+
+    public void setProblemData(List<ProblemData> problemData) {
+        this.problemData = problemData;
     }
 }

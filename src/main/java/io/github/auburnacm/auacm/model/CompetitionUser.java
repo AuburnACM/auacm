@@ -1,10 +1,11 @@
 package io.github.auburnacm.auacm.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "comp_users")
-public class CompetitionUser {
+public class CompetitionUser implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

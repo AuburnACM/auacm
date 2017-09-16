@@ -33,7 +33,7 @@ if [ $CREATE_ADMIN = 'y' ]
 then
   # Create an admin user
   echo "Creating AUACM admin user..."
-  USER_PWD='$2b$12$95hJ.4TE68Aj15vIxv8gPOGD0AH.qw623YM/zlX99xmTA/DXpvflG'
+  USER_PWD='$2a$12$95hJ.4TE68Aj15vIxv8gPOGD0AH.qw623YM/zlX99xmTA/DXpvflG'
   printf "Enter a display name for the user: "
   read USER_DISPLAY
 
