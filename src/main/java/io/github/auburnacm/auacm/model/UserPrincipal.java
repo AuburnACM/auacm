@@ -7,9 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 
-/**
- * Created by Mac on 9/14/17.
- */
 public class UserPrincipal implements UserDetails {
     private User user;
 

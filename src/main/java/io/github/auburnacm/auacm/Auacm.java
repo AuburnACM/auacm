@@ -6,9 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.File;
 
-/**
- * Created by Mac on 9/12/17.
- */
 @SpringBootApplication(scanBasePackages = "io.github.auburnacm.auacm")
 public class Auacm {
     public static void main(String args[]) {

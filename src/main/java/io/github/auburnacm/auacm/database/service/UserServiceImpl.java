@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
     public void createUser(String displayName, String username, String password, boolean isAdmin) {
         User user = new User();
         user.setDisplay(displayName);
-        user.setPassword(BCrypt.hashpw(password, "2a"));
+        user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
         user.setUsername(username);
         user.setAdmin(isAdmin);
         userDao.addUser(user);

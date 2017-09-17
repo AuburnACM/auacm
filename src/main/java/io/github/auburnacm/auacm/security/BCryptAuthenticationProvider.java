@@ -3,7 +3,6 @@ package io.github.auburnacm.auacm.security;
 import io.github.auburnacm.auacm.database.service.UserService;
 import io.github.auburnacm.auacm.model.User;
 import io.github.auburnacm.auacm.model.UserPrincipal;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;

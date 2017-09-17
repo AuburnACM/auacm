@@ -3,9 +3,6 @@ package io.github.auburnacm.auacm.model;
 import javax.persistence.*;
 import java.io.Serializable;
 
-/**
- * Created by Mac on 9/13/17.
- */
 @Entity
 @Table(name = "blog_posts")
 public class BlogPost implements Serializable {
