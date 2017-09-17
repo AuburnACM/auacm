@@ -19,7 +19,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity security) throws Exception {
-        security.anonymous().disable().authorizeRequests()
+        security.authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/problems").permitAll()
                 .antMatchers("/problem/**").permitAll()
@@ -29,7 +29,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/profile/**").permitAll()
                 .antMatchers("/rankings").permitAll()
                 .antMatchers("/api/hash").permitAll()
-                .antMatchers("/api/me", "/api/create_user").fullyAuthenticated()
+                .antMatchers("/api/ranking", "/api/ranking/**").permitAll()
+                .and().authorizeRequests()
+                .antMatchers("/api/me", "/api/create_user",
+                        "/api/change_password", "/api/update_user").fullyAuthenticated()
                 .and().httpBasic()
                 .and().formLogin().loginPage("/api/login").permitAll()
                 .and().csrf().disable();

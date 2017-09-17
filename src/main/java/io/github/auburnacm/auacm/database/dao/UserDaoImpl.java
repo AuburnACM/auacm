@@ -1,14 +1,16 @@
 package io.github.auburnacm.auacm.database.dao;
 
-import io.github.auburnacm.auacm.model.User;
+import io.github.auburnacm.auacm.database.model.User;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository
 public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao {
-    public UserDaoImpl() {
-        super(User.class);
+    public UserDaoImpl(EntityManager entityManager, SessionFactory sessionFactory) {
+        super(User.class, entityManager, sessionFactory);
     }
 
     @Override

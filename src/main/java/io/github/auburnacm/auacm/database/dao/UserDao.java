@@ -1,6 +1,6 @@
 package io.github.auburnacm.auacm.database.dao;
 
-import io.github.auburnacm.auacm.model.User;
+import io.github.auburnacm.auacm.database.model.User;
 
 import java.util.List;
 

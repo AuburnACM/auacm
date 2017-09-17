@@ -4,10 +4,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import io.github.auburnacm.auacm.api.model.CreateUser;
+import io.github.auburnacm.auacm.api.model.RankedUser;
 import io.github.auburnacm.auacm.api.model.SimpleResponse;
+import io.github.auburnacm.auacm.api.model.UpdateUser;
+import io.github.auburnacm.auacm.api.validator.UpdateUserValidator;
+import io.github.auburnacm.auacm.database.model.User;
+import io.github.auburnacm.auacm.database.model.UserPrincipal;
 import io.github.auburnacm.auacm.database.service.UserService;
-import io.github.auburnacm.auacm.model.User;
-import io.github.auburnacm.auacm.model.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,30 +19,41 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 public class UserController {
 
     @Autowired
+    private UpdateUserValidator updateUserValidator;
+
+
+    @Autowired
     private UserService userService;
 
+    @InitBinder
+    protected void initBinder(final WebDataBinder binder) {
+        binder.setValidator(updateUserValidator);
+    }
+
     @RequestMapping(value = "/api/login", produces = "application/json", method = {RequestMethod.POST, RequestMethod.GET})
-    public String login(HttpServletResponse response) {
+    public String login(HttpServletRequest request, HttpServletResponse response) {
         if (response.getStatus() == 200) {
             JsonObject object = new JsonObject();
             JsonArray perms = new JsonArray();
-            if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (SecurityContextHolder.getContext().getAuthentication() == null
+                    || SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
                 throw new BadCredentialsException("Invalid username or password!");
             }
-            Collection<? extends GrantedAuthority> authorityCollection = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+            Collection<? extends GrantedAuthority> authorityCollection = SecurityContextHolder.getContext()
+                    .getAuthentication().getAuthorities();
             for (GrantedAuthority g : authorityCollection) {
                 perms.add(g.getAuthority());
             }
@@ -85,5 +99,44 @@ public class UserController {
                     "User already exists!", "UsernameAlreadyExists", "/api/create_user"));
         }
         return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(value = "/api/change_password", produces = "application/json", method = RequestMethod.POST)
+    public String changePassword(@Validated @ModelAttribute UpdateUser user) {
+        User userInstance = (User) ((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+        if (user.getNewPassword() != null) {
+            userService.updatePassword(userInstance, user.getNewPassword());
+        }
+        return "";
+    }
+
+    @RequestMapping(value = "/api/update_user", produces = "application/json", method = RequestMethod.POST)
+    public String updateUser(@Validated @ModelAttribute UpdateUser user) {
+        User userInstance = (User) ((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+        if (user.getNewPassword() != null) {
+            userInstance.setPassword(user.getNewPassword());
+        }
+        if (user.getDisplay() != null) {
+            userInstance.setDisplay(user.getDisplay());
+        }
+        // TODO Enable this when we don't use usernames as primary keys
+//        if (user.getUsername() != null) {
+//            userInstance.setUsername(user.getUsername());
+//        }
+        userService.updateUser(userInstance);
+        return "";
+    }
+
+    @RequestMapping(value = "/api/ranking", produces = "application/json", method = RequestMethod.GET)
+    public @ResponseBody List<RankedUser> getRanks() {
+        return getRanks("all");
+    }
+
+    @RequestMapping(value = "/api/ranking/{timeFrame}", produces = "application/json", method = RequestMethod.GET)
+    public @ResponseBody List<RankedUser> getRanks(@PathVariable String timeFrame) {
+        if (timeFrame == null) {
+            timeFrame = "all";
+        }
+        return userService.getRanks(timeFrame);
     }
 }

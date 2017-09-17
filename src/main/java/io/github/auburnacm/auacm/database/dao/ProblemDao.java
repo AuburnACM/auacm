@@ -1,6 +1,6 @@
 package io.github.auburnacm.auacm.database.dao;
 
-import io.github.auburnacm.auacm.model.Problem;
+import io.github.auburnacm.auacm.database.model.Problem;
 
 import java.util.List;
 

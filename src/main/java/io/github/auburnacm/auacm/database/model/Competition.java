@@ -1,4 +1,4 @@
-package io.github.auburnacm.auacm.model;
+package io.github.auburnacm.auacm.database.model;
 
 import javax.persistence.*;
 import java.io.Serializable;

@@ -1,7 +1,11 @@
 package io.github.auburnacm.auacm.database.service;
 
-import io.github.auburnacm.auacm.model.User;
+import io.github.auburnacm.auacm.api.model.RankedUser;
+import io.github.auburnacm.auacm.database.model.User;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Set;
 
 @Component
 public interface UserService {
@@ -21,5 +25,9 @@ public interface UserService {
 
     void updateDisplayName(User user, String newDisplayName);
 
+    void updateUser(User user);
+
     boolean userExists(String username);
+
+    List<RankedUser> getRanks(String timeFrame);
 }

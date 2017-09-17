@@ -2,26 +2,26 @@ package io.github.auburnacm.auacm.api.model;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 
-public class CreateUser {
+public class UpdateUser {
 
-    @NotNull
     @Min(2)
     @Max(32)
     private String username;
 
-    @NotNull
-    @Min(8)
-    @Max(255)
-    private String password;
-
-    @NotNull
     @Min(2)
     @Max(32)
     private String display;
 
-    private boolean admin = false;
+    private boolean admin;
+
+    @Min(8)
+    @Max(255)
+    private String oldPassword;
+
+    @Min(8)
+    @Max(255)
+    private String newPassword;
 
     public String getUsername() {
         return username;
@@ -29,14 +29,6 @@ public class CreateUser {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getDisplay() {
@@ -53,5 +45,21 @@ public class CreateUser {
 
     public void setAdmin(boolean admin) {
         this.admin = admin;
+    }
+
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 }

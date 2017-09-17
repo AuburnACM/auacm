@@ -1,4 +1,4 @@
-package io.github.auburnacm.auacm.model;
+package io.github.auburnacm.auacm.database.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -10,13 +10,16 @@ import java.util.List;
 public class User implements Serializable {
 
     @Id
+    @Column(name = "username")
     private String username;
 
     @Column(name = "passw")
     private String password;
 
+    @Column(name = "display")
     private String display;
 
+    @Column(name = "admin")
     private boolean admin;
 
     @OneToMany(targetEntity = Submission.class, fetch = FetchType.LAZY)
@@ -33,7 +36,6 @@ public class User implements Serializable {
         submissions = new ArrayList<Submission>();
         blogPosts = new ArrayList<BlogPost>();
     }
-
 
     public String getUsername() {
         return username;

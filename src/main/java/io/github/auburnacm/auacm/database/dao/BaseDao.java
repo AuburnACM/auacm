@@ -7,6 +7,8 @@ public interface BaseDao<T> {
 
     List<T> getEntities();
 
+    List<T> getEntities(String parameter, Object object);
+
     T getEntity(String parameter, Object object);
 
     void updateEntity(T object);

@@ -1,4 +1,4 @@
-package io.github.auburnacm.auacm.model;
+package io.github.auburnacm.auacm.database.model;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

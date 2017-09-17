@@ -1,9 +1,6 @@
-package io.github.auburnacm.auacm.model;
+package io.github.auburnacm.auacm.database.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
@@ -16,6 +13,14 @@ public class SolvedProblem implements Serializable {
 
     @Column(name = "submit_time")
     private long submitTime;
+
+    public SolvedProblem() {}
+
+    public SolvedProblem(long pid, String username) {
+        this.pid = pid;
+        this.username = username;
+        this.submitTime = System.currentTimeMillis() / 1000;
+    }
 
     public long getPid() {
         return pid;
