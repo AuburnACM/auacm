@@ -1,34 +1,30 @@
-package io.github.auburnacm.auacm.database.model;
+package io.github.auburnacm.auacm.api.model;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import io.github.auburnacm.auacm.database.model.BlogPost;
+import io.github.auburnacm.auacm.database.model.User;
 
-@Entity
-@Table(name = "blog_posts")
-public class BlogPost implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class BlogPostResponse {
     private long id;
 
     private String title;
 
     private String subtitle;
 
-    @Column(name = "post_time")
     private long postTime;
 
     private String body;
 
-    private String username;
+    private AuthorResponse author;
 
-    public BlogPost() {}
+    public BlogPostResponse() {}
 
-    public BlogPost(String title, String subtitle, String body, String username) {
-        this.title = title;
-        this.subtitle = subtitle;
-        this.body = body;
-        this.username = username;
-        this.postTime = System.currentTimeMillis() / 1000;
+    public BlogPostResponse(BlogPost blogPost, User user) {
+        this.id = blogPost.getId();
+        this.title = blogPost.getTitle();
+        this.subtitle = blogPost.getSubtitle();
+        this.postTime = blogPost.getPostTime();
+        this.body = blogPost.getBody();
+        this.author = new AuthorResponse(user.getUsername(), user.getDisplay());
     }
 
     public long getId() {
@@ -71,11 +67,11 @@ public class BlogPost implements Serializable {
         this.body = body;
     }
 
-    public String getUsername() {
-        return username;
+    public AuthorResponse getAuthor() {
+        return author;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setAuthor(AuthorResponse author) {
+        this.author = author;
     }
 }

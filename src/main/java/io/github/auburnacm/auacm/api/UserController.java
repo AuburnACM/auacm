@@ -7,6 +7,7 @@ import io.github.auburnacm.auacm.api.model.CreateUser;
 import io.github.auburnacm.auacm.api.model.RankedUser;
 import io.github.auburnacm.auacm.api.model.SimpleResponse;
 import io.github.auburnacm.auacm.api.model.UpdateUser;
+import io.github.auburnacm.auacm.api.validator.UpdateBlogPostValidator;
 import io.github.auburnacm.auacm.api.validator.UpdateUserValidator;
 import io.github.auburnacm.auacm.database.model.User;
 import io.github.auburnacm.auacm.database.model.UserPrincipal;
@@ -30,17 +31,15 @@ import java.util.List;
 
 @RestController
 public class UserController {
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private UpdateUserValidator updateUserValidator;
 
-
-    @Autowired
-    private UserService userService;
-
     @InitBinder
     protected void initBinder(final WebDataBinder binder) {
-        binder.setValidator(updateUserValidator);
+        binder.addValidators(updateUserValidator);
     }
 
     @RequestMapping(value = "/api/login", produces = "application/json", method = {RequestMethod.POST, RequestMethod.GET})

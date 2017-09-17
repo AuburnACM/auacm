@@ -25,16 +25,12 @@ public class User implements Serializable {
     @OneToMany(targetEntity = Submission.class, fetch = FetchType.LAZY)
     private List<Submission> submissions;
 
-    @OneToMany(targetEntity = BlogPost.class, fetch = FetchType.LAZY)
-    private List<BlogPost> blogPosts;
-
     public User() {
         this.username = "";
         this.password = "";
         this.display = "";
         this.admin = false;
         submissions = new ArrayList<Submission>();
-        blogPosts = new ArrayList<BlogPost>();
     }
 
     public String getUsername() {
@@ -75,13 +71,5 @@ public class User implements Serializable {
 
     public void setSubmissions(List<Submission> submissions) {
         this.submissions = submissions;
-    }
-
-    public List<BlogPost> getBlogPosts() {
-        return blogPosts;
-    }
-
-    public void setBlogPosts(List<BlogPost> blogPosts) {
-        this.blogPosts = blogPosts;
     }
 }
