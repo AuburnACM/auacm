@@ -2,42 +2,41 @@ package io.github.auburnacm.auacm.database.dao;
 
 import io.github.auburnacm.auacm.database.model.Problem;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
-public class ProblemDaoImpl extends BaseDaoImpl<Problem> implements ProblemDao {
+public class ProblemDaoImpl implements ProblemDao {
+    private BaseDao<Problem> baseDao;
 
     public ProblemDaoImpl(EntityManager entityManager, SessionFactory sessionFactory) {
-        super(Problem.class, entityManager, sessionFactory);
+        baseDao = new BaseDaoImpl<>(Problem.class, entityManager, sessionFactory);
     }
 
     @Override
     public void addProblem(Problem object) {
-        addEntity(object);
+        baseDao.addEntity(object);
     }
 
     @Override
     public List<Problem> getProblems() {
-        return getEntities();
+        return baseDao.getEntities();
     }
 
     @Override
     public Problem getProblem(String parameter, Object object) {
-        return getProblem(parameter, object);
+        return baseDao.getEntity(parameter, object);
     }
 
     @Override
     public void updateProblem(Problem object) {
-        updateEntity(object);
+        baseDao.updateEntity(object);
     }
 
     @Override
     public void deleteProblem(Problem object) {
-        deleteEntity(object);
+        baseDao.deleteEntity(object);
     }
 }

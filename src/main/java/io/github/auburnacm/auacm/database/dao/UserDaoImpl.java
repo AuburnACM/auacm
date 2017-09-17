@@ -8,33 +8,35 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository
-public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao {
+public class UserDaoImpl implements UserDao {
+    private BaseDao<User> baseDao;
+
     public UserDaoImpl(EntityManager entityManager, SessionFactory sessionFactory) {
-        super(User.class, entityManager, sessionFactory);
+        baseDao = new BaseDaoImpl<>(User.class, entityManager, sessionFactory);
     }
 
     @Override
     public void addUser(User object) {
-        addEntity(object);
+        baseDao.addEntity(object);
     }
 
     @Override
     public List<User> getUsers() {
-        return getEntities();
+        return baseDao.getEntities();
     }
 
     @Override
     public User getUser(String parameter, Object object) {
-        return getEntity(parameter, object);
+        return baseDao.getEntity(parameter, object);
     }
 
     @Override
     public void updateUser(User object) {
-        updateEntity(object);
+        baseDao.updateEntity(object);
     }
 
     @Override
     public void deleteUser(User object) {
-        deleteEntity(object);
+        baseDao.deleteEntity(object);
     }
 }

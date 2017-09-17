@@ -8,39 +8,40 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository
-public class SolvedProblemDaoImpl extends BaseDaoImpl<SolvedProblem> implements SolvedProblemDao {
+public class SolvedProblemDaoImpl implements SolvedProblemDao {
+    private BaseDao<SolvedProblem> baseDao;
 
     public SolvedProblemDaoImpl(EntityManager entityManager, SessionFactory factory) {
-        super(SolvedProblem.class, entityManager, factory);
+        baseDao = new BaseDaoImpl<>(SolvedProblem.class, entityManager, factory);
     }
 
     @Override
     public void addSolvedProblem(SolvedProblem object) {
-        addEntity(object);
+        baseDao.addEntity(object);
     }
 
     @Override
     public List<SolvedProblem> getSolvedProblems() {
-        return getEntities();
+        return baseDao.getEntities();
     }
 
     @Override
     public List<SolvedProblem> getSolvedProblems(String parameter, Object object) {
-        return getEntities(parameter, object);
+        return baseDao.getEntities(parameter, object);
     }
 
     @Override
     public SolvedProblem getSolvedProblem(String parameter, Object object) {
-        return getEntity(parameter, object);
+        return baseDao.getEntity(parameter, object);
     }
 
     @Override
     public void updateSolvedProblem(SolvedProblem object) {
-        updateEntity(object);
+        baseDao.updateEntity(object);
     }
 
     @Override
     public void deleteSolvedProblem(SolvedProblem object) {
-        deleteEntity(object);
+        baseDao.deleteEntity(object);
     }
 }

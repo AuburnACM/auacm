@@ -4,7 +4,7 @@ import io.github.auburnacm.auacm.database.model.User;
 
 import java.util.List;
 
-public interface UserDao extends BaseDao<User> {
+public interface UserDao {
     void addUser(User object);
 
     List<User> getUsers();

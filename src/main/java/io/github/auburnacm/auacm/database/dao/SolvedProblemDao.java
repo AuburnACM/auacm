@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by Mac on 9/17/17.
  */
-public interface SolvedProblemDao extends BaseDao<SolvedProblem> {
+public interface SolvedProblemDao {
     void addSolvedProblem(SolvedProblem object);
 
     List<SolvedProblem> getSolvedProblems();

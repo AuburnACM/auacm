@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
         } else if (timeFrame.equals("year")) {
             time = now - (60 * 60 * 24 * 365);
         }
-        List<User> users = userDao.getEntities();
+        List<User> users = userDao.getUsers();
         for (User user : users) {
             List<SolvedProblem> submissions = solvedProblemService.getProblemsForUser(user.getUsername());
             int solvedSize = 0;
