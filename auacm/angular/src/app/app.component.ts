@@ -37,11 +37,11 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this._userService.refreshUserData();
-  };
+  }
 
   logout() {
     this._userService.logout();
-  };
+  }
 
   logIn() {
     this._userService.login(this.user.username, this.user.password).then(success => {
@@ -59,7 +59,7 @@ export class AppComponent implements OnInit {
 
   navigateTo(page: string) {
     this._router.navigate([page]);
-  };
+  }
 
   openDropdownMenu() {
     // Sets the focus on the username form.
@@ -70,7 +70,7 @@ export class AppComponent implements OnInit {
         doc.focus();
       }
     }, 100);
-  };
+  }
 
   refreshUserProfilePicture() {
     this.profilePictureSource = 'api/profile/image/' +

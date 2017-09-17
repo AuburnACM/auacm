@@ -1,3 +1,13 @@
+export class BlogAuthor {
+  public username: string;
+  public display: string;
+
+  constructor() {
+    this.username = '';
+    this.display = '';
+  }
+}
+
 export class BlogPost {
   public id: number;
   public postTime: number;
@@ -15,15 +25,5 @@ export class BlogPost {
     this.author = new BlogAuthor();
     this.resized = false;
     this.expanded = false;
-  }
-}
-
-export class BlogAuthor {
-  public username: string;
-  public display: string;
-
-  constructor() {
-    this.username = '';
-    this.display = '';
   }
 }

@@ -65,7 +65,7 @@ export class ProblemsComponent implements OnInit {
         return a[sortPredicate].localeCompare(b[sortPredicate]);
       }
     });
-  };
+  }
 
   navigateTo(path: string) {
     this._router.navigate([path]);
