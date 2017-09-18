@@ -17,17 +17,17 @@ export class EditUserComponent implements OnInit {
   private oldPassword = '';
   private newPassword = '';
   private confirmPassword = '';
-  private passwordForm: FormGroup;
-  private responseSuccess = false;
-  private responseFailed = false;
+  public passwordForm: FormGroup;
+  public responseSuccess = false;
+  public responseFailed = false;
   private responseMessage = '';
 
   // Display Name Form
-  private displayNameForm: FormGroup;
+  public displayNameForm: FormGroup;
   private newDisplayName = '';
-  private displayNameResponseSuccess = false;
-  private displayNameResponseFailed = false;
-  private displayNameResponseMessage = '';
+  public displayNameResponseSuccess = false;
+  public displayNameResponseFailed = false;
+  public displayNameResponseMessage = '';
 
   constructor(private _userService: UserService, private _router: Router,
               private _formBuilder: FormBuilder) {

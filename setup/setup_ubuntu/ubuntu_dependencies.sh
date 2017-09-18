@@ -17,7 +17,7 @@ ng --version > /dev/null
 if [ $? != 0 ]
 then
 	echo "Installing @angular/cli"
-	npm install -g @angular/cli
+	npm install -g @angular/cli@1.4.0
 else
 	echo "@angular/cli already installed"
 fi
