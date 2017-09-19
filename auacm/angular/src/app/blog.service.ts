@@ -12,12 +12,14 @@ export class BlogService {
 
   createBlog(title: string, subtitle: string, body: string): Promise<BlogPost> {
     return new Promise((resolve, reject) => {
-      const params = new URLSearchParams();
+      const params = new FormData();
       params.append('title', title);
       params.append('subtitle', subtitle);
       params.append('body', body);
+      const headers = new Headers();
+      // headers.append('Content-Type', 'multipart/form-data');
 
-      this._http.post(`/api/blog`, params.toString(), { headers: UrlEncodedHeader })
+      this._http.post(`/api/blog`, params)
           .subscribe((res: Response) => {
         if (res.status === 200) {
           resolve(res.json().data);

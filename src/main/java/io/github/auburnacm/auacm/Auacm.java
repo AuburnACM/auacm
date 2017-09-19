@@ -16,5 +16,6 @@ public class Auacm {
     private static void initializeConfig() {
         File configFolder = new File("config/");
         FileUtils.copyFileFromJar("config/application.properties", "application.properties", configFolder);
+        FileUtils.copyFolderFromJar("BOOT-INF/classes/public/", "public", true);
     }
 }

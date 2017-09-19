@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "blog_posts")
-public class BlogPost implements Serializable {
+public class BlogPost implements Serializable, Comparable<BlogPost> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -77,5 +77,10 @@ public class BlogPost implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    @Override
+    public int compareTo(BlogPost o) {
+        return Long.compare(o.getId(), id);
     }
 }

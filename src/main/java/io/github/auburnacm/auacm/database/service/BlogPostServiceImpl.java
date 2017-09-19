@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -69,7 +70,9 @@ public class BlogPostServiceImpl implements BlogPostService {
     @Override
     @Transactional
     public List<BlogPost> getAllBlogPosts() {
-        return blogPostDao.getBlogPosts();
+        List<BlogPost> posts = blogPostDao.getBlogPosts();
+        Collections.sort(posts);
+        return posts;
     }
 
     @Override

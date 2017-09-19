@@ -3,6 +3,10 @@ package io.github.auburnacm.auacm.util;
 import io.github.auburnacm.auacm.Auacm;
 
 import java.io.*;
+import java.net.URISyntaxException;
+import java.util.Enumeration;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 public class FileUtils {
     /**
@@ -29,6 +33,50 @@ public class FileUtils {
             } catch (IOException e) {
                 System.out.println("Failed to create " + fileName + "!");
             }
+        }
+    }
+
+    public static void copyFolderFromJar(String jarFolderName, String outputDirName, boolean replace) {
+        File outputDir = new File(jarFolderName);
+        if (!outputDir.exists()) {
+            outputDir.mkdirs();
+        }
+        try {
+            String path = Auacm.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+            String finalPath = path.substring(path.indexOf(":") + 1, path.indexOf("!"));
+            JarFile file = new JarFile(finalPath);
+            Enumeration<JarEntry> entryEnumeration = file.entries();
+            while (entryEnumeration.hasMoreElements()) {
+                JarEntry current = entryEnumeration.nextElement();
+                if (current.getName().startsWith(jarFolderName) && !current.getName().endsWith("/")) {
+                    copyFileFromJar(current.getName(), current.getName().replace(jarFolderName, ""), outputDirName, replace);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void copyFileFromJar(String jarName, String outputFileName, String outputFolder, boolean replace) {
+        File file = new File(outputFolder, outputFileName);
+        File parentDir = file.getParentFile();
+        if (!parentDir.exists()) {
+            parentDir.mkdirs();
+        }
+        if (file.exists() && replace) {
+            file.delete();
+        }
+        try {
+            InputStream stream = Auacm.class.getClassLoader().getResourceAsStream(jarName);
+            FileOutputStream out = new FileOutputStream(file, false);
+            byte[] buffer = new byte[4096];
+            int done;
+            while ((done = stream.read(buffer)) > 0) {
+                out.write(buffer, 0, done);
+            }
+            out.close();
+        } catch (IOException e) {
+            System.out.println("Failed to create " + outputFileName + "!");
         }
     }
 

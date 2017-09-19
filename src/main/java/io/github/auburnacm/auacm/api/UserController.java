@@ -3,10 +3,7 @@ package io.github.auburnacm.auacm.api;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import io.github.auburnacm.auacm.api.model.CreateUser;
-import io.github.auburnacm.auacm.api.model.RankedUser;
-import io.github.auburnacm.auacm.api.model.SimpleResponse;
-import io.github.auburnacm.auacm.api.model.UpdateUser;
+import io.github.auburnacm.auacm.api.model.*;
 import io.github.auburnacm.auacm.api.validator.UpdateBlogPostValidator;
 import io.github.auburnacm.auacm.api.validator.UpdateUserValidator;
 import io.github.auburnacm.auacm.database.model.User;
@@ -26,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -72,19 +70,15 @@ public class UserController {
     }
 
     @RequestMapping(value = "/api/me", produces = "application/json", method = RequestMethod.GET)
-    public String me(HttpServletResponse response) {
+    public @ResponseBody DataWrapper me(HttpServletResponse response) {
         UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = principal.getUser();
-        JsonObject object = new JsonObject();
-        object.add("username", new JsonPrimitive(user.getUsername()));
-        object.add("displayName", new JsonPrimitive(user.getDisplay()));
-        object.add("isAdmin", new JsonPrimitive(user.isAdmin() ? 1 : 0));
-        JsonArray permissions = new JsonArray();
+        List<String> permissions = new ArrayList<>();
         for (GrantedAuthority g : principal.getAuthorities()) {
             permissions.add(g.getAuthority());
         }
-        object.add("permissions", permissions);
-        return object.toString();
+        MeResponse me = new MeResponse(user.getUsername(), user.getDisplay(), user.isAdmin() ? 1 : 0, permissions);
+        return new DataWrapper(me, response.getStatus());
     }
 
     @RequestMapping(value = "/api/create_user", produces = "application/json", method = RequestMethod.POST)
@@ -127,15 +121,15 @@ public class UserController {
     }
 
     @RequestMapping(value = "/api/ranking", produces = "application/json", method = RequestMethod.GET)
-    public @ResponseBody List<RankedUser> getRanks() {
-        return getRanks("all");
+    public @ResponseBody DataWrapper getRanks(HttpServletResponse response) {
+        return getRanks("all", response);
     }
 
     @RequestMapping(value = "/api/ranking/{timeFrame}", produces = "application/json", method = RequestMethod.GET)
-    public @ResponseBody List<RankedUser> getRanks(@PathVariable String timeFrame) {
+    public @ResponseBody DataWrapper getRanks(@PathVariable String timeFrame, HttpServletResponse response) {
         if (timeFrame == null) {
             timeFrame = "all";
         }
-        return userService.getRanks(timeFrame);
+        return new DataWrapper(userService.getRanks(timeFrame), response.getStatus());
     }
 }

@@ -32,10 +32,12 @@ export class UserService {
   login(username: string, password: string): Promise<boolean> {
     const self = this;
     return new Promise((resolve, reject) => {
-      const params = new URLSearchParams();
-      params.append('username', username);
-      params.append('password', password);
-      this._http.post('/api/login', params.toString(), {headers: UrlEncodedHeader}).subscribe((res: Response) => {
+      const headers = new Headers();
+      headers.append('Authorization', `Basic ${btoa(username + ':' + password)}`);
+      // const params = new URLSearchParams();
+      // params.append('username', username);
+      // params.append('password', password);
+      this._http.post('/api/login', '', {headers: headers}).subscribe((res: Response) => {
         self.refreshUserData();
         resolve(res.status === 200);
       }, (err: Response) => {
