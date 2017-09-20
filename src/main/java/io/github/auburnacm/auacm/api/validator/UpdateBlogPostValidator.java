@@ -9,7 +9,7 @@ import org.springframework.validation.Validator;
 public class UpdateBlogPostValidator implements Validator {
     @Override
     public boolean supports(Class<?> aClass) {
-        return UpdateBlogPost.class.equals(aClass);
+        return UpdateBlogPost.class.isAssignableFrom(aClass);
     }
 
     @Override

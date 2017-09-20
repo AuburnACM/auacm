@@ -17,7 +17,7 @@ public class UpdateUserValidator implements Validator{
 
     @Override
     public boolean supports(Class<?> aClass) {
-        return UpdateUser.class.equals(aClass);
+        return UpdateUser.class.isAssignableFrom(aClass);
     }
 
     @Override

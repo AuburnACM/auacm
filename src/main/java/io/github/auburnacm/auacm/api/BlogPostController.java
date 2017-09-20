@@ -33,17 +33,18 @@ public class BlogPostController {
     @Autowired
     private UpdateBlogPostValidator updateBlogPostValidator;
 
-//    @InitBinder
-//    protected void initBinder(final WebDataBinder binder) {
-//        binder.addValidators(updateBlogPostValidator);
-//    }
+    @InitBinder(value = "updateBlogPost")
+    protected void initBinder(final WebDataBinder binder) {
+        binder.addValidators(updateBlogPostValidator);
+    }
 
     @RequestMapping(path = "/api/blog", produces = "application/json", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ADMIN')")
-    public String createBlogPost(@Validated @ModelAttribute CreateBlogPost blogPost) {
+    public @ResponseBody DataWrapper createBlogPost(@Validated @ModelAttribute CreateBlogPost blogPost,
+                                                    HttpServletResponse response) {
         User user = ((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
-        blogPostService.addBlogPost(blogPost, user.getUsername());
-        return "{ \"response\": \"success\" }";
+        BlogPost post = blogPostService.addBlogPost(blogPost, user.getUsername());
+        return new DataWrapper(new BlogPostResponse(post, user), response.getStatus());
     }
 
     @RequestMapping(path = "/api/blog", produces = "application/json", method = RequestMethod.GET)
@@ -72,10 +73,10 @@ public class BlogPostController {
 
     @RequestMapping(path = "/api/blog/{id}", produces = "application/json",
             method = {RequestMethod.PUT, RequestMethod.POST})
-    public DataWrapper updateBlogPost(@Validated @ModelAttribute UpdateBlogPost blogPost,
+    public DataWrapper updateBlogPost(@Validated @ModelAttribute("updateBlogPost") UpdateBlogPost blogPost,
                                       @PathVariable long id, HttpServletResponse response) {
-        blogPostService.updateBlogPost(blogPost, id);
-        BlogPost post = blogPostService.getBlogPostForId(id);
+
+        BlogPost post = blogPostService.updateBlogPost(blogPost, id);
         User user = userService.getUser(post.getUsername());
         return new DataWrapper(new BlogPostResponse(post, user), response.getStatus());
     }

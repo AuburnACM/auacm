@@ -7,15 +7,15 @@ import io.github.auburnacm.auacm.database.model.BlogPost;
 import java.util.List;
 
 public interface BlogPostService {
-    void addBlogPost(BlogPost post);
+    BlogPost addBlogPost(BlogPost post);
 
-    void addBlogPost(CreateBlogPost post, String username);
+    BlogPost addBlogPost(CreateBlogPost post, String username);
 
-    void addBlogPost(String title, String subtitle, String body, String username);
+    BlogPost addBlogPost(String title, String subtitle, String body, String username);
 
-    void updateBlogPost(BlogPost post);
+    BlogPost updateBlogPost(BlogPost post);
 
-    void updateBlogPost(UpdateBlogPost post, long id);
+    BlogPost updateBlogPost(UpdateBlogPost post, long id);
 
     void deleteBlogPost(BlogPost post);
 

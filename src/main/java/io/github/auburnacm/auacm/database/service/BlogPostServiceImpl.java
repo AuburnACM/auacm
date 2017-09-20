@@ -19,33 +19,37 @@ public class BlogPostServiceImpl implements BlogPostService {
 
     @Override
     @Transactional
-    public void addBlogPost(BlogPost post) {
+    public BlogPost addBlogPost(BlogPost post) {
         blogPostDao.addBlogPost(post);
+        return post;
     }
 
     @Override
     @Transactional
-    public void addBlogPost(CreateBlogPost post, String username) {
+    public BlogPost addBlogPost(CreateBlogPost post, String username) {
         BlogPost newBlogPost = new BlogPost(post.getTitle(), post.getSubtitle(), post.getBody(), username);
         addBlogPost(newBlogPost);
+        return newBlogPost;
     }
 
     @Override
     @Transactional
-    public void addBlogPost(String title, String subtitle, String body, String username) {
+    public BlogPost addBlogPost(String title, String subtitle, String body, String username) {
         BlogPost post = new BlogPost(title, subtitle, body, username);
         addBlogPost(post);
+        return post;
     }
 
     @Override
     @Transactional
-    public void updateBlogPost(BlogPost post) {
+    public BlogPost updateBlogPost(BlogPost post) {
         blogPostDao.updateBlogPost(post);
+        return post;
     }
 
     @Override
     @Transactional
-    public void updateBlogPost(UpdateBlogPost post, long id) {
+    public BlogPost updateBlogPost(UpdateBlogPost post, long id) {
         BlogPost toUpdate = getBlogPostForId(id);
         if (toUpdate != null) {
             if (post.getBody() != null) {
@@ -59,6 +63,7 @@ public class BlogPostServiceImpl implements BlogPostService {
             }
             updateBlogPost(toUpdate);
         }
+        return toUpdate;
     }
 
     @Override

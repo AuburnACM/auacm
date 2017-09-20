@@ -35,7 +35,7 @@ public class UserController {
     @Autowired
     private UpdateUserValidator updateUserValidator;
 
-    @InitBinder
+    @InitBinder("updateUser")
     protected void initBinder(final WebDataBinder binder) {
         binder.addValidators(updateUserValidator);
     }
@@ -104,7 +104,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/api/update_user", produces = "application/json", method = RequestMethod.POST)
-    public String updateUser(@Validated @ModelAttribute UpdateUser user) {
+    public String updateUser(@Validated @ModelAttribute("updateUser") UpdateUser user) {
         User userInstance = (User) ((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         if (user.getNewPassword() != null) {
             userInstance.setPassword(user.getNewPassword());
