@@ -1,5 +1,7 @@
 package io.github.auburnacm.auacm.database.model;
 
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -7,6 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
+@Proxy(lazy = false)
 public class User implements Serializable {
 
     @Id
@@ -22,15 +25,11 @@ public class User implements Serializable {
     @Column(name = "admin")
     private boolean admin;
 
-    @OneToMany(targetEntity = Submission.class, fetch = FetchType.LAZY)
-    private List<Submission> submissions;
-
     public User() {
         this.username = "";
         this.password = "";
         this.display = "";
         this.admin = false;
-        submissions = new ArrayList<Submission>();
     }
 
     public String getUsername() {
@@ -63,13 +62,5 @@ public class User implements Serializable {
 
     public void setAdmin(boolean admin) {
         this.admin = admin;
-    }
-
-    public List<Submission> getSubmissions() {
-        return submissions;
-    }
-
-    public void setSubmissions(List<Submission> submissions) {
-        this.submissions = submissions;
     }
 }

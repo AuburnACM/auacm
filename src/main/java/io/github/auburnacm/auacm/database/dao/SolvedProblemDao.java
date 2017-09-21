@@ -1,22 +1,12 @@
 package io.github.auburnacm.auacm.database.dao;
 
 import io.github.auburnacm.auacm.database.model.SolvedProblem;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * Created by Mac on 9/17/17.
- */
-public interface SolvedProblemDao {
-    void addSolvedProblem(SolvedProblem object);
-
-    List<SolvedProblem> getSolvedProblems();
-
-    List<SolvedProblem> getSolvedProblems(String parameter, Object object);
-
-    SolvedProblem getSolvedProblem(String parameter, Object object);
-
-    void updateSolvedProblem(SolvedProblem object);
-
-    void deleteSolvedProblem(SolvedProblem object);
+@Repository
+public interface SolvedProblemDao extends JpaRepository<SolvedProblem, Long> {
+    List<SolvedProblem> findByUsernameIgnoreCase(String username);
 }

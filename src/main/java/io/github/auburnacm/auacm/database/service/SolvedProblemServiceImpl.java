@@ -14,12 +14,12 @@ public class SolvedProblemServiceImpl implements SolvedProblemService {
 
     @Override
     public List<SolvedProblem> getProblemsForUser(String username) {
-        return solvedProblemDao.getSolvedProblems("username", username);
+        return solvedProblemDao.findByUsernameIgnoreCase(username);
     }
 
     @Override
     public void addSolvedProblem(SolvedProblem problem) {
-        solvedProblemDao.addSolvedProblem(problem);
+        solvedProblemDao.save(problem);
     }
 
     @Override

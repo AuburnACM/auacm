@@ -20,16 +20,15 @@ public class BlogPostServiceImpl implements BlogPostService {
     @Override
     @Transactional
     public BlogPost addBlogPost(BlogPost post) {
-        blogPostDao.addBlogPost(post);
-        return post;
+        return blogPostDao.save(post);
     }
 
     @Override
     @Transactional
     public BlogPost addBlogPost(CreateBlogPost post, String username) {
         BlogPost newBlogPost = new BlogPost(post.getTitle(), post.getSubtitle(), post.getBody(), username);
-        addBlogPost(newBlogPost);
-        return newBlogPost;
+        return addBlogPost(newBlogPost);
+
     }
 
     @Override
@@ -43,8 +42,7 @@ public class BlogPostServiceImpl implements BlogPostService {
     @Override
     @Transactional
     public BlogPost updateBlogPost(BlogPost post) {
-        blogPostDao.updateBlogPost(post);
-        return post;
+        return blogPostDao.saveAndFlush(post);
     }
 
     @Override
@@ -69,13 +67,13 @@ public class BlogPostServiceImpl implements BlogPostService {
     @Override
     @Transactional
     public void deleteBlogPost(BlogPost post) {
-        blogPostDao.deleteBlogPost(post);
+        blogPostDao.delete(post);
     }
 
     @Override
     @Transactional
     public List<BlogPost> getAllBlogPosts() {
-        List<BlogPost> posts = blogPostDao.getBlogPosts();
+        List<BlogPost> posts = blogPostDao.findAll();
         Collections.sort(posts);
         return posts;
     }
@@ -83,12 +81,12 @@ public class BlogPostServiceImpl implements BlogPostService {
     @Override
     @Transactional
     public List<BlogPost> getBlogPostForUser(String username) {
-        return blogPostDao.getBlogPosts("username", username);
+        return blogPostDao.findByUsernameIgnoreCase(username);
     }
 
     @Override
     @Transactional
     public BlogPost getBlogPostForId(long id) {
-        return blogPostDao.getBlogPost("id", id);
+        return blogPostDao.getOne(id);
     }
 }

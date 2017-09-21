@@ -28,14 +28,14 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public boolean validatePassword(String username, String password) {
-        User user = userDao.getUser("username", username);
+        User user = userDao.getOne(username);
         return BCrypt.checkpw(password, user.getPassword());
     }
 
     @Override
     @Transactional
     public void createUser(User user) {
-        userDao.addUser(user);
+        userDao.save(user);
     }
 
     @Override
@@ -46,13 +46,13 @@ public class UserServiceImpl implements UserService {
         user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
         user.setUsername(username);
         user.setAdmin(isAdmin);
-        userDao.addUser(user);
+        userDao.save(user);
     }
 
     @Override
     @Transactional
     public User getUser(String username) {
-        return userDao.getUser("username", username);
+        return userDao.getOne(username);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void updateUsername(User user, String newUsername) {
         user.setUsername(newUsername);
-        userDao.updateUser(user);
+        userDao.save(user);
     }
 
     @Override
@@ -73,26 +73,26 @@ public class UserServiceImpl implements UserService {
     public void updatePassword(User user, String newPassword) {
         String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
         user.setPassword(hashedPassword);
-        userDao.updateUser(user);
+        userDao.save(user);
     }
 
     @Override
     @Transactional
     public void updateDisplayName(User user, String newDisplayName) {
         user.setDisplay(newDisplayName);
-        userDao.updateUser(user);
+        userDao.save(user);
     }
 
     @Override
     @Transactional
     public void updateUser(User user) {
-        userDao.updateUser(user);
+        userDao.save(user);
     }
 
     @Override
     @Transactional
     public boolean userExists(String username) {
-        User user = userDao.getUser("username", username);
+        User user = userDao.getOne(username);
         return user != null;
     }
 
@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
         } else if (timeFrame.equals("year")) {
             time = now - (60 * 60 * 24 * 365);
         }
-        List<User> users = userDao.getUsers();
+        List<User> users = userDao.findAll();
         for (User user : users) {
             List<SolvedProblem> submissions = solvedProblemService.getProblemsForUser(user.getUsername());
             int solvedSize = 0;

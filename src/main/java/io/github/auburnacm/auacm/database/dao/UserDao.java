@@ -1,17 +1,12 @@
 package io.github.auburnacm.auacm.database.dao;
 
 import io.github.auburnacm.auacm.database.model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface UserDao {
-    void addUser(User object);
-
-    List<User> getUsers();
-
-    User getUser(String parameter, Object object);
-
-    void updateUser(User object);
-
-    void deleteUser(User object);
+@Repository
+public interface UserDao extends JpaRepository<User, String> {
+    List<User> findByUsername(String username);
 }
