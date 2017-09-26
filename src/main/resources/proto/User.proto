@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package com.auacm.api.proto;
+
+message CreateUser {
+    string username = 1;
+
+    string password = 2;
+
+    string display = 3;
+
+    bool admin = 4;
+}

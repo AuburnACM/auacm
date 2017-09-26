@@ -1,8 +1,10 @@
 package com.auacm.database.service;
 
 import com.auacm.api.model.CreateBlogPost;
+import com.auacm.api.proto.Blog;
 import com.auacm.database.model.BlogPost;
 import com.auacm.api.model.UpdateBlogPost;
+import com.auacm.database.model.User;
 
 import java.util.List;
 
@@ -24,4 +26,6 @@ public interface BlogPostService {
     List<BlogPost> getBlogPostForUser(String username);
 
     BlogPost getBlogPostForId(long id);
+
+    Blog.BlogResponseWrapper getResponseForBlog(BlogPost post, User user);
 }

@@ -68,8 +68,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/api/me", produces = "application/json", method = RequestMethod.GET)
-    public @ResponseBody
-    DataWrapper me(HttpServletResponse response) {
+    public @ResponseBody DataWrapper me(HttpServletResponse response) {
         UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = principal.getUser();
         List<String> permissions = new ArrayList<>();

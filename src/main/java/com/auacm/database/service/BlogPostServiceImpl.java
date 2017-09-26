@@ -1,9 +1,11 @@
 package com.auacm.database.service;
 
+import com.auacm.api.proto.Blog;
 import com.auacm.database.dao.BlogPostDao;
 import com.auacm.database.model.BlogPost;
 import com.auacm.api.model.CreateBlogPost;
 import com.auacm.api.model.UpdateBlogPost;
+import com.auacm.database.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -88,5 +90,14 @@ public class BlogPostServiceImpl implements BlogPostService {
     @Transactional
     public BlogPost getBlogPostForId(long id) {
         return blogPostDao.getOne(id);
+    }
+
+    @Override
+    public Blog.BlogResponseWrapper getResponseForBlog(BlogPost post, User user) {
+        return Blog.BlogResponseWrapper.newBuilder().setData(Blog.BlogResponseWrapper.BlogPostResponse.newBuilder()
+                .setId(post.getId()).setBody(post.getBody()).setPostTime(post.getPostTime())
+                .setSubtitle(post.getSubtitle()).setTitle(post.getTitle())
+                .setAuthor(Blog.BlogResponseWrapper.BlogPostResponse.Author.newBuilder().setDisplay(user.getDisplay())
+                        .setUsername(user.getUsername()))).build();
     }
 }

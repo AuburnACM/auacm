@@ -27,6 +27,10 @@ build_prod:
 mvn:
 	mvn clean package
 
+proto:
+	protoc --java_out=src/main/java/ src/main/resources/proto/Blog.proto
+	protoc --java_out=src/main/java/ src/main/resources/proto/User.proto
+
 clean:
 	cp auacm/angular/dist/index.html auacm/app/templates/index.html
 	rm -rf src/main/resources/public/
