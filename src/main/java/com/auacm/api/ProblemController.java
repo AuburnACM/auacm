@@ -19,11 +19,8 @@ public class ProblemController {
     @Autowired
     private ProblemService problemService;
 
-    @Autowired
-    private UserService userService;
-
     //@Autowired
-    //TODO private UpdateBlogPostValidator updateBlogPostValidator;
+    //TODO private UpdateProblemValidator updateProblemValidator;
 
     //@InitBinder(value = "updateProblem")
     //TODO protected void initBinder(final WebDataBinder binder) { binder.addValidators(updateProblemValidator); }

@@ -9,7 +9,7 @@ public class SampleCase implements Serializable {
     @Id
     private long pid;
 
-    @Column(name = "name_num")
+    @Column(name = "case_num")
     private int caseNumber;
 
     private String input;
@@ -17,7 +17,7 @@ public class SampleCase implements Serializable {
     private String output;
 
     @ManyToOne(targetEntity = Problem.class, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "pid")
+    @JoinColumn(name = "pid", insertable=false, updatable=false)
     private Problem problem;
 
     public long getPid() {

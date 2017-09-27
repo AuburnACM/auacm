@@ -1,6 +1,7 @@
 package com.auacm.database.model;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.io.Serializable;
 
 @Entity
@@ -10,8 +11,9 @@ public class ProblemData implements Serializable {
     private long pid;
 
     @Column(name = "time_limit")
-    private int timeLimit;
+    private Integer timeLimit;
 
+    @Column(name = "description")
     private String description;
 
     @Column(name = "input_desc")

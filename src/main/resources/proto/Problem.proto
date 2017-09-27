@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package com.auacm.api.proto;
+
+message ProblemWrapper {
+    message ProblemResponse{
+        int64 pid = 1;
+        string shortname = 2;
+        string name = 3;
+        string appeared = 4;
+        string difficuty = 5;
+        int64 added = 6;
+        int32 competitionId = 7;
+        message SampleCase {
+            int32 caseNumber = 1;
+            string input = 2;
+            string output = 3;
+        }
+        repeated SampleCase sampleCases = 8;
+        message ProblemData {
+            int32 timeLimit = 1;
+            string description = 2;
+            string inputDescription = 3;
+            string outputDescription = 4;
+        }
+        ProblemData problemData = 9;
+    }
+}

@@ -22,7 +22,7 @@ public class ProblemResponse {
 
     private List<SampleCase> sampleCases;
 
-    private List<ProblemData> problemData;
+    private ProblemData problemData;
 
     public ProblemResponse() {}
 
