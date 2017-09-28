@@ -14,7 +14,7 @@ public class SampleCase implements Serializable {
     private long pid;
 
     @Column(name = "case_num")
-    private int case_num;
+    private int caseNum;
 
     private String input;
 
@@ -33,12 +33,12 @@ public class SampleCase implements Serializable {
         this.pid = pid;
     }
 
-    public int getCase_num() {
-        return case_num;
+    public int getCaseNum() {
+        return caseNum;
     }
 
-    public void setCase_num(int case_num) {
-        this.case_num = case_num;
+    public void setCaseNum(int caseNum) {
+        this.caseNum = caseNum;
     }
 
     public String getInput() {

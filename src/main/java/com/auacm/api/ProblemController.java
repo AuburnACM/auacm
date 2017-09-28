@@ -37,7 +37,7 @@ public class ProblemController {
     @RequestMapping(path = "/api/problems/{identifier}", produces = "application/json", method = RequestMethod.GET)
     public @ResponseBody DataWrapper<ProblemFullResponse> getProblem(@PathVariable String identifier, HttpServletResponse response) {
         try {
-            Long pid = Long.parseLong(identifier);
+            long pid = Long.parseLong(identifier);
             Problem problem = problemService.getProblemForPid(pid);
             ProblemFullResponse ProblemFullResponse = new ProblemFullResponse(problem);
             return new DataWrapper<>(ProblemFullResponse, response.getStatus());

@@ -7,13 +7,13 @@ import java.util.List;
 
 public class ProblemFullResponse extends ProblemResponse {
 
-    private List<SampleCase> sample_cases;
+    private List<SampleCase> sampleCases;
 
     private String description;
 
-    private String input_desc;
+    private String inputDesc;
 
-    private String output_desc;
+    private String outputDesc;
 
     public ProblemFullResponse() {
 
@@ -21,18 +21,18 @@ public class ProblemFullResponse extends ProblemResponse {
 
     public ProblemFullResponse(Problem problem){
         super(problem);
-        this.sample_cases = problem.getSampleCases();
+        this.sampleCases = problem.getSampleCases();
         this.description = problem.getProblemData().getDescription();
-        this.input_desc = problem.getProblemData().getInputDescription();
-        this.output_desc = problem.getProblemData().getOutputDescription();
+        this.inputDesc = problem.getProblemData().getInputDescription();
+        this.outputDesc = problem.getProblemData().getOutputDescription();
     }
 
-    public List<SampleCase> getSample_cases() {
-        return sample_cases;
+    public List<SampleCase> getSampleCases() {
+        return sampleCases;
     }
 
-    public void setSample_cases(List<SampleCase> sample_cases) {
-        this.sample_cases = sample_cases;
+    public void setSample_cases(List<SampleCase> sampleCases) {
+        this.sampleCases = sampleCases;
     }
 
     public String getDescription() {
@@ -43,19 +43,19 @@ public class ProblemFullResponse extends ProblemResponse {
         this.description = description;
     }
 
-    public String getInput_desc() {
-        return input_desc;
+    public String getInputDesc() {
+        return inputDesc;
     }
 
-    public void setInput_desc(String input_desc) {
-        this.input_desc = input_desc;
+    public void setInputDesc(String input_desc) {
+        this.inputDesc = input_desc;
     }
 
-    public String getOutput_desc() {
-        return output_desc;
+    public String getOutputDesc() {
+        return outputDesc;
     }
 
-    public void setOutput_desc(String output_desc) {
-        this.output_desc = output_desc;
+    public void setOutputDesc(String output_desc) {
+        this.outputDesc = output_desc;
     }
 }

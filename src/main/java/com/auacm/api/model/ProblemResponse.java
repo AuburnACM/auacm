@@ -18,7 +18,7 @@ public class ProblemResponse {
 
     private long added;
 
-    private Integer comp_release;
+    private Integer compRelease;
 
     public ProblemResponse() {
     }
@@ -30,7 +30,7 @@ public class ProblemResponse {
         this.appeared = problem.getAppeared();
         this.difficulty = problem.getDifficulty();
         this.added = problem.getAdded();
-        this.comp_release = problem.getCompetitionId() == null ? 0 : problem.getCompetitionId();
+        this.compRelease = problem.getCompetitionId() == null ? 0 : problem.getCompetitionId();
         this.url = problem.getUrl();
     }
 
@@ -90,11 +90,12 @@ public class ProblemResponse {
         this.added = added;
     }
 
-    public int getComp_release() {
-        return comp_release;
+    public Integer getCompRelease() {
+        return compRelease;
     }
 
-    public void setComp_release(int comp_release) {
-        this.comp_release = comp_release;
+    public void setCompRelease(Integer compRelease) {
+        this.compRelease = compRelease;
     }
+
 }
