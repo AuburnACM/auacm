@@ -1,6 +1,5 @@
 package com.auacm.database.service;
 
-import com.auacm.database.model.BlogPost;
 import com.auacm.database.model.Problem;
 
 import java.util.List;
@@ -18,7 +17,8 @@ public interface ProblemService {
 
     List<Problem> getAllProblems();
 
-   Problem getProblemForPid(long pid);
+    Problem getProblemForPid(long pid);
 
+    Problem getProblemForShortName(String shortName);
     //TODO implement Problem.ProblemResponseWrapper Problem.ProblemResponseWrapper getResponseForProblem(Problem problem, User user);
 }

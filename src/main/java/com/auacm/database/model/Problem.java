@@ -1,7 +1,6 @@
 package com.auacm.database.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
@@ -20,6 +19,9 @@ public class Problem implements Serializable {
     private String appeared;
 
     private String difficulty;
+
+    @Transient
+    private String url;
 
     private long added;
 
@@ -98,7 +100,19 @@ public class Problem implements Serializable {
         this.sampleCases = sampleCases;
     }
 
-    public ProblemData getProblemData() { return problemData; }
+    public ProblemData getProblemData() {
+        return problemData;
+    }
 
-    public void setProblemData(ProblemData problemData) { this.problemData = problemData; }
+    public void setProblemData(ProblemData problemData) {
+        this.problemData = problemData;
+    }
+
+    public String getUrl() {
+        return "problems/" + shortName + "/info.pdf";
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 }

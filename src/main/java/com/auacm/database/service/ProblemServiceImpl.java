@@ -33,15 +33,18 @@ public class ProblemServiceImpl implements ProblemService {
     }
 
     @Override
-    @Transactional
     public List<Problem> getAllProblems() {
         List<Problem> problems = problemDao.findAll();
         return problems;
     }
 
     @Override
-    @Transactional
     public Problem getProblemForPid(long pid) {
         return problemDao.getOne(pid);
+    }
+
+    @Override
+    public Problem getProblemForShortName(String shortName) {
+        return problemDao.findByShortNameIgnoreCase(shortName);
     }
 }

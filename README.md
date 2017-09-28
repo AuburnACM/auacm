@@ -26,7 +26,7 @@ Just a quick note: we only support Ubuntu and MacOS for development. If you use 
 
    To see more detailed instructions, view the [Installation docs](https://github.com/AuburnACM/auacm/blob/master/docs/installation.md)
 
-## Creating Judge Times for Problems
+## Creating Judge Times for problems
 
 So, you probably want to actually time out after a reasonable amount of time.
 To generate all of the judge times on your host machine, simply set up the

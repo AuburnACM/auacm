@@ -1,19 +1,21 @@
 package com.auacm.database.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "problem_data")
 public class ProblemData implements Serializable {
+
+    @JsonIgnore
     @Id
     private long pid;
 
     @Column(name = "time_limit")
     private Integer timeLimit;
 
-    @Column(name = "description")
     private String description;
 
     @Column(name = "input_desc")
@@ -22,6 +24,7 @@ public class ProblemData implements Serializable {
     @Column(name = "output_desc")
     private String outputDescription;
 
+    @JsonIgnore
     @OneToOne(targetEntity = Problem.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "pid", nullable = false)
     private Problem problem;

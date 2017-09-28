@@ -18,7 +18,7 @@
             <a [routerLink]="['']">Blog</a>
           </li>
           <li [ngClass]="{active: this._router.url == '/problems', 'hover-pointer': true}">
-            <a [routerLink]="['problems']">Problems</a>
+            <a [routerLink]="['problems']">problems</a>
           </li>
           <li *ngIf="user.loggedIn" [ngClass]="{active: _router.url == '/judge',
               'hover-pointer': true}">
