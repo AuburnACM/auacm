@@ -25,7 +25,7 @@ export class EditTeamsComponent implements OnInit {
   public individuals: SimpleUser[] = [];
   public teamName = '';
   public DND_BOX_NAME = DRAG_BOX_NAME;
-  public comp_release = 0;
+  public competitionId = 0;
   public responseFailed = false;
   public responseSuccess = false;
   public responseMessage = '';
@@ -57,7 +57,7 @@ export class EditTeamsComponent implements OnInit {
   ngOnInit() {
     this._activeRoute.params.switchMap((params: Params) => {
       if (params['cid']) {
-        this.comp_release = +params['cid'];
+        this.competitionId = +params['cid'];
         return this._competitionService.getCompetitionTeams(+params['cid']);
       } else {
          return Observable.of<Map<string, SimpleUser[]>>(undefined);
@@ -135,8 +135,8 @@ export class EditTeamsComponent implements OnInit {
       map[user.display].push(user.username);
     }
 
-    if (this.comp_release > 0) {
-      this._competitionService.updateCompetitionTeams(this.comp_release, map)
+    if (this.competitionId > 0) {
+      this._competitionService.updateCompetitionTeams(this.competitionId, map)
           .then(success => {
         if (success) {
           this.responseSuccess = true;

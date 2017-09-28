@@ -6,7 +6,7 @@ from app.database import database_base, database_session
 class Problem(database_base):
     """Problem class that we build by reflecting the mysql database.
 
-    problems obey the following structure in the database:
+    Problems obey the following structure in the database:
     pid             Integer (primary key)
     name            String
     shortname       "

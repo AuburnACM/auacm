@@ -17,7 +17,7 @@ method arguments and return values.
 ## Problem Management
 
 Problem management allows access to the various problems that exist on the website.
-problems will always be described using the problem JSON object:
+Problems will always be described using the problem JSON object:
 
 __[Problem Object](#the-problem-object)__
 
@@ -29,7 +29,7 @@ __[Sample Case Object](#the-sample-case-object)__
 
 From here, any user can perform the following actions:
 
-1. [Get Data on all problems](#get-data-on-all-problems)
+1. [Get Data on all Problems](#get-data-on-all-problems)
 2. [Get Data on a Specific Problem](#get-data-on-a-problem)
 
 Those logged in as an administrator can perform additional actions:
@@ -354,9 +354,9 @@ Competitions are always represented in JSON with the following format:
 |`registered`|`boolean`|`true` if the current user is registered for this competition, `false` otherwise|
 |`startTime`|`int`|The time the competition starts, in seconds since the Unix epoch|
 
-### The Competition problems Object
+### The Competition Problems Object
 
-The Competition problems object represents the collection of problems that appear
+The Competition Problems object represents the collection of problems that appear
 in a particular competition. It consists of a mapping of problem letters
 (i.e. "A" for the first problem, "B" for the second, etc.) to a Competition Problem
 object, described below:
@@ -369,7 +369,7 @@ __Competition Problem:__
 |`pid`|`int`|An integer uniquely identifying the problem|
 |`shortname`|`String`|A string that can be used to uniquely identify the problem|
 
-__Example Competition problems Object:__
+__Example Competition Problems Object:__
 
 ```json
 "compProblems": {
@@ -485,7 +485,7 @@ in the route.
 
 | Name | Type | Description |
 | --- | --- | --- |
-|`compProblems`|[Competition problems](#the-competition-problems-object)|Data on all problems in the competition.|
+|`compProblems`|[Competition Problems](#the-competition-problems-object)|Data on all problems in the competition.|
 |`competition`|[Competition Info](#the-competition-object)|Basic info about the competition.|
 |`teams`|[Team Info](#the-team-object)|Data for all teams in the competition.|
 
@@ -571,7 +571,7 @@ __Form Data__
 | Start Time | Required | `int` | `start_time` | The start time of the competition, in seconds since the Unix epoch |
 | Length | Required | `int` | `length` | The length of the competition, in seconds |
 | Closed | Required | `boolean` | `closed` | `true` if the competition is closed, `false` otherwise |
-| problems | Required | `CompetitionProblems` | `problems` | The [problems](#the-competition-problems-object) in the competition |
+| Problems | Required | `CompetitionProblems` | `problems` | The [problems](#the-competition-problems-object) in the competition |
 
 ### Edit an Existing Competition
 ***This endpoint required being signed in as an administrator***
