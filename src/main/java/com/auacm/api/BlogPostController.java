@@ -10,19 +10,18 @@ import com.auacm.database.model.User;
 import com.auacm.database.model.UserPrincipal;
 import com.auacm.database.service.BlogPostService;
 import com.auacm.database.service.UserService;
-import com.auacm.exception.ProtobufParserException;
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.google.protobuf.util.JsonFormat;
+import com.auacm.util.JsonUtil;
+import com.googlecode.protobuf.format.JsonFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -36,6 +35,15 @@ public class BlogPostController {
     @Autowired
     private UpdateBlogPostValidator updateBlogPostValidator;
 
+    @Autowired
+    private JsonUtil jsonUtil;
+
+    private Logger logger;
+
+    public BlogPostController() {
+        logger = LoggerFactory.getLogger(BlogPostController.class);
+    }
+
     @InitBinder(value = "updateBlogPost")
     protected void initBinder(final WebDataBinder binder) {
         binder.addValidators(updateBlogPostValidator);
@@ -46,46 +54,34 @@ public class BlogPostController {
     public @ResponseBody String createBlogPost(@Validated @ModelAttribute CreateBlogPost blogPost) {
         User user = ((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         BlogPost post = blogPostService.addBlogPost(blogPost, user.getUsername());
-        String output = "";
-        try {
-            JsonFormat.parser().merge(output, blogPostService.getResponseForBlog(post, user).toBuilder());
-            return output;
-        } catch (InvalidProtocolBufferException e) {
-            throw new ProtobufParserException(e);
-        }
+        return new JsonFormat().printToString(blogPostService.getResponseForBlog(post, user));
     }
 
     @RequestMapping(path = "/api/blog", produces = "application/json", method = RequestMethod.GET)
-    public @ResponseBody DataWrapper<List<BlogPostResponse>> getBlogPosts(HttpServletResponse response) {
+    public @ResponseBody String getBlogPosts(HttpServletResponse response) {
         List<BlogPost> blogPosts = blogPostService.getAllBlogPosts();
-        List<BlogPostResponse> responseList = new ArrayList<>();
-        for (BlogPost blogPost : blogPosts) {
-            User user = userService.getUser(blogPost.getUsername());
-            if (user != null) {
-                responseList.add(new BlogPostResponse(blogPost, user));
-            }
-        }
-        return new DataWrapper<>(responseList, response.getStatus());
+        return jsonUtil.removeEmptyObjects(new JsonFormat().printToString(blogPostService.getResponseForBlogs(blogPosts)));
     }
 
     @RequestMapping(path = "/api/blog/{id}", produces = "application/json", method = {RequestMethod.GET})
-    public @ResponseBody DataWrapper<BlogPostResponse> getBlogPost(@PathVariable long id, HttpServletResponse response) {
+    public @ResponseBody String getBlogPost(@PathVariable long id, HttpServletResponse response) {
         BlogPost blogPost = blogPostService.getBlogPostForId(id);
-        User user = userService.getUser(blogPost.getUsername());
-        if (user != null) {
-            return new DataWrapper<>(new BlogPostResponse(blogPost, user), response.getStatus());
-        } else {
-            throw new UsernameNotFoundException(String.format("Failed to find user %s for blog post %d!", blogPost.getUsername(), id));
-        }
+        return new JsonFormat().printToString(blogPostService.getResponseForBlog(blogPost));
     }
 
     @RequestMapping(path = "/api/blog/{id}", produces = "application/json",
             method = {RequestMethod.PUT, RequestMethod.POST})
+    @PreAuthorize("hasRole('ADMIN')")
     public DataWrapper<BlogPostResponse> updateBlogPost(@Validated @ModelAttribute("updateBlogPost") UpdateBlogPost blogPost,
                                       @PathVariable long id, HttpServletResponse response) {
-
         BlogPost post = blogPostService.updateBlogPost(blogPost, id);
         User user = userService.getUser(post.getUsername());
         return new DataWrapper<>(new BlogPostResponse(post, user), response.getStatus());
+    }
+
+    @RequestMapping(path = "/api/blog/{id}", produces = "application/json", method = RequestMethod.DELETE)
+    @PreAuthorize("hasRole('ADMIN')")
+    public String deleteBlogPost(@PathVariable long id) {
+        return new JsonFormat().printToString(blogPostService.getResponseForBlog(blogPostService.deleteBlogPost(id)));
     }
 }

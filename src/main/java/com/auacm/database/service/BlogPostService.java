@@ -19,7 +19,9 @@ public interface BlogPostService {
 
     BlogPost updateBlogPost(UpdateBlogPost post, long id);
 
-    void deleteBlogPost(BlogPost post);
+    BlogPost deleteBlogPost(BlogPost post);
+
+    BlogPost deleteBlogPost(long postId);
 
     List<BlogPost> getAllBlogPosts();
 
@@ -28,4 +30,8 @@ public interface BlogPostService {
     BlogPost getBlogPostForId(long id);
 
     Blog.BlogResponseWrapper getResponseForBlog(BlogPost post, User user);
+
+    Blog.BlogResponseWrapper getResponseForBlog(BlogPost post);
+
+    Blog.MultiPostWrapper getResponseForBlogs(List<BlogPost> posts);
 }

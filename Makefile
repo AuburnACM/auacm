@@ -12,10 +12,10 @@ pylint:
 	echo "Linting Python"
 	pylint --load-plugins=pylint_flask auacm/app
 
-nonprod: build_nonprod clean mvn
+nonprod: build_nonprod clean proto mvn
 	echo "Build complete"
 
-prod: build_prod clean mvn
+prod: build_prod clean proto mvn
 	echo "Build complete"
 
 build_nonprod:

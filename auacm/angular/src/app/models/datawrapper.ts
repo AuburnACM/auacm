@@ -1,11 +1,11 @@
 export class DataWrapper<T> {
-	public data: T;
+  public data: T;
 
-	constructor(object: T) {
-		this.data = object;
-	}
+  constructor(object: T) {
+    this.data = object;
+  }
 
-	getData(): T {
-		return this.data;
-	}
+  getData(): T {
+    return this.data;
+  }
 }

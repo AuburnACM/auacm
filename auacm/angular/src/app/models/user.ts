@@ -4,6 +4,7 @@ export class UserData {
   public displayName: string;
   public isAdmin: boolean;
   public loggedIn: boolean;
+  public permissions: String[];
 
   constructor() {
     this.username = '';
@@ -11,6 +12,14 @@ export class UserData {
     this.displayName = '';
     this.isAdmin = false;
     this.loggedIn = false;
+  }
+
+  deserialize(object: any): UserData {
+    this.username = object.username;
+    this.displayName = object.displayName;
+    this.isAdmin = object.isAdmin === 1;
+    this.permissions = object.permissions;
+    return this;
   }
 }
 
@@ -25,6 +34,14 @@ export class RankData {
     this.rank = -1;
     this.solved = 0;
     this.username = '';
+  }
+
+  deserialize(object: any): RankData {
+    this.displayName = object.displayName;
+    this.rank = object.rank;
+    this.solved = object.solved;
+    this.username = object.username;
+    return this;
   }
 }
 

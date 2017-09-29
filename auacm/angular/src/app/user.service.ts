@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Http, Request, Response, Headers, URLSearchParams } from '@angular/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Subject } from 'rxjs/Subject';
 
 import { UserData, RankData } from './models/user';
 import { SimpleResponse } from './models/response';
+import { DataWrapper } from './models/datawrapper';
 import { UrlEncodedHeader } from './models/service.utils';
 
 /**
@@ -16,7 +17,7 @@ export class UserService {
   private userData: UserData = new UserData();
   public userData$ = this.userDataSource.asObservable();
 
-  constructor(private _http: Http) { }
+  constructor(private _httpClient: HttpClient) { }
 
   updateUserData(userData: UserData): void {
     this.userData = userData;
@@ -32,14 +33,12 @@ export class UserService {
   login(username: string, password: string): Promise<boolean> {
     const self = this;
     return new Promise((resolve, reject) => {
-      const headers = new Headers();
-      headers.append('Authorization', `Basic ${btoa(username + ':' + password)}`);
-      // const params = new URLSearchParams();
-      // params.append('username', username);
-      // params.append('password', password);
-      this._http.post('/api/login', '', {headers: headers}).subscribe((res: Response) => {
+      const form = new FormData();
+      form.append('username', username);
+      form.append('password', password);
+      this._httpClient.post('/api/login', form, {withCredentials: true}).subscribe(data => {
         self.refreshUserData();
-        resolve(res.status === 200);
+        resolve(true);
       }, (err: Response) => {
         self.refreshUserData();
         resolve(false);
@@ -50,9 +49,9 @@ export class UserService {
   logout(): Promise<boolean> {
     const self = this;
     return new Promise((resolve, reject) => {
-      this._http.get('/api/logout').subscribe((res: Response) => {
+      this._httpClient.get('/api/logout', {withCredentials: true}).subscribe(data => {
         self.updateUserData(new UserData());
-        resolve(res.status === 200);
+        resolve(true);
       }, (err: Response) => {
         self.updateUserData(new UserData());
         resolve(false);
@@ -67,19 +66,10 @@ export class UserService {
   me(): Promise<UserData> {
     return new Promise((resolve, reject) => {
       const self = this;
-      this._http.get('/api/me').subscribe((res: Response) => {
-        if (res.status === 200) {
-          const data = res.json().data;
-          const userData = new UserData();
-          userData.displayName = data.displayName;
-          userData.isAdmin = data.isAdmin === 1;
-          userData.loggedIn = true;
-          userData.username = data.username;
-          self.updateUserData(userData);
-          resolve(userData);
-        } else {
-          resolve(new UserData());
-        }
+      this._httpClient.get<DataWrapper<UserData>>('/api/me', {withCredentials: true}).subscribe(data => {
+        const userData = new UserData().deserialize(data.data);
+        self.updateUserData(userData);
+        resolve(userData);
       }, (err: Response) => {
         resolve(new UserData());
       });
@@ -88,17 +78,13 @@ export class UserService {
 
   createUser(username: string, password: string, displayName: string): Promise<SimpleResponse> {
     return new Promise((resolve, reject) => {
-      const params = new URLSearchParams();
+      const params = new FormData();
       params.append('username', username);
       params.append('password', password);
       params.append('display', displayName);
 
-      this._http.post('/api/create_user', params.toString(), { headers: UrlEncodedHeader }).subscribe((res: Response) => {
-        if (res.status === 200) {
+      this._httpClient.post('/api/create_user', params).subscribe(res => {
           resolve(new SimpleResponse(true, 'User created successfully.'));
-        } else {
-          resolve(new SimpleResponse(false, res.json().error));
-        }
       }, (err: Response) => {
         if (err.status === 401) {
           resolve(new SimpleResponse(false, 'You need to be an admin to do this.'));
@@ -113,11 +99,11 @@ export class UserService {
 
   changePassword(oldPassword: string, newPassword: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      const params = new URLSearchParams();
+      const params = new FormData();
       params.append('oldPassword', oldPassword);
       params.append('newPassword', newPassword);
 
-      this._http.post('/api/change_password', params.toString(), { headers: UrlEncodedHeader }).subscribe((res: Response) => {
+      this._httpClient.post('/api/change_password', params).subscribe((res: Response) => {
         resolve(res.status === 200);
       }, (err: Response) => {
         resolve(false);
@@ -127,11 +113,10 @@ export class UserService {
 
   changeDisplayName(newDisplayName: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      const params = new URLSearchParams();
+      const params = new FormData();
       params.append('newDisplayName', newDisplayName);
 
-      this._http.post('/api/change_display_name', params.toString(),
-          {headers: UrlEncodedHeader}).subscribe((res: Response) => {
+      this._httpClient.post('/api/change_display_name', params).subscribe((res: Response) => {
         resolve(res.status === 200);
       }, (err: Response) => {
         resolve(false);
@@ -150,13 +135,11 @@ export class UserService {
   getRanking(timeframe: string): Promise<RankData[]> {
     return new Promise((resolve, reject) => {
       const time = timeframe === undefined ? 'all' : timeframe;
-      this._http.get(`/api/ranking/${time}`).subscribe((res: Response) => {
-        const data = res.json().data;
+      this._httpClient.get<DataWrapper<RankData[]>>(`/api/ranking/${time}`).subscribe(data => {
+        const ranks = data.data;
         const rankings = [];
-        if (res.status === 200) {
-          for (let i = 0; i < data.length; i++) {
-            rankings.push(data[i]);
-          }
+        for (let i = 0; i < ranks.length; i++) {
+          rankings.push(new RankData().deserialize(ranks[i]));
         }
         resolve(rankings);
       }, (err: Response) => {

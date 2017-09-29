@@ -2,13 +2,15 @@ package com.auacm.database.service;
 
 import com.auacm.api.model.RankedUser;
 import com.auacm.database.dao.UserDao;
-import com.auacm.database.model.User;
 import com.auacm.database.model.SolvedProblem;
+import com.auacm.database.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
@@ -49,9 +51,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public User getUser(String username) {
-        return userDao.getOne(username);
+        try {
+            return userDao.getOne(username);
+        } catch (JpaObjectRetrievalFailureException e) {
+            return null;
+        }
     }
 
     @Override

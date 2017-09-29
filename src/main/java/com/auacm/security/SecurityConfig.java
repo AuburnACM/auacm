@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -20,24 +21,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity security) throws Exception {
-        security.authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/problems").permitAll()
-                .antMatchers("/problem/**").permitAll()
-                .antMatchers("/rankings").permitAll()
-                .antMatchers("/competitions").permitAll()
-                .antMatchers("/competition/**").permitAll()
-                .antMatchers("/profile/**").permitAll()
-                .antMatchers("/rankings").permitAll()
-                .antMatchers("/api/hash").permitAll()
-                .antMatchers("/api/ranking", "/api/ranking/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/blog", "/api/blog/**").permitAll()
+        security.exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint())
                 .and().authorizeRequests()
                 .antMatchers("/api/me", "/api/create_user",
                         "/api/change_password", "/api/update_user").fullyAuthenticated()
                 .antMatchers(HttpMethod.POST, "/api/blog").fullyAuthenticated()
                 .antMatchers(HttpMethod.PUT, "/api/blog/**").fullyAuthenticated()
-                .and().httpBasic()
+                // Enable if we want to support http basic
+//                .and().httpBasic().authenticationEntryPoint(new Http403ForbiddenEntryPoint())
                 .and().formLogin().loginPage("/api/login").permitAll()
                 .and().csrf().disable();
     }
