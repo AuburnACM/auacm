@@ -1,5 +1,6 @@
 package com.auacm.api;
 
+import com.auacm.Auacm;
 import com.auacm.api.model.*;
 import com.auacm.api.validator.UpdateUserValidator;
 import com.auacm.database.model.User;
@@ -7,6 +8,8 @@ import com.auacm.database.model.UserPrincipal;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.auacm.database.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +35,12 @@ public class UserController {
 
     @Autowired
     private UpdateUserValidator updateUserValidator;
+
+    private Logger logger;
+
+    public UserController() {
+        logger = LoggerFactory.getLogger(UserController.class);
+    }
 
     @InitBinder("updateUser")
     protected void initBinder(final WebDataBinder binder) {

@@ -1,10 +1,13 @@
 package com.auacm.database.model;
 
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "blog_posts")
+@Proxy(lazy = false)
 public class BlogPost implements Serializable, Comparable<BlogPost> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -21,11 +21,6 @@ public class BlogPostDaoTest {
     @Autowired
     private BlogPostDao blogPostDao;
 
-//    @Before
-//    public void setup() {
-//        blogPostDao = new BlogPostDaoImpl(entityManager.getEntityManager(), entityManagerFactory.unwrap(SessionFactory.class));
-//    }
-
     @Test
     public void addBlogPost() throws Exception {
         BlogPost post = new BlogPost("Test", "Subtitle", "Body", "Mac-Genius");
@@ -42,31 +37,6 @@ public class BlogPostDaoTest {
         Assert.assertNotNull(post1.getPostTime());
         Assert.assertNotNull(post1.getUsername());
         Assert.assertEquals("Mac-Genius", post1.getUsername());
-    }
-
-    @Test
-    public void getBlogPosts() throws Exception {
-
-    }
-
-    @Test
-    public void getBlogPosts1() throws Exception {
-
-    }
-
-    @Test
-    public void getBlogPost() throws Exception {
-
-    }
-
-    @Test
-    public void updateBlogPost() throws Exception {
-
-    }
-
-    @Test
-    public void deleteBlogPost() throws Exception {
-
     }
 
 }
