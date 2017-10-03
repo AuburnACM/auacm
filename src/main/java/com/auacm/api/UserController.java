@@ -68,12 +68,11 @@ public class UserController {
     }
 
     @RequestMapping(value = "/api/logout", produces = "application/json", method = {RequestMethod.POST, RequestMethod.GET})
-    public String logout(HttpSession session) {
+    public void logout(HttpSession session) {
         if (session != null) {
             session.invalidate();
         }
         SecurityContextHolder.clearContext();
-        return "";
     }
 
     @RequestMapping(value = "/api/me", produces = "application/json", method = RequestMethod.GET)

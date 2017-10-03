@@ -58,13 +58,13 @@ public class BlogPostController {
     }
 
     @RequestMapping(path = "/api/blog", produces = "application/json", method = RequestMethod.GET)
-    public @ResponseBody String getBlogPosts(HttpServletResponse response) {
+    public @ResponseBody String getBlogPosts() {
         List<BlogPost> blogPosts = blogPostService.getAllBlogPosts();
         return jsonUtil.removeEmptyObjects(new JsonFormat().printToString(blogPostService.getResponseForBlogs(blogPosts)));
     }
 
     @RequestMapping(path = "/api/blog/{id}", produces = "application/json", method = {RequestMethod.GET})
-    public @ResponseBody String getBlogPost(@PathVariable long id, HttpServletResponse response) {
+    public @ResponseBody String getBlogPost(@PathVariable long id) {
         BlogPost blogPost = blogPostService.getBlogPostForId(id);
         return new JsonFormat().printToString(blogPostService.getResponseForBlog(blogPost));
     }
@@ -72,11 +72,10 @@ public class BlogPostController {
     @RequestMapping(path = "/api/blog/{id}", produces = "application/json",
             method = {RequestMethod.PUT, RequestMethod.POST})
     @PreAuthorize("hasRole('ADMIN')")
-    public DataWrapper<BlogPostResponse> updateBlogPost(@Validated @ModelAttribute("updateBlogPost") UpdateBlogPost blogPost,
-                                      @PathVariable long id, HttpServletResponse response) {
+    public @ResponseBody String updateBlogPost(@Validated @ModelAttribute("updateBlogPost") UpdateBlogPost blogPost,
+                                      @PathVariable long id) {
         BlogPost post = blogPostService.updateBlogPost(blogPost, id);
-        User user = userService.getUser(post.getUsername());
-        return new DataWrapper<>(new BlogPostResponse(post, user), response.getStatus());
+        return new JsonFormat().printToString(blogPostService.getResponseForBlog(post));
     }
 
     @RequestMapping(path = "/api/blog/{id}", produces = "application/json", method = RequestMethod.DELETE)
