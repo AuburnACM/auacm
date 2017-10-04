@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package com.auacm.api.proto;
+
+message ProblemWrapper {
+    message ProblemResponse{
+        int64 pid = 1;
+        string shortname = 2;
+        string name = 3;
+        string appeared = 4;
+        string difficuty = 5;
+        int64 added = 6;
+        int32 competitionId = 7;
+        string url = 8;
+    }
+}

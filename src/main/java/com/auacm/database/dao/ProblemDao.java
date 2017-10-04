@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProblemDao extends JpaRepository<Problem, Long> {
+    Problem findByShortNameIgnoreCase(String shortName);
 }

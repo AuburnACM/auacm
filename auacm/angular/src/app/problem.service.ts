@@ -15,23 +15,23 @@ export class ProblemService {
     requestForm.append('pid', `${problem.pid}`);
     requestForm.append('name', problem.name);
     requestForm.append('description', problem.description);
-    requestForm.append('input_desc', problem.inputDesc);
-    requestForm.append('output_desc', problem.outputDesc);
+    requestForm.append('inputDesc', problem.inputDesc);
+    requestForm.append('outputDesc', problem.outputDesc);
     requestForm.append('cases', JSON.stringify(problem.sampleCases));
     if (problem.difficulty >= 0) {
       requestForm.append('difficulty', `${problem.difficulty}`);
     }
     if (judgeInput !== undefined) {
-      requestForm.append('in_file', judgeInput);
+      requestForm.append('inFile', judgeInput);
     }
     if (judgeOutput !== undefined) {
-      requestForm.append('out_file', judgeOutput);
+      requestForm.append('outFile', judgeOutput);
     }
     if (judgeSolution !== undefined) {
-      requestForm.append('sol_file', judgeSolution);
+      requestForm.append('solFile', judgeSolution);
     }
-    requestForm.append('appeared_in', problem.appeared);
-    requestForm.append('comp_release', `${problem.compRelease}`);
+    requestForm.append('appearedIn', problem.appeared);
+    requestForm.append('compRelease', `${problem.compRelease}`);
 
     return new Promise((resolve, reject) => {
       const xmlSubmit = new XMLHttpRequest();
@@ -42,12 +42,12 @@ export class ProblemService {
             const newProblem = new Problem();
             newProblem.added = data.added;
             newProblem.appeared = data.appeared;
-            newProblem.compRelease = data.comp_release;
+            newProblem.compRelease = data.compRelease;
             newProblem.description = data.description;
             newProblem.difficulty = data.difficulty;
-            newProblem.inputDesc = (data.input_desc === undefined || data.input_desc === null) ? '' : data.input_desc;
+            newProblem.inputDesc = (data.inputDesc === undefined || data.inputDesc === null) ? '' : data.inputDesc;
             newProblem.name = data.name;
-            newProblem.outputDesc = (data.output_desc === undefined || data.output_desc === null) ? '' : data.output_desc;
+            newProblem.outputDesc = (data.outputDesc === undefined || data.outputDesc === null) ? '' : data.outputDesc;
             newProblem.pid = data.pid;
             newProblem.sampleCases = data.cases;
             newProblem.shortName = data.shortname;
@@ -67,8 +67,8 @@ export class ProblemService {
     requestForm.append('pid', `${problem.pid}`);
     requestForm.append('name', problem.name);
     requestForm.append('description', problem.description);
-    requestForm.append('input_desc', problem.inputDesc);
-    requestForm.append('output_desc', problem.outputDesc);
+    requestForm.append('inputDesc', problem.inputDesc);
+    requestForm.append('outputDesc', problem.outputDesc);
     requestForm.append('cases', JSON.stringify(problem.sampleCases));
     if (problem.difficulty >= 0) {
       requestForm.append('difficulty', `${problem.difficulty}`);
@@ -83,7 +83,7 @@ export class ProblemService {
       requestForm.append('sol_file', judgeSolution);
     }
     requestForm.append('appeared_in', problem.appeared);
-    requestForm.append('comp_release', `${problem.compRelease}`);
+    requestForm.append('compRelease', `${problem.compRelease}`);
 
     return new Promise((resolve, reject) => {
       const xmlSubmit = new XMLHttpRequest();
@@ -94,12 +94,12 @@ export class ProblemService {
             const newProblem = new Problem();
             newProblem.added = data.added;
             newProblem.appeared = data.appeared;
-            newProblem.compRelease = data.comp_release;
+            newProblem.compRelease = data.compRelease;
             newProblem.description = data.description;
             newProblem.difficulty = data.difficulty;
-            newProblem.inputDesc = (data.input_desc === undefined || data.input_desc === null) ? '' : data.input_desc;
+            newProblem.inputDesc = (data.inputDesc === undefined || data.inputDesc === null) ? '' : data.inputDesc;
             newProblem.name = data.name;
-            newProblem.outputDesc = (data.output_desc === undefined || data.output_desc === null) ? '' : data.output_desc;
+            newProblem.outputDesc = (data.outputDesc === undefined || data.outputDesc === null) ? '' : data.outputDesc;
             newProblem.pid = data.pid;
             newProblem.sampleCases = data.cases;
             newProblem.shortName = data.shortname;
@@ -122,14 +122,14 @@ export class ProblemService {
         if (res.status === 200) {
           problem.added = data.added;
           problem.appeared = data.appeared;
-          problem.compRelease = data.comp_release;
+          problem.compRelease = data.compRelease;
           problem.description = data.description;
           problem.difficulty = data.difficulty;
-          problem.inputDesc = (data.input_desc === undefined || data.input_desc === null) ? '' : data.input_desc;
+          problem.inputDesc = (data.inputDesc === undefined || data.inputDesc === null) ? '' : data.inputDesc;
           problem.name = data.name;
-          problem.outputDesc = (data.output_desc === undefined || data.output_desc === null) ? '' : data.output_desc;
+          problem.outputDesc = (data.outputDesc === undefined || data.outputDesc === null) ? '' : data.outputDesc;
           problem.pid = data.pid;
-          problem.sampleCases = data.sample_cases;
+          problem.sampleCases = data.sampleCases;
           problem.shortName = data.shortname;
         }
         resolve(problem);
@@ -147,14 +147,14 @@ export class ProblemService {
         if (res.status === 200) {
           problem.added = data.added;
           problem.appeared = data.appeared;
-          problem.compRelease = data.comp_release;
+          problem.compRelease = data.compRelease;
           problem.description = (data.description === undefined || data.description === null) ? '' : data.description;
           problem.difficulty = data.difficulty;
-          problem.inputDesc = (data.input_desc === undefined || data.input_desc === null) ? '' : data.input_desc;
+          problem.inputDesc = (data.inputDesc === undefined || data.inputDesc === null) ? '' : data.inputDesc;
           problem.name = data.name;
-          problem.outputDesc = (data.output_desc === undefined || data.output_desc === null) ? '' : data.output_desc;
+          problem.outputDesc = (data.outputDesc === undefined || data.outputDesc === null) ? '' : data.outputDesc;
           problem.pid = data.pid;
-          problem.sampleCases = data.sample_cases;
+          problem.sampleCases = data.sampleCases;
           problem.shortName = data.shortname;
         }
         resolve(problem);
@@ -174,7 +174,7 @@ export class ProblemService {
             const tempProblem = new Problem();
             tempProblem.added = data[i].added;
             tempProblem.appeared = data[i].appeared;
-            tempProblem.compRelease = data[i].comp_release;
+            tempProblem.compRelease = data[i].compRelease;
             tempProblem.difficulty = data[i].difficulty;
             tempProblem.name = data[i].name;
             tempProblem.pid = data[i].pid;

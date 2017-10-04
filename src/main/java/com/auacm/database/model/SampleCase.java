@@ -1,23 +1,28 @@
 package com.auacm.database.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "sample_cases")
 public class SampleCase implements Serializable {
+
+    @JsonIgnore
     @Id
     private long pid;
 
-    @Column(name = "name_num")
-    private int caseNumber;
+    @Column(name = "case_num")
+    private int caseNum;
 
     private String input;
 
     private String output;
 
+    @JsonIgnore
     @ManyToOne(targetEntity = Problem.class, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "pid")
+    @JoinColumn(name = "pid", insertable=false, updatable=false)
     private Problem problem;
 
     public long getPid() {
@@ -28,12 +33,12 @@ public class SampleCase implements Serializable {
         this.pid = pid;
     }
 
-    public int getCaseNumber() {
-        return caseNumber;
+    public int getCaseNum() {
+        return caseNum;
     }
 
-    public void setCaseNumber(int caseNumber) {
-        this.caseNumber = caseNumber;
+    public void setCaseNum(int caseNum) {
+        this.caseNum = caseNum;
     }
 
     public String getInput() {

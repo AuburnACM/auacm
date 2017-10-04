@@ -20,18 +20,21 @@ public class Problem implements Serializable {
 
     private String difficulty;
 
+    @Transient
+    private String url;
+
     private long added;
 
     @Column(name = "comp_release")
-    private int competitionId;
+    private Integer competitionId;
 
     @OneToMany(targetEntity = SampleCase.class, fetch = FetchType.EAGER)
-//    @JoinColumn(name = "pid", nullable = false, )
+    @JoinColumn(name = "pid", nullable = false, insertable=false, updatable=false)
     private List<SampleCase> sampleCases;
 
     @OneToOne(targetEntity = ProblemData.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "pid", nullable = false)
-    private List<ProblemData> problemData;
+    private ProblemData problemData;
 
     public long getPid() {
         return pid;
@@ -81,11 +84,11 @@ public class Problem implements Serializable {
         this.added = added;
     }
 
-    public int getCompetitionId() {
+    public Integer getCompetitionId() {
         return competitionId;
     }
 
-    public void setCompetitionId(int competitionId) {
+    public void setCompetitionId(Integer competitionId) {
         this.competitionId = competitionId;
     }
 
@@ -97,11 +100,19 @@ public class Problem implements Serializable {
         this.sampleCases = sampleCases;
     }
 
-    public List<ProblemData> getProblemData() {
+    public ProblemData getProblemData() {
         return problemData;
     }
 
-    public void setProblemData(List<ProblemData> problemData) {
+    public void setProblemData(ProblemData problemData) {
         this.problemData = problemData;
+    }
+
+    public String getUrl() {
+        return "problems/" + shortName + "/info.pdf";
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }
