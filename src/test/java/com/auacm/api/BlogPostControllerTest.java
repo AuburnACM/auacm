@@ -6,6 +6,7 @@ import com.auacm.database.model.User;
 import com.auacm.database.model.UserPrincipal;
 import com.auacm.database.service.BlogPostService;
 import com.auacm.database.service.UserService;
+import com.auacm.exception.UserException;
 import com.google.gson.*;
 import org.junit.Assert;
 import org.junit.Before;
@@ -40,10 +41,6 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class BlogPostControllerTest {
-
-    private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
-            MediaType.APPLICATION_JSON.getSubtype(),
-            Charset.forName("utf8"));
 
     private MockMvc mockMvc;
 

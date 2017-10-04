@@ -17,7 +17,7 @@ export class UserData {
   deserialize(object: any): UserData {
     this.username = object.username;
     this.displayName = object.displayName;
-    this.isAdmin = object.isAdmin === 1;
+    this.isAdmin = object.isAdmin !== undefined;
     this.permissions = object.permissions;
     return this;
   }

@@ -31,7 +31,8 @@ public class UpdateUserValidator implements Validator{
             }
         }
 
-        if (user.getUsername() == null && user.getDisplay() == null && user.getOldPassword() == null && user.getNewPassword() == null && !user.isAdmin()) {
+        if (user.getUsername() == null && user.getDisplay() == null && user.getOldPassword() == null
+                && user.getNewPassword() == null && user.isAdmin() == null) {
             errors.reject("NoParameters");
         }
     }

@@ -20,6 +20,8 @@ public class UserPrincipal implements UserDetails {
         ArrayList<GrantedAuthority> authorities = new ArrayList<>();
         if (user.isAdmin()) {
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        } else {
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         }
         return authorities;
     }

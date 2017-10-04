@@ -1,26 +1,21 @@
 package com.auacm.api.model;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 
 public class UpdateUser {
 
-    @Min(2)
-    @Max(32)
+    @Size(min = 2, max = 255)
     private String username;
 
-    @Min(2)
-    @Max(32)
+    @Size(min = 2, max = 255)
     private String display;
 
-    private boolean admin;
+    private Boolean admin;
 
-    @Min(8)
-    @Max(255)
+    @Size(min = 8, max = 255)
     private String oldPassword;
 
-    @Min(8)
-    @Max(255)
+    @Size(min = 8, max = 255)
     private String newPassword;
 
     public String getUsername() {
@@ -39,7 +34,7 @@ public class UpdateUser {
         this.display = display;
     }
 
-    public boolean isAdmin() {
+    public Boolean isAdmin() {
         return admin;
     }
 

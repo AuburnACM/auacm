@@ -2,12 +2,24 @@ syntax = "proto3";
 
 package com.auacm.api.proto;
 
-message CreateUser {
+message UserData {
     string username = 1;
+    string displayName = 2;
+    bool isAdmin = 3;
+    repeated string permissions = 4;
+}
 
-    string password = 2;
+message RankedUser {
+    string displayName = 1;
+    string username = 2;
+    int32 rank = 3;
+    int32 solved = 4;
+}
 
-    string display = 3;
+message MeResponseWrapper {
+    UserData data = 1;
+}
 
-    bool admin = 4;
+message RankResponseWrapper {
+    repeated RankedUser data = 1;
 }

@@ -68,6 +68,7 @@ export class UserService {
       const self = this;
       this._httpClient.get<DataWrapper<UserData>>('/api/me', {withCredentials: true}).subscribe(data => {
         const userData = new UserData().deserialize(data.data);
+        userData.loggedIn = true;
         self.updateUserData(userData);
         resolve(userData);
       }, (err: Response) => {

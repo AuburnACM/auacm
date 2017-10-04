@@ -3,22 +3,20 @@ package com.auacm.api.model;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public class CreateUser {
 
     @NotNull
-    @Min(2)
-    @Max(32)
+    @Size(min = 2, max = 255)
     private String username;
 
     @NotNull
-    @Min(8)
-    @Max(255)
+    @Size(min = 8, max = 255)
     private String password;
 
     @NotNull
-    @Min(2)
-    @Max(32)
+    @Size(min = 2, max = 255)
     private String display;
 
     private boolean admin = false;
