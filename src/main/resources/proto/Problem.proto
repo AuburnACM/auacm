@@ -2,15 +2,42 @@ syntax = "proto3";
 
 package com.auacm.api.proto;
 
+message SimpleProblemResponse {
+    int64 added = 1;
+    string appeared = 2;
+    int64 compRelease = 3;
+    string difficuty = 4;
+    string name = 5;
+    int64 pid = 6;
+    string shortName = 7;
+    bool solved = 8;
+    string url = 9;
+}
+
+message ProblemListWrapper {
+    repeated SimpleProblemResponse data = 1;
+}
+
+message SampleCase {
+    int64 caseNum = 1;
+    string input = 2;
+    string output = 3;
+}
+
+message ProblemResponse {
+    int64 added = 1;
+    string appeared = 2;
+    int64 compRelease = 3;
+    string description = 4;
+    string difficuty = 5;
+    string inputDesc = 6;
+    string name = 7;
+    string outputDesc = 8;
+    int64 pid = 9;
+    repeated SampleCase sampleCases = 10;
+    string shortName = 11;
+}
+
 message ProblemWrapper {
-    message ProblemResponse{
-        int64 pid = 1;
-        string shortname = 2;
-        string name = 3;
-        string appeared = 4;
-        string difficuty = 5;
-        int64 added = 6;
-        int32 competitionId = 7;
-        string url = 8;
-    }
+    ProblemResponse data = 1;
 }

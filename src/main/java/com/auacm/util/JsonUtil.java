@@ -1,6 +1,8 @@
 package com.auacm.util;
 
 import com.google.gson.*;
+import com.google.protobuf.Message;
+import com.googlecode.protobuf.format.JsonFormat;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -10,8 +12,11 @@ import java.util.Map;
 public class JsonUtil {
     private Gson gson;
 
+    private JsonFormat format;
+
     public JsonUtil() {
         gson = new GsonBuilder().setPrettyPrinting().create();
+        format = new JsonFormat();
     }
 
     public String removeEmptyObjects(String jsonString) {
@@ -51,5 +56,9 @@ public class JsonUtil {
         for (String key : deleteObject) {
             object.remove(key);
         }
+    }
+
+    public String toJson(Message message) {
+        return format.printToString(message);
     }
 }

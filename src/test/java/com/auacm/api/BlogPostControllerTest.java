@@ -4,9 +4,8 @@ import com.auacm.Auacm;
 import com.auacm.database.model.BlogPost;
 import com.auacm.database.model.User;
 import com.auacm.database.model.UserPrincipal;
-import com.auacm.database.service.BlogPostService;
-import com.auacm.database.service.UserService;
-import com.auacm.exception.UserException;
+import com.auacm.service.BlogPostService;
+import com.auacm.service.UserService;
 import com.google.gson.*;
 import org.junit.Assert;
 import org.junit.Before;
@@ -29,7 +28,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertNotNull;

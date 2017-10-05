@@ -26,7 +26,7 @@ public class Problem implements Serializable {
     private long added;
 
     @Column(name = "comp_release")
-    private Integer competitionId;
+    private Long competitionId;
 
     @OneToMany(targetEntity = SampleCase.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "pid", nullable = false, insertable=false, updatable=false)
@@ -84,11 +84,11 @@ public class Problem implements Serializable {
         this.added = added;
     }
 
-    public Integer getCompetitionId() {
-        return competitionId;
+    public Long getCompetitionId() {
+        return competitionId == null ? 0 : competitionId;
     }
 
-    public void setCompetitionId(Integer competitionId) {
+    public void setCompetitionId(Long competitionId) {
         this.competitionId = competitionId;
     }
 

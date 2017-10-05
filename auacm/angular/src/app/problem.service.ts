@@ -3,11 +3,13 @@ import { Http, Request, Response } from '@angular/http';
 import { Subject } from 'rxjs/Subject';
 
 import { Problem, SampleCase } from './models/problem';
+import { HttpClient } from '@angular/common/http';
+import { DataWrapper } from 'app/models/datawrapper';
 
 @Injectable()
 export class ProblemService {
 
-  constructor(private _http: Http) { }
+  constructor(private _http: Http, private _httpClient: HttpClient) { }
 
   // Returns a copy of itself if successful
   createProblem(problem: Problem, judgeInput: File, judgeOutput: File, judgeSolution: File): Promise<Problem> {
@@ -116,22 +118,8 @@ export class ProblemService {
 
   getProblemByPid(identifier: number): Promise<Problem> {
     return new Promise((resolve, reject) => {
-      this._http.get(`/api/problems/${identifier}`).subscribe((res: Response) => {
-        const problem = new Problem();
-        const data = res.json().data;
-        if (res.status === 200) {
-          problem.added = data.added;
-          problem.appeared = data.appeared;
-          problem.compRelease = data.compRelease;
-          problem.description = data.description;
-          problem.difficulty = data.difficulty;
-          problem.inputDesc = (data.inputDesc === undefined || data.inputDesc === null) ? '' : data.inputDesc;
-          problem.name = data.name;
-          problem.outputDesc = (data.outputDesc === undefined || data.outputDesc === null) ? '' : data.outputDesc;
-          problem.pid = data.pid;
-          problem.sampleCases = data.sampleCases;
-          problem.shortName = data.shortname;
-        }
+      this._httpClient.get<DataWrapper<Problem>>(`/api/problems/${identifier}`).subscribe(data => {
+        const problem = new Problem().deserialize(data.data);
         resolve(problem);
       }, (err: Response) => {
         resolve(new Problem());
@@ -141,22 +129,8 @@ export class ProblemService {
 
   getProblemByShortName(identifier: string): Promise<Problem> {
     return new Promise((resolve, reject) => {
-      this._http.get(`/api/problems/${identifier}`).subscribe((res: Response) => {
-        const problem = new Problem();
-        const data = res.json().data;
-        if (res.status === 200) {
-          problem.added = data.added;
-          problem.appeared = data.appeared;
-          problem.compRelease = data.compRelease;
-          problem.description = (data.description === undefined || data.description === null) ? '' : data.description;
-          problem.difficulty = data.difficulty;
-          problem.inputDesc = (data.inputDesc === undefined || data.inputDesc === null) ? '' : data.inputDesc;
-          problem.name = data.name;
-          problem.outputDesc = (data.outputDesc === undefined || data.outputDesc === null) ? '' : data.outputDesc;
-          problem.pid = data.pid;
-          problem.sampleCases = data.sampleCases;
-          problem.shortName = data.shortname;
-        }
+      this._httpClient.get<DataWrapper<Problem>>(`/api/problems/${identifier}`).subscribe(data => {
+        const problem = new Problem().deserialize(data.data);
         resolve(problem);
       }, (err: Response) => {
         resolve(undefined);
@@ -166,23 +140,11 @@ export class ProblemService {
 
   getAllProblems(): Promise<Problem[]> {
     return new Promise((resolve, reject) => {
-      this._http.get('/api/problems').subscribe((res: Response) => {
-        const problems = [];
-        if (res.status === 200) {
-          const data = res.json().data;
-          for (let i = 0; i < data.length; i++) {
-            const tempProblem = new Problem();
-            tempProblem.added = data[i].added;
-            tempProblem.appeared = data[i].appeared;
-            tempProblem.compRelease = data[i].compRelease;
-            tempProblem.difficulty = data[i].difficulty;
-            tempProblem.name = data[i].name;
-            tempProblem.pid = data[i].pid;
-            tempProblem.shortName = data[i].shortname;
-            tempProblem.solved = data[i].solved;
-            tempProblem.url = data[i].url;
-            problems.push(tempProblem);
-          }
+      this._httpClient.get<DataWrapper<Problem[]>>('/api/problems').subscribe(data => {
+        const problems = <Problem[]> [];
+        const list = data.data;
+        for (const problem of list) {
+          problems.push(new Problem().deserialize(problem));
         }
         resolve(problems);
       }, (err: Response) => {

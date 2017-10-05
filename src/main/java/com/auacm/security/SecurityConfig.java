@@ -1,6 +1,6 @@
 package com.auacm.security;
 
-import com.auacm.database.service.UserService;
+import com.auacm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

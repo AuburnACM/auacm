@@ -2,6 +2,7 @@ package com.auacm.database.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "comp_names")
@@ -17,6 +18,14 @@ public class Competition implements Serializable {
     private int stop;
 
     private boolean closed;
+
+    @OneToMany(targetEntity = CompetitionProblem.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "cid", nullable = false, insertable = false)
+    private List<CompetitionProblem> competitionProblems;
+
+    @OneToMany(targetEntity = CompetitionUser.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "cid", nullable = false, insertable = false)
+    private List<CompetitionUser> competitionUsers;
 
     public long getCid() {
         return cid;
@@ -56,5 +65,13 @@ public class Competition implements Serializable {
 
     public void setClosed(boolean closed) {
         this.closed = closed;
+    }
+
+    public List<CompetitionProblem> getCompetitionProblems() {
+        return competitionProblems;
+    }
+
+    public void setCompetitionProblems(List<CompetitionProblem> competitionProblems) {
+        this.competitionProblems = competitionProblems;
     }
 }

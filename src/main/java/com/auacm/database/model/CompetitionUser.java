@@ -10,11 +10,15 @@ public class CompetitionUser implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private int cid;
+//    private int cid;
 
     private String username;
 
     private String team;
+
+    @ManyToOne(targetEntity = Competition.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "cid", nullable = false, insertable = false)
+    private Competition competition;
 
     public long getId() {
         return id;
@@ -24,13 +28,13 @@ public class CompetitionUser implements Serializable {
         this.id = id;
     }
 
-    public int getCid() {
-        return cid;
-    }
-
-    public void setCid(int cid) {
-        this.cid = cid;
-    }
+//    public int getCid() {
+//        return cid;
+//    }
+//
+//    public void setCid(int cid) {
+//        this.cid = cid;
+//    }
 
     public String getUsername() {
         return username;
@@ -46,5 +50,13 @@ public class CompetitionUser implements Serializable {
 
     public void setTeam(String team) {
         this.team = team;
+    }
+
+    public Competition getCompetition() {
+        return competition;
+    }
+
+    public void setCompetition(Competition competition) {
+        this.competition = competition;
     }
 }

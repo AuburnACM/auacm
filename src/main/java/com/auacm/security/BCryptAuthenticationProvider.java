@@ -1,7 +1,7 @@
 package com.auacm.security;
 
 import com.auacm.database.model.UserPrincipal;
-import com.auacm.database.service.UserService;
+import com.auacm.service.UserService;
 import com.auacm.database.model.User;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

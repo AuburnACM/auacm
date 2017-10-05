@@ -25,7 +25,10 @@ build_prod:
 	cd auacm/angular/ && ng build --prod
 
 mvn:
-	mvn clean package
+	mvn clean package -DskipTests=true
+
+test:
+	mvn clean test
 
 proto:
 	protoc --java_out=src/main/java/ src/main/resources/proto/Blog.proto

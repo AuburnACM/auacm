@@ -6,11 +6,11 @@ import com.auacm.api.validator.CreateUserValidator;
 import com.auacm.api.validator.UpdateUserValidator;
 import com.auacm.database.model.User;
 import com.auacm.database.model.UserPrincipal;
-import com.auacm.database.service.UserService;
 import com.auacm.exception.UserException;
+import com.auacm.service.UserService;
+import com.auacm.util.JsonUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.googlecode.protobuf.format.JsonFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +35,9 @@ public class UserController {
 
     @Autowired
     private CreateUserValidator createUserValidator;
+
+    @Autowired
+    private JsonUtil jsonUtil;
 
     @InitBinder("createUser")
     private void initCreateUserValidator(WebDataBinder binder) {
@@ -61,7 +64,7 @@ public class UserController {
                     || SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
                 throw new BadCredentialsException("Invalid username or password!");
             }
-            return new JsonFormat().printToString(userService
+            return jsonUtil.toJson(userService
                     .getMeResponse((UserPrincipal)SecurityContextHolder
                             .getContext().getAuthentication().getPrincipal()));
         }
@@ -79,19 +82,19 @@ public class UserController {
     @RequestMapping(value = "/api/me", produces = "application/json", method = RequestMethod.GET)
     public @ResponseBody String me(HttpServletResponse response) {
         UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return new JsonFormat().printToString(userService.getMeResponse(principal));
+        return jsonUtil.toJson(userService.getMeResponse(principal));
     }
 
     @RequestMapping(value = "/api/create_user", produces = "application/json", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ADMIN')")
     public @ResponseBody String createUser(@Validated @ModelAttribute("createUser") CreateUser user) {
         User user1 = userService.createUser(user.getDisplay(), user.getUsername(), user.getPassword(), user.isAdmin());
-        return new JsonFormat().printToString(userService.getMeResponse(new UserPrincipal(user1)));
+        return jsonUtil.toJson(userService.getMeResponse(new UserPrincipal(user1)));
     }
 
     @RequestMapping(value = "/api/change_password", produces = "application/json", method = RequestMethod.POST)
     public void changePassword(@Validated @ModelAttribute("updateUser") UpdateUser user) {
-        User userInstance = (User) ((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+        User userInstance = ((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         if (user.getNewPassword() != null) {
             userService.updatePassword(userInstance, user.getNewPassword());
         } else {
@@ -114,6 +117,7 @@ public class UserController {
         if (timeFrame == null) {
             timeFrame = "all";
         }
-        return new JsonFormat().printToString(userService.getRankedResponse(userService.getRanks(timeFrame)));
+        return jsonUtil.removeEmptyObjects(jsonUtil.toJson(
+                userService.getRankedResponse(userService.getRanks(timeFrame))));
     }
 }

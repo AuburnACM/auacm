@@ -1,4 +1,4 @@
-package com.auacm.database.service;
+package com.auacm.service;
 
 import com.auacm.api.model.RankedUser;
 import com.auacm.api.model.UpdateUser;

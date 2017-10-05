@@ -1,7 +1,7 @@
 package com.auacm.api.validator;
 
 import com.auacm.api.model.CreateUser;
-import com.auacm.database.service.UserService;
+import com.auacm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

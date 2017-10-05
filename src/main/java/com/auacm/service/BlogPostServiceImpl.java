@@ -1,6 +1,5 @@
-package com.auacm.database.service;
+package com.auacm.service;
 
-import com.auacm.api.model.BlogPostResponse;
 import com.auacm.api.proto.Blog;
 import com.auacm.database.dao.BlogPostDao;
 import com.auacm.database.model.BlogPost;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

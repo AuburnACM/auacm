@@ -14,9 +14,4733 @@ public final class Problem {
     registerAllExtensions(
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
+  public interface SimpleProblemResponseOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.auacm.api.proto.SimpleProblemResponse)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>int64 added = 1;</code>
+     */
+    long getAdded();
+
+    /**
+     * <code>string appeared = 2;</code>
+     */
+    java.lang.String getAppeared();
+    /**
+     * <code>string appeared = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getAppearedBytes();
+
+    /**
+     * <code>int64 compRelease = 3;</code>
+     */
+    long getCompRelease();
+
+    /**
+     * <code>string difficuty = 4;</code>
+     */
+    java.lang.String getDifficuty();
+    /**
+     * <code>string difficuty = 4;</code>
+     */
+    com.google.protobuf.ByteString
+        getDifficutyBytes();
+
+    /**
+     * <code>string name = 5;</code>
+     */
+    java.lang.String getName();
+    /**
+     * <code>string name = 5;</code>
+     */
+    com.google.protobuf.ByteString
+        getNameBytes();
+
+    /**
+     * <code>int64 pid = 6;</code>
+     */
+    long getPid();
+
+    /**
+     * <code>string shortName = 7;</code>
+     */
+    java.lang.String getShortName();
+    /**
+     * <code>string shortName = 7;</code>
+     */
+    com.google.protobuf.ByteString
+        getShortNameBytes();
+
+    /**
+     * <code>bool solved = 8;</code>
+     */
+    boolean getSolved();
+
+    /**
+     * <code>string url = 9;</code>
+     */
+    java.lang.String getUrl();
+    /**
+     * <code>string url = 9;</code>
+     */
+    com.google.protobuf.ByteString
+        getUrlBytes();
+  }
+  /**
+   * Protobuf type {@code com.auacm.api.proto.SimpleProblemResponse}
+   */
+  public  static final class SimpleProblemResponse extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.auacm.api.proto.SimpleProblemResponse)
+      SimpleProblemResponseOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use SimpleProblemResponse.newBuilder() to construct.
+    private SimpleProblemResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private SimpleProblemResponse() {
+      added_ = 0L;
+      appeared_ = "";
+      compRelease_ = 0L;
+      difficuty_ = "";
+      name_ = "";
+      pid_ = 0L;
+      shortName_ = "";
+      solved_ = false;
+      url_ = "";
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private SimpleProblemResponse(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+
+              added_ = input.readInt64();
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              appeared_ = s;
+              break;
+            }
+            case 24: {
+
+              compRelease_ = input.readInt64();
+              break;
+            }
+            case 34: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              difficuty_ = s;
+              break;
+            }
+            case 42: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              name_ = s;
+              break;
+            }
+            case 48: {
+
+              pid_ = input.readInt64();
+              break;
+            }
+            case 58: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              shortName_ = s;
+              break;
+            }
+            case 64: {
+
+              solved_ = input.readBool();
+              break;
+            }
+            case 74: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              url_ = s;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.auacm.api.proto.Problem.internal_static_com_auacm_api_proto_SimpleProblemResponse_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.auacm.api.proto.Problem.internal_static_com_auacm_api_proto_SimpleProblemResponse_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.auacm.api.proto.Problem.SimpleProblemResponse.class, com.auacm.api.proto.Problem.SimpleProblemResponse.Builder.class);
+    }
+
+    public static final int ADDED_FIELD_NUMBER = 1;
+    private long added_;
+    /**
+     * <code>int64 added = 1;</code>
+     */
+    public long getAdded() {
+      return added_;
+    }
+
+    public static final int APPEARED_FIELD_NUMBER = 2;
+    private volatile java.lang.Object appeared_;
+    /**
+     * <code>string appeared = 2;</code>
+     */
+    public java.lang.String getAppeared() {
+      java.lang.Object ref = appeared_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        appeared_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string appeared = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getAppearedBytes() {
+      java.lang.Object ref = appeared_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        appeared_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int COMPRELEASE_FIELD_NUMBER = 3;
+    private long compRelease_;
+    /**
+     * <code>int64 compRelease = 3;</code>
+     */
+    public long getCompRelease() {
+      return compRelease_;
+    }
+
+    public static final int DIFFICUTY_FIELD_NUMBER = 4;
+    private volatile java.lang.Object difficuty_;
+    /**
+     * <code>string difficuty = 4;</code>
+     */
+    public java.lang.String getDifficuty() {
+      java.lang.Object ref = difficuty_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        difficuty_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string difficuty = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDifficutyBytes() {
+      java.lang.Object ref = difficuty_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        difficuty_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int NAME_FIELD_NUMBER = 5;
+    private volatile java.lang.Object name_;
+    /**
+     * <code>string name = 5;</code>
+     */
+    public java.lang.String getName() {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        name_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string name = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getNameBytes() {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        name_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int PID_FIELD_NUMBER = 6;
+    private long pid_;
+    /**
+     * <code>int64 pid = 6;</code>
+     */
+    public long getPid() {
+      return pid_;
+    }
+
+    public static final int SHORTNAME_FIELD_NUMBER = 7;
+    private volatile java.lang.Object shortName_;
+    /**
+     * <code>string shortName = 7;</code>
+     */
+    public java.lang.String getShortName() {
+      java.lang.Object ref = shortName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        shortName_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string shortName = 7;</code>
+     */
+    public com.google.protobuf.ByteString
+        getShortNameBytes() {
+      java.lang.Object ref = shortName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        shortName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int SOLVED_FIELD_NUMBER = 8;
+    private boolean solved_;
+    /**
+     * <code>bool solved = 8;</code>
+     */
+    public boolean getSolved() {
+      return solved_;
+    }
+
+    public static final int URL_FIELD_NUMBER = 9;
+    private volatile java.lang.Object url_;
+    /**
+     * <code>string url = 9;</code>
+     */
+    public java.lang.String getUrl() {
+      java.lang.Object ref = url_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        url_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string url = 9;</code>
+     */
+    public com.google.protobuf.ByteString
+        getUrlBytes() {
+      java.lang.Object ref = url_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        url_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (added_ != 0L) {
+        output.writeInt64(1, added_);
+      }
+      if (!getAppearedBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, appeared_);
+      }
+      if (compRelease_ != 0L) {
+        output.writeInt64(3, compRelease_);
+      }
+      if (!getDifficutyBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, difficuty_);
+      }
+      if (!getNameBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, name_);
+      }
+      if (pid_ != 0L) {
+        output.writeInt64(6, pid_);
+      }
+      if (!getShortNameBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, shortName_);
+      }
+      if (solved_ != false) {
+        output.writeBool(8, solved_);
+      }
+      if (!getUrlBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 9, url_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (added_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(1, added_);
+      }
+      if (!getAppearedBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, appeared_);
+      }
+      if (compRelease_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(3, compRelease_);
+      }
+      if (!getDifficutyBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, difficuty_);
+      }
+      if (!getNameBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, name_);
+      }
+      if (pid_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(6, pid_);
+      }
+      if (!getShortNameBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, shortName_);
+      }
+      if (solved_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(8, solved_);
+      }
+      if (!getUrlBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, url_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.auacm.api.proto.Problem.SimpleProblemResponse)) {
+        return super.equals(obj);
+      }
+      com.auacm.api.proto.Problem.SimpleProblemResponse other = (com.auacm.api.proto.Problem.SimpleProblemResponse) obj;
+
+      boolean result = true;
+      result = result && (getAdded()
+          == other.getAdded());
+      result = result && getAppeared()
+          .equals(other.getAppeared());
+      result = result && (getCompRelease()
+          == other.getCompRelease());
+      result = result && getDifficuty()
+          .equals(other.getDifficuty());
+      result = result && getName()
+          .equals(other.getName());
+      result = result && (getPid()
+          == other.getPid());
+      result = result && getShortName()
+          .equals(other.getShortName());
+      result = result && (getSolved()
+          == other.getSolved());
+      result = result && getUrl()
+          .equals(other.getUrl());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + ADDED_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getAdded());
+      hash = (37 * hash) + APPEARED_FIELD_NUMBER;
+      hash = (53 * hash) + getAppeared().hashCode();
+      hash = (37 * hash) + COMPRELEASE_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getCompRelease());
+      hash = (37 * hash) + DIFFICUTY_FIELD_NUMBER;
+      hash = (53 * hash) + getDifficuty().hashCode();
+      hash = (37 * hash) + NAME_FIELD_NUMBER;
+      hash = (53 * hash) + getName().hashCode();
+      hash = (37 * hash) + PID_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getPid());
+      hash = (37 * hash) + SHORTNAME_FIELD_NUMBER;
+      hash = (53 * hash) + getShortName().hashCode();
+      hash = (37 * hash) + SOLVED_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getSolved());
+      hash = (37 * hash) + URL_FIELD_NUMBER;
+      hash = (53 * hash) + getUrl().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.auacm.api.proto.Problem.SimpleProblemResponse parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.auacm.api.proto.Problem.SimpleProblemResponse parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.auacm.api.proto.Problem.SimpleProblemResponse parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.auacm.api.proto.Problem.SimpleProblemResponse parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.auacm.api.proto.Problem.SimpleProblemResponse parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.auacm.api.proto.Problem.SimpleProblemResponse parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.auacm.api.proto.Problem.SimpleProblemResponse parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.auacm.api.proto.Problem.SimpleProblemResponse parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.auacm.api.proto.Problem.SimpleProblemResponse parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.auacm.api.proto.Problem.SimpleProblemResponse parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.auacm.api.proto.Problem.SimpleProblemResponse parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.auacm.api.proto.Problem.SimpleProblemResponse parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.auacm.api.proto.Problem.SimpleProblemResponse prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.auacm.api.proto.SimpleProblemResponse}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.auacm.api.proto.SimpleProblemResponse)
+        com.auacm.api.proto.Problem.SimpleProblemResponseOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.auacm.api.proto.Problem.internal_static_com_auacm_api_proto_SimpleProblemResponse_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.auacm.api.proto.Problem.internal_static_com_auacm_api_proto_SimpleProblemResponse_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.auacm.api.proto.Problem.SimpleProblemResponse.class, com.auacm.api.proto.Problem.SimpleProblemResponse.Builder.class);
+      }
+
+      // Construct using com.auacm.api.proto.Problem.SimpleProblemResponse.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        added_ = 0L;
+
+        appeared_ = "";
+
+        compRelease_ = 0L;
+
+        difficuty_ = "";
+
+        name_ = "";
+
+        pid_ = 0L;
+
+        shortName_ = "";
+
+        solved_ = false;
+
+        url_ = "";
+
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.auacm.api.proto.Problem.internal_static_com_auacm_api_proto_SimpleProblemResponse_descriptor;
+      }
+
+      public com.auacm.api.proto.Problem.SimpleProblemResponse getDefaultInstanceForType() {
+        return com.auacm.api.proto.Problem.SimpleProblemResponse.getDefaultInstance();
+      }
+
+      public com.auacm.api.proto.Problem.SimpleProblemResponse build() {
+        com.auacm.api.proto.Problem.SimpleProblemResponse result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.auacm.api.proto.Problem.SimpleProblemResponse buildPartial() {
+        com.auacm.api.proto.Problem.SimpleProblemResponse result = new com.auacm.api.proto.Problem.SimpleProblemResponse(this);
+        result.added_ = added_;
+        result.appeared_ = appeared_;
+        result.compRelease_ = compRelease_;
+        result.difficuty_ = difficuty_;
+        result.name_ = name_;
+        result.pid_ = pid_;
+        result.shortName_ = shortName_;
+        result.solved_ = solved_;
+        result.url_ = url_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.auacm.api.proto.Problem.SimpleProblemResponse) {
+          return mergeFrom((com.auacm.api.proto.Problem.SimpleProblemResponse)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.auacm.api.proto.Problem.SimpleProblemResponse other) {
+        if (other == com.auacm.api.proto.Problem.SimpleProblemResponse.getDefaultInstance()) return this;
+        if (other.getAdded() != 0L) {
+          setAdded(other.getAdded());
+        }
+        if (!other.getAppeared().isEmpty()) {
+          appeared_ = other.appeared_;
+          onChanged();
+        }
+        if (other.getCompRelease() != 0L) {
+          setCompRelease(other.getCompRelease());
+        }
+        if (!other.getDifficuty().isEmpty()) {
+          difficuty_ = other.difficuty_;
+          onChanged();
+        }
+        if (!other.getName().isEmpty()) {
+          name_ = other.name_;
+          onChanged();
+        }
+        if (other.getPid() != 0L) {
+          setPid(other.getPid());
+        }
+        if (!other.getShortName().isEmpty()) {
+          shortName_ = other.shortName_;
+          onChanged();
+        }
+        if (other.getSolved() != false) {
+          setSolved(other.getSolved());
+        }
+        if (!other.getUrl().isEmpty()) {
+          url_ = other.url_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.auacm.api.proto.Problem.SimpleProblemResponse parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.auacm.api.proto.Problem.SimpleProblemResponse) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private long added_ ;
+      /**
+       * <code>int64 added = 1;</code>
+       */
+      public long getAdded() {
+        return added_;
+      }
+      /**
+       * <code>int64 added = 1;</code>
+       */
+      public Builder setAdded(long value) {
+        
+        added_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 added = 1;</code>
+       */
+      public Builder clearAdded() {
+        
+        added_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object appeared_ = "";
+      /**
+       * <code>string appeared = 2;</code>
+       */
+      public java.lang.String getAppeared() {
+        java.lang.Object ref = appeared_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          appeared_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string appeared = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getAppearedBytes() {
+        java.lang.Object ref = appeared_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          appeared_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string appeared = 2;</code>
+       */
+      public Builder setAppeared(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        appeared_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string appeared = 2;</code>
+       */
+      public Builder clearAppeared() {
+        
+        appeared_ = getDefaultInstance().getAppeared();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string appeared = 2;</code>
+       */
+      public Builder setAppearedBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        appeared_ = value;
+        onChanged();
+        return this;
+      }
+
+      private long compRelease_ ;
+      /**
+       * <code>int64 compRelease = 3;</code>
+       */
+      public long getCompRelease() {
+        return compRelease_;
+      }
+      /**
+       * <code>int64 compRelease = 3;</code>
+       */
+      public Builder setCompRelease(long value) {
+        
+        compRelease_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 compRelease = 3;</code>
+       */
+      public Builder clearCompRelease() {
+        
+        compRelease_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object difficuty_ = "";
+      /**
+       * <code>string difficuty = 4;</code>
+       */
+      public java.lang.String getDifficuty() {
+        java.lang.Object ref = difficuty_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          difficuty_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string difficuty = 4;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDifficutyBytes() {
+        java.lang.Object ref = difficuty_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          difficuty_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string difficuty = 4;</code>
+       */
+      public Builder setDifficuty(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        difficuty_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string difficuty = 4;</code>
+       */
+      public Builder clearDifficuty() {
+        
+        difficuty_ = getDefaultInstance().getDifficuty();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string difficuty = 4;</code>
+       */
+      public Builder setDifficutyBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        difficuty_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object name_ = "";
+      /**
+       * <code>string name = 5;</code>
+       */
+      public java.lang.String getName() {
+        java.lang.Object ref = name_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          name_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string name = 5;</code>
+       */
+      public com.google.protobuf.ByteString
+          getNameBytes() {
+        java.lang.Object ref = name_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          name_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string name = 5;</code>
+       */
+      public Builder setName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        name_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string name = 5;</code>
+       */
+      public Builder clearName() {
+        
+        name_ = getDefaultInstance().getName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string name = 5;</code>
+       */
+      public Builder setNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        name_ = value;
+        onChanged();
+        return this;
+      }
+
+      private long pid_ ;
+      /**
+       * <code>int64 pid = 6;</code>
+       */
+      public long getPid() {
+        return pid_;
+      }
+      /**
+       * <code>int64 pid = 6;</code>
+       */
+      public Builder setPid(long value) {
+        
+        pid_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 pid = 6;</code>
+       */
+      public Builder clearPid() {
+        
+        pid_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object shortName_ = "";
+      /**
+       * <code>string shortName = 7;</code>
+       */
+      public java.lang.String getShortName() {
+        java.lang.Object ref = shortName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          shortName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string shortName = 7;</code>
+       */
+      public com.google.protobuf.ByteString
+          getShortNameBytes() {
+        java.lang.Object ref = shortName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          shortName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string shortName = 7;</code>
+       */
+      public Builder setShortName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        shortName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string shortName = 7;</code>
+       */
+      public Builder clearShortName() {
+        
+        shortName_ = getDefaultInstance().getShortName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string shortName = 7;</code>
+       */
+      public Builder setShortNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        shortName_ = value;
+        onChanged();
+        return this;
+      }
+
+      private boolean solved_ ;
+      /**
+       * <code>bool solved = 8;</code>
+       */
+      public boolean getSolved() {
+        return solved_;
+      }
+      /**
+       * <code>bool solved = 8;</code>
+       */
+      public Builder setSolved(boolean value) {
+        
+        solved_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool solved = 8;</code>
+       */
+      public Builder clearSolved() {
+        
+        solved_ = false;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object url_ = "";
+      /**
+       * <code>string url = 9;</code>
+       */
+      public java.lang.String getUrl() {
+        java.lang.Object ref = url_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          url_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string url = 9;</code>
+       */
+      public com.google.protobuf.ByteString
+          getUrlBytes() {
+        java.lang.Object ref = url_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          url_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string url = 9;</code>
+       */
+      public Builder setUrl(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        url_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string url = 9;</code>
+       */
+      public Builder clearUrl() {
+        
+        url_ = getDefaultInstance().getUrl();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string url = 9;</code>
+       */
+      public Builder setUrlBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        url_ = value;
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.auacm.api.proto.SimpleProblemResponse)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.auacm.api.proto.SimpleProblemResponse)
+    private static final com.auacm.api.proto.Problem.SimpleProblemResponse DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.auacm.api.proto.Problem.SimpleProblemResponse();
+    }
+
+    public static com.auacm.api.proto.Problem.SimpleProblemResponse getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<SimpleProblemResponse>
+        PARSER = new com.google.protobuf.AbstractParser<SimpleProblemResponse>() {
+      public SimpleProblemResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new SimpleProblemResponse(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<SimpleProblemResponse> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<SimpleProblemResponse> getParserForType() {
+      return PARSER;
+    }
+
+    public com.auacm.api.proto.Problem.SimpleProblemResponse getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface ProblemListWrapperOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.auacm.api.proto.ProblemListWrapper)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+     */
+    java.util.List<com.auacm.api.proto.Problem.SimpleProblemResponse> 
+        getDataList();
+    /**
+     * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+     */
+    com.auacm.api.proto.Problem.SimpleProblemResponse getData(int index);
+    /**
+     * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+     */
+    int getDataCount();
+    /**
+     * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+     */
+    java.util.List<? extends com.auacm.api.proto.Problem.SimpleProblemResponseOrBuilder> 
+        getDataOrBuilderList();
+    /**
+     * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+     */
+    com.auacm.api.proto.Problem.SimpleProblemResponseOrBuilder getDataOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code com.auacm.api.proto.ProblemListWrapper}
+   */
+  public  static final class ProblemListWrapper extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.auacm.api.proto.ProblemListWrapper)
+      ProblemListWrapperOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ProblemListWrapper.newBuilder() to construct.
+    private ProblemListWrapper(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ProblemListWrapper() {
+      data_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ProblemListWrapper(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                data_ = new java.util.ArrayList<com.auacm.api.proto.Problem.SimpleProblemResponse>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              data_.add(
+                  input.readMessage(com.auacm.api.proto.Problem.SimpleProblemResponse.parser(), extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          data_ = java.util.Collections.unmodifiableList(data_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.auacm.api.proto.Problem.internal_static_com_auacm_api_proto_ProblemListWrapper_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.auacm.api.proto.Problem.internal_static_com_auacm_api_proto_ProblemListWrapper_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.auacm.api.proto.Problem.ProblemListWrapper.class, com.auacm.api.proto.Problem.ProblemListWrapper.Builder.class);
+    }
+
+    public static final int DATA_FIELD_NUMBER = 1;
+    private java.util.List<com.auacm.api.proto.Problem.SimpleProblemResponse> data_;
+    /**
+     * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+     */
+    public java.util.List<com.auacm.api.proto.Problem.SimpleProblemResponse> getDataList() {
+      return data_;
+    }
+    /**
+     * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+     */
+    public java.util.List<? extends com.auacm.api.proto.Problem.SimpleProblemResponseOrBuilder> 
+        getDataOrBuilderList() {
+      return data_;
+    }
+    /**
+     * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+     */
+    public int getDataCount() {
+      return data_.size();
+    }
+    /**
+     * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+     */
+    public com.auacm.api.proto.Problem.SimpleProblemResponse getData(int index) {
+      return data_.get(index);
+    }
+    /**
+     * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+     */
+    public com.auacm.api.proto.Problem.SimpleProblemResponseOrBuilder getDataOrBuilder(
+        int index) {
+      return data_.get(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      for (int i = 0; i < data_.size(); i++) {
+        output.writeMessage(1, data_.get(i));
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (int i = 0; i < data_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, data_.get(i));
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.auacm.api.proto.Problem.ProblemListWrapper)) {
+        return super.equals(obj);
+      }
+      com.auacm.api.proto.Problem.ProblemListWrapper other = (com.auacm.api.proto.Problem.ProblemListWrapper) obj;
+
+      boolean result = true;
+      result = result && getDataList()
+          .equals(other.getDataList());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (getDataCount() > 0) {
+        hash = (37 * hash) + DATA_FIELD_NUMBER;
+        hash = (53 * hash) + getDataList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.auacm.api.proto.Problem.ProblemListWrapper parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.auacm.api.proto.Problem.ProblemListWrapper parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.auacm.api.proto.Problem.ProblemListWrapper parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.auacm.api.proto.Problem.ProblemListWrapper parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.auacm.api.proto.Problem.ProblemListWrapper parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.auacm.api.proto.Problem.ProblemListWrapper parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.auacm.api.proto.Problem.ProblemListWrapper parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.auacm.api.proto.Problem.ProblemListWrapper parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.auacm.api.proto.Problem.ProblemListWrapper parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.auacm.api.proto.Problem.ProblemListWrapper parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.auacm.api.proto.Problem.ProblemListWrapper parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.auacm.api.proto.Problem.ProblemListWrapper parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.auacm.api.proto.Problem.ProblemListWrapper prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.auacm.api.proto.ProblemListWrapper}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.auacm.api.proto.ProblemListWrapper)
+        com.auacm.api.proto.Problem.ProblemListWrapperOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.auacm.api.proto.Problem.internal_static_com_auacm_api_proto_ProblemListWrapper_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.auacm.api.proto.Problem.internal_static_com_auacm_api_proto_ProblemListWrapper_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.auacm.api.proto.Problem.ProblemListWrapper.class, com.auacm.api.proto.Problem.ProblemListWrapper.Builder.class);
+      }
+
+      // Construct using com.auacm.api.proto.Problem.ProblemListWrapper.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getDataFieldBuilder();
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        if (dataBuilder_ == null) {
+          data_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          dataBuilder_.clear();
+        }
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.auacm.api.proto.Problem.internal_static_com_auacm_api_proto_ProblemListWrapper_descriptor;
+      }
+
+      public com.auacm.api.proto.Problem.ProblemListWrapper getDefaultInstanceForType() {
+        return com.auacm.api.proto.Problem.ProblemListWrapper.getDefaultInstance();
+      }
+
+      public com.auacm.api.proto.Problem.ProblemListWrapper build() {
+        com.auacm.api.proto.Problem.ProblemListWrapper result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.auacm.api.proto.Problem.ProblemListWrapper buildPartial() {
+        com.auacm.api.proto.Problem.ProblemListWrapper result = new com.auacm.api.proto.Problem.ProblemListWrapper(this);
+        int from_bitField0_ = bitField0_;
+        if (dataBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            data_ = java.util.Collections.unmodifiableList(data_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.data_ = data_;
+        } else {
+          result.data_ = dataBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.auacm.api.proto.Problem.ProblemListWrapper) {
+          return mergeFrom((com.auacm.api.proto.Problem.ProblemListWrapper)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.auacm.api.proto.Problem.ProblemListWrapper other) {
+        if (other == com.auacm.api.proto.Problem.ProblemListWrapper.getDefaultInstance()) return this;
+        if (dataBuilder_ == null) {
+          if (!other.data_.isEmpty()) {
+            if (data_.isEmpty()) {
+              data_ = other.data_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureDataIsMutable();
+              data_.addAll(other.data_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.data_.isEmpty()) {
+            if (dataBuilder_.isEmpty()) {
+              dataBuilder_.dispose();
+              dataBuilder_ = null;
+              data_ = other.data_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              dataBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getDataFieldBuilder() : null;
+            } else {
+              dataBuilder_.addAllMessages(other.data_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.auacm.api.proto.Problem.ProblemListWrapper parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.auacm.api.proto.Problem.ProblemListWrapper) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<com.auacm.api.proto.Problem.SimpleProblemResponse> data_ =
+        java.util.Collections.emptyList();
+      private void ensureDataIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          data_ = new java.util.ArrayList<com.auacm.api.proto.Problem.SimpleProblemResponse>(data_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.auacm.api.proto.Problem.SimpleProblemResponse, com.auacm.api.proto.Problem.SimpleProblemResponse.Builder, com.auacm.api.proto.Problem.SimpleProblemResponseOrBuilder> dataBuilder_;
+
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+       */
+      public java.util.List<com.auacm.api.proto.Problem.SimpleProblemResponse> getDataList() {
+        if (dataBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(data_);
+        } else {
+          return dataBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+       */
+      public int getDataCount() {
+        if (dataBuilder_ == null) {
+          return data_.size();
+        } else {
+          return dataBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+       */
+      public com.auacm.api.proto.Problem.SimpleProblemResponse getData(int index) {
+        if (dataBuilder_ == null) {
+          return data_.get(index);
+        } else {
+          return dataBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+       */
+      public Builder setData(
+          int index, com.auacm.api.proto.Problem.SimpleProblemResponse value) {
+        if (dataBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDataIsMutable();
+          data_.set(index, value);
+          onChanged();
+        } else {
+          dataBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+       */
+      public Builder setData(
+          int index, com.auacm.api.proto.Problem.SimpleProblemResponse.Builder builderForValue) {
+        if (dataBuilder_ == null) {
+          ensureDataIsMutable();
+          data_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          dataBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+       */
+      public Builder addData(com.auacm.api.proto.Problem.SimpleProblemResponse value) {
+        if (dataBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDataIsMutable();
+          data_.add(value);
+          onChanged();
+        } else {
+          dataBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+       */
+      public Builder addData(
+          int index, com.auacm.api.proto.Problem.SimpleProblemResponse value) {
+        if (dataBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDataIsMutable();
+          data_.add(index, value);
+          onChanged();
+        } else {
+          dataBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+       */
+      public Builder addData(
+          com.auacm.api.proto.Problem.SimpleProblemResponse.Builder builderForValue) {
+        if (dataBuilder_ == null) {
+          ensureDataIsMutable();
+          data_.add(builderForValue.build());
+          onChanged();
+        } else {
+          dataBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+       */
+      public Builder addData(
+          int index, com.auacm.api.proto.Problem.SimpleProblemResponse.Builder builderForValue) {
+        if (dataBuilder_ == null) {
+          ensureDataIsMutable();
+          data_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          dataBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+       */
+      public Builder addAllData(
+          java.lang.Iterable<? extends com.auacm.api.proto.Problem.SimpleProblemResponse> values) {
+        if (dataBuilder_ == null) {
+          ensureDataIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, data_);
+          onChanged();
+        } else {
+          dataBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+       */
+      public Builder clearData() {
+        if (dataBuilder_ == null) {
+          data_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          dataBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+       */
+      public Builder removeData(int index) {
+        if (dataBuilder_ == null) {
+          ensureDataIsMutable();
+          data_.remove(index);
+          onChanged();
+        } else {
+          dataBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+       */
+      public com.auacm.api.proto.Problem.SimpleProblemResponse.Builder getDataBuilder(
+          int index) {
+        return getDataFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+       */
+      public com.auacm.api.proto.Problem.SimpleProblemResponseOrBuilder getDataOrBuilder(
+          int index) {
+        if (dataBuilder_ == null) {
+          return data_.get(index);  } else {
+          return dataBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+       */
+      public java.util.List<? extends com.auacm.api.proto.Problem.SimpleProblemResponseOrBuilder> 
+           getDataOrBuilderList() {
+        if (dataBuilder_ != null) {
+          return dataBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(data_);
+        }
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+       */
+      public com.auacm.api.proto.Problem.SimpleProblemResponse.Builder addDataBuilder() {
+        return getDataFieldBuilder().addBuilder(
+            com.auacm.api.proto.Problem.SimpleProblemResponse.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+       */
+      public com.auacm.api.proto.Problem.SimpleProblemResponse.Builder addDataBuilder(
+          int index) {
+        return getDataFieldBuilder().addBuilder(
+            index, com.auacm.api.proto.Problem.SimpleProblemResponse.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleProblemResponse data = 1;</code>
+       */
+      public java.util.List<com.auacm.api.proto.Problem.SimpleProblemResponse.Builder> 
+           getDataBuilderList() {
+        return getDataFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.auacm.api.proto.Problem.SimpleProblemResponse, com.auacm.api.proto.Problem.SimpleProblemResponse.Builder, com.auacm.api.proto.Problem.SimpleProblemResponseOrBuilder> 
+          getDataFieldBuilder() {
+        if (dataBuilder_ == null) {
+          dataBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.auacm.api.proto.Problem.SimpleProblemResponse, com.auacm.api.proto.Problem.SimpleProblemResponse.Builder, com.auacm.api.proto.Problem.SimpleProblemResponseOrBuilder>(
+                  data_,
+                  ((bitField0_ & 0x00000001) == 0x00000001),
+                  getParentForChildren(),
+                  isClean());
+          data_ = null;
+        }
+        return dataBuilder_;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.auacm.api.proto.ProblemListWrapper)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.auacm.api.proto.ProblemListWrapper)
+    private static final com.auacm.api.proto.Problem.ProblemListWrapper DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.auacm.api.proto.Problem.ProblemListWrapper();
+    }
+
+    public static com.auacm.api.proto.Problem.ProblemListWrapper getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ProblemListWrapper>
+        PARSER = new com.google.protobuf.AbstractParser<ProblemListWrapper>() {
+      public ProblemListWrapper parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new ProblemListWrapper(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ProblemListWrapper> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ProblemListWrapper> getParserForType() {
+      return PARSER;
+    }
+
+    public com.auacm.api.proto.Problem.ProblemListWrapper getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface SampleCaseOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.auacm.api.proto.SampleCase)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>int64 caseNum = 1;</code>
+     */
+    long getCaseNum();
+
+    /**
+     * <code>string input = 2;</code>
+     */
+    java.lang.String getInput();
+    /**
+     * <code>string input = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getInputBytes();
+
+    /**
+     * <code>string output = 3;</code>
+     */
+    java.lang.String getOutput();
+    /**
+     * <code>string output = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getOutputBytes();
+  }
+  /**
+   * Protobuf type {@code com.auacm.api.proto.SampleCase}
+   */
+  public  static final class SampleCase extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.auacm.api.proto.SampleCase)
+      SampleCaseOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use SampleCase.newBuilder() to construct.
+    private SampleCase(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private SampleCase() {
+      caseNum_ = 0L;
+      input_ = "";
+      output_ = "";
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private SampleCase(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+
+              caseNum_ = input.readInt64();
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              input_ = s;
+              break;
+            }
+            case 26: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              output_ = s;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.auacm.api.proto.Problem.internal_static_com_auacm_api_proto_SampleCase_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.auacm.api.proto.Problem.internal_static_com_auacm_api_proto_SampleCase_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.auacm.api.proto.Problem.SampleCase.class, com.auacm.api.proto.Problem.SampleCase.Builder.class);
+    }
+
+    public static final int CASENUM_FIELD_NUMBER = 1;
+    private long caseNum_;
+    /**
+     * <code>int64 caseNum = 1;</code>
+     */
+    public long getCaseNum() {
+      return caseNum_;
+    }
+
+    public static final int INPUT_FIELD_NUMBER = 2;
+    private volatile java.lang.Object input_;
+    /**
+     * <code>string input = 2;</code>
+     */
+    public java.lang.String getInput() {
+      java.lang.Object ref = input_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        input_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string input = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getInputBytes() {
+      java.lang.Object ref = input_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        input_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int OUTPUT_FIELD_NUMBER = 3;
+    private volatile java.lang.Object output_;
+    /**
+     * <code>string output = 3;</code>
+     */
+    public java.lang.String getOutput() {
+      java.lang.Object ref = output_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        output_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string output = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getOutputBytes() {
+      java.lang.Object ref = output_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        output_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (caseNum_ != 0L) {
+        output.writeInt64(1, caseNum_);
+      }
+      if (!getInputBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, input_);
+      }
+      if (!getOutputBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, output_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (caseNum_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(1, caseNum_);
+      }
+      if (!getInputBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, input_);
+      }
+      if (!getOutputBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, output_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.auacm.api.proto.Problem.SampleCase)) {
+        return super.equals(obj);
+      }
+      com.auacm.api.proto.Problem.SampleCase other = (com.auacm.api.proto.Problem.SampleCase) obj;
+
+      boolean result = true;
+      result = result && (getCaseNum()
+          == other.getCaseNum());
+      result = result && getInput()
+          .equals(other.getInput());
+      result = result && getOutput()
+          .equals(other.getOutput());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + CASENUM_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getCaseNum());
+      hash = (37 * hash) + INPUT_FIELD_NUMBER;
+      hash = (53 * hash) + getInput().hashCode();
+      hash = (37 * hash) + OUTPUT_FIELD_NUMBER;
+      hash = (53 * hash) + getOutput().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.auacm.api.proto.Problem.SampleCase parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.auacm.api.proto.Problem.SampleCase parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.auacm.api.proto.Problem.SampleCase parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.auacm.api.proto.Problem.SampleCase parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.auacm.api.proto.Problem.SampleCase parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.auacm.api.proto.Problem.SampleCase parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.auacm.api.proto.Problem.SampleCase parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.auacm.api.proto.Problem.SampleCase parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.auacm.api.proto.Problem.SampleCase parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.auacm.api.proto.Problem.SampleCase parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.auacm.api.proto.Problem.SampleCase parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.auacm.api.proto.Problem.SampleCase parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.auacm.api.proto.Problem.SampleCase prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.auacm.api.proto.SampleCase}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.auacm.api.proto.SampleCase)
+        com.auacm.api.proto.Problem.SampleCaseOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.auacm.api.proto.Problem.internal_static_com_auacm_api_proto_SampleCase_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.auacm.api.proto.Problem.internal_static_com_auacm_api_proto_SampleCase_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.auacm.api.proto.Problem.SampleCase.class, com.auacm.api.proto.Problem.SampleCase.Builder.class);
+      }
+
+      // Construct using com.auacm.api.proto.Problem.SampleCase.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        caseNum_ = 0L;
+
+        input_ = "";
+
+        output_ = "";
+
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.auacm.api.proto.Problem.internal_static_com_auacm_api_proto_SampleCase_descriptor;
+      }
+
+      public com.auacm.api.proto.Problem.SampleCase getDefaultInstanceForType() {
+        return com.auacm.api.proto.Problem.SampleCase.getDefaultInstance();
+      }
+
+      public com.auacm.api.proto.Problem.SampleCase build() {
+        com.auacm.api.proto.Problem.SampleCase result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.auacm.api.proto.Problem.SampleCase buildPartial() {
+        com.auacm.api.proto.Problem.SampleCase result = new com.auacm.api.proto.Problem.SampleCase(this);
+        result.caseNum_ = caseNum_;
+        result.input_ = input_;
+        result.output_ = output_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.auacm.api.proto.Problem.SampleCase) {
+          return mergeFrom((com.auacm.api.proto.Problem.SampleCase)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.auacm.api.proto.Problem.SampleCase other) {
+        if (other == com.auacm.api.proto.Problem.SampleCase.getDefaultInstance()) return this;
+        if (other.getCaseNum() != 0L) {
+          setCaseNum(other.getCaseNum());
+        }
+        if (!other.getInput().isEmpty()) {
+          input_ = other.input_;
+          onChanged();
+        }
+        if (!other.getOutput().isEmpty()) {
+          output_ = other.output_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.auacm.api.proto.Problem.SampleCase parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.auacm.api.proto.Problem.SampleCase) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private long caseNum_ ;
+      /**
+       * <code>int64 caseNum = 1;</code>
+       */
+      public long getCaseNum() {
+        return caseNum_;
+      }
+      /**
+       * <code>int64 caseNum = 1;</code>
+       */
+      public Builder setCaseNum(long value) {
+        
+        caseNum_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 caseNum = 1;</code>
+       */
+      public Builder clearCaseNum() {
+        
+        caseNum_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object input_ = "";
+      /**
+       * <code>string input = 2;</code>
+       */
+      public java.lang.String getInput() {
+        java.lang.Object ref = input_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          input_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string input = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getInputBytes() {
+        java.lang.Object ref = input_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          input_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string input = 2;</code>
+       */
+      public Builder setInput(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        input_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string input = 2;</code>
+       */
+      public Builder clearInput() {
+        
+        input_ = getDefaultInstance().getInput();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string input = 2;</code>
+       */
+      public Builder setInputBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        input_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object output_ = "";
+      /**
+       * <code>string output = 3;</code>
+       */
+      public java.lang.String getOutput() {
+        java.lang.Object ref = output_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          output_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string output = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getOutputBytes() {
+        java.lang.Object ref = output_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          output_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string output = 3;</code>
+       */
+      public Builder setOutput(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        output_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string output = 3;</code>
+       */
+      public Builder clearOutput() {
+        
+        output_ = getDefaultInstance().getOutput();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string output = 3;</code>
+       */
+      public Builder setOutputBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        output_ = value;
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.auacm.api.proto.SampleCase)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.auacm.api.proto.SampleCase)
+    private static final com.auacm.api.proto.Problem.SampleCase DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.auacm.api.proto.Problem.SampleCase();
+    }
+
+    public static com.auacm.api.proto.Problem.SampleCase getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<SampleCase>
+        PARSER = new com.google.protobuf.AbstractParser<SampleCase>() {
+      public SampleCase parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new SampleCase(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<SampleCase> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<SampleCase> getParserForType() {
+      return PARSER;
+    }
+
+    public com.auacm.api.proto.Problem.SampleCase getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface ProblemResponseOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.auacm.api.proto.ProblemResponse)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>int64 added = 1;</code>
+     */
+    long getAdded();
+
+    /**
+     * <code>string appeared = 2;</code>
+     */
+    java.lang.String getAppeared();
+    /**
+     * <code>string appeared = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getAppearedBytes();
+
+    /**
+     * <code>int64 compRelease = 3;</code>
+     */
+    long getCompRelease();
+
+    /**
+     * <code>string description = 4;</code>
+     */
+    java.lang.String getDescription();
+    /**
+     * <code>string description = 4;</code>
+     */
+    com.google.protobuf.ByteString
+        getDescriptionBytes();
+
+    /**
+     * <code>string difficuty = 5;</code>
+     */
+    java.lang.String getDifficuty();
+    /**
+     * <code>string difficuty = 5;</code>
+     */
+    com.google.protobuf.ByteString
+        getDifficutyBytes();
+
+    /**
+     * <code>string inputDesc = 6;</code>
+     */
+    java.lang.String getInputDesc();
+    /**
+     * <code>string inputDesc = 6;</code>
+     */
+    com.google.protobuf.ByteString
+        getInputDescBytes();
+
+    /**
+     * <code>string name = 7;</code>
+     */
+    java.lang.String getName();
+    /**
+     * <code>string name = 7;</code>
+     */
+    com.google.protobuf.ByteString
+        getNameBytes();
+
+    /**
+     * <code>string outputDesc = 8;</code>
+     */
+    java.lang.String getOutputDesc();
+    /**
+     * <code>string outputDesc = 8;</code>
+     */
+    com.google.protobuf.ByteString
+        getOutputDescBytes();
+
+    /**
+     * <code>int64 pid = 9;</code>
+     */
+    long getPid();
+
+    /**
+     * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+     */
+    java.util.List<com.auacm.api.proto.Problem.SampleCase> 
+        getSampleCasesList();
+    /**
+     * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+     */
+    com.auacm.api.proto.Problem.SampleCase getSampleCases(int index);
+    /**
+     * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+     */
+    int getSampleCasesCount();
+    /**
+     * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+     */
+    java.util.List<? extends com.auacm.api.proto.Problem.SampleCaseOrBuilder> 
+        getSampleCasesOrBuilderList();
+    /**
+     * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+     */
+    com.auacm.api.proto.Problem.SampleCaseOrBuilder getSampleCasesOrBuilder(
+        int index);
+
+    /**
+     * <code>string shortName = 11;</code>
+     */
+    java.lang.String getShortName();
+    /**
+     * <code>string shortName = 11;</code>
+     */
+    com.google.protobuf.ByteString
+        getShortNameBytes();
+  }
+  /**
+   * Protobuf type {@code com.auacm.api.proto.ProblemResponse}
+   */
+  public  static final class ProblemResponse extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.auacm.api.proto.ProblemResponse)
+      ProblemResponseOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ProblemResponse.newBuilder() to construct.
+    private ProblemResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ProblemResponse() {
+      added_ = 0L;
+      appeared_ = "";
+      compRelease_ = 0L;
+      description_ = "";
+      difficuty_ = "";
+      inputDesc_ = "";
+      name_ = "";
+      outputDesc_ = "";
+      pid_ = 0L;
+      sampleCases_ = java.util.Collections.emptyList();
+      shortName_ = "";
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ProblemResponse(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+
+              added_ = input.readInt64();
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              appeared_ = s;
+              break;
+            }
+            case 24: {
+
+              compRelease_ = input.readInt64();
+              break;
+            }
+            case 34: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              description_ = s;
+              break;
+            }
+            case 42: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              difficuty_ = s;
+              break;
+            }
+            case 50: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              inputDesc_ = s;
+              break;
+            }
+            case 58: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              name_ = s;
+              break;
+            }
+            case 66: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              outputDesc_ = s;
+              break;
+            }
+            case 72: {
+
+              pid_ = input.readInt64();
+              break;
+            }
+            case 82: {
+              if (!((mutable_bitField0_ & 0x00000200) == 0x00000200)) {
+                sampleCases_ = new java.util.ArrayList<com.auacm.api.proto.Problem.SampleCase>();
+                mutable_bitField0_ |= 0x00000200;
+              }
+              sampleCases_.add(
+                  input.readMessage(com.auacm.api.proto.Problem.SampleCase.parser(), extensionRegistry));
+              break;
+            }
+            case 90: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              shortName_ = s;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000200) == 0x00000200)) {
+          sampleCases_ = java.util.Collections.unmodifiableList(sampleCases_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.auacm.api.proto.Problem.internal_static_com_auacm_api_proto_ProblemResponse_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.auacm.api.proto.Problem.internal_static_com_auacm_api_proto_ProblemResponse_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.auacm.api.proto.Problem.ProblemResponse.class, com.auacm.api.proto.Problem.ProblemResponse.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int ADDED_FIELD_NUMBER = 1;
+    private long added_;
+    /**
+     * <code>int64 added = 1;</code>
+     */
+    public long getAdded() {
+      return added_;
+    }
+
+    public static final int APPEARED_FIELD_NUMBER = 2;
+    private volatile java.lang.Object appeared_;
+    /**
+     * <code>string appeared = 2;</code>
+     */
+    public java.lang.String getAppeared() {
+      java.lang.Object ref = appeared_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        appeared_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string appeared = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getAppearedBytes() {
+      java.lang.Object ref = appeared_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        appeared_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int COMPRELEASE_FIELD_NUMBER = 3;
+    private long compRelease_;
+    /**
+     * <code>int64 compRelease = 3;</code>
+     */
+    public long getCompRelease() {
+      return compRelease_;
+    }
+
+    public static final int DESCRIPTION_FIELD_NUMBER = 4;
+    private volatile java.lang.Object description_;
+    /**
+     * <code>string description = 4;</code>
+     */
+    public java.lang.String getDescription() {
+      java.lang.Object ref = description_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        description_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string description = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDescriptionBytes() {
+      java.lang.Object ref = description_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        description_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int DIFFICUTY_FIELD_NUMBER = 5;
+    private volatile java.lang.Object difficuty_;
+    /**
+     * <code>string difficuty = 5;</code>
+     */
+    public java.lang.String getDifficuty() {
+      java.lang.Object ref = difficuty_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        difficuty_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string difficuty = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDifficutyBytes() {
+      java.lang.Object ref = difficuty_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        difficuty_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int INPUTDESC_FIELD_NUMBER = 6;
+    private volatile java.lang.Object inputDesc_;
+    /**
+     * <code>string inputDesc = 6;</code>
+     */
+    public java.lang.String getInputDesc() {
+      java.lang.Object ref = inputDesc_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        inputDesc_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string inputDesc = 6;</code>
+     */
+    public com.google.protobuf.ByteString
+        getInputDescBytes() {
+      java.lang.Object ref = inputDesc_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        inputDesc_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int NAME_FIELD_NUMBER = 7;
+    private volatile java.lang.Object name_;
+    /**
+     * <code>string name = 7;</code>
+     */
+    public java.lang.String getName() {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        name_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string name = 7;</code>
+     */
+    public com.google.protobuf.ByteString
+        getNameBytes() {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        name_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int OUTPUTDESC_FIELD_NUMBER = 8;
+    private volatile java.lang.Object outputDesc_;
+    /**
+     * <code>string outputDesc = 8;</code>
+     */
+    public java.lang.String getOutputDesc() {
+      java.lang.Object ref = outputDesc_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        outputDesc_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string outputDesc = 8;</code>
+     */
+    public com.google.protobuf.ByteString
+        getOutputDescBytes() {
+      java.lang.Object ref = outputDesc_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        outputDesc_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int PID_FIELD_NUMBER = 9;
+    private long pid_;
+    /**
+     * <code>int64 pid = 9;</code>
+     */
+    public long getPid() {
+      return pid_;
+    }
+
+    public static final int SAMPLECASES_FIELD_NUMBER = 10;
+    private java.util.List<com.auacm.api.proto.Problem.SampleCase> sampleCases_;
+    /**
+     * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+     */
+    public java.util.List<com.auacm.api.proto.Problem.SampleCase> getSampleCasesList() {
+      return sampleCases_;
+    }
+    /**
+     * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+     */
+    public java.util.List<? extends com.auacm.api.proto.Problem.SampleCaseOrBuilder> 
+        getSampleCasesOrBuilderList() {
+      return sampleCases_;
+    }
+    /**
+     * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+     */
+    public int getSampleCasesCount() {
+      return sampleCases_.size();
+    }
+    /**
+     * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+     */
+    public com.auacm.api.proto.Problem.SampleCase getSampleCases(int index) {
+      return sampleCases_.get(index);
+    }
+    /**
+     * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+     */
+    public com.auacm.api.proto.Problem.SampleCaseOrBuilder getSampleCasesOrBuilder(
+        int index) {
+      return sampleCases_.get(index);
+    }
+
+    public static final int SHORTNAME_FIELD_NUMBER = 11;
+    private volatile java.lang.Object shortName_;
+    /**
+     * <code>string shortName = 11;</code>
+     */
+    public java.lang.String getShortName() {
+      java.lang.Object ref = shortName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        shortName_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string shortName = 11;</code>
+     */
+    public com.google.protobuf.ByteString
+        getShortNameBytes() {
+      java.lang.Object ref = shortName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        shortName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (added_ != 0L) {
+        output.writeInt64(1, added_);
+      }
+      if (!getAppearedBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, appeared_);
+      }
+      if (compRelease_ != 0L) {
+        output.writeInt64(3, compRelease_);
+      }
+      if (!getDescriptionBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, description_);
+      }
+      if (!getDifficutyBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, difficuty_);
+      }
+      if (!getInputDescBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, inputDesc_);
+      }
+      if (!getNameBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, name_);
+      }
+      if (!getOutputDescBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 8, outputDesc_);
+      }
+      if (pid_ != 0L) {
+        output.writeInt64(9, pid_);
+      }
+      for (int i = 0; i < sampleCases_.size(); i++) {
+        output.writeMessage(10, sampleCases_.get(i));
+      }
+      if (!getShortNameBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 11, shortName_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (added_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(1, added_);
+      }
+      if (!getAppearedBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, appeared_);
+      }
+      if (compRelease_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(3, compRelease_);
+      }
+      if (!getDescriptionBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, description_);
+      }
+      if (!getDifficutyBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, difficuty_);
+      }
+      if (!getInputDescBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, inputDesc_);
+      }
+      if (!getNameBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, name_);
+      }
+      if (!getOutputDescBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, outputDesc_);
+      }
+      if (pid_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(9, pid_);
+      }
+      for (int i = 0; i < sampleCases_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(10, sampleCases_.get(i));
+      }
+      if (!getShortNameBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(11, shortName_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.auacm.api.proto.Problem.ProblemResponse)) {
+        return super.equals(obj);
+      }
+      com.auacm.api.proto.Problem.ProblemResponse other = (com.auacm.api.proto.Problem.ProblemResponse) obj;
+
+      boolean result = true;
+      result = result && (getAdded()
+          == other.getAdded());
+      result = result && getAppeared()
+          .equals(other.getAppeared());
+      result = result && (getCompRelease()
+          == other.getCompRelease());
+      result = result && getDescription()
+          .equals(other.getDescription());
+      result = result && getDifficuty()
+          .equals(other.getDifficuty());
+      result = result && getInputDesc()
+          .equals(other.getInputDesc());
+      result = result && getName()
+          .equals(other.getName());
+      result = result && getOutputDesc()
+          .equals(other.getOutputDesc());
+      result = result && (getPid()
+          == other.getPid());
+      result = result && getSampleCasesList()
+          .equals(other.getSampleCasesList());
+      result = result && getShortName()
+          .equals(other.getShortName());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + ADDED_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getAdded());
+      hash = (37 * hash) + APPEARED_FIELD_NUMBER;
+      hash = (53 * hash) + getAppeared().hashCode();
+      hash = (37 * hash) + COMPRELEASE_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getCompRelease());
+      hash = (37 * hash) + DESCRIPTION_FIELD_NUMBER;
+      hash = (53 * hash) + getDescription().hashCode();
+      hash = (37 * hash) + DIFFICUTY_FIELD_NUMBER;
+      hash = (53 * hash) + getDifficuty().hashCode();
+      hash = (37 * hash) + INPUTDESC_FIELD_NUMBER;
+      hash = (53 * hash) + getInputDesc().hashCode();
+      hash = (37 * hash) + NAME_FIELD_NUMBER;
+      hash = (53 * hash) + getName().hashCode();
+      hash = (37 * hash) + OUTPUTDESC_FIELD_NUMBER;
+      hash = (53 * hash) + getOutputDesc().hashCode();
+      hash = (37 * hash) + PID_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getPid());
+      if (getSampleCasesCount() > 0) {
+        hash = (37 * hash) + SAMPLECASES_FIELD_NUMBER;
+        hash = (53 * hash) + getSampleCasesList().hashCode();
+      }
+      hash = (37 * hash) + SHORTNAME_FIELD_NUMBER;
+      hash = (53 * hash) + getShortName().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.auacm.api.proto.Problem.ProblemResponse parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.auacm.api.proto.Problem.ProblemResponse parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.auacm.api.proto.Problem.ProblemResponse parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.auacm.api.proto.Problem.ProblemResponse parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.auacm.api.proto.Problem.ProblemResponse parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.auacm.api.proto.Problem.ProblemResponse parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.auacm.api.proto.Problem.ProblemResponse parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.auacm.api.proto.Problem.ProblemResponse parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.auacm.api.proto.Problem.ProblemResponse parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.auacm.api.proto.Problem.ProblemResponse parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.auacm.api.proto.Problem.ProblemResponse parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.auacm.api.proto.Problem.ProblemResponse parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.auacm.api.proto.Problem.ProblemResponse prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.auacm.api.proto.ProblemResponse}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.auacm.api.proto.ProblemResponse)
+        com.auacm.api.proto.Problem.ProblemResponseOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.auacm.api.proto.Problem.internal_static_com_auacm_api_proto_ProblemResponse_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.auacm.api.proto.Problem.internal_static_com_auacm_api_proto_ProblemResponse_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.auacm.api.proto.Problem.ProblemResponse.class, com.auacm.api.proto.Problem.ProblemResponse.Builder.class);
+      }
+
+      // Construct using com.auacm.api.proto.Problem.ProblemResponse.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getSampleCasesFieldBuilder();
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        added_ = 0L;
+
+        appeared_ = "";
+
+        compRelease_ = 0L;
+
+        description_ = "";
+
+        difficuty_ = "";
+
+        inputDesc_ = "";
+
+        name_ = "";
+
+        outputDesc_ = "";
+
+        pid_ = 0L;
+
+        if (sampleCasesBuilder_ == null) {
+          sampleCases_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000200);
+        } else {
+          sampleCasesBuilder_.clear();
+        }
+        shortName_ = "";
+
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.auacm.api.proto.Problem.internal_static_com_auacm_api_proto_ProblemResponse_descriptor;
+      }
+
+      public com.auacm.api.proto.Problem.ProblemResponse getDefaultInstanceForType() {
+        return com.auacm.api.proto.Problem.ProblemResponse.getDefaultInstance();
+      }
+
+      public com.auacm.api.proto.Problem.ProblemResponse build() {
+        com.auacm.api.proto.Problem.ProblemResponse result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.auacm.api.proto.Problem.ProblemResponse buildPartial() {
+        com.auacm.api.proto.Problem.ProblemResponse result = new com.auacm.api.proto.Problem.ProblemResponse(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        result.added_ = added_;
+        result.appeared_ = appeared_;
+        result.compRelease_ = compRelease_;
+        result.description_ = description_;
+        result.difficuty_ = difficuty_;
+        result.inputDesc_ = inputDesc_;
+        result.name_ = name_;
+        result.outputDesc_ = outputDesc_;
+        result.pid_ = pid_;
+        if (sampleCasesBuilder_ == null) {
+          if (((bitField0_ & 0x00000200) == 0x00000200)) {
+            sampleCases_ = java.util.Collections.unmodifiableList(sampleCases_);
+            bitField0_ = (bitField0_ & ~0x00000200);
+          }
+          result.sampleCases_ = sampleCases_;
+        } else {
+          result.sampleCases_ = sampleCasesBuilder_.build();
+        }
+        result.shortName_ = shortName_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.auacm.api.proto.Problem.ProblemResponse) {
+          return mergeFrom((com.auacm.api.proto.Problem.ProblemResponse)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.auacm.api.proto.Problem.ProblemResponse other) {
+        if (other == com.auacm.api.proto.Problem.ProblemResponse.getDefaultInstance()) return this;
+        if (other.getAdded() != 0L) {
+          setAdded(other.getAdded());
+        }
+        if (!other.getAppeared().isEmpty()) {
+          appeared_ = other.appeared_;
+          onChanged();
+        }
+        if (other.getCompRelease() != 0L) {
+          setCompRelease(other.getCompRelease());
+        }
+        if (!other.getDescription().isEmpty()) {
+          description_ = other.description_;
+          onChanged();
+        }
+        if (!other.getDifficuty().isEmpty()) {
+          difficuty_ = other.difficuty_;
+          onChanged();
+        }
+        if (!other.getInputDesc().isEmpty()) {
+          inputDesc_ = other.inputDesc_;
+          onChanged();
+        }
+        if (!other.getName().isEmpty()) {
+          name_ = other.name_;
+          onChanged();
+        }
+        if (!other.getOutputDesc().isEmpty()) {
+          outputDesc_ = other.outputDesc_;
+          onChanged();
+        }
+        if (other.getPid() != 0L) {
+          setPid(other.getPid());
+        }
+        if (sampleCasesBuilder_ == null) {
+          if (!other.sampleCases_.isEmpty()) {
+            if (sampleCases_.isEmpty()) {
+              sampleCases_ = other.sampleCases_;
+              bitField0_ = (bitField0_ & ~0x00000200);
+            } else {
+              ensureSampleCasesIsMutable();
+              sampleCases_.addAll(other.sampleCases_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.sampleCases_.isEmpty()) {
+            if (sampleCasesBuilder_.isEmpty()) {
+              sampleCasesBuilder_.dispose();
+              sampleCasesBuilder_ = null;
+              sampleCases_ = other.sampleCases_;
+              bitField0_ = (bitField0_ & ~0x00000200);
+              sampleCasesBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getSampleCasesFieldBuilder() : null;
+            } else {
+              sampleCasesBuilder_.addAllMessages(other.sampleCases_);
+            }
+          }
+        }
+        if (!other.getShortName().isEmpty()) {
+          shortName_ = other.shortName_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.auacm.api.proto.Problem.ProblemResponse parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.auacm.api.proto.Problem.ProblemResponse) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private long added_ ;
+      /**
+       * <code>int64 added = 1;</code>
+       */
+      public long getAdded() {
+        return added_;
+      }
+      /**
+       * <code>int64 added = 1;</code>
+       */
+      public Builder setAdded(long value) {
+        
+        added_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 added = 1;</code>
+       */
+      public Builder clearAdded() {
+        
+        added_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object appeared_ = "";
+      /**
+       * <code>string appeared = 2;</code>
+       */
+      public java.lang.String getAppeared() {
+        java.lang.Object ref = appeared_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          appeared_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string appeared = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getAppearedBytes() {
+        java.lang.Object ref = appeared_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          appeared_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string appeared = 2;</code>
+       */
+      public Builder setAppeared(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        appeared_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string appeared = 2;</code>
+       */
+      public Builder clearAppeared() {
+        
+        appeared_ = getDefaultInstance().getAppeared();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string appeared = 2;</code>
+       */
+      public Builder setAppearedBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        appeared_ = value;
+        onChanged();
+        return this;
+      }
+
+      private long compRelease_ ;
+      /**
+       * <code>int64 compRelease = 3;</code>
+       */
+      public long getCompRelease() {
+        return compRelease_;
+      }
+      /**
+       * <code>int64 compRelease = 3;</code>
+       */
+      public Builder setCompRelease(long value) {
+        
+        compRelease_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 compRelease = 3;</code>
+       */
+      public Builder clearCompRelease() {
+        
+        compRelease_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object description_ = "";
+      /**
+       * <code>string description = 4;</code>
+       */
+      public java.lang.String getDescription() {
+        java.lang.Object ref = description_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          description_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string description = 4;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDescriptionBytes() {
+        java.lang.Object ref = description_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          description_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string description = 4;</code>
+       */
+      public Builder setDescription(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        description_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string description = 4;</code>
+       */
+      public Builder clearDescription() {
+        
+        description_ = getDefaultInstance().getDescription();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string description = 4;</code>
+       */
+      public Builder setDescriptionBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        description_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object difficuty_ = "";
+      /**
+       * <code>string difficuty = 5;</code>
+       */
+      public java.lang.String getDifficuty() {
+        java.lang.Object ref = difficuty_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          difficuty_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string difficuty = 5;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDifficutyBytes() {
+        java.lang.Object ref = difficuty_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          difficuty_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string difficuty = 5;</code>
+       */
+      public Builder setDifficuty(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        difficuty_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string difficuty = 5;</code>
+       */
+      public Builder clearDifficuty() {
+        
+        difficuty_ = getDefaultInstance().getDifficuty();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string difficuty = 5;</code>
+       */
+      public Builder setDifficutyBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        difficuty_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object inputDesc_ = "";
+      /**
+       * <code>string inputDesc = 6;</code>
+       */
+      public java.lang.String getInputDesc() {
+        java.lang.Object ref = inputDesc_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          inputDesc_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string inputDesc = 6;</code>
+       */
+      public com.google.protobuf.ByteString
+          getInputDescBytes() {
+        java.lang.Object ref = inputDesc_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          inputDesc_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string inputDesc = 6;</code>
+       */
+      public Builder setInputDesc(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        inputDesc_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string inputDesc = 6;</code>
+       */
+      public Builder clearInputDesc() {
+        
+        inputDesc_ = getDefaultInstance().getInputDesc();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string inputDesc = 6;</code>
+       */
+      public Builder setInputDescBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        inputDesc_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object name_ = "";
+      /**
+       * <code>string name = 7;</code>
+       */
+      public java.lang.String getName() {
+        java.lang.Object ref = name_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          name_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string name = 7;</code>
+       */
+      public com.google.protobuf.ByteString
+          getNameBytes() {
+        java.lang.Object ref = name_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          name_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string name = 7;</code>
+       */
+      public Builder setName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        name_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string name = 7;</code>
+       */
+      public Builder clearName() {
+        
+        name_ = getDefaultInstance().getName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string name = 7;</code>
+       */
+      public Builder setNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        name_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object outputDesc_ = "";
+      /**
+       * <code>string outputDesc = 8;</code>
+       */
+      public java.lang.String getOutputDesc() {
+        java.lang.Object ref = outputDesc_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          outputDesc_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string outputDesc = 8;</code>
+       */
+      public com.google.protobuf.ByteString
+          getOutputDescBytes() {
+        java.lang.Object ref = outputDesc_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          outputDesc_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string outputDesc = 8;</code>
+       */
+      public Builder setOutputDesc(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        outputDesc_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string outputDesc = 8;</code>
+       */
+      public Builder clearOutputDesc() {
+        
+        outputDesc_ = getDefaultInstance().getOutputDesc();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string outputDesc = 8;</code>
+       */
+      public Builder setOutputDescBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        outputDesc_ = value;
+        onChanged();
+        return this;
+      }
+
+      private long pid_ ;
+      /**
+       * <code>int64 pid = 9;</code>
+       */
+      public long getPid() {
+        return pid_;
+      }
+      /**
+       * <code>int64 pid = 9;</code>
+       */
+      public Builder setPid(long value) {
+        
+        pid_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 pid = 9;</code>
+       */
+      public Builder clearPid() {
+        
+        pid_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private java.util.List<com.auacm.api.proto.Problem.SampleCase> sampleCases_ =
+        java.util.Collections.emptyList();
+      private void ensureSampleCasesIsMutable() {
+        if (!((bitField0_ & 0x00000200) == 0x00000200)) {
+          sampleCases_ = new java.util.ArrayList<com.auacm.api.proto.Problem.SampleCase>(sampleCases_);
+          bitField0_ |= 0x00000200;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.auacm.api.proto.Problem.SampleCase, com.auacm.api.proto.Problem.SampleCase.Builder, com.auacm.api.proto.Problem.SampleCaseOrBuilder> sampleCasesBuilder_;
+
+      /**
+       * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+       */
+      public java.util.List<com.auacm.api.proto.Problem.SampleCase> getSampleCasesList() {
+        if (sampleCasesBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(sampleCases_);
+        } else {
+          return sampleCasesBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+       */
+      public int getSampleCasesCount() {
+        if (sampleCasesBuilder_ == null) {
+          return sampleCases_.size();
+        } else {
+          return sampleCasesBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+       */
+      public com.auacm.api.proto.Problem.SampleCase getSampleCases(int index) {
+        if (sampleCasesBuilder_ == null) {
+          return sampleCases_.get(index);
+        } else {
+          return sampleCasesBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+       */
+      public Builder setSampleCases(
+          int index, com.auacm.api.proto.Problem.SampleCase value) {
+        if (sampleCasesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureSampleCasesIsMutable();
+          sampleCases_.set(index, value);
+          onChanged();
+        } else {
+          sampleCasesBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+       */
+      public Builder setSampleCases(
+          int index, com.auacm.api.proto.Problem.SampleCase.Builder builderForValue) {
+        if (sampleCasesBuilder_ == null) {
+          ensureSampleCasesIsMutable();
+          sampleCases_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          sampleCasesBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+       */
+      public Builder addSampleCases(com.auacm.api.proto.Problem.SampleCase value) {
+        if (sampleCasesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureSampleCasesIsMutable();
+          sampleCases_.add(value);
+          onChanged();
+        } else {
+          sampleCasesBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+       */
+      public Builder addSampleCases(
+          int index, com.auacm.api.proto.Problem.SampleCase value) {
+        if (sampleCasesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureSampleCasesIsMutable();
+          sampleCases_.add(index, value);
+          onChanged();
+        } else {
+          sampleCasesBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+       */
+      public Builder addSampleCases(
+          com.auacm.api.proto.Problem.SampleCase.Builder builderForValue) {
+        if (sampleCasesBuilder_ == null) {
+          ensureSampleCasesIsMutable();
+          sampleCases_.add(builderForValue.build());
+          onChanged();
+        } else {
+          sampleCasesBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+       */
+      public Builder addSampleCases(
+          int index, com.auacm.api.proto.Problem.SampleCase.Builder builderForValue) {
+        if (sampleCasesBuilder_ == null) {
+          ensureSampleCasesIsMutable();
+          sampleCases_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          sampleCasesBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+       */
+      public Builder addAllSampleCases(
+          java.lang.Iterable<? extends com.auacm.api.proto.Problem.SampleCase> values) {
+        if (sampleCasesBuilder_ == null) {
+          ensureSampleCasesIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, sampleCases_);
+          onChanged();
+        } else {
+          sampleCasesBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+       */
+      public Builder clearSampleCases() {
+        if (sampleCasesBuilder_ == null) {
+          sampleCases_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000200);
+          onChanged();
+        } else {
+          sampleCasesBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+       */
+      public Builder removeSampleCases(int index) {
+        if (sampleCasesBuilder_ == null) {
+          ensureSampleCasesIsMutable();
+          sampleCases_.remove(index);
+          onChanged();
+        } else {
+          sampleCasesBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+       */
+      public com.auacm.api.proto.Problem.SampleCase.Builder getSampleCasesBuilder(
+          int index) {
+        return getSampleCasesFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+       */
+      public com.auacm.api.proto.Problem.SampleCaseOrBuilder getSampleCasesOrBuilder(
+          int index) {
+        if (sampleCasesBuilder_ == null) {
+          return sampleCases_.get(index);  } else {
+          return sampleCasesBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+       */
+      public java.util.List<? extends com.auacm.api.proto.Problem.SampleCaseOrBuilder> 
+           getSampleCasesOrBuilderList() {
+        if (sampleCasesBuilder_ != null) {
+          return sampleCasesBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(sampleCases_);
+        }
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+       */
+      public com.auacm.api.proto.Problem.SampleCase.Builder addSampleCasesBuilder() {
+        return getSampleCasesFieldBuilder().addBuilder(
+            com.auacm.api.proto.Problem.SampleCase.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+       */
+      public com.auacm.api.proto.Problem.SampleCase.Builder addSampleCasesBuilder(
+          int index) {
+        return getSampleCasesFieldBuilder().addBuilder(
+            index, com.auacm.api.proto.Problem.SampleCase.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SampleCase sampleCases = 10;</code>
+       */
+      public java.util.List<com.auacm.api.proto.Problem.SampleCase.Builder> 
+           getSampleCasesBuilderList() {
+        return getSampleCasesFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.auacm.api.proto.Problem.SampleCase, com.auacm.api.proto.Problem.SampleCase.Builder, com.auacm.api.proto.Problem.SampleCaseOrBuilder> 
+          getSampleCasesFieldBuilder() {
+        if (sampleCasesBuilder_ == null) {
+          sampleCasesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.auacm.api.proto.Problem.SampleCase, com.auacm.api.proto.Problem.SampleCase.Builder, com.auacm.api.proto.Problem.SampleCaseOrBuilder>(
+                  sampleCases_,
+                  ((bitField0_ & 0x00000200) == 0x00000200),
+                  getParentForChildren(),
+                  isClean());
+          sampleCases_ = null;
+        }
+        return sampleCasesBuilder_;
+      }
+
+      private java.lang.Object shortName_ = "";
+      /**
+       * <code>string shortName = 11;</code>
+       */
+      public java.lang.String getShortName() {
+        java.lang.Object ref = shortName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          shortName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string shortName = 11;</code>
+       */
+      public com.google.protobuf.ByteString
+          getShortNameBytes() {
+        java.lang.Object ref = shortName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          shortName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string shortName = 11;</code>
+       */
+      public Builder setShortName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        shortName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string shortName = 11;</code>
+       */
+      public Builder clearShortName() {
+        
+        shortName_ = getDefaultInstance().getShortName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string shortName = 11;</code>
+       */
+      public Builder setShortNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        shortName_ = value;
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.auacm.api.proto.ProblemResponse)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.auacm.api.proto.ProblemResponse)
+    private static final com.auacm.api.proto.Problem.ProblemResponse DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.auacm.api.proto.Problem.ProblemResponse();
+    }
+
+    public static com.auacm.api.proto.Problem.ProblemResponse getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ProblemResponse>
+        PARSER = new com.google.protobuf.AbstractParser<ProblemResponse>() {
+      public ProblemResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new ProblemResponse(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ProblemResponse> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ProblemResponse> getParserForType() {
+      return PARSER;
+    }
+
+    public com.auacm.api.proto.Problem.ProblemResponse getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public interface ProblemWrapperOrBuilder extends
       // @@protoc_insertion_point(interface_extends:com.auacm.api.proto.ProblemWrapper)
       com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>.com.auacm.api.proto.ProblemResponse data = 1;</code>
+     */
+    boolean hasData();
+    /**
+     * <code>.com.auacm.api.proto.ProblemResponse data = 1;</code>
+     */
+    com.auacm.api.proto.Problem.ProblemResponse getData();
+    /**
+     * <code>.com.auacm.api.proto.ProblemResponse data = 1;</code>
+     */
+    com.auacm.api.proto.Problem.ProblemResponseOrBuilder getDataOrBuilder();
   }
   /**
    * Protobuf type {@code com.auacm.api.proto.ProblemWrapper}
@@ -43,6 +4767,7 @@ public final class Problem {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
+      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -58,6 +4783,19 @@ public final class Problem {
                   input, unknownFields, extensionRegistry, tag)) {
                 done = true;
               }
+              break;
+            }
+            case 10: {
+              com.auacm.api.proto.Problem.ProblemResponse.Builder subBuilder = null;
+              if (data_ != null) {
+                subBuilder = data_.toBuilder();
+              }
+              data_ = input.readMessage(com.auacm.api.proto.Problem.ProblemResponse.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(data_);
+                data_ = subBuilder.buildPartial();
+              }
+
               break;
             }
           }
@@ -84,1265 +4822,25 @@ public final class Problem {
               com.auacm.api.proto.Problem.ProblemWrapper.class, com.auacm.api.proto.Problem.ProblemWrapper.Builder.class);
     }
 
-    public interface ProblemResponseOrBuilder extends
-        // @@protoc_insertion_point(interface_extends:com.auacm.api.proto.ProblemWrapper.ProblemResponse)
-        com.google.protobuf.MessageOrBuilder {
-
-      /**
-       * <code>int64 pid = 1;</code>
-       */
-      long getPid();
-
-      /**
-       * <code>string shortname = 2;</code>
-       */
-      java.lang.String getShortname();
-      /**
-       * <code>string shortname = 2;</code>
-       */
-      com.google.protobuf.ByteString
-          getShortnameBytes();
-
-      /**
-       * <code>string name = 3;</code>
-       */
-      java.lang.String getName();
-      /**
-       * <code>string name = 3;</code>
-       */
-      com.google.protobuf.ByteString
-          getNameBytes();
-
-      /**
-       * <code>string appeared = 4;</code>
-       */
-      java.lang.String getAppeared();
-      /**
-       * <code>string appeared = 4;</code>
-       */
-      com.google.protobuf.ByteString
-          getAppearedBytes();
-
-      /**
-       * <code>string difficuty = 5;</code>
-       */
-      java.lang.String getDifficuty();
-      /**
-       * <code>string difficuty = 5;</code>
-       */
-      com.google.protobuf.ByteString
-          getDifficutyBytes();
-
-      /**
-       * <code>int64 added = 6;</code>
-       */
-      long getAdded();
-
-      /**
-       * <code>int32 competitionId = 7;</code>
-       */
-      int getCompetitionId();
-
-      /**
-       * <code>string url = 8;</code>
-       */
-      java.lang.String getUrl();
-      /**
-       * <code>string url = 8;</code>
-       */
-      com.google.protobuf.ByteString
-          getUrlBytes();
+    public static final int DATA_FIELD_NUMBER = 1;
+    private com.auacm.api.proto.Problem.ProblemResponse data_;
+    /**
+     * <code>.com.auacm.api.proto.ProblemResponse data = 1;</code>
+     */
+    public boolean hasData() {
+      return data_ != null;
     }
     /**
-     * Protobuf type {@code com.auacm.api.proto.ProblemWrapper.ProblemResponse}
+     * <code>.com.auacm.api.proto.ProblemResponse data = 1;</code>
      */
-    public  static final class ProblemResponse extends
-        com.google.protobuf.GeneratedMessageV3 implements
-        // @@protoc_insertion_point(message_implements:com.auacm.api.proto.ProblemWrapper.ProblemResponse)
-        ProblemResponseOrBuilder {
-    private static final long serialVersionUID = 0L;
-      // Use ProblemResponse.newBuilder() to construct.
-      private ProblemResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-        super(builder);
-      }
-      private ProblemResponse() {
-        pid_ = 0L;
-        shortname_ = "";
-        name_ = "";
-        appeared_ = "";
-        difficuty_ = "";
-        added_ = 0L;
-        competitionId_ = 0;
-        url_ = "";
-      }
-
-      @java.lang.Override
-      public final com.google.protobuf.UnknownFieldSet
-      getUnknownFields() {
-        return this.unknownFields;
-      }
-      private ProblemResponse(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        this();
-        int mutable_bitField0_ = 0;
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-            com.google.protobuf.UnknownFieldSet.newBuilder();
-        try {
-          boolean done = false;
-          while (!done) {
-            int tag = input.readTag();
-            switch (tag) {
-              case 0:
-                done = true;
-                break;
-              default: {
-                if (!parseUnknownFieldProto3(
-                    input, unknownFields, extensionRegistry, tag)) {
-                  done = true;
-                }
-                break;
-              }
-              case 8: {
-
-                pid_ = input.readInt64();
-                break;
-              }
-              case 18: {
-                java.lang.String s = input.readStringRequireUtf8();
-
-                shortname_ = s;
-                break;
-              }
-              case 26: {
-                java.lang.String s = input.readStringRequireUtf8();
-
-                name_ = s;
-                break;
-              }
-              case 34: {
-                java.lang.String s = input.readStringRequireUtf8();
-
-                appeared_ = s;
-                break;
-              }
-              case 42: {
-                java.lang.String s = input.readStringRequireUtf8();
-
-                difficuty_ = s;
-                break;
-              }
-              case 48: {
-
-                added_ = input.readInt64();
-                break;
-              }
-              case 56: {
-
-                competitionId_ = input.readInt32();
-                break;
-              }
-              case 66: {
-                java.lang.String s = input.readStringRequireUtf8();
-
-                url_ = s;
-                break;
-              }
-            }
-          }
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          throw e.setUnfinishedMessage(this);
-        } catch (java.io.IOException e) {
-          throw new com.google.protobuf.InvalidProtocolBufferException(
-              e).setUnfinishedMessage(this);
-        } finally {
-          this.unknownFields = unknownFields.build();
-          makeExtensionsImmutable();
-        }
-      }
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.auacm.api.proto.Problem.internal_static_com_auacm_api_proto_ProblemWrapper_ProblemResponse_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.auacm.api.proto.Problem.internal_static_com_auacm_api_proto_ProblemWrapper_ProblemResponse_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse.class, com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse.Builder.class);
-      }
-
-      public static final int PID_FIELD_NUMBER = 1;
-      private long pid_;
-      /**
-       * <code>int64 pid = 1;</code>
-       */
-      public long getPid() {
-        return pid_;
-      }
-
-      public static final int SHORTNAME_FIELD_NUMBER = 2;
-      private volatile java.lang.Object shortname_;
-      /**
-       * <code>string shortname = 2;</code>
-       */
-      public java.lang.String getShortname() {
-        java.lang.Object ref = shortname_;
-        if (ref instanceof java.lang.String) {
-          return (java.lang.String) ref;
-        } else {
-          com.google.protobuf.ByteString bs = 
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          shortname_ = s;
-          return s;
-        }
-      }
-      /**
-       * <code>string shortname = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getShortnameBytes() {
-        java.lang.Object ref = shortname_;
-        if (ref instanceof java.lang.String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          shortname_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-
-      public static final int NAME_FIELD_NUMBER = 3;
-      private volatile java.lang.Object name_;
-      /**
-       * <code>string name = 3;</code>
-       */
-      public java.lang.String getName() {
-        java.lang.Object ref = name_;
-        if (ref instanceof java.lang.String) {
-          return (java.lang.String) ref;
-        } else {
-          com.google.protobuf.ByteString bs = 
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          name_ = s;
-          return s;
-        }
-      }
-      /**
-       * <code>string name = 3;</code>
-       */
-      public com.google.protobuf.ByteString
-          getNameBytes() {
-        java.lang.Object ref = name_;
-        if (ref instanceof java.lang.String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          name_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-
-      public static final int APPEARED_FIELD_NUMBER = 4;
-      private volatile java.lang.Object appeared_;
-      /**
-       * <code>string appeared = 4;</code>
-       */
-      public java.lang.String getAppeared() {
-        java.lang.Object ref = appeared_;
-        if (ref instanceof java.lang.String) {
-          return (java.lang.String) ref;
-        } else {
-          com.google.protobuf.ByteString bs = 
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          appeared_ = s;
-          return s;
-        }
-      }
-      /**
-       * <code>string appeared = 4;</code>
-       */
-      public com.google.protobuf.ByteString
-          getAppearedBytes() {
-        java.lang.Object ref = appeared_;
-        if (ref instanceof java.lang.String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          appeared_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-
-      public static final int DIFFICUTY_FIELD_NUMBER = 5;
-      private volatile java.lang.Object difficuty_;
-      /**
-       * <code>string difficuty = 5;</code>
-       */
-      public java.lang.String getDifficuty() {
-        java.lang.Object ref = difficuty_;
-        if (ref instanceof java.lang.String) {
-          return (java.lang.String) ref;
-        } else {
-          com.google.protobuf.ByteString bs = 
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          difficuty_ = s;
-          return s;
-        }
-      }
-      /**
-       * <code>string difficuty = 5;</code>
-       */
-      public com.google.protobuf.ByteString
-          getDifficutyBytes() {
-        java.lang.Object ref = difficuty_;
-        if (ref instanceof java.lang.String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          difficuty_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-
-      public static final int ADDED_FIELD_NUMBER = 6;
-      private long added_;
-      /**
-       * <code>int64 added = 6;</code>
-       */
-      public long getAdded() {
-        return added_;
-      }
-
-      public static final int COMPETITIONID_FIELD_NUMBER = 7;
-      private int competitionId_;
-      /**
-       * <code>int32 competitionId = 7;</code>
-       */
-      public int getCompetitionId() {
-        return competitionId_;
-      }
-
-      public static final int URL_FIELD_NUMBER = 8;
-      private volatile java.lang.Object url_;
-      /**
-       * <code>string url = 8;</code>
-       */
-      public java.lang.String getUrl() {
-        java.lang.Object ref = url_;
-        if (ref instanceof java.lang.String) {
-          return (java.lang.String) ref;
-        } else {
-          com.google.protobuf.ByteString bs = 
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          url_ = s;
-          return s;
-        }
-      }
-      /**
-       * <code>string url = 8;</code>
-       */
-      public com.google.protobuf.ByteString
-          getUrlBytes() {
-        java.lang.Object ref = url_;
-        if (ref instanceof java.lang.String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          url_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-
-      private byte memoizedIsInitialized = -1;
-      public final boolean isInitialized() {
-        byte isInitialized = memoizedIsInitialized;
-        if (isInitialized == 1) return true;
-        if (isInitialized == 0) return false;
-
-        memoizedIsInitialized = 1;
-        return true;
-      }
-
-      public void writeTo(com.google.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
-        if (pid_ != 0L) {
-          output.writeInt64(1, pid_);
-        }
-        if (!getShortnameBytes().isEmpty()) {
-          com.google.protobuf.GeneratedMessageV3.writeString(output, 2, shortname_);
-        }
-        if (!getNameBytes().isEmpty()) {
-          com.google.protobuf.GeneratedMessageV3.writeString(output, 3, name_);
-        }
-        if (!getAppearedBytes().isEmpty()) {
-          com.google.protobuf.GeneratedMessageV3.writeString(output, 4, appeared_);
-        }
-        if (!getDifficutyBytes().isEmpty()) {
-          com.google.protobuf.GeneratedMessageV3.writeString(output, 5, difficuty_);
-        }
-        if (added_ != 0L) {
-          output.writeInt64(6, added_);
-        }
-        if (competitionId_ != 0) {
-          output.writeInt32(7, competitionId_);
-        }
-        if (!getUrlBytes().isEmpty()) {
-          com.google.protobuf.GeneratedMessageV3.writeString(output, 8, url_);
-        }
-        unknownFields.writeTo(output);
-      }
-
-      public int getSerializedSize() {
-        int size = memoizedSize;
-        if (size != -1) return size;
-
-        size = 0;
-        if (pid_ != 0L) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeInt64Size(1, pid_);
-        }
-        if (!getShortnameBytes().isEmpty()) {
-          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, shortname_);
-        }
-        if (!getNameBytes().isEmpty()) {
-          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, name_);
-        }
-        if (!getAppearedBytes().isEmpty()) {
-          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, appeared_);
-        }
-        if (!getDifficutyBytes().isEmpty()) {
-          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, difficuty_);
-        }
-        if (added_ != 0L) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeInt64Size(6, added_);
-        }
-        if (competitionId_ != 0) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeInt32Size(7, competitionId_);
-        }
-        if (!getUrlBytes().isEmpty()) {
-          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, url_);
-        }
-        size += unknownFields.getSerializedSize();
-        memoizedSize = size;
-        return size;
-      }
-
-      @java.lang.Override
-      public boolean equals(final java.lang.Object obj) {
-        if (obj == this) {
-         return true;
-        }
-        if (!(obj instanceof com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse)) {
-          return super.equals(obj);
-        }
-        com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse other = (com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse) obj;
-
-        boolean result = true;
-        result = result && (getPid()
-            == other.getPid());
-        result = result && getShortname()
-            .equals(other.getShortname());
-        result = result && getName()
-            .equals(other.getName());
-        result = result && getAppeared()
-            .equals(other.getAppeared());
-        result = result && getDifficuty()
-            .equals(other.getDifficuty());
-        result = result && (getAdded()
-            == other.getAdded());
-        result = result && (getCompetitionId()
-            == other.getCompetitionId());
-        result = result && getUrl()
-            .equals(other.getUrl());
-        result = result && unknownFields.equals(other.unknownFields);
-        return result;
-      }
-
-      @java.lang.Override
-      public int hashCode() {
-        if (memoizedHashCode != 0) {
-          return memoizedHashCode;
-        }
-        int hash = 41;
-        hash = (19 * hash) + getDescriptor().hashCode();
-        hash = (37 * hash) + PID_FIELD_NUMBER;
-        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-            getPid());
-        hash = (37 * hash) + SHORTNAME_FIELD_NUMBER;
-        hash = (53 * hash) + getShortname().hashCode();
-        hash = (37 * hash) + NAME_FIELD_NUMBER;
-        hash = (53 * hash) + getName().hashCode();
-        hash = (37 * hash) + APPEARED_FIELD_NUMBER;
-        hash = (53 * hash) + getAppeared().hashCode();
-        hash = (37 * hash) + DIFFICUTY_FIELD_NUMBER;
-        hash = (53 * hash) + getDifficuty().hashCode();
-        hash = (37 * hash) + ADDED_FIELD_NUMBER;
-        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-            getAdded());
-        hash = (37 * hash) + COMPETITIONID_FIELD_NUMBER;
-        hash = (53 * hash) + getCompetitionId();
-        hash = (37 * hash) + URL_FIELD_NUMBER;
-        hash = (53 * hash) + getUrl().hashCode();
-        hash = (29 * hash) + unknownFields.hashCode();
-        memoizedHashCode = hash;
-        return hash;
-      }
-
-      public static com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse parseFrom(
-          java.nio.ByteBuffer data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-      }
-      public static com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse parseFrom(
-          java.nio.ByteBuffer data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-      }
-      public static com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse parseFrom(
-          com.google.protobuf.ByteString data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-      }
-      public static com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse parseFrom(
-          com.google.protobuf.ByteString data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-      }
-      public static com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse parseFrom(byte[] data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-      }
-      public static com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse parseFrom(
-          byte[] data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-      }
-      public static com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse parseFrom(java.io.InputStream input)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseWithIOException(PARSER, input);
-      }
-      public static com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse parseFrom(
-          java.io.InputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseWithIOException(PARSER, input, extensionRegistry);
-      }
-      public static com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse parseDelimitedFrom(java.io.InputStream input)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseDelimitedWithIOException(PARSER, input);
-      }
-      public static com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse parseDelimitedFrom(
-          java.io.InputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-      }
-      public static com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse parseFrom(
-          com.google.protobuf.CodedInputStream input)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseWithIOException(PARSER, input);
-      }
-      public static com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse parseFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseWithIOException(PARSER, input, extensionRegistry);
-      }
-
-      public Builder newBuilderForType() { return newBuilder(); }
-      public static Builder newBuilder() {
-        return DEFAULT_INSTANCE.toBuilder();
-      }
-      public static Builder newBuilder(com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse prototype) {
-        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-      }
-      public Builder toBuilder() {
-        return this == DEFAULT_INSTANCE
-            ? new Builder() : new Builder().mergeFrom(this);
-      }
-
-      @java.lang.Override
-      protected Builder newBuilderForType(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
-      }
-      /**
-       * Protobuf type {@code com.auacm.api.proto.ProblemWrapper.ProblemResponse}
-       */
-      public static final class Builder extends
-          com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-          // @@protoc_insertion_point(builder_implements:com.auacm.api.proto.ProblemWrapper.ProblemResponse)
-          com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponseOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor
-            getDescriptor() {
-          return com.auacm.api.proto.Problem.internal_static_com_auacm_api_proto_ProblemWrapper_ProblemResponse_descriptor;
-        }
-
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
-          return com.auacm.api.proto.Problem.internal_static_com_auacm_api_proto_ProblemWrapper_ProblemResponse_fieldAccessorTable
-              .ensureFieldAccessorsInitialized(
-                  com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse.class, com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse.Builder.class);
-        }
-
-        // Construct using com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse.newBuilder()
-        private Builder() {
-          maybeForceBuilderInitialization();
-        }
-
-        private Builder(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-          super(parent);
-          maybeForceBuilderInitialization();
-        }
-        private void maybeForceBuilderInitialization() {
-          if (com.google.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
-          }
-        }
-        public Builder clear() {
-          super.clear();
-          pid_ = 0L;
-
-          shortname_ = "";
-
-          name_ = "";
-
-          appeared_ = "";
-
-          difficuty_ = "";
-
-          added_ = 0L;
-
-          competitionId_ = 0;
-
-          url_ = "";
-
-          return this;
-        }
-
-        public com.google.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
-          return com.auacm.api.proto.Problem.internal_static_com_auacm_api_proto_ProblemWrapper_ProblemResponse_descriptor;
-        }
-
-        public com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse getDefaultInstanceForType() {
-          return com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse.getDefaultInstance();
-        }
-
-        public com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse build() {
-          com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse result = buildPartial();
-          if (!result.isInitialized()) {
-            throw newUninitializedMessageException(result);
-          }
-          return result;
-        }
-
-        public com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse buildPartial() {
-          com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse result = new com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse(this);
-          result.pid_ = pid_;
-          result.shortname_ = shortname_;
-          result.name_ = name_;
-          result.appeared_ = appeared_;
-          result.difficuty_ = difficuty_;
-          result.added_ = added_;
-          result.competitionId_ = competitionId_;
-          result.url_ = url_;
-          onBuilt();
-          return result;
-        }
-
-        public Builder clone() {
-          return (Builder) super.clone();
-        }
-        public Builder setField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            java.lang.Object value) {
-          return (Builder) super.setField(field, value);
-        }
-        public Builder clearField(
-            com.google.protobuf.Descriptors.FieldDescriptor field) {
-          return (Builder) super.clearField(field);
-        }
-        public Builder clearOneof(
-            com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-          return (Builder) super.clearOneof(oneof);
-        }
-        public Builder setRepeatedField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            int index, java.lang.Object value) {
-          return (Builder) super.setRepeatedField(field, index, value);
-        }
-        public Builder addRepeatedField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            java.lang.Object value) {
-          return (Builder) super.addRepeatedField(field, value);
-        }
-        public Builder mergeFrom(com.google.protobuf.Message other) {
-          if (other instanceof com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse) {
-            return mergeFrom((com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse)other);
-          } else {
-            super.mergeFrom(other);
-            return this;
-          }
-        }
-
-        public Builder mergeFrom(com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse other) {
-          if (other == com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse.getDefaultInstance()) return this;
-          if (other.getPid() != 0L) {
-            setPid(other.getPid());
-          }
-          if (!other.getShortname().isEmpty()) {
-            shortname_ = other.shortname_;
-            onChanged();
-          }
-          if (!other.getName().isEmpty()) {
-            name_ = other.name_;
-            onChanged();
-          }
-          if (!other.getAppeared().isEmpty()) {
-            appeared_ = other.appeared_;
-            onChanged();
-          }
-          if (!other.getDifficuty().isEmpty()) {
-            difficuty_ = other.difficuty_;
-            onChanged();
-          }
-          if (other.getAdded() != 0L) {
-            setAdded(other.getAdded());
-          }
-          if (other.getCompetitionId() != 0) {
-            setCompetitionId(other.getCompetitionId());
-          }
-          if (!other.getUrl().isEmpty()) {
-            url_ = other.url_;
-            onChanged();
-          }
-          this.mergeUnknownFields(other.unknownFields);
-          onChanged();
-          return this;
-        }
-
-        public final boolean isInitialized() {
-          return true;
-        }
-
-        public Builder mergeFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
-          com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse parsedMessage = null;
-          try {
-            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            parsedMessage = (com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse) e.getUnfinishedMessage();
-            throw e.unwrapIOException();
-          } finally {
-            if (parsedMessage != null) {
-              mergeFrom(parsedMessage);
-            }
-          }
-          return this;
-        }
-
-        private long pid_ ;
-        /**
-         * <code>int64 pid = 1;</code>
-         */
-        public long getPid() {
-          return pid_;
-        }
-        /**
-         * <code>int64 pid = 1;</code>
-         */
-        public Builder setPid(long value) {
-          
-          pid_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>int64 pid = 1;</code>
-         */
-        public Builder clearPid() {
-          
-          pid_ = 0L;
-          onChanged();
-          return this;
-        }
-
-        private java.lang.Object shortname_ = "";
-        /**
-         * <code>string shortname = 2;</code>
-         */
-        public java.lang.String getShortname() {
-          java.lang.Object ref = shortname_;
-          if (!(ref instanceof java.lang.String)) {
-            com.google.protobuf.ByteString bs =
-                (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            shortname_ = s;
-            return s;
-          } else {
-            return (java.lang.String) ref;
-          }
-        }
-        /**
-         * <code>string shortname = 2;</code>
-         */
-        public com.google.protobuf.ByteString
-            getShortnameBytes() {
-          java.lang.Object ref = shortname_;
-          if (ref instanceof String) {
-            com.google.protobuf.ByteString b = 
-                com.google.protobuf.ByteString.copyFromUtf8(
-                    (java.lang.String) ref);
-            shortname_ = b;
-            return b;
-          } else {
-            return (com.google.protobuf.ByteString) ref;
-          }
-        }
-        /**
-         * <code>string shortname = 2;</code>
-         */
-        public Builder setShortname(
-            java.lang.String value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  
-          shortname_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>string shortname = 2;</code>
-         */
-        public Builder clearShortname() {
-          
-          shortname_ = getDefaultInstance().getShortname();
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>string shortname = 2;</code>
-         */
-        public Builder setShortnameBytes(
-            com.google.protobuf.ByteString value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-          
-          shortname_ = value;
-          onChanged();
-          return this;
-        }
-
-        private java.lang.Object name_ = "";
-        /**
-         * <code>string name = 3;</code>
-         */
-        public java.lang.String getName() {
-          java.lang.Object ref = name_;
-          if (!(ref instanceof java.lang.String)) {
-            com.google.protobuf.ByteString bs =
-                (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            name_ = s;
-            return s;
-          } else {
-            return (java.lang.String) ref;
-          }
-        }
-        /**
-         * <code>string name = 3;</code>
-         */
-        public com.google.protobuf.ByteString
-            getNameBytes() {
-          java.lang.Object ref = name_;
-          if (ref instanceof String) {
-            com.google.protobuf.ByteString b = 
-                com.google.protobuf.ByteString.copyFromUtf8(
-                    (java.lang.String) ref);
-            name_ = b;
-            return b;
-          } else {
-            return (com.google.protobuf.ByteString) ref;
-          }
-        }
-        /**
-         * <code>string name = 3;</code>
-         */
-        public Builder setName(
-            java.lang.String value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  
-          name_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>string name = 3;</code>
-         */
-        public Builder clearName() {
-          
-          name_ = getDefaultInstance().getName();
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>string name = 3;</code>
-         */
-        public Builder setNameBytes(
-            com.google.protobuf.ByteString value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-          
-          name_ = value;
-          onChanged();
-          return this;
-        }
-
-        private java.lang.Object appeared_ = "";
-        /**
-         * <code>string appeared = 4;</code>
-         */
-        public java.lang.String getAppeared() {
-          java.lang.Object ref = appeared_;
-          if (!(ref instanceof java.lang.String)) {
-            com.google.protobuf.ByteString bs =
-                (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            appeared_ = s;
-            return s;
-          } else {
-            return (java.lang.String) ref;
-          }
-        }
-        /**
-         * <code>string appeared = 4;</code>
-         */
-        public com.google.protobuf.ByteString
-            getAppearedBytes() {
-          java.lang.Object ref = appeared_;
-          if (ref instanceof String) {
-            com.google.protobuf.ByteString b = 
-                com.google.protobuf.ByteString.copyFromUtf8(
-                    (java.lang.String) ref);
-            appeared_ = b;
-            return b;
-          } else {
-            return (com.google.protobuf.ByteString) ref;
-          }
-        }
-        /**
-         * <code>string appeared = 4;</code>
-         */
-        public Builder setAppeared(
-            java.lang.String value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  
-          appeared_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>string appeared = 4;</code>
-         */
-        public Builder clearAppeared() {
-          
-          appeared_ = getDefaultInstance().getAppeared();
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>string appeared = 4;</code>
-         */
-        public Builder setAppearedBytes(
-            com.google.protobuf.ByteString value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-          
-          appeared_ = value;
-          onChanged();
-          return this;
-        }
-
-        private java.lang.Object difficuty_ = "";
-        /**
-         * <code>string difficuty = 5;</code>
-         */
-        public java.lang.String getDifficuty() {
-          java.lang.Object ref = difficuty_;
-          if (!(ref instanceof java.lang.String)) {
-            com.google.protobuf.ByteString bs =
-                (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            difficuty_ = s;
-            return s;
-          } else {
-            return (java.lang.String) ref;
-          }
-        }
-        /**
-         * <code>string difficuty = 5;</code>
-         */
-        public com.google.protobuf.ByteString
-            getDifficutyBytes() {
-          java.lang.Object ref = difficuty_;
-          if (ref instanceof String) {
-            com.google.protobuf.ByteString b = 
-                com.google.protobuf.ByteString.copyFromUtf8(
-                    (java.lang.String) ref);
-            difficuty_ = b;
-            return b;
-          } else {
-            return (com.google.protobuf.ByteString) ref;
-          }
-        }
-        /**
-         * <code>string difficuty = 5;</code>
-         */
-        public Builder setDifficuty(
-            java.lang.String value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  
-          difficuty_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>string difficuty = 5;</code>
-         */
-        public Builder clearDifficuty() {
-          
-          difficuty_ = getDefaultInstance().getDifficuty();
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>string difficuty = 5;</code>
-         */
-        public Builder setDifficutyBytes(
-            com.google.protobuf.ByteString value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-          
-          difficuty_ = value;
-          onChanged();
-          return this;
-        }
-
-        private long added_ ;
-        /**
-         * <code>int64 added = 6;</code>
-         */
-        public long getAdded() {
-          return added_;
-        }
-        /**
-         * <code>int64 added = 6;</code>
-         */
-        public Builder setAdded(long value) {
-          
-          added_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>int64 added = 6;</code>
-         */
-        public Builder clearAdded() {
-          
-          added_ = 0L;
-          onChanged();
-          return this;
-        }
-
-        private int competitionId_ ;
-        /**
-         * <code>int32 competitionId = 7;</code>
-         */
-        public int getCompetitionId() {
-          return competitionId_;
-        }
-        /**
-         * <code>int32 competitionId = 7;</code>
-         */
-        public Builder setCompetitionId(int value) {
-          
-          competitionId_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>int32 competitionId = 7;</code>
-         */
-        public Builder clearCompetitionId() {
-          
-          competitionId_ = 0;
-          onChanged();
-          return this;
-        }
-
-        private java.lang.Object url_ = "";
-        /**
-         * <code>string url = 8;</code>
-         */
-        public java.lang.String getUrl() {
-          java.lang.Object ref = url_;
-          if (!(ref instanceof java.lang.String)) {
-            com.google.protobuf.ByteString bs =
-                (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            url_ = s;
-            return s;
-          } else {
-            return (java.lang.String) ref;
-          }
-        }
-        /**
-         * <code>string url = 8;</code>
-         */
-        public com.google.protobuf.ByteString
-            getUrlBytes() {
-          java.lang.Object ref = url_;
-          if (ref instanceof String) {
-            com.google.protobuf.ByteString b = 
-                com.google.protobuf.ByteString.copyFromUtf8(
-                    (java.lang.String) ref);
-            url_ = b;
-            return b;
-          } else {
-            return (com.google.protobuf.ByteString) ref;
-          }
-        }
-        /**
-         * <code>string url = 8;</code>
-         */
-        public Builder setUrl(
-            java.lang.String value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  
-          url_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>string url = 8;</code>
-         */
-        public Builder clearUrl() {
-          
-          url_ = getDefaultInstance().getUrl();
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>string url = 8;</code>
-         */
-        public Builder setUrlBytes(
-            com.google.protobuf.ByteString value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-          
-          url_ = value;
-          onChanged();
-          return this;
-        }
-        public final Builder setUnknownFields(
-            final com.google.protobuf.UnknownFieldSet unknownFields) {
-          return super.setUnknownFieldsProto3(unknownFields);
-        }
-
-        public final Builder mergeUnknownFields(
-            final com.google.protobuf.UnknownFieldSet unknownFields) {
-          return super.mergeUnknownFields(unknownFields);
-        }
-
-
-        // @@protoc_insertion_point(builder_scope:com.auacm.api.proto.ProblemWrapper.ProblemResponse)
-      }
-
-      // @@protoc_insertion_point(class_scope:com.auacm.api.proto.ProblemWrapper.ProblemResponse)
-      private static final com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse DEFAULT_INSTANCE;
-      static {
-        DEFAULT_INSTANCE = new com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse();
-      }
-
-      public static com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse getDefaultInstance() {
-        return DEFAULT_INSTANCE;
-      }
-
-      private static final com.google.protobuf.Parser<ProblemResponse>
-          PARSER = new com.google.protobuf.AbstractParser<ProblemResponse>() {
-        public ProblemResponse parsePartialFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-            return new ProblemResponse(input, extensionRegistry);
-        }
-      };
-
-      public static com.google.protobuf.Parser<ProblemResponse> parser() {
-        return PARSER;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Parser<ProblemResponse> getParserForType() {
-        return PARSER;
-      }
-
-      public com.auacm.api.proto.Problem.ProblemWrapper.ProblemResponse getDefaultInstanceForType() {
-        return DEFAULT_INSTANCE;
-      }
-
+    public com.auacm.api.proto.Problem.ProblemResponse getData() {
+      return data_ == null ? com.auacm.api.proto.Problem.ProblemResponse.getDefaultInstance() : data_;
+    }
+    /**
+     * <code>.com.auacm.api.proto.ProblemResponse data = 1;</code>
+     */
+    public com.auacm.api.proto.Problem.ProblemResponseOrBuilder getDataOrBuilder() {
+      return getData();
     }
 
     private byte memoizedIsInitialized = -1;
@@ -1357,6 +4855,9 @@ public final class Problem {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      if (data_ != null) {
+        output.writeMessage(1, getData());
+      }
       unknownFields.writeTo(output);
     }
 
@@ -1365,6 +4866,10 @@ public final class Problem {
       if (size != -1) return size;
 
       size = 0;
+      if (data_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getData());
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -1381,6 +4886,11 @@ public final class Problem {
       com.auacm.api.proto.Problem.ProblemWrapper other = (com.auacm.api.proto.Problem.ProblemWrapper) obj;
 
       boolean result = true;
+      result = result && (hasData() == other.hasData());
+      if (hasData()) {
+        result = result && getData()
+            .equals(other.getData());
+      }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -1392,6 +4902,10 @@ public final class Problem {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasData()) {
+        hash = (37 * hash) + DATA_FIELD_NUMBER;
+        hash = (53 * hash) + getData().hashCode();
+      }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1521,6 +5035,12 @@ public final class Problem {
       }
       public Builder clear() {
         super.clear();
+        if (dataBuilder_ == null) {
+          data_ = null;
+        } else {
+          data_ = null;
+          dataBuilder_ = null;
+        }
         return this;
       }
 
@@ -1543,6 +5063,11 @@ public final class Problem {
 
       public com.auacm.api.proto.Problem.ProblemWrapper buildPartial() {
         com.auacm.api.proto.Problem.ProblemWrapper result = new com.auacm.api.proto.Problem.ProblemWrapper(this);
+        if (dataBuilder_ == null) {
+          result.data_ = data_;
+        } else {
+          result.data_ = dataBuilder_.build();
+        }
         onBuilt();
         return result;
       }
@@ -1584,6 +5109,9 @@ public final class Problem {
 
       public Builder mergeFrom(com.auacm.api.proto.Problem.ProblemWrapper other) {
         if (other == com.auacm.api.proto.Problem.ProblemWrapper.getDefaultInstance()) return this;
+        if (other.hasData()) {
+          mergeData(other.getData());
+        }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -1609,6 +5137,123 @@ public final class Problem {
           }
         }
         return this;
+      }
+
+      private com.auacm.api.proto.Problem.ProblemResponse data_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.auacm.api.proto.Problem.ProblemResponse, com.auacm.api.proto.Problem.ProblemResponse.Builder, com.auacm.api.proto.Problem.ProblemResponseOrBuilder> dataBuilder_;
+      /**
+       * <code>.com.auacm.api.proto.ProblemResponse data = 1;</code>
+       */
+      public boolean hasData() {
+        return dataBuilder_ != null || data_ != null;
+      }
+      /**
+       * <code>.com.auacm.api.proto.ProblemResponse data = 1;</code>
+       */
+      public com.auacm.api.proto.Problem.ProblemResponse getData() {
+        if (dataBuilder_ == null) {
+          return data_ == null ? com.auacm.api.proto.Problem.ProblemResponse.getDefaultInstance() : data_;
+        } else {
+          return dataBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.com.auacm.api.proto.ProblemResponse data = 1;</code>
+       */
+      public Builder setData(com.auacm.api.proto.Problem.ProblemResponse value) {
+        if (dataBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          data_ = value;
+          onChanged();
+        } else {
+          dataBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.com.auacm.api.proto.ProblemResponse data = 1;</code>
+       */
+      public Builder setData(
+          com.auacm.api.proto.Problem.ProblemResponse.Builder builderForValue) {
+        if (dataBuilder_ == null) {
+          data_ = builderForValue.build();
+          onChanged();
+        } else {
+          dataBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.com.auacm.api.proto.ProblemResponse data = 1;</code>
+       */
+      public Builder mergeData(com.auacm.api.proto.Problem.ProblemResponse value) {
+        if (dataBuilder_ == null) {
+          if (data_ != null) {
+            data_ =
+              com.auacm.api.proto.Problem.ProblemResponse.newBuilder(data_).mergeFrom(value).buildPartial();
+          } else {
+            data_ = value;
+          }
+          onChanged();
+        } else {
+          dataBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.com.auacm.api.proto.ProblemResponse data = 1;</code>
+       */
+      public Builder clearData() {
+        if (dataBuilder_ == null) {
+          data_ = null;
+          onChanged();
+        } else {
+          data_ = null;
+          dataBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.com.auacm.api.proto.ProblemResponse data = 1;</code>
+       */
+      public com.auacm.api.proto.Problem.ProblemResponse.Builder getDataBuilder() {
+        
+        onChanged();
+        return getDataFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.com.auacm.api.proto.ProblemResponse data = 1;</code>
+       */
+      public com.auacm.api.proto.Problem.ProblemResponseOrBuilder getDataOrBuilder() {
+        if (dataBuilder_ != null) {
+          return dataBuilder_.getMessageOrBuilder();
+        } else {
+          return data_ == null ?
+              com.auacm.api.proto.Problem.ProblemResponse.getDefaultInstance() : data_;
+        }
+      }
+      /**
+       * <code>.com.auacm.api.proto.ProblemResponse data = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.auacm.api.proto.Problem.ProblemResponse, com.auacm.api.proto.Problem.ProblemResponse.Builder, com.auacm.api.proto.Problem.ProblemResponseOrBuilder> 
+          getDataFieldBuilder() {
+        if (dataBuilder_ == null) {
+          dataBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.auacm.api.proto.Problem.ProblemResponse, com.auacm.api.proto.Problem.ProblemResponse.Builder, com.auacm.api.proto.Problem.ProblemResponseOrBuilder>(
+                  getData(),
+                  getParentForChildren(),
+                  isClean());
+          data_ = null;
+        }
+        return dataBuilder_;
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -1660,15 +5305,30 @@ public final class Problem {
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_auacm_api_proto_SimpleProblemResponse_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_auacm_api_proto_SimpleProblemResponse_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_auacm_api_proto_ProblemListWrapper_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_auacm_api_proto_ProblemListWrapper_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_auacm_api_proto_SampleCase_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_auacm_api_proto_SampleCase_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_auacm_api_proto_ProblemResponse_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_auacm_api_proto_ProblemResponse_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_auacm_api_proto_ProblemWrapper_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_auacm_api_proto_ProblemWrapper_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_auacm_api_proto_ProblemWrapper_ProblemResponse_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_auacm_api_proto_ProblemWrapper_ProblemResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -1679,12 +5339,23 @@ public final class Problem {
   static {
     java.lang.String[] descriptorData = {
       "\n&src/main/resources/proto/Problem.proto" +
-      "\022\023com.auacm.api.proto\"\252\001\n\016ProblemWrapper" +
-      "\032\227\001\n\017ProblemResponse\022\013\n\003pid\030\001 \001(\003\022\021\n\tsho" +
-      "rtname\030\002 \001(\t\022\014\n\004name\030\003 \001(\t\022\020\n\010appeared\030\004" +
-      " \001(\t\022\021\n\tdifficuty\030\005 \001(\t\022\r\n\005added\030\006 \001(\003\022\025" +
-      "\n\rcompetitionId\030\007 \001(\005\022\013\n\003url\030\010 \001(\tb\006prot" +
-      "o3"
+      "\022\023com.auacm.api.proto\"\253\001\n\025SimpleProblemR" +
+      "esponse\022\r\n\005added\030\001 \001(\003\022\020\n\010appeared\030\002 \001(\t" +
+      "\022\023\n\013compRelease\030\003 \001(\003\022\021\n\tdifficuty\030\004 \001(\t" +
+      "\022\014\n\004name\030\005 \001(\t\022\013\n\003pid\030\006 \001(\003\022\021\n\tshortName" +
+      "\030\007 \001(\t\022\016\n\006solved\030\010 \001(\010\022\013\n\003url\030\t \001(\t\"N\n\022P" +
+      "roblemListWrapper\0228\n\004data\030\001 \003(\0132*.com.au" +
+      "acm.api.proto.SimpleProblemResponse\"<\n\nS" +
+      "ampleCase\022\017\n\007caseNum\030\001 \001(\003\022\r\n\005input\030\002 \001(" +
+      "\t\022\016\n\006output\030\003 \001(\t\"\372\001\n\017ProblemResponse\022\r\n",
+      "\005added\030\001 \001(\003\022\020\n\010appeared\030\002 \001(\t\022\023\n\013compRe" +
+      "lease\030\003 \001(\003\022\023\n\013description\030\004 \001(\t\022\021\n\tdiff" +
+      "icuty\030\005 \001(\t\022\021\n\tinputDesc\030\006 \001(\t\022\014\n\004name\030\007" +
+      " \001(\t\022\022\n\noutputDesc\030\010 \001(\t\022\013\n\003pid\030\t \001(\003\0224\n" +
+      "\013sampleCases\030\n \003(\0132\037.com.auacm.api.proto" +
+      ".SampleCase\022\021\n\tshortName\030\013 \001(\t\"D\n\016Proble" +
+      "mWrapper\0222\n\004data\030\001 \001(\0132$.com.auacm.api.p" +
+      "roto.ProblemResponseb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1698,18 +5369,36 @@ public final class Problem {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         }, assigner);
-    internal_static_com_auacm_api_proto_ProblemWrapper_descriptor =
+    internal_static_com_auacm_api_proto_SimpleProblemResponse_descriptor =
       getDescriptor().getMessageTypes().get(0);
+    internal_static_com_auacm_api_proto_SimpleProblemResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_auacm_api_proto_SimpleProblemResponse_descriptor,
+        new java.lang.String[] { "Added", "Appeared", "CompRelease", "Difficuty", "Name", "Pid", "ShortName", "Solved", "Url", });
+    internal_static_com_auacm_api_proto_ProblemListWrapper_descriptor =
+      getDescriptor().getMessageTypes().get(1);
+    internal_static_com_auacm_api_proto_ProblemListWrapper_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_auacm_api_proto_ProblemListWrapper_descriptor,
+        new java.lang.String[] { "Data", });
+    internal_static_com_auacm_api_proto_SampleCase_descriptor =
+      getDescriptor().getMessageTypes().get(2);
+    internal_static_com_auacm_api_proto_SampleCase_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_auacm_api_proto_SampleCase_descriptor,
+        new java.lang.String[] { "CaseNum", "Input", "Output", });
+    internal_static_com_auacm_api_proto_ProblemResponse_descriptor =
+      getDescriptor().getMessageTypes().get(3);
+    internal_static_com_auacm_api_proto_ProblemResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_auacm_api_proto_ProblemResponse_descriptor,
+        new java.lang.String[] { "Added", "Appeared", "CompRelease", "Description", "Difficuty", "InputDesc", "Name", "OutputDesc", "Pid", "SampleCases", "ShortName", });
+    internal_static_com_auacm_api_proto_ProblemWrapper_descriptor =
+      getDescriptor().getMessageTypes().get(4);
     internal_static_com_auacm_api_proto_ProblemWrapper_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_auacm_api_proto_ProblemWrapper_descriptor,
-        new java.lang.String[] { });
-    internal_static_com_auacm_api_proto_ProblemWrapper_ProblemResponse_descriptor =
-      internal_static_com_auacm_api_proto_ProblemWrapper_descriptor.getNestedTypes().get(0);
-    internal_static_com_auacm_api_proto_ProblemWrapper_ProblemResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_auacm_api_proto_ProblemWrapper_ProblemResponse_descriptor,
-        new java.lang.String[] { "Pid", "Shortname", "Name", "Appeared", "Difficuty", "Added", "CompetitionId", "Url", });
+        new java.lang.String[] { "Data", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

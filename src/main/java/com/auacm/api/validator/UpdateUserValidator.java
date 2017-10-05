@@ -3,7 +3,7 @@ package com.auacm.api.validator;
 import com.auacm.database.model.UserPrincipal;
 import com.auacm.api.model.UpdateUser;
 import com.auacm.database.model.User;
-import com.auacm.database.service.UserService;
+import com.auacm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
