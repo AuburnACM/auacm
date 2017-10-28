@@ -3,11 +3,13 @@ import { Http, Request, Response } from '@angular/http';
 import { Subject } from 'rxjs/Subject';
 
 import { Problem, SampleCase } from './models/problem';
+import { HttpClient } from '@angular/common/http';
+import { DataWrapper } from 'app/models/datawrapper';
 
 @Injectable()
 export class ProblemService {
 
-  constructor(private _http: Http) { }
+  constructor(private _http: Http, private _httpClient: HttpClient) { }
 
   // Returns a copy of itself if successful
   createProblem(problem: Problem, judgeInput: File, judgeOutput: File, judgeSolution: File): Promise<Problem> {
@@ -15,23 +17,23 @@ export class ProblemService {
     requestForm.append('pid', `${problem.pid}`);
     requestForm.append('name', problem.name);
     requestForm.append('description', problem.description);
-    requestForm.append('input_desc', problem.inputDesc);
-    requestForm.append('output_desc', problem.outputDesc);
+    requestForm.append('inputDesc', problem.inputDesc);
+    requestForm.append('outputDesc', problem.outputDesc);
     requestForm.append('cases', JSON.stringify(problem.sampleCases));
     if (problem.difficulty >= 0) {
       requestForm.append('difficulty', `${problem.difficulty}`);
     }
     if (judgeInput !== undefined) {
-      requestForm.append('in_file', judgeInput);
+      requestForm.append('inFile', judgeInput);
     }
     if (judgeOutput !== undefined) {
-      requestForm.append('out_file', judgeOutput);
+      requestForm.append('outFile', judgeOutput);
     }
     if (judgeSolution !== undefined) {
-      requestForm.append('sol_file', judgeSolution);
+      requestForm.append('solFile', judgeSolution);
     }
-    requestForm.append('appeared_in', problem.appeared);
-    requestForm.append('comp_release', `${problem.compRelease}`);
+    requestForm.append('appearedIn', problem.appeared);
+    requestForm.append('compRelease', `${problem.compRelease}`);
 
     return new Promise((resolve, reject) => {
       const xmlSubmit = new XMLHttpRequest();
@@ -42,12 +44,12 @@ export class ProblemService {
             const newProblem = new Problem();
             newProblem.added = data.added;
             newProblem.appeared = data.appeared;
-            newProblem.compRelease = data.comp_release;
+            newProblem.compRelease = data.compRelease;
             newProblem.description = data.description;
             newProblem.difficulty = data.difficulty;
-            newProblem.inputDesc = (data.input_desc === undefined || data.input_desc === null) ? '' : data.input_desc;
+            newProblem.inputDesc = (data.inputDesc === undefined || data.inputDesc === null) ? '' : data.inputDesc;
             newProblem.name = data.name;
-            newProblem.outputDesc = (data.output_desc === undefined || data.output_desc === null) ? '' : data.output_desc;
+            newProblem.outputDesc = (data.outputDesc === undefined || data.outputDesc === null) ? '' : data.outputDesc;
             newProblem.pid = data.pid;
             newProblem.sampleCases = data.cases;
             newProblem.shortName = data.shortname;
@@ -67,8 +69,8 @@ export class ProblemService {
     requestForm.append('pid', `${problem.pid}`);
     requestForm.append('name', problem.name);
     requestForm.append('description', problem.description);
-    requestForm.append('input_desc', problem.inputDesc);
-    requestForm.append('output_desc', problem.outputDesc);
+    requestForm.append('inputDesc', problem.inputDesc);
+    requestForm.append('outputDesc', problem.outputDesc);
     requestForm.append('cases', JSON.stringify(problem.sampleCases));
     if (problem.difficulty >= 0) {
       requestForm.append('difficulty', `${problem.difficulty}`);
@@ -83,7 +85,7 @@ export class ProblemService {
       requestForm.append('sol_file', judgeSolution);
     }
     requestForm.append('appeared_in', problem.appeared);
-    requestForm.append('comp_release', `${problem.compRelease}`);
+    requestForm.append('compRelease', `${problem.compRelease}`);
 
     return new Promise((resolve, reject) => {
       const xmlSubmit = new XMLHttpRequest();
@@ -94,12 +96,12 @@ export class ProblemService {
             const newProblem = new Problem();
             newProblem.added = data.added;
             newProblem.appeared = data.appeared;
-            newProblem.compRelease = data.comp_release;
+            newProblem.compRelease = data.compRelease;
             newProblem.description = data.description;
             newProblem.difficulty = data.difficulty;
-            newProblem.inputDesc = (data.input_desc === undefined || data.input_desc === null) ? '' : data.input_desc;
+            newProblem.inputDesc = (data.inputDesc === undefined || data.inputDesc === null) ? '' : data.inputDesc;
             newProblem.name = data.name;
-            newProblem.outputDesc = (data.output_desc === undefined || data.output_desc === null) ? '' : data.output_desc;
+            newProblem.outputDesc = (data.outputDesc === undefined || data.outputDesc === null) ? '' : data.outputDesc;
             newProblem.pid = data.pid;
             newProblem.sampleCases = data.cases;
             newProblem.shortName = data.shortname;
@@ -116,22 +118,8 @@ export class ProblemService {
 
   getProblemByPid(identifier: number): Promise<Problem> {
     return new Promise((resolve, reject) => {
-      this._http.get(`/api/problems/${identifier}`).subscribe((res: Response) => {
-        const problem = new Problem();
-        const data = res.json().data;
-        if (res.status === 200) {
-          problem.added = data.added;
-          problem.appeared = data.appeared;
-          problem.compRelease = data.comp_release;
-          problem.description = data.description;
-          problem.difficulty = data.difficulty;
-          problem.inputDesc = (data.input_desc === undefined || data.input_desc === null) ? '' : data.input_desc;
-          problem.name = data.name;
-          problem.outputDesc = (data.output_desc === undefined || data.output_desc === null) ? '' : data.output_desc;
-          problem.pid = data.pid;
-          problem.sampleCases = data.sample_cases;
-          problem.shortName = data.shortname;
-        }
+      this._httpClient.get<DataWrapper<Problem>>(`/api/problems/${identifier}`).subscribe(data => {
+        const problem = new Problem().deserialize(data.data);
         resolve(problem);
       }, (err: Response) => {
         resolve(new Problem());
@@ -141,22 +129,8 @@ export class ProblemService {
 
   getProblemByShortName(identifier: string): Promise<Problem> {
     return new Promise((resolve, reject) => {
-      this._http.get(`/api/problems/${identifier}`).subscribe((res: Response) => {
-        const problem = new Problem();
-        const data = res.json().data;
-        if (res.status === 200) {
-          problem.added = data.added;
-          problem.appeared = data.appeared;
-          problem.compRelease = data.comp_release;
-          problem.description = (data.description === undefined || data.description === null) ? '' : data.description;
-          problem.difficulty = data.difficulty;
-          problem.inputDesc = (data.input_desc === undefined || data.input_desc === null) ? '' : data.input_desc;
-          problem.name = data.name;
-          problem.outputDesc = (data.output_desc === undefined || data.output_desc === null) ? '' : data.output_desc;
-          problem.pid = data.pid;
-          problem.sampleCases = data.sample_cases;
-          problem.shortName = data.shortname;
-        }
+      this._httpClient.get<DataWrapper<Problem>>(`/api/problems/${identifier}`).subscribe(data => {
+        const problem = new Problem().deserialize(data.data);
         resolve(problem);
       }, (err: Response) => {
         resolve(undefined);
@@ -166,23 +140,11 @@ export class ProblemService {
 
   getAllProblems(): Promise<Problem[]> {
     return new Promise((resolve, reject) => {
-      this._http.get('/api/problems').subscribe((res: Response) => {
-        const problems = [];
-        if (res.status === 200) {
-          const data = res.json().data;
-          for (let i = 0; i < data.length; i++) {
-            const tempProblem = new Problem();
-            tempProblem.added = data[i].added;
-            tempProblem.appeared = data[i].appeared;
-            tempProblem.compRelease = data[i].comp_release;
-            tempProblem.difficulty = data[i].difficulty;
-            tempProblem.name = data[i].name;
-            tempProblem.pid = data[i].pid;
-            tempProblem.shortName = data[i].shortname;
-            tempProblem.solved = data[i].solved;
-            tempProblem.url = data[i].url;
-            problems.push(tempProblem);
-          }
+      this._httpClient.get<DataWrapper<Problem[]>>('/api/problems').subscribe(data => {
+        const problems = <Problem[]> [];
+        const list = data.data;
+        for (const problem of list) {
+          problems.push(new Problem().deserialize(problem));
         }
         resolve(problems);
       }, (err: Response) => {

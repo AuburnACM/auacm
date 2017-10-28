@@ -48,6 +48,15 @@ else
 	brew install python3
 fi
 
+# Check if protobuf is installed
+if brew ls --versions protobuf > /dev/null
+then
+	echo "protobuf already installed"
+else
+	echo "Installing protobuf"
+	brew install protobuf
+fi
+
 # Check if mysql is installed
 if brew ls --versions mysql > /dev/null
 then

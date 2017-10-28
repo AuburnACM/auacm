@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { DragulaModule } from 'ng2-dragula';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
@@ -83,6 +84,7 @@ import { ProblemValidatorDirective } from './directives/problem-validator.direct
     BrowserModule,
     DragulaModule,
     FormsModule,
+    HttpClientModule,
     HttpModule,
     ReactiveFormsModule
   ],
