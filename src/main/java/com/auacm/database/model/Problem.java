@@ -20,9 +20,6 @@ public class Problem implements Serializable {
 
     private String difficulty;
 
-    @Transient
-    private String url;
-
     private long added;
 
     @Column(name = "comp_release")
@@ -110,9 +107,5 @@ public class Problem implements Serializable {
 
     public String getUrl() {
         return "problems/" + shortName + "/info.pdf";
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 }

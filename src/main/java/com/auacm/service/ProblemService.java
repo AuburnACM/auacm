@@ -1,17 +1,18 @@
 package com.auacm.service;
 
+import com.auacm.api.model.NewProblem;
 import com.auacm.database.model.Problem;
 
 import java.util.List;
 
 public interface ProblemService {
-    Problem addProblem(Problem problem);
+    Problem createProblem(NewProblem problem);
 
-    //TODO implement CreateProblem Problem addProblem(CreateProblem problem, String username);
+    Problem addProblem(Problem problem);
 
     Problem updateProblem(Problem problem);
 
-    //TODO implement UpdateProblem Problem updateProblem(UpdateProblem problem, long pid);
+    Problem updateProblem(String identifier, NewProblem problem);
 
     void deleteProblem(Problem problem);
 

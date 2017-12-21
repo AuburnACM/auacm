@@ -28,3 +28,6 @@ auacm/app/static/*.bundle.js.map
 auacm/app/static/*.bundle.css
 auacm/app/static/*.jpg
 auacm/app/templates/index.html
+.classpath
+.project
+.settings/

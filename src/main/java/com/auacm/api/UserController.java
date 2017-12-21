@@ -7,6 +7,7 @@ import com.auacm.api.validator.UpdateUserValidator;
 import com.auacm.database.model.User;
 import com.auacm.database.model.UserPrincipal;
 import com.auacm.exception.UserException;
+import com.auacm.service.FileSystemService;
 import com.auacm.service.UserService;
 import com.auacm.util.JsonUtil;
 import com.google.gson.JsonArray;
@@ -14,6 +15,9 @@ import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,20 +43,23 @@ public class UserController {
     @Autowired
     private JsonUtil jsonUtil;
 
+    @Autowired
+    private FileSystemService fileSystemService;
+
     @InitBinder("createUser")
     private void initCreateUserValidator(WebDataBinder binder) {
         binder.addValidators(createUserValidator);
+    }
+
+    @InitBinder("updateUser")
+    protected void initBinder(final WebDataBinder binder) {
+        binder.addValidators(updateUserValidator);
     }
 
     private Logger logger;
 
     public UserController() {
         logger = LoggerFactory.getLogger(UserController.class);
-    }
-
-    @InitBinder("updateUser")
-    protected void initBinder(final WebDataBinder binder) {
-        binder.addValidators(updateUserValidator);
     }
 
     @RequestMapping(value = "/api/login", produces = "application/json", method = {RequestMethod.POST, RequestMethod.GET})
@@ -119,5 +126,10 @@ public class UserController {
         }
         return jsonUtil.removeEmptyObjects(jsonUtil.toJson(
                 userService.getRankedResponse(userService.getRanks(timeFrame))));
+    }
+
+    @RequestMapping(value = "/api/profile/image/{username}", method = RequestMethod.GET)
+    public ResponseEntity<Resource> getProfilePicture(@PathVariable String username) {
+        return new ResponseEntity<>(fileSystemService.getProfilePicture(username), HttpStatus.OK);
     }
 }

@@ -17,7 +17,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     public boolean isInUpcomingCompetition(Problem problem) {
-        if (problem.getCompetitionId() > 0) {
+        if (problem.getCompetitionId() != null && problem.getCompetitionId() > 0) {
             Competition competition = competitionDao.findOne(problem.getCompetitionId());
             long currentTime = System.currentTimeMillis() / 1000;
             if (competition.getStart() > currentTime) {
@@ -25,5 +25,11 @@ public class CompetitionServiceImpl implements CompetitionService {
             }
         }
         return false;
+    }
+
+    @Override
+    public Competition getCompeitionByName(String name) {
+        // TODO This
+        return null;
     }
 }

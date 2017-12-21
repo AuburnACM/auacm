@@ -33,6 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/change_password", "/api/update_user").fullyAuthenticated()
                 .antMatchers(HttpMethod.POST, "/api/blog").fullyAuthenticated()
                 .antMatchers(HttpMethod.PUT, "/api/blog/**").fullyAuthenticated()
+                .antMatchers(HttpMethod.POST, "/api/problems").fullyAuthenticated()
                 // Enable if we want to support http basic
 //                .and().httpBasic().authenticationEntryPoint(new Http403ForbiddenEntryPoint())
                 .and().formLogin().loginPage("/api/login").successHandler(handler).failureHandler(failedLoginHandler).permitAll()

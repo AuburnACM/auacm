@@ -1,6 +1,8 @@
 package com.auacm;
 
 import com.auacm.util.FileUtils;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -28,10 +30,16 @@ public class Auacm {
         File configFolder = new File("config/");
         FileUtils.copyFileFromJar("config/application.properties", "application.properties", configFolder);
         FileUtils.copyFolderFromJar("BOOT-INF/classes/public/", "public", true);
+        FileUtils.copyFolderFromJar("BOOT-INF/classes/data/", "data", true);
     }
 
     @Bean
     ProtobufHttpMessageConverter protobufHttpMessageConverter() {
         return new ProtobufHttpMessageConverter();
+    }
+
+    @Bean
+    Gson gson() {
+        return new GsonBuilder().setPrettyPrinting().create();
     }
 }

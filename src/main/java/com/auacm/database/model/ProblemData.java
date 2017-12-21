@@ -14,7 +14,7 @@ public class ProblemData implements Serializable {
     private long pid;
 
     @Column(name = "time_limit")
-    private Integer timeLimit;
+    private Long timeLimit;
 
     private String description;
 
@@ -37,11 +37,11 @@ public class ProblemData implements Serializable {
         this.pid = pid;
     }
 
-    public int getTimeLimit() {
+    public long getTimeLimit() {
         return timeLimit;
     }
 
-    public void setTimeLimit(int timeLimit) {
+    public void setTimeLimit(long timeLimit) {
         this.timeLimit = timeLimit;
     }
 

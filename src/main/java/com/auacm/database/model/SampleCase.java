@@ -9,12 +9,8 @@ import java.io.Serializable;
 @Table(name = "sample_cases")
 public class SampleCase implements Serializable {
 
-    @JsonIgnore
-    @Id
-    private long pid;
-
-    @Column(name = "case_num")
-    private int caseNum;
+    @EmbeddedId
+    private SampleCasePK sampleCasePK;
 
     private String input;
 
@@ -25,20 +21,17 @@ public class SampleCase implements Serializable {
     @JoinColumn(name = "pid", insertable=false, updatable=false)
     private Problem problem;
 
-    public long getPid() {
-        return pid;
+    public SampleCase() {
+        this.sampleCasePK = new SampleCasePK();
     }
 
-    public void setPid(long pid) {
-        this.pid = pid;
+
+    public SampleCasePK getSampleCasePK() {
+        return sampleCasePK;
     }
 
-    public int getCaseNum() {
-        return caseNum;
-    }
-
-    public void setCaseNum(int caseNum) {
-        this.caseNum = caseNum;
+    public void setSampleCasePK(SampleCasePK sampleCasePK) {
+        this.sampleCasePK = sampleCasePK;
     }
 
     public String getInput() {

@@ -79,6 +79,11 @@ public final class Problem {
     boolean getSolved();
 
     /**
+     * <code>int64 timeLimit = 12;</code>
+     */
+    long getTimeLimit();
+
+    /**
      * <code>string url = 9;</code>
      */
     java.lang.String getUrl();
@@ -109,6 +114,7 @@ public final class Problem {
       pid_ = 0L;
       shortName_ = "";
       solved_ = false;
+      timeLimit_ = 0L;
       url_ = "";
     }
 
@@ -188,6 +194,11 @@ public final class Problem {
               java.lang.String s = input.readStringRequireUtf8();
 
               url_ = s;
+              break;
+            }
+            case 96: {
+
+              timeLimit_ = input.readInt64();
               break;
             }
           }
@@ -386,6 +397,15 @@ public final class Problem {
       return solved_;
     }
 
+    public static final int TIMELIMIT_FIELD_NUMBER = 12;
+    private long timeLimit_;
+    /**
+     * <code>int64 timeLimit = 12;</code>
+     */
+    public long getTimeLimit() {
+      return timeLimit_;
+    }
+
     public static final int URL_FIELD_NUMBER = 9;
     private volatile java.lang.Object url_;
     /**
@@ -459,6 +479,9 @@ public final class Problem {
       if (!getUrlBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 9, url_);
       }
+      if (timeLimit_ != 0L) {
+        output.writeInt64(12, timeLimit_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -498,6 +521,10 @@ public final class Problem {
       if (!getUrlBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, url_);
       }
+      if (timeLimit_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(12, timeLimit_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -530,6 +557,8 @@ public final class Problem {
           .equals(other.getShortName());
       result = result && (getSolved()
           == other.getSolved());
+      result = result && (getTimeLimit()
+          == other.getTimeLimit());
       result = result && getUrl()
           .equals(other.getUrl());
       result = result && unknownFields.equals(other.unknownFields);
@@ -563,6 +592,9 @@ public final class Problem {
       hash = (37 * hash) + SOLVED_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getSolved());
+      hash = (37 * hash) + TIMELIMIT_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getTimeLimit());
       hash = (37 * hash) + URL_FIELD_NUMBER;
       hash = (53 * hash) + getUrl().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
@@ -710,6 +742,8 @@ public final class Problem {
 
         solved_ = false;
 
+        timeLimit_ = 0L;
+
         url_ = "";
 
         return this;
@@ -742,6 +776,7 @@ public final class Problem {
         result.pid_ = pid_;
         result.shortName_ = shortName_;
         result.solved_ = solved_;
+        result.timeLimit_ = timeLimit_;
         result.url_ = url_;
         onBuilt();
         return result;
@@ -811,6 +846,9 @@ public final class Problem {
         }
         if (other.getSolved() != false) {
           setSolved(other.getSolved());
+        }
+        if (other.getTimeLimit() != 0L) {
+          setTimeLimit(other.getTimeLimit());
         }
         if (!other.getUrl().isEmpty()) {
           url_ = other.url_;
@@ -1219,6 +1257,32 @@ public final class Problem {
       public Builder clearSolved() {
         
         solved_ = false;
+        onChanged();
+        return this;
+      }
+
+      private long timeLimit_ ;
+      /**
+       * <code>int64 timeLimit = 12;</code>
+       */
+      public long getTimeLimit() {
+        return timeLimit_;
+      }
+      /**
+       * <code>int64 timeLimit = 12;</code>
+       */
+      public Builder setTimeLimit(long value) {
+        
+        timeLimit_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 timeLimit = 12;</code>
+       */
+      public Builder clearTimeLimit() {
+        
+        timeLimit_ = 0L;
         onChanged();
         return this;
       }
@@ -2852,14 +2916,14 @@ public final class Problem {
         getDescriptionBytes();
 
     /**
-     * <code>string difficuty = 5;</code>
+     * <code>string difficulty = 5;</code>
      */
-    java.lang.String getDifficuty();
+    java.lang.String getDifficulty();
     /**
-     * <code>string difficuty = 5;</code>
+     * <code>string difficulty = 5;</code>
      */
     com.google.protobuf.ByteString
-        getDifficutyBytes();
+        getDifficultyBytes();
 
     /**
      * <code>string inputDesc = 6;</code>
@@ -2929,6 +2993,11 @@ public final class Problem {
      */
     com.google.protobuf.ByteString
         getShortNameBytes();
+
+    /**
+     * <code>int64 timeLimit = 12;</code>
+     */
+    long getTimeLimit();
   }
   /**
    * Protobuf type {@code com.auacm.api.proto.ProblemResponse}
@@ -2947,13 +3016,14 @@ public final class Problem {
       appeared_ = "";
       compRelease_ = 0L;
       description_ = "";
-      difficuty_ = "";
+      difficulty_ = "";
       inputDesc_ = "";
       name_ = "";
       outputDesc_ = "";
       pid_ = 0L;
       sampleCases_ = java.util.Collections.emptyList();
       shortName_ = "";
+      timeLimit_ = 0L;
     }
 
     @java.lang.Override
@@ -3009,7 +3079,7 @@ public final class Problem {
             case 42: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              difficuty_ = s;
+              difficulty_ = s;
               break;
             }
             case 50: {
@@ -3048,6 +3118,11 @@ public final class Problem {
               java.lang.String s = input.readStringRequireUtf8();
 
               shortName_ = s;
+              break;
+            }
+            case 96: {
+
+              timeLimit_ = input.readInt64();
               break;
             }
           }
@@ -3164,34 +3239,34 @@ public final class Problem {
       }
     }
 
-    public static final int DIFFICUTY_FIELD_NUMBER = 5;
-    private volatile java.lang.Object difficuty_;
+    public static final int DIFFICULTY_FIELD_NUMBER = 5;
+    private volatile java.lang.Object difficulty_;
     /**
-     * <code>string difficuty = 5;</code>
+     * <code>string difficulty = 5;</code>
      */
-    public java.lang.String getDifficuty() {
-      java.lang.Object ref = difficuty_;
+    public java.lang.String getDifficulty() {
+      java.lang.Object ref = difficulty_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        difficuty_ = s;
+        difficulty_ = s;
         return s;
       }
     }
     /**
-     * <code>string difficuty = 5;</code>
+     * <code>string difficulty = 5;</code>
      */
     public com.google.protobuf.ByteString
-        getDifficutyBytes() {
-      java.lang.Object ref = difficuty_;
+        getDifficultyBytes() {
+      java.lang.Object ref = difficulty_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        difficuty_ = b;
+        difficulty_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -3378,6 +3453,15 @@ public final class Problem {
       }
     }
 
+    public static final int TIMELIMIT_FIELD_NUMBER = 12;
+    private long timeLimit_;
+    /**
+     * <code>int64 timeLimit = 12;</code>
+     */
+    public long getTimeLimit() {
+      return timeLimit_;
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -3402,8 +3486,8 @@ public final class Problem {
       if (!getDescriptionBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 4, description_);
       }
-      if (!getDifficutyBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, difficuty_);
+      if (!getDifficultyBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, difficulty_);
       }
       if (!getInputDescBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 6, inputDesc_);
@@ -3422,6 +3506,9 @@ public final class Problem {
       }
       if (!getShortNameBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 11, shortName_);
+      }
+      if (timeLimit_ != 0L) {
+        output.writeInt64(12, timeLimit_);
       }
       unknownFields.writeTo(output);
     }
@@ -3445,8 +3532,8 @@ public final class Problem {
       if (!getDescriptionBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, description_);
       }
-      if (!getDifficutyBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, difficuty_);
+      if (!getDifficultyBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, difficulty_);
       }
       if (!getInputDescBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, inputDesc_);
@@ -3467,6 +3554,10 @@ public final class Problem {
       }
       if (!getShortNameBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(11, shortName_);
+      }
+      if (timeLimit_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(12, timeLimit_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -3492,8 +3583,8 @@ public final class Problem {
           == other.getCompRelease());
       result = result && getDescription()
           .equals(other.getDescription());
-      result = result && getDifficuty()
-          .equals(other.getDifficuty());
+      result = result && getDifficulty()
+          .equals(other.getDifficulty());
       result = result && getInputDesc()
           .equals(other.getInputDesc());
       result = result && getName()
@@ -3506,6 +3597,8 @@ public final class Problem {
           .equals(other.getSampleCasesList());
       result = result && getShortName()
           .equals(other.getShortName());
+      result = result && (getTimeLimit()
+          == other.getTimeLimit());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -3527,8 +3620,8 @@ public final class Problem {
           getCompRelease());
       hash = (37 * hash) + DESCRIPTION_FIELD_NUMBER;
       hash = (53 * hash) + getDescription().hashCode();
-      hash = (37 * hash) + DIFFICUTY_FIELD_NUMBER;
-      hash = (53 * hash) + getDifficuty().hashCode();
+      hash = (37 * hash) + DIFFICULTY_FIELD_NUMBER;
+      hash = (53 * hash) + getDifficulty().hashCode();
       hash = (37 * hash) + INPUTDESC_FIELD_NUMBER;
       hash = (53 * hash) + getInputDesc().hashCode();
       hash = (37 * hash) + NAME_FIELD_NUMBER;
@@ -3544,6 +3637,9 @@ public final class Problem {
       }
       hash = (37 * hash) + SHORTNAME_FIELD_NUMBER;
       hash = (53 * hash) + getShortName().hashCode();
+      hash = (37 * hash) + TIMELIMIT_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getTimeLimit());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -3682,7 +3778,7 @@ public final class Problem {
 
         description_ = "";
 
-        difficuty_ = "";
+        difficulty_ = "";
 
         inputDesc_ = "";
 
@@ -3699,6 +3795,8 @@ public final class Problem {
           sampleCasesBuilder_.clear();
         }
         shortName_ = "";
+
+        timeLimit_ = 0L;
 
         return this;
       }
@@ -3728,7 +3826,7 @@ public final class Problem {
         result.appeared_ = appeared_;
         result.compRelease_ = compRelease_;
         result.description_ = description_;
-        result.difficuty_ = difficuty_;
+        result.difficulty_ = difficulty_;
         result.inputDesc_ = inputDesc_;
         result.name_ = name_;
         result.outputDesc_ = outputDesc_;
@@ -3743,6 +3841,7 @@ public final class Problem {
           result.sampleCases_ = sampleCasesBuilder_.build();
         }
         result.shortName_ = shortName_;
+        result.timeLimit_ = timeLimit_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -3799,8 +3898,8 @@ public final class Problem {
           description_ = other.description_;
           onChanged();
         }
-        if (!other.getDifficuty().isEmpty()) {
-          difficuty_ = other.difficuty_;
+        if (!other.getDifficulty().isEmpty()) {
+          difficulty_ = other.difficulty_;
           onChanged();
         }
         if (!other.getInputDesc().isEmpty()) {
@@ -3847,6 +3946,9 @@ public final class Problem {
         if (!other.getShortName().isEmpty()) {
           shortName_ = other.shortName_;
           onChanged();
+        }
+        if (other.getTimeLimit() != 0L) {
+          setTimeLimit(other.getTimeLimit());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -4066,71 +4168,71 @@ public final class Problem {
         return this;
       }
 
-      private java.lang.Object difficuty_ = "";
+      private java.lang.Object difficulty_ = "";
       /**
-       * <code>string difficuty = 5;</code>
+       * <code>string difficulty = 5;</code>
        */
-      public java.lang.String getDifficuty() {
-        java.lang.Object ref = difficuty_;
+      public java.lang.String getDifficulty() {
+        java.lang.Object ref = difficulty_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          difficuty_ = s;
+          difficulty_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>string difficuty = 5;</code>
+       * <code>string difficulty = 5;</code>
        */
       public com.google.protobuf.ByteString
-          getDifficutyBytes() {
-        java.lang.Object ref = difficuty_;
+          getDifficultyBytes() {
+        java.lang.Object ref = difficulty_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          difficuty_ = b;
+          difficulty_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>string difficuty = 5;</code>
+       * <code>string difficulty = 5;</code>
        */
-      public Builder setDifficuty(
+      public Builder setDifficulty(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        difficuty_ = value;
+        difficulty_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string difficuty = 5;</code>
+       * <code>string difficulty = 5;</code>
        */
-      public Builder clearDifficuty() {
+      public Builder clearDifficulty() {
         
-        difficuty_ = getDefaultInstance().getDifficuty();
+        difficulty_ = getDefaultInstance().getDifficulty();
         onChanged();
         return this;
       }
       /**
-       * <code>string difficuty = 5;</code>
+       * <code>string difficulty = 5;</code>
        */
-      public Builder setDifficutyBytes(
+      public Builder setDifficultyBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        difficuty_ = value;
+        difficulty_ = value;
         onChanged();
         return this;
       }
@@ -4673,6 +4775,32 @@ public final class Problem {
   checkByteStringIsUtf8(value);
         
         shortName_ = value;
+        onChanged();
+        return this;
+      }
+
+      private long timeLimit_ ;
+      /**
+       * <code>int64 timeLimit = 12;</code>
+       */
+      public long getTimeLimit() {
+        return timeLimit_;
+      }
+      /**
+       * <code>int64 timeLimit = 12;</code>
+       */
+      public Builder setTimeLimit(long value) {
+        
+        timeLimit_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 timeLimit = 12;</code>
+       */
+      public Builder clearTimeLimit() {
+        
+        timeLimit_ = 0L;
         onChanged();
         return this;
       }
@@ -5339,23 +5467,24 @@ public final class Problem {
   static {
     java.lang.String[] descriptorData = {
       "\n&src/main/resources/proto/Problem.proto" +
-      "\022\023com.auacm.api.proto\"\253\001\n\025SimpleProblemR" +
+      "\022\023com.auacm.api.proto\"\276\001\n\025SimpleProblemR" +
       "esponse\022\r\n\005added\030\001 \001(\003\022\020\n\010appeared\030\002 \001(\t" +
       "\022\023\n\013compRelease\030\003 \001(\003\022\021\n\tdifficuty\030\004 \001(\t" +
       "\022\014\n\004name\030\005 \001(\t\022\013\n\003pid\030\006 \001(\003\022\021\n\tshortName" +
-      "\030\007 \001(\t\022\016\n\006solved\030\010 \001(\010\022\013\n\003url\030\t \001(\t\"N\n\022P" +
-      "roblemListWrapper\0228\n\004data\030\001 \003(\0132*.com.au" +
-      "acm.api.proto.SimpleProblemResponse\"<\n\nS" +
-      "ampleCase\022\017\n\007caseNum\030\001 \001(\003\022\r\n\005input\030\002 \001(" +
-      "\t\022\016\n\006output\030\003 \001(\t\"\372\001\n\017ProblemResponse\022\r\n",
-      "\005added\030\001 \001(\003\022\020\n\010appeared\030\002 \001(\t\022\023\n\013compRe" +
-      "lease\030\003 \001(\003\022\023\n\013description\030\004 \001(\t\022\021\n\tdiff" +
-      "icuty\030\005 \001(\t\022\021\n\tinputDesc\030\006 \001(\t\022\014\n\004name\030\007" +
-      " \001(\t\022\022\n\noutputDesc\030\010 \001(\t\022\013\n\003pid\030\t \001(\003\0224\n" +
-      "\013sampleCases\030\n \003(\0132\037.com.auacm.api.proto" +
-      ".SampleCase\022\021\n\tshortName\030\013 \001(\t\"D\n\016Proble" +
-      "mWrapper\0222\n\004data\030\001 \001(\0132$.com.auacm.api.p" +
-      "roto.ProblemResponseb\006proto3"
+      "\030\007 \001(\t\022\016\n\006solved\030\010 \001(\010\022\021\n\ttimeLimit\030\014 \001(" +
+      "\003\022\013\n\003url\030\t \001(\t\"N\n\022ProblemListWrapper\0228\n\004" +
+      "data\030\001 \003(\0132*.com.auacm.api.proto.SimpleP" +
+      "roblemResponse\"<\n\nSampleCase\022\017\n\007caseNum\030" +
+      "\001 \001(\003\022\r\n\005input\030\002 \001(\t\022\016\n\006output\030\003 \001(\t\"\216\002\n",
+      "\017ProblemResponse\022\r\n\005added\030\001 \001(\003\022\020\n\010appea" +
+      "red\030\002 \001(\t\022\023\n\013compRelease\030\003 \001(\003\022\023\n\013descri" +
+      "ption\030\004 \001(\t\022\022\n\ndifficulty\030\005 \001(\t\022\021\n\tinput" +
+      "Desc\030\006 \001(\t\022\014\n\004name\030\007 \001(\t\022\022\n\noutputDesc\030\010" +
+      " \001(\t\022\013\n\003pid\030\t \001(\003\0224\n\013sampleCases\030\n \003(\0132\037" +
+      ".com.auacm.api.proto.SampleCase\022\021\n\tshort" +
+      "Name\030\013 \001(\t\022\021\n\ttimeLimit\030\014 \001(\003\"D\n\016Problem" +
+      "Wrapper\0222\n\004data\030\001 \001(\0132$.com.auacm.api.pr" +
+      "oto.ProblemResponseb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -5374,7 +5503,7 @@ public final class Problem {
     internal_static_com_auacm_api_proto_SimpleProblemResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_auacm_api_proto_SimpleProblemResponse_descriptor,
-        new java.lang.String[] { "Added", "Appeared", "CompRelease", "Difficuty", "Name", "Pid", "ShortName", "Solved", "Url", });
+        new java.lang.String[] { "Added", "Appeared", "CompRelease", "Difficuty", "Name", "Pid", "ShortName", "Solved", "TimeLimit", "Url", });
     internal_static_com_auacm_api_proto_ProblemListWrapper_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_com_auacm_api_proto_ProblemListWrapper_fieldAccessorTable = new
@@ -5392,7 +5521,7 @@ public final class Problem {
     internal_static_com_auacm_api_proto_ProblemResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_auacm_api_proto_ProblemResponse_descriptor,
-        new java.lang.String[] { "Added", "Appeared", "CompRelease", "Description", "Difficuty", "InputDesc", "Name", "OutputDesc", "Pid", "SampleCases", "ShortName", });
+        new java.lang.String[] { "Added", "Appeared", "CompRelease", "Description", "Difficulty", "InputDesc", "Name", "OutputDesc", "Pid", "SampleCases", "ShortName", "TimeLimit", });
     internal_static_com_auacm_api_proto_ProblemWrapper_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_com_auacm_api_proto_ProblemWrapper_fieldAccessorTable = new
