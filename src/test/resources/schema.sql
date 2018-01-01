@@ -82,6 +82,10 @@ CREATE TABLE IF NOT EXISTS users(
 
 ALTER TABLE comp_problems ADD CONSTRAINT comp_problems_ibfk_1 FOREIGN KEY (pid) REFERENCES problems (pid);
 
+ALTER TABLE comp_problems ADD CONSTRAINT comp_problems_ibfk_2 FOREIGN KEY (cid) REFERENCES comp_names (cid);
+
+ALTER TABLE comp_users ADD CONSTRAINT comp_users_ibfk_1 FOREIGN KEY (cid) REFERENCES comp_names (cid);
+
 ALTER TABLE problem_data ADD CONSTRAINT comp_data_ibfk_1 FOREIGN KEY (pid) REFERENCES problems (pid);
 
 ALTER TABLE problems ADD CONSTRAINT problems_ibfk_1 FOREIGN KEY (comp_release) REFERENCES comp_names (cid);

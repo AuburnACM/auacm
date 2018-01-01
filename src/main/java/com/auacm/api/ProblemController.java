@@ -1,6 +1,6 @@
 package com.auacm.api;
 
-import com.auacm.api.model.NewProblem;
+import com.auacm.api.model.CreateProblem;
 import com.auacm.api.validator.CreateProblemValidator;
 import com.auacm.api.validator.UpdateProblemValidator;
 import com.auacm.service.FileSystemService;
@@ -11,7 +11,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -45,13 +44,13 @@ public class ProblemController {
 
     @RequestMapping(value = "/api/problems", method = RequestMethod.POST, produces = "application/json")
     @PreAuthorize("hasRole('ADMIN')")
-    public @ResponseBody String createProblem(@Validated @ModelAttribute("newProblem") NewProblem newProblem) {
+    public @ResponseBody String createProblem(@Validated @ModelAttribute("newProblem") CreateProblem newProblem) {
         return jsonUtil.toJson(problemService.getProblemResponse(problemService.createProblem(newProblem)));
     }
 
     @RequestMapping(value = "/api/problems/{identifier}", method = {RequestMethod.PUT, RequestMethod.POST}, produces = "application/json")
     @PreAuthorize("hasRole('ADMIN')")
-    public @ResponseBody String updateProblem(@PathVariable String identifier, @ModelAttribute("updateProblem") NewProblem newProblem) {
+    public @ResponseBody String updateProblem(@PathVariable String identifier, @ModelAttribute("updateProblem") CreateProblem newProblem) {
         return jsonUtil.toJson(problemService.getProblemResponse(problemService.updateProblem(identifier, newProblem)));
     }
 

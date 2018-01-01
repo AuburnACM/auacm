@@ -4,21 +4,21 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "comp_names")
+@Table(name = "comp_problems")
 public class CompetitionProblem implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-//    private int cid;
+    private Long cid;
 
-    private int pid;
+    private Long pid;
 
     private String label;
 
-    @ManyToOne(targetEntity = Competition.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "cid", nullable = false, insertable = false)
-    private Competition competition;
+//    @ManyToOne(targetEntity = Competition.class, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "cid", nullable = false, insertable = false)
+//    private Competition competition;
 
     public long getId() {
         return id;
@@ -28,19 +28,19 @@ public class CompetitionProblem implements Serializable {
         this.id = id;
     }
 
-//    public int getCid() {
-//        return cid;
-//    }
-//
-//    public void setCid(int cid) {
-//        this.cid = cid;
-//    }
+    public Long getCid() {
+        return cid;
+    }
 
-    public int getPid() {
+    public void setCid(Long cid) {
+        this.cid = cid;
+    }
+
+    public Long getPid() {
         return pid;
     }
 
-    public void setPid(int pid) {
+    public void setPid(Long pid) {
         this.pid = pid;
     }
 
@@ -52,11 +52,11 @@ public class CompetitionProblem implements Serializable {
         this.label = label;
     }
 
-    public Competition getCompetition() {
-        return competition;
-    }
-
-    public void setCompetition(Competition competition) {
-        this.competition = competition;
-    }
+//    public Competition getCompetition() {
+//        return competition;
+//    }
+//
+//    public void setCompetition(Competition competition) {
+//        this.competition = competition;
+//    }
 }

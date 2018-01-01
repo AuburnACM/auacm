@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewProblem {
+public class CreateProblem {
     private String name;
 
     private String description;
@@ -46,7 +46,7 @@ public class NewProblem {
     @JsonIgnore
     private Gson gson;
 
-    public NewProblem() {
+    public CreateProblem() {
         gson = new GsonBuilder().setPrettyPrinting().create();
     }
 

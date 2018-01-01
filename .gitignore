@@ -31,3 +31,4 @@ auacm/app/templates/index.html
 .classpath
 .project
 .settings/
+data/

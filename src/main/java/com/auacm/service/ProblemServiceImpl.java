@@ -13,7 +13,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
-import org.springframework.security.access.method.P;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -50,7 +49,7 @@ public class ProblemServiceImpl implements ProblemService {
     public ProblemServiceImpl() {}
 
     @Override
-    public Problem createProblem(NewProblem problem) {
+    public Problem createProblem(CreateProblem problem) {
         if (!fileSystemService.doesFileExist("data/problems/")) {
             fileSystemService.createFolder("data/problems/");
         }
@@ -59,7 +58,7 @@ public class ProblemServiceImpl implements ProblemService {
             newProblem.setName(problem.getName());
             newProblem.setAdded(System.currentTimeMillis() / 1000);
             if (problem.getAppearedIn() != null) {
-                Competition competition = competitionService.getCompeitionByName(problem.getAppearedIn());
+                Competition competition = competitionService.getCompetitionByName(problem.getAppearedIn());
                 if (competition != null) {
                     newProblem.setAppeared(problem.getAppearedIn());
                     newProblem.setCompetitionId(competition.getCid());
@@ -167,11 +166,11 @@ public class ProblemServiceImpl implements ProblemService {
 
     @Override
     @Transactional
-    public Problem updateProblem(String identifier, NewProblem problem) {
+    public Problem updateProblem(String identifier, CreateProblem problem) {
         Problem problem1 = getProblem(identifier);
         if (problem.getImportZip() == null || problem.getImportZip().isEmpty()) {
             if (problem.getAppearedIn() != null) {
-                Competition competition = competitionService.getCompeitionByName(problem.getAppearedIn());
+                Competition competition = competitionService.getCompetitionByName(problem.getAppearedIn());
                 if (competition != null) {
                     problem1.setAppeared(problem.getAppearedIn());
                     problem1.setCompetitionId(competition.getCid());
@@ -374,7 +373,7 @@ public class ProblemServiceImpl implements ProblemService {
         return com.auacm.api.proto.Problem.ProblemWrapper.newBuilder().setData(builder).build();
     }
 
-    private Problem saveProblemZip(NewProblem problem) {
+    private Problem saveProblemZip(CreateProblem problem) {
         long currentTime = System.currentTimeMillis();
         if (fileSystemService.saveTempFile(problem.getImportZip(),
                 currentTime + "", problem.getImportZip().getOriginalFilename())) {
@@ -391,7 +390,7 @@ public class ProblemServiceImpl implements ProblemService {
                         newProblem.setShortName(getShortName(dataObject.get("name").getAsString()));
                         newProblem.setAdded(System.currentTimeMillis() / 1000);
                         if (dataObject.has("appearedIn")) {
-                            Competition competition = competitionService.getCompeitionByName(dataObject.get("appearedIn").getAsString());
+                            Competition competition = competitionService.getCompetitionByName(dataObject.get("appearedIn").getAsString());
                             if (competition != null) {
                                 newProblem.setAppeared(dataObject.get("appearedIn").getAsString());
                                 newProblem.setCompetitionId(competition.getCid());

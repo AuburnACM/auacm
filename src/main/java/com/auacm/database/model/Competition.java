@@ -1,29 +1,38 @@
 package com.auacm.database.model;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "comp_names")
+@Proxy(lazy = false)
 public class Competition implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cid")
     private long cid;
 
     private String name;
 
-    private int start;
+    private Long start;
 
-    private int stop;
+    private Long stop;
 
-    private boolean closed;
+    private Boolean closed;
 
-    @OneToMany(targetEntity = CompetitionProblem.class, fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = CompetitionProblem.class)
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinColumn(name = "cid", nullable = false, insertable = false)
     private List<CompetitionProblem> competitionProblems;
 
-    @OneToMany(targetEntity = CompetitionUser.class, fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = CompetitionUser.class)
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinColumn(name = "cid", nullable = false, insertable = false)
     private List<CompetitionUser> competitionUsers;
 
@@ -43,35 +52,51 @@ public class Competition implements Serializable {
         this.name = name;
     }
 
-    public int getStart() {
+    public Long getStart() {
         return start;
     }
 
-    public void setStart(int start) {
+    public void setStart(Long start) {
         this.start = start;
     }
 
-    public int getStop() {
+    public Long getStop() {
         return stop;
     }
 
-    public void setStop(int stop) {
+    public void setStop(Long stop) {
         this.stop = stop;
     }
 
-    public boolean isClosed() {
+    public Boolean isClosed() {
         return closed;
     }
 
-    public void setClosed(boolean closed) {
+    public void setClosed(Boolean closed) {
         this.closed = closed;
     }
 
     public List<CompetitionProblem> getCompetitionProblems() {
-        return competitionProblems;
+        if (competitionProblems == null) {
+            return new ArrayList<>();
+        } else {
+            return competitionProblems;
+        }
     }
 
     public void setCompetitionProblems(List<CompetitionProblem> competitionProblems) {
         this.competitionProblems = competitionProblems;
+    }
+
+    public List<CompetitionUser> getCompetitionUsers() {
+        if (competitionUsers == null) {
+            return new ArrayList<>();
+        } else {
+            return competitionUsers;
+        }
+    }
+
+    public void setCompetitionUsers(List<CompetitionUser> competitionUsers) {
+        this.competitionUsers = competitionUsers;
     }
 }

@@ -3,6 +3,7 @@ package com.auacm.api;
 import com.auacm.Auacm;
 import com.auacm.database.model.User;
 import com.auacm.database.model.UserPrincipal;
+import com.auacm.request.MockRequest;
 import com.auacm.service.FileSystemService;
 import com.auacm.service.UserService;
 import com.google.gson.*;
@@ -41,13 +42,15 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.auacm.request.MockRequest.getCreateProblemRequest;
+import static com.auacm.request.MockRequest.getProblemTestCases2;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Auacm.class)
 @WebAppConfiguration
 @ActiveProfiles("test")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ProblemControllerTest {
     private MockMvc mockMvc;
 
@@ -83,7 +86,7 @@ public class ProblemControllerTest {
     @Test
     @WithMockUser(username = "admin")
     public void createProblem() throws Exception {
-        setSecurityContext("admin");
+        MockRequest.setSecurityContext(userService, "admin");
         String response = mockMvc.perform(getCreateProblemRequest()).andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString();
         JsonObject object = new JsonParser().parse(response).getAsJsonObject().get("data").getAsJsonObject();
@@ -111,7 +114,7 @@ public class ProblemControllerTest {
     @Test
     @WithMockUser(username = "admin")
     public void createProblemWithSameName() throws Exception {
-        setSecurityContext("admin");
+        MockRequest.setSecurityContext(userService, "admin");
         mockMvc.perform(getCreateProblemRequest()).andExpect(MockMvcResultMatchers.status().isOk());
         String response = mockMvc.perform(getCreateProblemRequest()).andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString();
@@ -123,7 +126,7 @@ public class ProblemControllerTest {
     @Test
     @WithMockUser(username = "admin")
     public void createProblemWithInputZip() throws Exception {
-        setSecurityContext("admin");
+        MockRequest.setSecurityContext(userService, "admin");
         String response = mockMvc.perform(MockMvcRequestBuilders.fileUpload("/api/problems")
                 .file(new MockMultipartFile("importZip", "export.zip", "application/zip", getExportBytes())))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -160,63 +163,63 @@ public class ProblemControllerTest {
     @Test
     @WithMockUser(username = "admin")
     public void createProblemMissingName() throws Exception {
-        setSecurityContext("admin");
+        MockRequest.setSecurityContext(userService, "admin");
         mockMvc.perform(getCreateProblemRequest("name")).andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
     @WithMockUser(username = "admin")
     public void createProblemMissingDescription() throws Exception {
-        setSecurityContext("admin");
+        MockRequest.setSecurityContext(userService, "admin");
         mockMvc.perform(getCreateProblemRequest("description")).andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
     @WithMockUser(username = "admin")
     public void createProblemMissingInputDescription() throws Exception {
-        setSecurityContext("admin");
+        MockRequest.setSecurityContext(userService, "admin");
         mockMvc.perform(getCreateProblemRequest("inputDesc")).andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
     @WithMockUser(username = "admin")
     public void createProblemMissingOutputDescription() throws Exception {
-        setSecurityContext("admin");
+        MockRequest.setSecurityContext(userService, "admin");
         mockMvc.perform(getCreateProblemRequest("outputDesc")).andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
     @WithMockUser(username = "admin")
     public void createProblemMissingInputFiles() throws Exception {
-        setSecurityContext("admin");
+        MockRequest.setSecurityContext(userService, "admin");
         mockMvc.perform(getCreateProblemRequest("inputFiles")).andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
     @WithMockUser(username = "admin")
     public void createProblemMissingOutputFiles() throws Exception {
-        setSecurityContext("admin");
+        MockRequest.setSecurityContext(userService, "admin");
         mockMvc.perform(getCreateProblemRequest("outputFiles")).andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
     @WithMockUser(username = "admin")
     public void createProblemMissingSolutionFile() throws Exception {
-        setSecurityContext("admin");
+        MockRequest.setSecurityContext(userService, "admin");
         mockMvc.perform(getCreateProblemRequest("solutionFile")).andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
     @WithMockUser(username = "admin")
     public void createProblemMissingSampleCases() throws Exception {
-        setSecurityContext("admin");
+        MockRequest.setSecurityContext(userService, "admin");
         mockMvc.perform(getCreateProblemRequest("sampleCases")).andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
     @WithMockUser(username = "admin")
     public void updateProblemDifficulty() throws Exception {
-        setSecurityContext("admin");
+        MockRequest.setSecurityContext(userService, "admin");
         mockMvc.perform(getCreateProblemRequest()).andExpect(MockMvcResultMatchers.status().isOk());
         String response = mockMvc.perform(MockMvcRequestBuilders.fileUpload("/api/problems/1")
                 .param("difficulty", "100")).andExpect(MockMvcResultMatchers.status().isOk())
@@ -229,7 +232,7 @@ public class ProblemControllerTest {
     @Test
     @WithMockUser(username = "admin")
     public void updateProblemInputDesc() throws Exception {
-        setSecurityContext("admin");
+        MockRequest.setSecurityContext(userService, "admin");
         mockMvc.perform(getCreateProblemRequest()).andExpect(MockMvcResultMatchers.status().isOk());
         String response = mockMvc.perform(MockMvcRequestBuilders.fileUpload("/api/problems/1")
                 .param("inputDesc", "Updated input description")).andExpect(MockMvcResultMatchers.status().isOk())
@@ -242,7 +245,7 @@ public class ProblemControllerTest {
     @Test
     @WithMockUser(username = "admin")
     public void updateProblemOutputDesc() throws Exception {
-        setSecurityContext("admin");
+        MockRequest.setSecurityContext(userService, "admin");
         mockMvc.perform(getCreateProblemRequest()).andExpect(MockMvcResultMatchers.status().isOk());
         String response = mockMvc.perform(MockMvcRequestBuilders.fileUpload("/api/problems/1")
                 .param("outputDesc", "Updated output description")).andExpect(MockMvcResultMatchers.status().isOk())
@@ -255,7 +258,7 @@ public class ProblemControllerTest {
     @Test
     @WithMockUser(username = "admin")
     public void updateProblemName() throws Exception {
-        setSecurityContext("admin");
+        MockRequest.setSecurityContext(userService, "admin");
         mockMvc.perform(getCreateProblemRequest()).andExpect(MockMvcResultMatchers.status().isOk());
         String response = mockMvc.perform(MockMvcRequestBuilders.fileUpload("/api/problems/1")
                 .param("name", "New Test Problem")).andExpect(MockMvcResultMatchers.status().isOk())
@@ -270,20 +273,20 @@ public class ProblemControllerTest {
     @Test
     @WithMockUser(username = "admin")
     public void updateProblemSampleCases() throws Exception {
-        setSecurityContext("admin");
+        MockRequest.setSecurityContext(userService, "admin");
         mockMvc.perform(getCreateProblemRequest()).andExpect(MockMvcResultMatchers.status().isOk());
         String response = mockMvc.perform(MockMvcRequestBuilders.fileUpload("/api/problems/1")
-                .param("sampleCases", getTestCases2())).andExpect(MockMvcResultMatchers.status().isOk())
+                .param("sampleCases", getProblemTestCases2())).andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString();
         JsonObject object = new JsonParser().parse(response).getAsJsonObject().get("data").getAsJsonObject();
         Assert.assertEquals(true, object.has("sampleCases"));
-        Assert.assertEquals(getTestCases2(), object.get("sampleCases").getAsJsonArray().toString());
+        Assert.assertEquals(getProblemTestCases2(), object.get("sampleCases").getAsJsonArray().toString());
     }
 
     @Test
     @WithMockUser(username = "admin")
     public void updateProblemInputFile() throws Exception {
-        setSecurityContext("admin");
+        MockRequest.setSecurityContext(userService, "admin");
         mockMvc.perform(getCreateProblemRequest()).andExpect(MockMvcResultMatchers.status().isOk());
         mockMvc.perform(MockMvcRequestBuilders.fileUpload("/api/problems/1")
                 .file(new MockMultipartFile("inputFiles", "in1.txt", "text/plain",
@@ -294,7 +297,7 @@ public class ProblemControllerTest {
     @Test
     @WithMockUser(username = "admin")
     public void updateProblemOutputFile() throws Exception {
-        setSecurityContext("admin");
+        MockRequest.setSecurityContext(userService, "admin");
         mockMvc.perform(getCreateProblemRequest()).andExpect(MockMvcResultMatchers.status().isOk());
         mockMvc.perform(MockMvcRequestBuilders.fileUpload("/api/problems/1")
                 .file(new MockMultipartFile("outputFiles", "out1.txt", "text/plain",
@@ -305,7 +308,7 @@ public class ProblemControllerTest {
     @Test
     @WithMockUser(username = "admin")
     public void updateProblemSolutionFile() throws Exception {
-        setSecurityContext("admin");
+        MockRequest.setSecurityContext(userService, "admin");
         mockMvc.perform(getCreateProblemRequest()).andExpect(MockMvcResultMatchers.status().isOk());
         mockMvc.perform(MockMvcRequestBuilders.fileUpload("/api/problems/1")
                 .file(new MockMultipartFile("solutionFile", "Solution.java", "text/plain",
@@ -315,7 +318,7 @@ public class ProblemControllerTest {
 
     @Test
     public void getProblems() throws Exception {
-        setSecurityContext("admin");
+        MockRequest.setSecurityContext(userService, "admin");
         mockMvc.perform(getCreateProblemRequest())
                 .andExpect(MockMvcResultMatchers.status().isOk());
         String response = mockMvc.perform(MockMvcRequestBuilders.get("/api/problems"))
@@ -327,7 +330,7 @@ public class ProblemControllerTest {
     @Test
     @WithMockUser(username = "admin")
     public void getProblemByPid() throws Exception {
-        setSecurityContext("admin");
+        MockRequest.setSecurityContext(userService, "admin");
         mockMvc.perform(getCreateProblemRequest()).andExpect(MockMvcResultMatchers.status().isOk());
         String response = mockMvc.perform(MockMvcRequestBuilders.get("/api/problems/1"))
                 .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse().getContentAsString();
@@ -346,7 +349,7 @@ public class ProblemControllerTest {
     @Test
     @WithMockUser(username = "admin")
     public void getProblemByShortName() throws Exception {
-        setSecurityContext("admin");
+        MockRequest.setSecurityContext(userService, "admin");
         mockMvc.perform(getCreateProblemRequest()).andExpect(MockMvcResultMatchers.status().isOk());
         String response = mockMvc.perform(MockMvcRequestBuilders.get("/api/problems/testproblem"))
                 .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse().getContentAsString();
@@ -365,80 +368,6 @@ public class ProblemControllerTest {
     @After
     public void cleanUp() throws Exception {
         fileSystemService.deleteFile("data");
-    }
-
-    private MockHttpServletRequestBuilder getCreateProblemRequest(String...exclude) {
-        List<String> excludeValues = Arrays.asList(exclude);
-        MockMultipartHttpServletRequestBuilder builder = MockMvcRequestBuilders.fileUpload("/api/problems");
-        if (!excludeValues.contains("inputFiles")) {
-            builder.file(new MockMultipartFile("inputFiles", "in1.txt",
-                    "text/plain", "Test\nLine2\n".getBytes()))
-                    .file(new MockMultipartFile("inputFiles", "in2.txt",
-                            "text/plain", "Test2\nLine2\n".getBytes()));
-        }
-        if (!excludeValues.contains("outputFiles")) {
-            builder.file(new MockMultipartFile("outputFiles", "out1.txt",
-                    "text/plain", "TestOutput1\nLine2\n".getBytes()))
-                    .file(new MockMultipartFile("outputFiles", "out2.txt",
-                            "text/plain", "TestOutput2\nLine2\n".getBytes()));
-        }
-        if (!excludeValues.contains("solutionFile")) {
-            builder.file(new MockMultipartFile("solutionFile", "Solution.java",
-                    "text/plain", "TestSolution\nLine2\n".getBytes()));
-        }
-        if (!excludeValues.contains("name")) {
-            builder.param("name", "Test Problem");
-        }
-        if (!excludeValues.contains("description")) {
-            builder.param("description", "Description for the problem.");
-        }
-        if (!excludeValues.contains("inputDesc")) {
-            builder.param("inputDesc", "Some input");
-        }
-        if (!excludeValues.contains("outputDesc")) {
-            builder.param("outputDesc", "Some output");
-        }
-        if (!excludeValues.contains("sampleCases")) {
-            builder.param("sampleCases", getTestCases());
-        }
-        if (!excludeValues.contains("timeLimit")) {
-            builder.param("timeLimit", "2");
-        }
-        if (!excludeValues.contains("difficulty")) {
-            builder.param("difficulty", "50");
-        }
-        return builder;
-    }
-
-    private String getTestCases() {
-        JsonArray array = new JsonArray();
-        for (int i = 0; i < 2; i++) {
-            JsonObject object = new JsonObject();
-            object.add("caseNum", new JsonPrimitive(i + 1));
-            object.add("input", new JsonPrimitive("Sample Input"));
-            object.add("output", new JsonPrimitive("Sample Output"));
-            array.add(object);
-        }
-        return array.toString();
-    }
-
-    private String getTestCases2() {
-        JsonArray array = new JsonArray();
-        for (int i = 0; i < 2; i++) {
-            JsonObject object = new JsonObject();
-            object.add("caseNum", new JsonPrimitive(i + 1));
-            object.add("input", new JsonPrimitive("Sample Input 2"));
-            object.add("output", new JsonPrimitive("Sample Output 2"));
-            array.add(object);
-        }
-        return array.toString();
-    }
-
-    private void setSecurityContext(String username) {
-        User user = userService.getUser(username);
-        SecurityContextHolder.getContext()
-                .setAuthentication(
-                        new UsernamePasswordAuthenticationToken(new UserPrincipal(user), "password"));
     }
 
     private byte[] getExportBytes() {

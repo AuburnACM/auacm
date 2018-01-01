@@ -1,6 +1,6 @@
 package com.auacm.api.validator;
 
-import com.auacm.api.model.NewProblem;
+import com.auacm.api.model.CreateProblem;
 import com.auacm.database.model.Competition;
 import com.auacm.service.CompetitionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +16,12 @@ public class CreateProblemValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> aClass) {
-        return NewProblem.class.equals(aClass);
+        return CreateProblem.class.equals(aClass);
     }
 
     @Override
     public void validate(Object o, Errors errors) {
-        NewProblem problem = (NewProblem) o;
+        CreateProblem problem = (CreateProblem) o;
         if (problem.getImportZip() == null || problem.getImportZip().isEmpty()) {
             if (problem.getName() != null) {
                 if (problem.getName().length() < 2) {
@@ -56,7 +56,7 @@ public class CreateProblemValidator implements Validator {
             }
 
             if (problem.getAppearedIn() != null) {
-                Competition competition = competitionService.getCompeitionByName(problem.getAppearedIn());
+                Competition competition = competitionService.getCompetitionByName(problem.getAppearedIn());
                 if (competition == null) {
                     errors.reject(String.format("The competition %s does not exist.", problem.getAppearedIn()));
                 }

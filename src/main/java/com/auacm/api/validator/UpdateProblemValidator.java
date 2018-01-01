@@ -1,6 +1,6 @@
 package com.auacm.api.validator;
 
-import com.auacm.api.model.NewProblem;
+import com.auacm.api.model.CreateProblem;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -9,7 +9,7 @@ import org.springframework.validation.Validator;
 public class UpdateProblemValidator implements Validator {
     @Override
     public boolean supports(Class<?> aClass) {
-        return NewProblem.class.equals(aClass);
+        return CreateProblem.class.equals(aClass);
     }
 
     @Override

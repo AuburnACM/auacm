@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package com.auacm.api.proto;
+
+message Competition {
+    int64 cid = 1;
+    bool closed = 2;
+    int64 length = 3;
+    string name = 4;
+    bool registered = 5;
+    int64 startTime = 6;
+}
+
+message CompetitionProblem {
+    string name = 1;
+    int64 pid = 2;
+    string shortName = 3;
+}
+
+message CompetitionTeamProblem {
+    string label = 1;
+    string status = 2;
+    int32 submitCount = 3;
+    int64 submitTime = 4;
+}
+
+message CompetitionTeam {
+    repeated string displayNames = 1;
+    string name = 2;
+    map<string, CompetitionTeamProblem> problemData = 3;
+    repeated string users = 4;
+}
+
+message SingleCompetition {
+    map<string, CompetitionProblem> compProblems = 1;
+    Competition competition = 2;
+    repeated CompetitionTeam teams = 3;
+}
+
+message SingleCompetitionWrapper {
+    SingleCompetition data = 1;
+}
+
+message CompetitionList {
+    repeated Competition ongoing = 1;
+    repeated Competition past = 2;
+    repeated Competition upcoming= 3;
+}
+
+message CompetitionListWrapper {
+    CompetitionList data = 1;
+}

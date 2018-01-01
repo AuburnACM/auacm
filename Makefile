@@ -32,8 +32,9 @@ test:
 
 proto:
 	protoc --java_out=src/main/java/ src/main/resources/proto/Blog.proto
-	protoc --java_out=src/main/java/ src/main/resources/proto/User.proto
+	protoc --java_out=src/main/java/ src/main/resources/proto/Competition.proto
 	protoc --java_out=src/main/java/ src/main/resources/proto/Problem.proto
+	protoc --java_out=src/main/java/ src/main/resources/proto/User.proto
 
 clean:
 	cp auacm/angular/dist/index.html auacm/app/templates/index.html

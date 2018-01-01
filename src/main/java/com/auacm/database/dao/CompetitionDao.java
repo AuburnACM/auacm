@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CompetitionDao extends JpaRepository<Competition, Long> {
+    Competition getCompetitionByName(String name);
 }

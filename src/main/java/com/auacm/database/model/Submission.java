@@ -15,11 +15,14 @@ public class Submission implements Serializable {
     @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     private User user;
 
+    @Column(name = "username")
+    private String userName;
+
     @Column(name = "shortname")
     private String shortName;
 
     @Column(name = "submit_time")
-    private int submitTime;
+    private Long submitTime;
 
     @Column(name = "auto_id")
     private boolean autoId;
@@ -57,6 +60,14 @@ public class Submission implements Serializable {
         return this;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public String getShortName() {
         return shortName;
     }
@@ -66,11 +77,11 @@ public class Submission implements Serializable {
         return this;
     }
 
-    public int getSubmitTime() {
+    public Long getSubmitTime() {
         return submitTime;
     }
 
-    public Submission setSubmitTime(int submitTime) {
+    public Submission setSubmitTime(Long submitTime) {
         this.submitTime = submitTime;
         return this;
     }

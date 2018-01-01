@@ -59,7 +59,44 @@ public class JsonUtil {
     }
 
     public String toJson(Message message) {
-        return format.printToString(message);
+        JsonObject object = new JsonParser().parse(format.printToString(message)).getAsJsonObject();
+        object = formatMaps(object);
+        return object.toString();
+    }
+
+    public JsonObject formatMaps(JsonObject object) {
+        JsonObject newObject = new JsonObject();
+        for (Map.Entry<String, JsonElement> temp : object.entrySet()) {
+            if (temp.getValue().isJsonObject()) {
+                JsonObject current = temp.getValue().getAsJsonObject();
+                newObject.add(temp.getKey(), formatMaps(current));
+            } else if (temp.getValue().isJsonArray()) {
+                JsonArray array = temp.getValue().getAsJsonArray();
+                JsonArray replaceArray = new JsonArray();
+                JsonObject replace = new JsonObject();
+                if (array.get(0).isJsonObject()) {
+                    JsonObject firstObject = array.get(0).getAsJsonObject();
+                    if (firstObject.has("key") && firstObject.has("value") && firstObject.size() == 2) {
+                        for (JsonElement e : array) {
+                            JsonObject current = e.getAsJsonObject();
+                            replace.add(current.get("key").getAsString(), current.get("value"));
+                        }
+                        newObject.add(temp.getKey(), replace);
+                    } else {
+                        for (JsonElement e : array) {
+                            JsonObject current = e.getAsJsonObject();
+                            replaceArray.add(formatMaps(current));
+                        }
+                        newObject.add(temp.getKey(), replaceArray);
+                    }
+                } else {
+                    newObject.add(temp.getKey(), array);
+                }
+            } else {
+                newObject.add(temp.getKey(), temp.getValue());
+            }
+        }
+        return newObject;
     }
 
     public JsonObject toJsonObject(Message message) {
