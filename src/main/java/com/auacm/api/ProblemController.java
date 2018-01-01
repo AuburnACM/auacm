@@ -54,6 +54,12 @@ public class ProblemController {
         return jsonUtil.toJson(problemService.getProblemResponse(problemService.updateProblem(identifier, newProblem)));
     }
 
+    @RequestMapping(value = "/api/problems/{identifier}", method = {RequestMethod.DELETE}, produces = "application/json")
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteProblem(@PathVariable String identifier) {
+        problemService.deleteProblem(identifier);
+    }
+
     @RequestMapping(value = "/api/problems", produces = "application/json", method = RequestMethod.GET)
     public @ResponseBody String getProblems() {
         return jsonUtil.toJson(problemService.getProblemListResponse(problemService.getAllProblems()));

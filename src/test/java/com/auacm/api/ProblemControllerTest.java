@@ -1,10 +1,11 @@
 package com.auacm.api;
 
-import com.auacm.Auacm;
-import com.auacm.database.model.User;
-import com.auacm.database.model.UserPrincipal;
+import com.auacm.database.model.Problem;
+import com.auacm.exception.ProblemNotFoundException;
+import com.auacm.model.MockProblemBuilder;
 import com.auacm.request.MockRequest;
 import com.auacm.service.FileSystemService;
+import com.auacm.service.ProblemService;
 import com.auacm.service.UserService;
 import com.google.gson.*;
 import org.junit.After;
@@ -18,37 +19,28 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.auacm.request.MockRequest.getCreateProblemRequest;
 import static com.auacm.request.MockRequest.getProblemTestCases2;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Auacm.class)
-@WebAppConfiguration
+@SpringBootTest
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ProblemControllerTest {
@@ -66,6 +58,9 @@ public class ProblemControllerTest {
 
     @Autowired
     private FileSystemService fileSystemService;
+
+    @Autowired
+    private ProblemService problemService;
 
     @Bean
     public MultipartResolver multipartResolver() {
@@ -363,6 +358,29 @@ public class ProblemControllerTest {
         Assert.assertEquals(true, object.has("pid"));
         Assert.assertEquals(true, object.has("sampleCases"));
         Assert.assertEquals(true, object.has("shortName"));
+    }
+
+    @Test
+    @WithMockUser(username = "admin")
+    public void deleteProblem() throws Exception {
+        MockRequest.setSecurityContext(userService, "admin");
+        problemService.createProblem(new MockProblemBuilder().build());
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/problems/1")).andExpect(MockMvcResultMatchers.status().isOk());
+        Problem problem = null;
+        try {
+            problem = problemService.getProblemForPid(1);
+            Assert.assertNull(problem);
+        } catch (ProblemNotFoundException e) {
+            Assert.assertNull(problem);
+        }
+    }
+
+    @Test
+    @WithMockUser(username = "user")
+    public void deleteProblemNotAdmin() throws Exception {
+        MockRequest.setSecurityContext(userService, "user");
+        problemService.createProblem(new MockProblemBuilder().build());
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/problems/1")).andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @After

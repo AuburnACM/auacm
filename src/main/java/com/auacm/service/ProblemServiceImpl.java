@@ -267,6 +267,15 @@ public class ProblemServiceImpl implements ProblemService {
     }
 
     @Override
+    @Transactional
+    public void deleteProblem(String identifier) {
+        Problem problem = getProblem(identifier);
+        problemDataDao.delete(problem.getPid());
+        sampleCaseDao.deleteAllBySampleCasePK_Pid(problem.getPid());
+        problemDao.delete(problem.getPid());
+    }
+
+    @Override
     public List<Problem> getAllProblems() {
         if (SecurityContextHolder.getContext().getAuthentication().getAuthorities()
                 .contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
@@ -297,6 +306,9 @@ public class ProblemServiceImpl implements ProblemService {
     public Problem getProblemForPid(long pid) {
         try {
             Problem problem = problemDao.findOne(pid);
+            if (problem == null) {
+                throw new ProblemNotFoundException("Failed to find a problem for pid " + pid + ".");
+            }
             if (competitionService.isInUpcomingCompetition(problem)) {
                 if (SecurityContextHolder.getContext().getAuthentication().getAuthorities()
                         .contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {

@@ -16,6 +16,8 @@ public interface ProblemService {
 
     void deleteProblem(Problem problem);
 
+    void deleteProblem(String identifier);
+
     List<Problem> getAllProblems();
 
     Problem getProblem(String identifier);

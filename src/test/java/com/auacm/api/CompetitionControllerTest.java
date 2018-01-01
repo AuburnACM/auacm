@@ -7,12 +7,14 @@ import com.auacm.model.MockCompetitionBuilder;
 import com.auacm.model.MockProblemBuilder;
 import com.auacm.request.MockRequest;
 import com.auacm.service.CompetitionService;
+import com.auacm.service.FileSystemService;
 import com.auacm.service.ProblemService;
 import com.auacm.service.UserService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -64,6 +66,9 @@ public class CompetitionControllerTest {
 
     @Autowired
     private ProblemService problemService;
+
+    @Autowired
+    private FileSystemService fileSystemService;
 
     @Before
     public void setup() throws Exception {
@@ -450,6 +455,11 @@ public class CompetitionControllerTest {
         Assert.assertNotNull(competition);
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/competitions/1"))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @After
+    public void cleanUp() throws Exception {
+        fileSystemService.deleteFile("data");
     }
 
     private void createNewCompetition() {
