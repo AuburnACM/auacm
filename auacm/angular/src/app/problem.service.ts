@@ -5,6 +5,7 @@ import { Subject } from 'rxjs/Subject';
 import { Problem, SampleCase } from './models/problem';
 import { HttpClient } from '@angular/common/http';
 import { DataWrapper } from 'app/models/datawrapper';
+import { environment } from './../environments/environment';
 
 @Injectable()
 export class ProblemService {
@@ -59,7 +60,7 @@ export class ProblemService {
           }
         }
       };
-      xmlSubmit.open('POST', window.location.protocol + '//' + window.location.host + '/api/problems/', true);
+      xmlSubmit.open('POST', environment.apiUrl + '/problems/', true);
       xmlSubmit.send(requestForm);
     });
   }
@@ -111,14 +112,14 @@ export class ProblemService {
           }
         }
       };
-      xmlSubmit.open('PUT', window.location.protocol + '//' + window.location.host + '/api/problems/' + problem.pid, true);
+      xmlSubmit.open('PUT', environment.apiUrl + '/problems/' + problem.pid, true);
       xmlSubmit.send(requestForm);
     });
   }
 
   getProblemByPid(identifier: number): Promise<Problem> {
     return new Promise((resolve, reject) => {
-      this._httpClient.get<DataWrapper<Problem>>(`/api/problems/${identifier}`).subscribe(data => {
+      this._httpClient.get<DataWrapper<Problem>>(`${environment.apiUrl}/problems/${identifier}`).subscribe(data => {
         const problem = new Problem().deserialize(data.data);
         resolve(problem);
       }, (err: Response) => {
@@ -129,7 +130,7 @@ export class ProblemService {
 
   getProblemByShortName(identifier: string): Promise<Problem> {
     return new Promise((resolve, reject) => {
-      this._httpClient.get<DataWrapper<Problem>>(`/api/problems/${identifier}`).subscribe(data => {
+      this._httpClient.get<DataWrapper<Problem>>(`${environment.apiUrl}/problems/${identifier}`).subscribe(data => {
         const problem = new Problem().deserialize(data.data);
         resolve(problem);
       }, (err: Response) => {
@@ -140,7 +141,7 @@ export class ProblemService {
 
   getAllProblems(): Promise<Problem[]> {
     return new Promise((resolve, reject) => {
-      this._httpClient.get<DataWrapper<Problem[]>>('/api/problems').subscribe(data => {
+      this._httpClient.get<DataWrapper<Problem[]>>(`${environment.apiUrl}/problems`).subscribe(data => {
         const problems = <Problem[]> [];
         const list = data.data;
         for (const problem of list) {

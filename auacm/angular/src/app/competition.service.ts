@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Http, Request, Response, Headers, URLSearchParams } from '@angular/http';
 import { Subject } from 'rxjs/Subject';
+import { HttpClient } from '@angular/common/http';
 
 import { WebsocketService } from './websocket.service';
 
 import { CompetitionProblem, Competition, CompetitionTeam, TeamProblemData } from './models/competition';
+import { DataWrapper } from './models/datawrapper';
 import { RecentSubmission } from './models/submission';
 import { Problem } from './models/problem';
 import { SimpleUser, WebsocketRegisteredUser } from './models/user';
 import { UrlEncodedHeader } from './models/service.utils';
-
+import { environment } from './../environments/environment';
 
 /**
  * This class manages the connection to the competition part of the backend.
@@ -41,7 +43,7 @@ export class CompetitionService {
    * the websocket. It currently handles the system_time, status, new_user
    * websocket messages.
    */
-  constructor(private _http: Http, private _websocketService: WebsocketService) {
+  constructor(private _http: Http, private _httpClient: HttpClient, private _websocketService: WebsocketService) {
     this._websocketService.connect(window.location.host + '/websocket').subscribe(data => {
         // update the client's time offset and scoreboard data
         const response = JSON.parse(data.data);
@@ -142,30 +144,20 @@ export class CompetitionService {
    */
   createCompetition(competition: Competition, problems: Problem[]): Promise<Competition> {
     const problemData = [];
-    for (let i = 0; i < problems.length; i++) {
-      problemData.push({
-        label: String.fromCharCode('A'.charCodeAt(0) + i),
-        pid: problems[i].pid
-      });
-    }
-    const formData = new URLSearchParams();
+    const formData = new FormData();
     formData.append('name', competition.name);
-    formData.append('start_time', competition.startTime.toString());
+    formData.append('startTime', competition.startTime.toString());
     formData.append('length', competition.length.toString());
-    formData.append('problems', JSON.stringify(problemData));
-    // in python, a non empty string that is parsed will be true,
-    // while an empty string will be false.
-    formData.append('closed', competition.closed ? '1' : '');
+    for (const problem of problems) {
+      formData.append('problems', `${problem.pid}`);
+    }
+    formData.append('closed', `${competition.closed}`);
 
     return new Promise((resolve, reject) => {
-      this._http.post('/api/competitions', formData.toString(), { headers: UrlEncodedHeader }).subscribe((res: Response) => {
-        if (res.status === 200) {
-          resolve(new Competition());
-        } else {
-          resolve(undefined);
-        }
+      this._httpClient.post<DataWrapper<Competition>>(`${environment.apiUrl}/competitions`, formData, { withCredentials: true }).subscribe(data => {
+        resolve(new Competition().deserialize(data.data));
       }, (err: Response) => {
-        resolve(undefined);
+        reject(err);
       });
     });
   }
@@ -177,169 +169,96 @@ export class CompetitionService {
    */
   getAllCompetitions(): Promise<Map<string, Competition[]>> {
     return new Promise((resolve, reject) => {
-      this._http.get('/api/competitions').subscribe((res: Response) => {
-        const competitions = new Map<string, Competition[]>();
-        const data = res.json().data;
-        if (res.status === 200) {
-          const competitionTypes = Object.keys(data);
-          for (let i = 0; i < competitionTypes.length; i++) {
-            const competitionType = competitionTypes[i];
-            competitions[competitionType] = [];
-            for (let j = 0; j < data[competitionType].length; j++) {
-              // I'm unsure what is returned, going to check for all parameters     - John
-              const competition = new Competition();
-              if (data[competitionType][j]['cid'] !== undefined) {
-                competition['cid'] = data[competitionType][j]['cid'];
-              }
-              if (data[competitionType][j]['closed'] !== undefined) {
-                competition['closed'] = data[competitionType][j]['closed'];
-              }
-              if (data[competitionType][j]['length'] !== undefined) {
-                competition['length'] = data[competitionType][j]['length'];
-              }
-              if (data[competitionType][j]['name'] !== undefined) {
-                competition['name'] = data[competitionType][j]['name'];
-              }
-              if (data[competitionType][j]['registered'] !== undefined) {
-                competition['registered'] = data[competitionType][j]['registered'];
-              }
-              if (data[competitionType][j]['startTime'] !== undefined) {
-                competition['startTime'] = data[competitionType][j]['startTime'];
-              }
-              if (data[competitionType][j]['stop'] !== undefined) {
-                competition['stop'] = data[competitionType][j]['stop'];
-              }
-              if (data[competitionType][j]['compProblems'] !== undefined) {
-                competition['compProblems'] = data[competitionType][j]['compProblems'];
-              }
-              competitions[competitionType].push(competition);
-            }
+      this._httpClient.get<DataWrapper<Map<string, Competition>>>(`${environment.apiUrl}/competitions`, {withCredentials: true}).subscribe(data => {
+        const map = data.data;
+        const compMap = new Map<string, Competition[]>();
+        for (const type in map) {
+          compMap[type] = [];
+          for (const comp of map[type]) {
+            compMap[type].push(new Competition().deserialize(comp));
           }
         }
-        resolve(competitions);
+        console.log(compMap);
+        if (compMap['past'] === undefined) {
+          compMap['past'] = [];
+        }
+        if (compMap['ongoing'] === undefined) {
+          compMap['ongoing'] = [];
+        }
+        if (compMap['upcoming'] === undefined) {
+          compMap['upcoming'] = [];
+        }
+        resolve(compMap);
       }, (err: Response) => {
-        const competitions = new Map<string, Competition[]>();
-        competitions['ongoing'] = [];
-        competitions['upcoming'] = [];
-        competitions['past'] = [];
-        resolve(competitions);
+        reject(err);
       });
     });
   }
 
   getCompetition(cid: number): Promise<Competition> {
     return new Promise((resolve, reject) => {
-      this._http.get(`/api/competitions/${cid}`).subscribe((res: Response) => {
-        if (res.status === 200) {
-          const competition = new Competition();
-          const data = res.json().data;
-
-          // Parse competition compProblems
-          const keys = Object.keys(data.compProblems);
-          for (let i = 0; i < keys.length; i++) {
-            const tempData = data.compProblems[keys[i]];
-            const tempCompProblem = new CompetitionProblem();
-            tempCompProblem.name = tempData.name;
-            tempCompProblem.pid = tempData.pid;
-            tempCompProblem.shortName = tempData.shortname;
-            competition.compProblems[keys[i]] = tempCompProblem;
-          }
-
-          // Parse general competition data
-          competition.cid = data.competition.cid;
-          competition.closed = data.competition.closed;
-          competition.length = data.competition.length;
-          competition.name = data.competition.name;
-          competition.registered = data.competition.registered;
-          competition.startTime = data.competition.startTime;
-
-          // Parse team data
-          for (let i = 0; i < data.teams.length; i++) {
-            const tempTeam = data.teams[i];
-            const tempTeamData = new CompetitionTeam();
-            tempTeamData.displayNames = tempTeam.display_names;
-            tempTeamData.name = tempTeam.name;
-            tempTeamData.problemData = tempTeam.problemData;
-            tempTeamData.users = tempTeam.users;
-            competition.teams.push(tempTeamData);
-          }
-          resolve(competition);
-        } else {
-          resolve(new Competition());
-        }
-      }, (err: Response) => {
-        resolve(new Competition());
+      this._httpClient.get<DataWrapper<Competition>>(`${environment.apiUrl}/competitions/${cid}`, {withCredentials: true}).subscribe(data => {
+        const comp = data.data;
+        const temp = new Competition().deserialize(comp);
+        console.log(temp);
+        resolve(new Competition().deserialize(comp));
       });
     });
   }
 
   updateCompetition(competition: Competition, problems: Problem[]): Promise<Competition> {
     const problemData = [];
-    for (let i = 0; i < problems.length; i++) {
-      problemData.push({
-        label: String.fromCharCode('A'.charCodeAt(0) + i),
-        pid: problems[i].pid
-      });
-    }
-    const formData = new URLSearchParams();
+    const formData = new FormData();
     formData.append('name', competition.name);
-    formData.append('start_time', competition.startTime.toString());
+    formData.append('startTime', competition.startTime.toString());
     formData.append('length', competition.length.toString());
-    formData.append('problems', JSON.stringify(problemData));
-    // in python, a non empty string that is parsed will be true,
-    // while an empty string will be false.
-    formData.append('closed', competition.closed ? '1' : '');
+    for (const problem of problems) {
+      formData.append('problems', `${problem.pid}`);
+    }
+    formData.append('closed', `${competition.closed}`);
 
     return new Promise((resolve, reject) => {
-      this._http.put(`/api/competitions/${competition.cid}`,
-          formData.toString(), { headers: UrlEncodedHeader }).subscribe((res: Response) => {
-        if (res.status === 200) {
-          resolve(new Competition());
-        } else {
-          resolve(undefined);
-        }
+      this._httpClient.post<DataWrapper<Competition>>(`${environment.apiUrl}/competitions/${competition.cid}`, formData, { withCredentials: true }).subscribe(data => {
+        resolve(new Competition().deserialize(data.data));
       }, (err: Response) => {
-        resolve(undefined);
+        reject(err);
       });
     });
   }
 
-  deleteCompetition(cid: number): Promise<boolean> {
-    // TODO Add this functionallity to the front and backend
-    return undefined;
-  }
-
-  register(cid: number): Promise<boolean> {
+  deleteCompetition(cid: number): Promise<any> {
     return new Promise((resolve, reject) => {
-      this._http.post(`/api/competitions/${cid}/register`, '').subscribe((res: Response) => {
-        if (res.status === 200) {
-          resolve(true);
-        } else {
-          resolve(false);
-        }
+      this._httpClient.delete(`${environment.apiUrl}/competitions/${cid}`, { withCredentials: true }).subscribe(() => {
+        resolve();
       }, (err: Response) => {
-        resolve(false);
+        reject(err);
       });
     });
   }
 
-  unregister(cid: number): Promise<boolean> {
+  register(cid: number): Promise<any> {
     return new Promise((resolve, reject) => {
-      this._http.post(`/api/competitions/${cid}/unregister`, '').subscribe((res: Response) => {
-        if (res.status === 200) {
-          resolve(true);
-        } else {
-          resolve(false);
-        }
+      this._httpClient.post(`${environment.apiUrl}/competitions/${cid}/register`, undefined, { withCredentials: true}).subscribe(() => {
+        resolve();
       }, (err: Response) => {
-        resolve(false);
+        reject(err);
+      });
+    });
+  }
+
+  unregister(cid: number): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this._httpClient.post(`${environment.apiUrl}/competitions/${cid}/unregister`, undefined, { withCredentials: true }).subscribe(() => {
+        resolve();
+      }, (err: Response) => {
+        reject(err);
       });
     });
   }
 
   getCompetitionTeams(cid: number): Promise<Map<string, SimpleUser[]>> {
     return new Promise((resolve, reject) => {
-      this._http.get(`/api/competitions/${cid}/teams`).subscribe((res: Response) => {
+      this._http.get(`${environment.apiUrl}/competitions/${cid}/teams`).subscribe((res: Response) => {
         if (res.status === 200) {
           const data = res.json().data;
           const map = new Map<string, SimpleUser[]>();
@@ -361,7 +280,7 @@ export class CompetitionService {
     return new Promise((resolve, reject) => {
       const formData = new FormData();
       formData.append('teams', JSON.stringify(team));
-      this._http.put(`/api/competitions/${cid}/teams`, formData).subscribe((res: Response) => {
+      this._http.put(`${environment.apiUrl}/competitions/${cid}/teams`, formData).subscribe((res: Response) => {
         if (res.status === 200) {
           resolve(true);
         } else {

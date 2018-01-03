@@ -68,9 +68,9 @@ export class CompetitionsComponent implements OnInit, OnDestroy {
 
   register(competition: Competition) {
     this._competitionService.register(competition.cid).then(success => {
-      if (success) {
-        competition.registered = true;
-      }
+      competition.registered = true;
+    }).catch((err: Response) => {
+      competition.registered = false;
     });
   }
 

@@ -12,7 +12,9 @@ public class Submission implements Serializable {
 
     private int pid;
 
-    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "username", updatable = false, insertable = false)
+//    @Transient
     private User user;
 
     @Column(name = "username")

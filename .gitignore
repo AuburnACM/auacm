@@ -32,3 +32,4 @@ auacm/app/templates/index.html
 .project
 .settings/
 data/
+auacm/angular/package-lock.json

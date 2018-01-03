@@ -6,6 +6,7 @@ import { UserData, RankData } from './models/user';
 import { SimpleResponse } from './models/response';
 import { DataWrapper } from './models/datawrapper';
 import { UrlEncodedHeader } from './models/service.utils';
+import { environment } from './../environments/environment';
 
 /**
  * All methods of this class should notify the userData observable
@@ -36,7 +37,7 @@ export class UserService {
       const form = new FormData();
       form.append('username', username);
       form.append('password', password);
-      this._httpClient.post('/api/login', form, {withCredentials: true}).subscribe(data => {
+      this._httpClient.post(`${environment.apiUrl}/login`, form, {withCredentials: true}).subscribe(data => {
         self.refreshUserData();
         resolve(true);
       }, (err: Response) => {
@@ -49,7 +50,7 @@ export class UserService {
   logout(): Promise<boolean> {
     const self = this;
     return new Promise((resolve, reject) => {
-      this._httpClient.get('/api/logout', {withCredentials: true}).subscribe(data => {
+      this._httpClient.get(`${environment.apiUrl}/logout`, {withCredentials: true}).subscribe(data => {
         self.updateUserData(new UserData());
         resolve(true);
       }, (err: Response) => {
@@ -66,7 +67,7 @@ export class UserService {
   me(): Promise<UserData> {
     return new Promise((resolve, reject) => {
       const self = this;
-      this._httpClient.get<DataWrapper<UserData>>('/api/me', {withCredentials: true}).subscribe(data => {
+      this._httpClient.get<DataWrapper<UserData>>(`${environment.apiUrl}/me`, {withCredentials: true}).subscribe(data => {
         const userData = new UserData().deserialize(data.data);
         userData.loggedIn = true;
         self.updateUserData(userData);
@@ -84,7 +85,7 @@ export class UserService {
       params.append('password', password);
       params.append('display', displayName);
 
-      this._httpClient.post('/api/create_user', params).subscribe(res => {
+      this._httpClient.post(`${environment.apiUrl}/create_user`, params, {withCredentials: true}).subscribe(res => {
           resolve(new SimpleResponse(true, 'User created successfully.'));
       }, (err: Response) => {
         if (err.status === 401) {
@@ -104,7 +105,7 @@ export class UserService {
       params.append('oldPassword', oldPassword);
       params.append('newPassword', newPassword);
 
-      this._httpClient.post('/api/change_password', params).subscribe((res: Response) => {
+      this._httpClient.post(`${environment.apiUrl}/change_password`, params, {withCredentials: true}).subscribe((res: Response) => {
         resolve(res.status === 200);
       }, (err: Response) => {
         resolve(false);
@@ -117,7 +118,7 @@ export class UserService {
       const params = new FormData();
       params.append('newDisplayName', newDisplayName);
 
-      this._httpClient.post('/api/change_display_name', params).subscribe((res: Response) => {
+      this._httpClient.post(`${environment.apiUrl}/change_display_name`, params, {withCredentials: true}).subscribe((res: Response) => {
         resolve(res.status === 200);
       }, (err: Response) => {
         resolve(false);
@@ -136,7 +137,7 @@ export class UserService {
   getRanking(timeframe: string): Promise<RankData[]> {
     return new Promise((resolve, reject) => {
       const time = timeframe === undefined ? 'all' : timeframe;
-      this._httpClient.get<DataWrapper<RankData[]>>(`/api/ranking/${time}`).subscribe(data => {
+      this._httpClient.get<DataWrapper<RankData[]>>(`${environment.apiUrl}/ranking/${time}`, {withCredentials: true}).subscribe(data => {
         const ranks = data.data;
         const rankings = [];
         for (let i = 0; i < ranks.length; i++) {

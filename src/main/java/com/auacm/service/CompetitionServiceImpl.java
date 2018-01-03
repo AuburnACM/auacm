@@ -101,7 +101,7 @@ public class CompetitionServiceImpl implements CompetitionService {
     @Override
     public boolean isCurrentUserRegistered(Competition competition) {
         boolean registered = false;
-        if (SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof UserPrincipal) {
             User user = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
             for (CompetitionUser competitionUser : competition.getCompetitionUsers()) {
                 if (competitionUser.getUsername().equals(user.getUsername())) {
@@ -314,7 +314,8 @@ public class CompetitionServiceImpl implements CompetitionService {
         CompetitionOuterClass.SingleCompetition.Builder builder = CompetitionOuterClass.SingleCompetition.newBuilder()
                 .setCompetition(CompetitionOuterClass.Competition.newBuilder().setCid(competition.getCid())
                         .setClosed(competition.isClosed()).setLength(competition.getStop() - competition.getStart())
-                        .setStartTime(competition.getStart()).setRegistered(isCurrentUserRegistered(competition)));
+                        .setStartTime(competition.getStart()).setRegistered(isCurrentUserRegistered(competition))
+                        .setName(competition.getName()));
         HashMap<Long, Problem> problems = new HashMap<>();
         for (CompetitionProblem competitionProblem : competition.getCompetitionProblems()) {
             Problem temp = problemService.getProblemForPid(competitionProblem.getPid());
@@ -350,10 +351,10 @@ public class CompetitionServiceImpl implements CompetitionService {
             builder.addOngoing(getCompetition(c));
         }
         for (Competition c : competitions.get("upcoming")) {
-            builder.addOngoing(getCompetition(c));
+            builder.addUpcoming(getCompetition(c));
         }
         for (Competition c : competitions.get("past")) {
-            builder.addOngoing(getCompetition(c));
+            builder.addPast(getCompetition(c));
         }
         return CompetitionOuterClass.CompetitionListWrapper.newBuilder().setData(builder).build();
     }
@@ -361,6 +362,7 @@ public class CompetitionServiceImpl implements CompetitionService {
     private CompetitionOuterClass.Competition.Builder getCompetition(Competition competition) {
         return CompetitionOuterClass.Competition.newBuilder().setCid(competition.getCid())
                 .setClosed(competition.isClosed()).setLength(competition.getStop() - competition.getStart())
-                .setStartTime(competition.getStart()).setRegistered(isCurrentUserRegistered(competition));
+                .setStartTime(competition.getStart()).setRegistered(isCurrentUserRegistered(competition))
+                .setName(competition.getName());
     }
 }
