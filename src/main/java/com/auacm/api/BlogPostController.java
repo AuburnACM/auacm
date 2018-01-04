@@ -2,6 +2,7 @@ package com.auacm.api;
 
 import com.auacm.api.model.CreateBlogPost;
 import com.auacm.api.model.UpdateBlogPost;
+import com.auacm.api.proto.Blog;
 import com.auacm.api.validator.UpdateBlogPostValidator;
 import com.auacm.database.model.BlogPost;
 import com.auacm.database.model.User;
@@ -32,9 +33,6 @@ public class BlogPostController {
     @Autowired
     private UpdateBlogPostValidator updateBlogPostValidator;
 
-    @Autowired
-    private JsonUtil jsonUtil;
-
     private Logger logger;
 
     public BlogPostController() {
@@ -48,36 +46,36 @@ public class BlogPostController {
 
     @RequestMapping(path = "/api/blog", produces = "application/json", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ADMIN')")
-    public @ResponseBody String createBlogPost(@Validated @ModelAttribute CreateBlogPost blogPost) {
+    public @ResponseBody Blog.BlogResponseWrapper createBlogPost(@Validated @ModelAttribute CreateBlogPost blogPost) {
         User user = ((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         BlogPost post = blogPostService.addBlogPost(blogPost, user.getUsername());
-        return jsonUtil.toJson(blogPostService.getResponseForBlog(post, user));
+        return blogPostService.getResponseForBlog(post, user);
     }
 
     @RequestMapping(path = "/api/blog", produces = "application/json", method = RequestMethod.GET)
-    public @ResponseBody String getBlogPosts() {
+    public @ResponseBody Blog.MultiPostWrapper getBlogPosts() {
         List<BlogPost> blogPosts = blogPostService.getAllBlogPosts();
-        return jsonUtil.removeEmptyObjects(jsonUtil.toJson(blogPostService.getResponseForBlogs(blogPosts)));
+        return blogPostService.getResponseForBlogs(blogPosts);
     }
 
     @RequestMapping(path = "/api/blog/{id}", produces = "application/json", method = {RequestMethod.GET})
-    public @ResponseBody String getBlogPost(@PathVariable long id) {
+    public @ResponseBody Blog.BlogResponseWrapper getBlogPost(@PathVariable long id) {
         BlogPost blogPost = blogPostService.getBlogPostForId(id);
-        return jsonUtil.toJson(blogPostService.getResponseForBlog(blogPost));
+        return blogPostService.getResponseForBlog(blogPost);
     }
 
     @RequestMapping(path = "/api/blog/{id}", produces = "application/json",
             method = {RequestMethod.PUT, RequestMethod.POST})
     @PreAuthorize("hasRole('ADMIN')")
-    public @ResponseBody String updateBlogPost(@Validated @ModelAttribute("updateBlogPost") UpdateBlogPost blogPost,
-                                      @PathVariable long id) {
+    public @ResponseBody Blog.BlogResponseWrapper updateBlogPost(
+            @Validated @ModelAttribute("updateBlogPost") UpdateBlogPost blogPost, @PathVariable long id) {
         BlogPost post = blogPostService.updateBlogPost(blogPost, id);
-        return jsonUtil.toJson(blogPostService.getResponseForBlog(post));
+        return blogPostService.getResponseForBlog(post);
     }
 
     @RequestMapping(path = "/api/blog/{id}", produces = "application/json", method = RequestMethod.DELETE)
     @PreAuthorize("hasRole('ADMIN')")
-    public String deleteBlogPost(@PathVariable long id) {
-        return jsonUtil.toJson(blogPostService.getResponseForBlog(blogPostService.deleteBlogPost(id)));
+    public Blog.BlogResponseWrapper deleteBlogPost(@PathVariable long id) {
+        return blogPostService.getResponseForBlog(blogPostService.deleteBlogPost(id));
     }
 }

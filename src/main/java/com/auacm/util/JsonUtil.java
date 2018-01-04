@@ -61,6 +61,7 @@ public class JsonUtil {
     public String toJson(Message message) {
         JsonObject object = new JsonParser().parse(format.printToString(message)).getAsJsonObject();
         object = formatMaps(object);
+        removeEmptyObjects(object);
         return object.toString();
     }
 

@@ -1,5 +1,6 @@
 package com.auacm.security;
 
+import com.auacm.filter.MessageToJsonFilter;
 import com.auacm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -25,10 +27,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private FailedLoginHandler failedLoginHandler;
 
+    @Autowired
+    private MessageToJsonFilter messageToJsonFilter;
+
     @Override
     protected void configure(HttpSecurity security) throws Exception {
         security.exceptionHandling().authenticationEntryPoint(new ForbiddenEntryPoint())
-                .and().authorizeRequests()
+                .and().addFilterAfter(messageToJsonFilter, BasicAuthenticationFilter.class).authorizeRequests()
                 .antMatchers("/api/me", "/api/create_user",
                         "/api/change_password", "/api/update_user").fullyAuthenticated()
                 .antMatchers(HttpMethod.POST, "/api/blog").fullyAuthenticated()
