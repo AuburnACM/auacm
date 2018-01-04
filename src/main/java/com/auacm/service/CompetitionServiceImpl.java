@@ -5,9 +5,9 @@ import com.auacm.api.proto.CompetitionOuterClass;
 import com.auacm.database.dao.CompetitionDao;
 import com.auacm.database.dao.CompetitionProblemDao;
 import com.auacm.database.dao.CompetitionUserDao;
-import com.auacm.database.dao.ProblemDao;
 import com.auacm.database.model.*;
 import com.auacm.exception.CompetitionNotFoundException;
+import com.auacm.exception.ForbiddenException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -111,6 +111,23 @@ public class CompetitionServiceImpl implements CompetitionService {
             }
         }
         return registered;
+    }
+
+    @Override
+    public CompetitionUser registerCurrentUser(long competitionId) {
+        Competition competition = getCompetitionById(competitionId);
+        User user = ((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+        if (competition.isClosed()) {
+            if (!user.isAdmin()) {
+                throw new ForbiddenException("This is a closed competition. An admin must register you.");
+            }
+        }
+        CompetitionUser temp = new CompetitionUser();
+        temp.setCid(competition.getCid());
+        temp.setUsername(user.getUsername());
+        temp.setTeam(user.getDisplay());
+        saveCompetitionUsers(Collections.singletonList(temp));
+        return temp;
     }
 
     @Override

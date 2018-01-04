@@ -1,5 +1,7 @@
 package com.auacm.api;
 
+import com.auacm.Auacm;
+import com.auacm.TestingConfig;
 import com.auacm.database.model.Problem;
 import com.auacm.exception.ProblemNotFoundException;
 import com.auacm.model.MockProblemBuilder;
@@ -23,6 +25,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -40,15 +43,15 @@ import static com.auacm.request.MockRequest.getProblemTestCases2;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = {Auacm.class, TestingConfig.class})
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@ContextConfiguration(classes = TestingConfig.class)
 public class ProblemControllerTest {
+    @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private WebApplicationContext webApplicationContext;
-
     private Gson gson;
 
     private HttpHeaders headers;
@@ -70,10 +73,6 @@ public class ProblemControllerTest {
 
     @Before
     public void setup() throws Exception {
-        gson = new GsonBuilder().setPrettyPrinting().create();
-        this.mockMvc = webAppContextSetup(webApplicationContext).apply(SecurityMockMvcConfigurers.springSecurity()).build();
-        userService.createUser("Admin", "admin", "password", true);
-        userService.createUser("User", "user", "password", false);
         headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
     }

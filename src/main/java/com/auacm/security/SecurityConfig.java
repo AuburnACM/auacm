@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity security) throws Exception {
-        security.exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint())
+        security.exceptionHandling().authenticationEntryPoint(new ForbiddenEntryPoint())
                 .and().authorizeRequests()
                 .antMatchers("/api/me", "/api/create_user",
                         "/api/change_password", "/api/update_user").fullyAuthenticated()

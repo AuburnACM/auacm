@@ -28,7 +28,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private SolvedProblemService solvedProblemService;
 
+    public UserServiceImpl() {}
 
+    public UserServiceImpl(UserDao userDao, SolvedProblemService solvedProblemService) {
+        this.userDao = userDao;
+        this.solvedProblemService = solvedProblemService;
+    }
 
     @Override
     @Transactional

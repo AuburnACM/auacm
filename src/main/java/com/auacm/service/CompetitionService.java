@@ -23,6 +23,8 @@ public interface CompetitionService {
 
     boolean isCurrentUserRegistered(Competition competition);
 
+    CompetitionUser registerCurrentUser(long competitionId);
+
     List<CompetitionUser> registerUsers(long competitionId, List<String> userNames);
 
     void unregisterUsers(long competitionId, List<String> userNames);

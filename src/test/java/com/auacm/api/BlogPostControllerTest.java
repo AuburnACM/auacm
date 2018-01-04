@@ -1,11 +1,13 @@
 package com.auacm.api;
 
 import com.auacm.Auacm;
+import com.auacm.TestingConfig;
 import com.auacm.database.model.BlogPost;
 import com.auacm.database.model.User;
 import com.auacm.database.model.UserPrincipal;
 import com.auacm.service.BlogPostService;
 import com.auacm.service.UserService;
+import com.auacm.user.WithACMUser;
 import com.google.gson.*;
 import org.junit.Assert;
 import org.junit.Before;
@@ -19,8 +21,10 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,34 +38,27 @@ import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Auacm.class)
+@SpringBootTest(classes = {Auacm.class, TestingConfig.class})
 @WebAppConfiguration
 @ActiveProfiles("test")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@ContextConfiguration(classes = TestingConfig.class)
 public class BlogPostControllerTest {
 
+    @Autowired
     private MockMvc mockMvc;
 
     private HttpMessageConverter mappingJackson2HttpMessageConverter;
 
     @Autowired
-    private WebApplicationContext webApplicationContext;
-
     private Gson gson;
 
     private HttpHeaders headers;
 
     @Before
     public void setup() throws Exception {
-        gson = new GsonBuilder().setPrettyPrinting().create();
-        this.mockMvc = webAppContextSetup(webApplicationContext).build();
-        userService.createUser("Admin", "admin", "password", true);
         headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        User user = userService.getUser("admin");
-        UserPrincipal principal = new UserPrincipal(user);
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(principal,
-                "password", principal.getAuthorities()));
     }
 
     @Autowired
@@ -82,6 +79,7 @@ public class BlogPostControllerTest {
     }
 
     @Test
+    @WithACMUser(username = "admin")
     public void createBlogPostValid() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/blog")
                 .param("title", "Test").param("subtitle", "Test").param("body", "the body")
@@ -100,6 +98,7 @@ public class BlogPostControllerTest {
     }
 
     @Test
+    @WithACMUser(username = "admin")
     public void createBlogPostMissingTitle() throws Exception {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -110,6 +109,7 @@ public class BlogPostControllerTest {
     }
 
     @Test
+    @WithACMUser(username = "admin")
     public void createBlogPostMissingSubtitle() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/blog")
                 .param("title", "Test").param("body", "the body")
@@ -118,6 +118,7 @@ public class BlogPostControllerTest {
     }
 
     @Test
+    @WithACMUser(username = "admin")
     public void createBlogPostMissingBody() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/blog")
                 .param("title", "Test").param("subtitle", "Test")
@@ -126,6 +127,7 @@ public class BlogPostControllerTest {
     }
 
     @Test
+//    @WithACMUser(username = "user")
     public void getBlogPosts() throws Exception {
         blogPostService.addBlogPost("Title 1", "Subtitle 1", "Body 1", "admin");
         blogPostService.addBlogPost("Title 2", "Subtitle 2", "Body 2", "admin");
@@ -156,6 +158,7 @@ public class BlogPostControllerTest {
     }
 
     @Test
+//    @WithACMUser(username = "user")
     public void getBlogPost() throws Exception {
         blogPostService.addBlogPost("Title 1", "Subtitle 1", "Body 1", "admin");
         String response = mockMvc.perform(MockMvcRequestBuilders.get("/api/blog/1")
@@ -180,6 +183,7 @@ public class BlogPostControllerTest {
     }
 
     @Test
+    @WithACMUser(username = "admin")
     public void updateBlogPostTitle() throws Exception {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -194,6 +198,7 @@ public class BlogPostControllerTest {
     }
 
     @Test
+    @WithACMUser(username = "admin")
     public void updateBlogPostSubtitle() throws Exception {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -208,6 +213,7 @@ public class BlogPostControllerTest {
     }
 
     @Test
+    @WithACMUser(username = "admin")
     public void updateBlogPostBody() throws Exception {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -222,6 +228,7 @@ public class BlogPostControllerTest {
     }
 
     @Test
+    @WithACMUser(username = "admin")
     public void updateBlogPostNotExistent() throws Exception {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -233,6 +240,7 @@ public class BlogPostControllerTest {
     }
 
     @Test
+    @WithACMUser(username = "admin")
     public void deleteBlogPost() throws Exception {
         blogPostService.addBlogPost("Title 1", "Subtitle 1", "Body 1", "admin");
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/blog/1"))
@@ -240,6 +248,7 @@ public class BlogPostControllerTest {
     }
 
     @Test
+    @WithACMUser(username = "admin")
     public void deleteBlogPostNonExistent() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/blog/1"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());

@@ -1,9 +1,11 @@
 package com.auacm.api;
 
 import com.auacm.Auacm;
+import com.auacm.TestingConfig;
 import com.auacm.database.model.User;
 import com.auacm.database.model.UserPrincipal;
 import com.auacm.service.UserService;
+import com.auacm.user.WithACMUser;
 import com.google.gson.*;
 import org.junit.Assert;
 import org.junit.Before;
@@ -19,6 +21,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,16 +32,16 @@ import org.springframework.web.context.WebApplicationContext;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Auacm.class)
+@SpringBootTest(classes = {Auacm.class, TestingConfig.class})
 @WebAppConfiguration
 @ActiveProfiles("test")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@ContextConfiguration(classes = TestingConfig.class)
 public class UserControllerTest {
+    @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private WebApplicationContext webApplicationContext;
-
     private Gson gson;
 
     private HttpHeaders headers;
@@ -48,10 +51,6 @@ public class UserControllerTest {
 
     @Before
     public void setup() throws Exception {
-        gson = new GsonBuilder().setPrettyPrinting().create();
-        this.mockMvc = webAppContextSetup(webApplicationContext).apply(SecurityMockMvcConfigurers.springSecurity()).build();
-        userService.createUser("Admin", "admin", "password", true);
-        userService.createUser("User", "user", "password", false);
         headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
     }
@@ -85,9 +84,8 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin")
+    @WithACMUser(username = "admin")
     public void me() throws Exception {
-        setSecurityContext("admin");
         String response = mockMvc.perform(MockMvcRequestBuilders.get("/api/me"))
                 .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse().getContentAsString();
         JsonObject object = new JsonParser().parse(response).getAsJsonObject().get("data").getAsJsonObject();
@@ -105,9 +103,8 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user")
+    @WithACMUser(username = "user")
     public void meNonAdmin() throws Exception {
-        setSecurityContext("user");
         String response = mockMvc.perform(MockMvcRequestBuilders.get("/api/me"))
                 .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse().getContentAsString();
         JsonObject object = new JsonParser().parse(response).getAsJsonObject().get("data").getAsJsonObject();
@@ -124,7 +121,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithACMUser(username = "admin")
     public void createUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/create_user")
                 .param("username", "test").param("password", "password")
@@ -133,7 +130,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user")
+    @WithACMUser(username = "user")
     public void createUserNotAdmin() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/create_user")
                 .param("username", "test").param("password", "password")
@@ -150,9 +147,8 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user")
+    @WithACMUser(username = "user")
     public void changePassword() throws Exception {
-        setSecurityContext("user");
         mockMvc.perform(MockMvcRequestBuilders.post("/api/change_password")
             .param("oldPassword", "password").param("newPassword", "password1").headers(headers))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -160,18 +156,16 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user")
+    @WithACMUser(username = "user")
     public void changePasswordInvalidOldPassword() throws Exception {
-        setSecurityContext("user");
         mockMvc.perform(MockMvcRequestBuilders.post("/api/change_password")
                 .param("oldPassword", "invalid_password").param("newPassword", "password1").headers(headers))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
-    @WithMockUser(username = "user")
+    @WithACMUser(username = "user")
     public void updateUserDisplayName() throws Exception {
-        setSecurityContext("user");
         mockMvc.perform(MockMvcRequestBuilders.post("/api/update_user")
                 .param("display", "New Display").headers(headers))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -184,12 +178,5 @@ public class UserControllerTest {
     public void getRanksAll() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/ranking"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    private void setSecurityContext(String username) {
-        User user = userService.getUser(username);
-        SecurityContextHolder.getContext()
-                .setAuthentication(
-                        new UsernamePasswordAuthenticationToken(new UserPrincipal(user), "password"));
     }
 }

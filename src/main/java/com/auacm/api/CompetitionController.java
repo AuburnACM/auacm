@@ -5,21 +5,19 @@ import com.auacm.api.model.RegisterUsers;
 import com.auacm.api.validator.CreateCompetitionValidator;
 import com.auacm.database.model.User;
 import com.auacm.database.model.UserPrincipal;
+import com.auacm.exception.ForbiddenException;
 import com.auacm.service.CompetitionService;
 import com.auacm.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
 import java.util.Collections;
 
 @RestController
@@ -41,14 +39,13 @@ public class CompetitionController {
 
     @RequestMapping(path = "/api/competitions/{competitionId}/register", produces = "application/json", method = RequestMethod.POST)
     public @ResponseBody void register(@PathVariable long competitionId, @ModelAttribute RegisterUsers users, HttpServletResponse response) {
-        User user = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         if (users.getUserNames() == null) {
-            competitionService.registerUsers(competitionId, Collections.singletonList(user.getUsername()));
+            competitionService.registerCurrentUser(competitionId);
         } else {
             if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
                 competitionService.registerUsers(competitionId, users.getUserNames());
             } else {
-                response.setStatus(HttpStatus.FORBIDDEN.value());
+                throw new ForbiddenException("You must be an admin to do that!");
             }
         }
     }
