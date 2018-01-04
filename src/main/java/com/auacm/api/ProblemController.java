@@ -1,6 +1,7 @@
 package com.auacm.api;
 
 import com.auacm.api.model.CreateProblem;
+import com.auacm.api.proto.Problem;
 import com.auacm.api.validator.CreateProblemValidator;
 import com.auacm.api.validator.UpdateProblemValidator;
 import com.auacm.service.FileSystemService;
@@ -42,32 +43,34 @@ public class ProblemController {
         binder.addValidators(updateProblemValidator);
     }
 
-    @RequestMapping(value = "/api/problems", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/api/problems", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ADMIN')")
-    public @ResponseBody String createProblem(@Validated @ModelAttribute("newProblem") CreateProblem newProblem) {
-        return jsonUtil.toJson(problemService.getProblemResponse(problemService.createProblem(newProblem)));
+    public @ResponseBody Problem.ProblemWrapper
+    createProblem(@Validated @ModelAttribute("newProblem") CreateProblem newProblem) {
+        return problemService.getProblemResponse(problemService.createProblem(newProblem));
     }
 
-    @RequestMapping(value = "/api/problems/{identifier}", method = {RequestMethod.PUT, RequestMethod.POST}, produces = "application/json")
+    @RequestMapping(value = "/api/problems/{identifier}", method = {RequestMethod.PUT, RequestMethod.POST})
     @PreAuthorize("hasRole('ADMIN')")
-    public @ResponseBody String updateProblem(@PathVariable String identifier, @ModelAttribute("updateProblem") CreateProblem newProblem) {
-        return jsonUtil.toJson(problemService.getProblemResponse(problemService.updateProblem(identifier, newProblem)));
+    public @ResponseBody Problem.ProblemWrapper
+    updateProblem(@PathVariable String identifier, @ModelAttribute("updateProblem") CreateProblem newProblem) {
+        return problemService.getProblemResponse(problemService.updateProblem(identifier, newProblem));
     }
 
-    @RequestMapping(value = "/api/problems/{identifier}", method = {RequestMethod.DELETE}, produces = "application/json")
+    @RequestMapping(value = "/api/problems/{identifier}", method = {RequestMethod.DELETE})
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteProblem(@PathVariable String identifier) {
         problemService.deleteProblem(identifier);
     }
 
-    @RequestMapping(value = "/api/problems", produces = "application/json", method = RequestMethod.GET)
-    public @ResponseBody String getProblems() {
-        return jsonUtil.toJson(problemService.getProblemListResponse(problemService.getAllProblems()));
+    @RequestMapping(value = "/api/problems", method = RequestMethod.GET)
+    public @ResponseBody Problem.ProblemListWrapper getProblems() {
+        return problemService.getProblemListResponse(problemService.getAllProblems());
     }
 
-    @RequestMapping(value = "/api/problems/{identifier}", produces = "application/json", method = RequestMethod.GET)
-    public @ResponseBody String getProblem(@PathVariable String identifier) {
-        return jsonUtil.toJson(problemService.getProblemResponse(problemService.getProblem(identifier)));
+    @RequestMapping(value = "/api/problems/{identifier}", method = RequestMethod.GET)
+    public @ResponseBody Problem.ProblemWrapper getProblem(@PathVariable String identifier) {
+        return problemService.getProblemResponse(problemService.getProblem(identifier));
     }
     //TODO GetProblem and UpdateProblem and CreateProblem
     @RequestMapping(value = "/problems/{shortName}/info.pdf", method = RequestMethod.GET)

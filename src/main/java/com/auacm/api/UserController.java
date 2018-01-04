@@ -10,8 +10,6 @@ import com.auacm.exception.UserException;
 import com.auacm.service.FileSystemService;
 import com.auacm.service.UserService;
 import com.auacm.util.JsonUtil;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,23 +60,21 @@ public class UserController {
         logger = LoggerFactory.getLogger(UserController.class);
     }
 
-    @RequestMapping(value = "/api/login", produces = "application/json", method = {RequestMethod.POST, RequestMethod.GET})
-    public String login(HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/api/login", method = {RequestMethod.POST, RequestMethod.GET})
+    public com.auacm.api.proto.User.MeResponseWrapper login(HttpServletRequest request, HttpServletResponse response) {
         if (response.getStatus() == 200) {
-            JsonObject object = new JsonObject();
-            JsonArray perms = new JsonArray();
             if (SecurityContextHolder.getContext().getAuthentication() == null
                     || SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
                 throw new BadCredentialsException("Invalid username or password!");
             }
-            return jsonUtil.toJson(userService
+            return userService
                     .getMeResponse((UserPrincipal)SecurityContextHolder
-                            .getContext().getAuthentication().getPrincipal()));
+                            .getContext().getAuthentication().getPrincipal());
         }
         throw new BadCredentialsException("Invalid username or password!");
     }
 
-    @RequestMapping(value = "/api/logout", produces = "application/json", method = {RequestMethod.POST, RequestMethod.GET})
+    @RequestMapping(value = "/api/logout", method = {RequestMethod.POST, RequestMethod.GET})
     public void logout(HttpSession session) {
         if (session != null) {
             session.invalidate();
@@ -86,20 +82,21 @@ public class UserController {
         SecurityContextHolder.clearContext();
     }
 
-    @RequestMapping(value = "/api/me", produces = "application/json", method = RequestMethod.GET)
-    public @ResponseBody String me(HttpServletResponse response) {
+    @RequestMapping(value = "/api/me", method = RequestMethod.GET)
+    public @ResponseBody com.auacm.api.proto.User.MeResponseWrapper me() {
         UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return jsonUtil.toJson(userService.getMeResponse(principal));
+        return userService.getMeResponse(principal);
     }
 
-    @RequestMapping(value = "/api/create_user", produces = "application/json", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/create_user", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ADMIN')")
-    public @ResponseBody String createUser(@Validated @ModelAttribute("createUser") CreateUser user) {
+    public @ResponseBody com.auacm.api.proto.User.MeResponseWrapper
+    createUser(@Validated @ModelAttribute("createUser") CreateUser user) {
         User user1 = userService.createUser(user.getDisplay(), user.getUsername(), user.getPassword(), user.isAdmin());
-        return jsonUtil.toJson(userService.getMeResponse(new UserPrincipal(user1)));
+        return userService.getMeResponse(new UserPrincipal(user1));
     }
 
-    @RequestMapping(value = "/api/change_password", produces = "application/json", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/change_password", method = RequestMethod.POST)
     public void changePassword(@Validated @ModelAttribute("updateUser") UpdateUser user) {
         User userInstance = ((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         if (user.getNewPassword() != null) {
@@ -115,17 +112,18 @@ public class UserController {
     }
 
     @RequestMapping(value = "/api/ranking", produces = "application/json", method = RequestMethod.GET)
-    public @ResponseBody String getRanks() {
+    public @ResponseBody
+    com.auacm.api.proto.User.RankResponseWrapper getRanks() {
         return getRanks("all");
     }
 
     @RequestMapping(value = "/api/ranking/{timeFrame}", produces = "application/json", method = RequestMethod.GET)
-    public @ResponseBody String getRanks(@PathVariable String timeFrame) {
+    public @ResponseBody
+    com.auacm.api.proto.User.RankResponseWrapper getRanks(@PathVariable String timeFrame) {
         if (timeFrame == null) {
             timeFrame = "all";
         }
-        return jsonUtil.removeEmptyObjects(jsonUtil.toJson(
-                userService.getRankedResponse(userService.getRanks(timeFrame))));
+        return userService.getRankedResponse(userService.getRanks(timeFrame));
     }
 
     @RequestMapping(value = "/api/profile/image/{username}", method = RequestMethod.GET)

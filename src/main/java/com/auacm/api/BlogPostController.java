@@ -44,7 +44,7 @@ public class BlogPostController {
         binder.addValidators(updateBlogPostValidator);
     }
 
-    @RequestMapping(path = "/api/blog", produces = "application/json", method = RequestMethod.POST)
+    @RequestMapping(path = "/api/blog", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ADMIN')")
     public @ResponseBody Blog.BlogResponseWrapper createBlogPost(@Validated @ModelAttribute CreateBlogPost blogPost) {
         User user = ((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
@@ -52,19 +52,19 @@ public class BlogPostController {
         return blogPostService.getResponseForBlog(post, user);
     }
 
-    @RequestMapping(path = "/api/blog", produces = "application/json", method = RequestMethod.GET)
+    @RequestMapping(path = "/api/blog", method = RequestMethod.GET)
     public @ResponseBody Blog.MultiPostWrapper getBlogPosts() {
         List<BlogPost> blogPosts = blogPostService.getAllBlogPosts();
         return blogPostService.getResponseForBlogs(blogPosts);
     }
 
-    @RequestMapping(path = "/api/blog/{id}", produces = "application/json", method = {RequestMethod.GET})
+    @RequestMapping(path = "/api/blog/{id}", method = {RequestMethod.GET})
     public @ResponseBody Blog.BlogResponseWrapper getBlogPost(@PathVariable long id) {
         BlogPost blogPost = blogPostService.getBlogPostForId(id);
         return blogPostService.getResponseForBlog(blogPost);
     }
 
-    @RequestMapping(path = "/api/blog/{id}", produces = "application/json",
+    @RequestMapping(path = "/api/blog/{id}",
             method = {RequestMethod.PUT, RequestMethod.POST})
     @PreAuthorize("hasRole('ADMIN')")
     public @ResponseBody Blog.BlogResponseWrapper updateBlogPost(
@@ -73,7 +73,7 @@ public class BlogPostController {
         return blogPostService.getResponseForBlog(post);
     }
 
-    @RequestMapping(path = "/api/blog/{id}", produces = "application/json", method = RequestMethod.DELETE)
+    @RequestMapping(path = "/api/blog/{id}", method = RequestMethod.DELETE)
     @PreAuthorize("hasRole('ADMIN')")
     public Blog.BlogResponseWrapper deleteBlogPost(@PathVariable long id) {
         return blogPostService.getResponseForBlog(blogPostService.deleteBlogPost(id));
