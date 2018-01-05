@@ -57,9 +57,20 @@ public class UserControllerTest {
 
     @Test
     public void login() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/login")
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/api/login")
                 .param("username", "admin").param("password", "password"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse().getContentAsString();
+        JsonObject object = new JsonParser().parse(response).getAsJsonObject().get("data").getAsJsonObject();
+        Assert.assertNotNull(object);
+        Assert.assertEquals(true, object.has("username"));
+        Assert.assertEquals(true, object.has("displayName"));
+        Assert.assertEquals(true, object.has("isAdmin"));
+        Assert.assertEquals(true, object.has("permissions"));
+        Assert.assertEquals("admin", object.get("username").getAsString());
+        Assert.assertEquals("Admin", object.get("displayName").getAsString());
+        Assert.assertEquals(true, object.get("isAdmin").getAsBoolean());
+        Assert.assertEquals(1, object.get("permissions").getAsJsonArray().size());
+        Assert.assertEquals("ROLE_ADMIN", object.get("permissions").getAsJsonArray().get(0).getAsString());
     }
 
     @Test
