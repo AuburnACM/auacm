@@ -6,7 +6,7 @@ lint: nglint pylint
 
 nglint:
 	echo "Linting Angular..."
-	cd auacm/angular/ && ng lint --type-check
+	cd src/main/angular/ && ng lint --type-check
 
 pylint:
 	echo "Linting Python"
@@ -19,10 +19,10 @@ prod: build_prod clean proto mvn
 	echo "Build complete"
 
 build_nonprod:
-	cd auacm/angular/ && ng build
+	cd src/main/angular/ && ng build
 
 build_prod:
-	cd auacm/angular/ && ng build --prod
+	cd src/main/angular/ && ng build --prod
 
 mvn:
 	mvn clean package -DskipTests=true
@@ -37,7 +37,7 @@ proto:
 	protoc --java_out=src/main/java/ src/main/resources/proto/User.proto
 
 clean:
-	cp auacm/angular/dist/index.html auacm/app/templates/index.html
+	cp src/main/angular/dist/index.html auacm/app/templates/index.html
 	rm -rf src/main/resources/public/
 	rm -rf auacm/app/static/assets/
 	rm -f auacm/app/static/*.bundle.js
@@ -45,4 +45,4 @@ clean:
 	rm -f auacm/app/static/*.html
 	rm -f auacm/app/static/*.bundle.js.map
 	mkdir src/main/resources/public/
-	cp -r auacm/angular/dist/* src/main/resources/public/
+	cp -r src/main/angular/dist/* src/main/resources/public/

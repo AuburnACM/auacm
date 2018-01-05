@@ -324,7 +324,12 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Transactional
     public List<CompetitionUser> updateCompetitionTeams(List<CompetitionUser> teams) {
-        return competitionUserDao.save(teams);
+        Iterable<CompetitionUser> users = competitionUserDao.save(teams);
+        ArrayList<CompetitionUser> finalUsers = new ArrayList<>();
+        for (CompetitionUser temp : users) {
+            finalUsers.add(temp);
+        }
+        return finalUsers;
     }
 
     @Transactional

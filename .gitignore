@@ -15,21 +15,21 @@ target/
 src/main/resources/public/
 
 # Angular dependencies
-auacm/angular/.bin/
-auacm/angular/src/assets/showdown.min.js
-auacm/angular/node_modules
-auacm/angular/dist
-auacm/angular/tmp
-auacm/app/static/assets/
-auacm/app/static/favicon.ico
-auacm/app/static/index.html
-auacm/app/static/*.bundle.js
-auacm/app/static/*.bundle.js.map
-auacm/app/static/*.bundle.css
+src/main/angular/.bin/
+src/main/angular/src/assets/showdown.min.js
+src/main/angular/node_modules
+src/main/angular/dist
+src/main/angular/tmp
+src/main/app/static/assets/
+src/main/app/static/favicon.ico
+src/main/app/static/index.html
+src/main/app/static/*.bundle.js
+src/main/app/static/*.bundle.js.map
+src/main/app/static/*.bundle.css
 auacm/app/static/*.jpg
 auacm/app/templates/index.html
 .classpath
 .project
 .settings/
 data/
-auacm/angular/package-lock.json
+src/main/angular/package-lock.json

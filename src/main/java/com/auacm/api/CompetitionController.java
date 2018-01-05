@@ -11,6 +11,9 @@ import com.auacm.exception.ForbiddenException;
 import com.auacm.service.CompetitionService;
 import com.auacm.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -108,5 +111,11 @@ public class CompetitionController {
     @PreAuthorize("hasRole('ADMIN')")
     public @ResponseBody CompetitionOuterClass.TeamList updateCompetitionTeams(@PathVariable long cid, @RequestBody CompetitionTeams competitionTeams) {
         return competitionService.getTeamList(competitionService.updateCompetitionTeams(cid, competitionTeams));
+    }
+
+    @MessageMapping("/competitions/{cid}")
+    @SendTo("/topic/competitions/{cid}")
+    public String send(@DestinationVariable long cid,  String data) throws Exception {
+        return data;
     }
 }
