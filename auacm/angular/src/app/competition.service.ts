@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { WebsocketService } from './websocket.service';
 
-import { CompetitionProblem, Competition, CompetitionTeam, TeamProblemData } from './models/competition';
+import { CompetitionProblem, Competition, CompetitionTeam, TeamProblemData, CompetitionTeamWrapper } from './models/competition';
 import { DataWrapper } from './models/datawrapper';
 import { RecentSubmission } from './models/submission';
 import { Problem } from './models/problem';
@@ -258,36 +258,21 @@ export class CompetitionService {
 
   getCompetitionTeams(cid: number): Promise<Map<string, SimpleUser[]>> {
     return new Promise((resolve, reject) => {
-      this._http.get(`${environment.apiUrl}/competitions/${cid}/teams`).subscribe((res: Response) => {
-        if (res.status === 200) {
-          const data = res.json().data;
-          const map = new Map<string, SimpleUser[]>();
-          const teams = Object.keys(data);
-          for (let i = 0; i < teams.length; i++) {
-            map[teams[i]] = data[teams[i]];
-          }
-          resolve(map);
-        } else {
-          resolve(new Map<string, SimpleUser[]>());
-        }
+      this._httpClient.get<CompetitionTeamWrapper>(`${environment.apiUrl}/competitions/${cid}/teams`, { withCredentials: true }).subscribe(data => {
+        resolve(data.data);
       }, (err: Response) => {
-        resolve(new Map<string, SimpleUser[]>());
+        reject(err);
       });
     });
   }
 
-  updateCompetitionTeams(cid: number, team: Map<string, string[]>): Promise<boolean> {
+  updateCompetitionTeams(cid: number, team: Map<string, SimpleUser[]>): Promise<any> {
+    console.log(team);
     return new Promise((resolve, reject) => {
-      const formData = new FormData();
-      formData.append('teams', JSON.stringify(team));
-      this._http.put(`${environment.apiUrl}/competitions/${cid}/teams`, formData).subscribe((res: Response) => {
-        if (res.status === 200) {
-          resolve(true);
-        } else {
-          resolve(false);
-        }
+      this._httpClient.post(`${environment.apiUrl}/competitions/${cid}/teams`, {teams: team}, { withCredentials: true }).subscribe(data => {
+        resolve();
       }, (err: Response) => {
-        resolve(false);
+        reject(err);
       });
     });
   }

@@ -1,4 +1,5 @@
 import { BlogAuthor } from './blog';
+import { SimpleUser } from 'app/models/user';
 
 export class Competition {
   public cid: number;
@@ -156,6 +157,24 @@ export class CompetitionTeam {
     if (object['problemData'] !== undefined) {
       for (const pid in object['problemData']) {
         this.problemData[pid] = new TeamProblemData().deserialize(object['problemData'][pid]);
+      }
+    }
+    return this;
+  }
+}
+
+export class CompetitionTeamWrapper {
+  public data: Map<string, SimpleUser[]>;
+
+  constructor() {
+    this.data = new Map<string, SimpleUser[]>();
+  }
+
+  public deserialize(object: any): CompetitionTeamWrapper {
+    for (const team in object) {
+      this.data[team] = [];
+      for (const user of object[team]) {
+        this.data[team].push(new SimpleUser().deserialize(user));
       }
     }
     return this;

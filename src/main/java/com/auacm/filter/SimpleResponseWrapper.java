@@ -5,10 +5,15 @@ import org.apache.catalina.ssi.ByteArrayServletOutputStream;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 public class SimpleResponseWrapper extends HttpServletResponseWrapper {
     private ByteArrayServletOutputStream outputStream;
+    private ByteArrayOutputStream byteArrayOutputStream;
+    private PrintWriter printWriter;
     private HashMap<String, List<String>> headers;
 
     /**
@@ -21,6 +26,13 @@ public class SimpleResponseWrapper extends HttpServletResponseWrapper {
         super(response);
         this.outputStream = new ByteArrayServletOutputStream();
         this.headers = new HashMap<>();
+        this.byteArrayOutputStream = new ByteArrayOutputStream();
+        this.printWriter = new PrintWriter(byteArrayOutputStream);
+    }
+
+    @Override
+    public PrintWriter getWriter() throws IOException {
+        return printWriter;
     }
 
     @Override
@@ -71,5 +83,9 @@ public class SimpleResponseWrapper extends HttpServletResponseWrapper {
 
     public byte[] getOutputArray() {
         return outputStream.toByteArray();
+    }
+
+    public byte[] getPrintWriterData() {
+        return byteArrayOutputStream.toByteArray();
     }
 }

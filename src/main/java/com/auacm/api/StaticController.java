@@ -9,6 +9,6 @@ public class StaticController {
     @RequestMapping(value = {"/problems", "/problems/**", "/blog", "/blog/**",
             "/rankings", "/competitions", "/competitions/**", "/problem/**", "/judge"}, method = RequestMethod.GET)
     public String forward() {
-        return "/index.html";
+        return "forward:index.html";
     }
 }

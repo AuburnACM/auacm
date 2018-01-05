@@ -119,34 +119,23 @@ export class EditTeamsComponent implements OnInit {
   }
 
   save() {
-    const map = new Map<string, string[]>();
-
-    for (const teamName in this.teams) {
-      if (this.teams[teamName].length > 0) {
-        map[teamName] = [];
-        for (const user1 of this.teams[teamName]) {
-          map[teamName].push(user1.username);
-        }
-      }
-    }
-
-    for (const user of this.individuals) {
-      map[user.display] = [];
-      map[user.display].push(user.username);
-    }
-
     if (this.competitionId > 0) {
+      const map = new Map<string, SimpleUser[]>();
+      for (const teamName in this.teams) {
+        map[teamName] = this.teams[teamName];
+      }
+      for (const individual of this.individuals) {
+        map[individual.display] = [individual];
+      }
       this._competitionService.updateCompetitionTeams(this.competitionId, map)
-          .then(success => {
-        if (success) {
-          this.responseSuccess = true;
-          this.responseFailed = false;
-          this.responseMessage = 'Successfully updated the users!';
-        } else {
-          this.responseSuccess = false;
-          this.responseFailed = true;
-          this.responseMessage = 'Failed to update the users!';
-        }
+          .then(() => {
+        this.responseSuccess = true;
+        this.responseFailed = false;
+        this.responseMessage = 'Successfully updated the users!';
+      }).catch((err: Response) => {
+        this.responseSuccess = false;
+        this.responseFailed = true;
+        this.responseMessage = 'Failed to update the users!';
       });
     }
   }

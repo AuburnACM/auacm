@@ -53,6 +53,16 @@ export class SimpleUser {
     this.display = '';
     this.username = '';
   }
+
+  public deserialize(object: any): SimpleUser {
+    if (object['display'] !== undefined) {
+      this.display = object['display'];
+    }
+    if (object['username'] !== undefined) {
+      this.username = object['username'];
+    }
+    return this;
+  }
 }
 
 export class WebsocketRegisteredUser {

@@ -33,10 +33,10 @@ public class Auacm {
         FileUtils.copyFolderFromJar("BOOT-INF/classes/data/", "data", true);
     }
 
-    @Bean
-    ProtobufHttpMessageConverter protobufHttpMessageConverter() {
-        return new ProtobufHttpMessageConverter();
-    }
+//    @Bean
+//    ProtobufHttpMessageConverter protobufHttpMessageConverter() {
+//        return new ProtobufHttpMessageConverter();
+//    }
 
     @Bean
     Gson gson() {
