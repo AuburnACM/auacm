@@ -1,5 +1,6 @@
 package com.auacm.api;
 
+import com.auacm.api.model.CompetitionTeams;
 import com.auacm.api.model.CreateCompetition;
 import com.auacm.api.model.RegisterUsers;
 import com.auacm.api.proto.CompetitionOuterClass;
@@ -101,5 +102,11 @@ public class CompetitionController {
     @PreAuthorize("hasRole('ADMIN')")
     public @ResponseBody CompetitionOuterClass.TeamList getCompetitionTeams(@PathVariable long cid) {
         return competitionService.getTeamList(competitionService.getCompetitionById(cid));
+    }
+
+    @RequestMapping(path = "/api/competitions/{cid}/teams", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ADMIN')")
+    public @ResponseBody CompetitionOuterClass.TeamList updateCompetitionTeams(@PathVariable long cid, @RequestBody CompetitionTeams competitionTeams) {
+        return competitionService.getTeamList(competitionService.updateCompetitionTeams(cid, competitionTeams));
     }
 }

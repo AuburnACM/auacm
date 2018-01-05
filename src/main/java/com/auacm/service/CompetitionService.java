@@ -1,5 +1,6 @@
 package com.auacm.service;
 
+import com.auacm.api.model.CompetitionTeams;
 import com.auacm.api.model.CreateCompetition;
 import com.auacm.api.proto.CompetitionOuterClass;
 import com.auacm.database.model.Competition;
@@ -34,6 +35,8 @@ public interface CompetitionService {
     Competition updateCompetition(long competitionId, CreateCompetition newCompetition);
 
     void deleteCompetition(long competitionId);
+
+    Competition updateCompetitionTeams(long competitionId, CompetitionTeams competitionTeams);
 
     Scoreboard getScoreboard(Competition competition, Map<Long, Problem> problems);
 

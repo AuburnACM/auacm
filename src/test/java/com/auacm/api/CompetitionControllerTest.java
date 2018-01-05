@@ -7,6 +7,7 @@ import com.auacm.database.model.Competition;
 import com.auacm.database.model.CompetitionUser;
 import com.auacm.exception.CompetitionNotFoundException;
 import com.auacm.model.MockCompetitionBuilder;
+import com.auacm.model.MockCompetitionTeamBuilder;
 import com.auacm.model.MockProblemBuilder;
 import com.auacm.request.MockRequest;
 import com.auacm.service.*;
@@ -502,6 +503,77 @@ public class CompetitionControllerTest {
         competitionService.createCompetition(new MockCompetitionBuilder().addUser("admin").build());
         mockMvc.perform(MockMvcRequestBuilders.get("/api/competitions/1/teams"))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    @WithACMUser(username = "admin")
+    public void updateCompetitionTeamsRenameTeam() throws Exception {
+        problemService.createProblem(new MockProblemBuilder().build());
+        competitionService.createCompetition(new MockCompetitionBuilder().addUser("admin").build());
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/api/competitions/1/teams")
+                .content("{\"teams\": {\"New Team Name\": [{\"display\": \"Admin\", \"username\": \"admin\"}]}}")
+                .header("Content-Type", "application/json"))
+                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse().getContentAsString();
+        JsonObject object = new JsonParser().parse(response).getAsJsonObject().get("data").getAsJsonObject();
+        Assert.assertNotNull(object);
+        Assert.assertEquals(true, object.has("New Team Name"));
+        Assert.assertEquals(1, object.get("New Team Name").getAsJsonArray().size());
+    }
+
+    @Test
+    @WithACMUser(username = "admin")
+    public void updateCompetitionTeamsOneTeam() throws Exception {
+        problemService.createProblem(new MockProblemBuilder().build());
+        competitionService.createCompetition(new MockCompetitionBuilder().addUser("admin").addUser("user").build());
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/api/competitions/1/teams")
+                .content("{\"teams\": {\"New Team Name\": [{\"display\": \"Admin\", \"username\": \"admin\"}, {\"display\": \"User\", \"username\": \"user\"}]}}")
+                .header("Content-Type", "application/json"))
+                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse().getContentAsString();
+        JsonObject object = new JsonParser().parse(response).getAsJsonObject().get("data").getAsJsonObject();
+        Assert.assertNotNull(object);
+        Assert.assertEquals(true, object.has("New Team Name"));
+        Assert.assertEquals(2, object.get("New Team Name").getAsJsonArray().size());
+    }
+
+    @Test
+    @WithACMUser(username = "admin")
+    public void updateCompetitionTeamsRemoveUser() throws Exception {
+        problemService.createProblem(new MockProblemBuilder().build());
+        competitionService.createCompetition(new MockCompetitionBuilder().addUser("admin").addUser("user").build());
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/api/competitions/1/teams")
+                .content("{\"teams\": {\"New Team Name\": [{\"display\": \"Admin\", \"username\": \"admin\"}]}}")
+                .header("Content-Type", "application/json"))
+                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse().getContentAsString();
+        JsonObject object = new JsonParser().parse(response).getAsJsonObject().get("data").getAsJsonObject();
+        Assert.assertNotNull(object);
+        Assert.assertEquals(true, object.has("New Team Name"));
+        Assert.assertEquals(1, object.size());
+        Assert.assertEquals(1, object.get("New Team Name").getAsJsonArray().size());
+    }
+
+    @Test
+    @WithACMUser(username = "admin")
+    public void updateCompetitionTeamsSeparateTeams() throws Exception {
+        problemService.createProblem(new MockProblemBuilder().build());
+        competitionService.createCompetition(new MockCompetitionBuilder().addUser("admin").addUser("user").build());
+        Competition competition = competitionService.updateCompetitionTeams(1, new MockCompetitionTeamBuilder()
+                .addUser("admin", "Admin", "One Team")
+                .addUser("user", "User", "One Team").build());
+        for (CompetitionUser user : competition.getCompetitionUsers()) {
+            Assert.assertEquals("One Team", user.getTeam());
+        }
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/api/competitions/1/teams")
+                .content("{\"teams\": {\"Team One\": [{\"display\": \"Admin\", \"username\": \"admin\"}], " +
+                        "\"Team Two\": [{\"display\": \"User\", \"username\": \"user\"}]}}")
+                .header("Content-Type", "application/json"))
+                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse().getContentAsString();
+        JsonObject object = new JsonParser().parse(response).getAsJsonObject().get("data").getAsJsonObject();
+        Assert.assertNotNull(object);
+        Assert.assertEquals(true, object.has("Team One"));
+        Assert.assertEquals(true, object.has("Team Two"));
+        Assert.assertEquals(2, object.size());
+        Assert.assertEquals(1, object.get("Team One").getAsJsonArray().size());
+        Assert.assertEquals(1, object.get("Team Two").getAsJsonArray().size());
     }
 
     @After

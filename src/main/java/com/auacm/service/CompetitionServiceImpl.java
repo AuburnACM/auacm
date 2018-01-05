@@ -1,6 +1,8 @@
 package com.auacm.service;
 
+import com.auacm.api.model.CompetitionTeams;
 import com.auacm.api.model.CreateCompetition;
+import com.auacm.api.model.SimpleTeam;
 import com.auacm.api.proto.CompetitionOuterClass;
 import com.auacm.database.dao.CompetitionDao;
 import com.auacm.database.dao.CompetitionProblemDao;
@@ -269,6 +271,65 @@ public class CompetitionServiceImpl implements CompetitionService {
         competitionProblemDao.deleteAllByCid(competitionId);
         competitionUserDao.deleteAllByCid(competitionId);
         competitionDao.delete(competitionId);
+    }
+
+    @Override
+    public Competition updateCompetitionTeams(long competitionId, CompetitionTeams competitionTeams) {
+        Competition competition = getCompetitionById(competitionId);
+        ArrayList<CompetitionUser> toUpdate = new ArrayList<>();
+        ArrayList<CompetitionUser> toDelete = new ArrayList<>();
+        // Lets iterate through existing users and update them.
+        // We will also remove the ones we find from the competitionTeams object
+        // That way we can iterate over the ones we have yet to do and add them to the toUpdate object
+        for (CompetitionUser user : competition.getCompetitionUsers()) {
+            boolean found = false;
+            for (String teams : new ArrayList<>(competitionTeams.getTeams().keySet())) {
+                List<SimpleTeam> teamList = new ArrayList<>(competitionTeams.getTeams().get(teams));
+                for (SimpleTeam team : teamList) {
+                    if (team.getUsername().equals(user.getUsername())) {
+                        if (!user.getTeam().equals(teams)) {
+                            user.setTeam(teams);
+                            toUpdate.add(user);
+                            found = true;
+                            competitionTeams.getTeams().get(teams).remove(team);
+                            if (competitionTeams.getTeams().get(teams).size() == 0) {
+                                competitionTeams.getTeams().remove(teams);
+                            }
+                            break;
+                        }
+                    }
+                }
+                if (found) {
+                    break;
+                }
+            }
+            if (!found) {
+                toDelete.add(user);
+            }
+        }
+        for (String teamName : competitionTeams.getTeams().keySet()) {
+            List<SimpleTeam> teamList = competitionTeams.getTeams().get(teamName);
+            for (SimpleTeam team : teamList) {
+                CompetitionUser newUser = new CompetitionUser();
+                newUser.setTeam(teamName);
+                newUser.setUsername(team.getUsername());
+                newUser.setCid(competitionId);
+                toUpdate.add(newUser);
+            }
+        }
+        deleteCompetitionTeams(toDelete);
+        competition.setCompetitionUsers(updateCompetitionTeams(updateCompetitionTeams(toUpdate)));
+        return competition;
+    }
+
+    @Transactional
+    public List<CompetitionUser> updateCompetitionTeams(List<CompetitionUser> teams) {
+        return competitionUserDao.save(teams);
+    }
+
+    @Transactional
+    public void deleteCompetitionTeams(List<CompetitionUser> teams) {
+        competitionUserDao.delete(teams);
     }
 
     @Override
