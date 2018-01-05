@@ -50,3 +50,17 @@ message CompetitionList {
 message CompetitionListWrapper {
     CompetitionList data = 1;
 }
+
+message SimpleTeam {
+    string display = 1;
+    string username = 2;
+}
+
+message TeamList {
+    message TeamListWrapper {
+        repeated SimpleTeam list = 1;
+    }
+    map<string, TeamListWrapper> data = 1;
+}
+
+

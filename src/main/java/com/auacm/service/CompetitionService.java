@@ -40,4 +40,6 @@ public interface CompetitionService {
     CompetitionOuterClass.SingleCompetitionWrapper getCompetitionResponse(Competition competition);
 
     CompetitionOuterClass.CompetitionListWrapper getCompetitionListResponse(Map<String, List<Competition>> competitions);
+
+    CompetitionOuterClass.TeamList getTeamList(Competition competition);
 }

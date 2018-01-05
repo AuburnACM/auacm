@@ -3,6 +3,7 @@ package com.auacm.util;
 import com.google.gson.*;
 import com.google.protobuf.Message;
 import com.googlecode.protobuf.format.JsonFormat;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -60,9 +61,9 @@ public class JsonUtil {
 
     public String toJson(Message message) {
         JsonObject object = new JsonParser().parse(format.printToString(message)).getAsJsonObject();
-        object = formatMaps(object);
-        removeEmptyObjects(object);
-        return object.toString();
+        JsonObject newObject = formatMaps(object);
+        removeEmptyObjects(newObject);
+        return newObject.toString();
     }
 
     public JsonObject formatMaps(JsonObject object) {
@@ -70,7 +71,20 @@ public class JsonUtil {
         for (Map.Entry<String, JsonElement> temp : object.entrySet()) {
             if (temp.getValue().isJsonObject()) {
                 JsonObject current = temp.getValue().getAsJsonObject();
-                newObject.add(temp.getKey(), formatMaps(current));
+                if (current.size() == 1 && current.has("list") && current.get("list").isJsonArray()) {
+                    JsonArray replaceArray = new JsonArray();
+                    JsonArray currentArray = current.get("list").getAsJsonArray();
+                    for (JsonElement e : currentArray) {
+                        if (e.isJsonObject()) {
+                            replaceArray.add(formatMaps(e.getAsJsonObject()));
+                        } else {
+                            replaceArray.add(e);
+                        }
+                    }
+                    newObject.add(temp.getKey(), replaceArray);
+                } else {
+                    newObject.add(temp.getKey(), formatMaps(current));
+                }
             } else if (temp.getValue().isJsonArray()) {
                 JsonArray array = temp.getValue().getAsJsonArray();
                 JsonArray replaceArray = new JsonArray();
@@ -82,7 +96,7 @@ public class JsonUtil {
                             JsonObject current = e.getAsJsonObject();
                             replace.add(current.get("key").getAsString(), current.get("value"));
                         }
-                        newObject.add(temp.getKey(), replace);
+                        newObject.add(temp.getKey(), formatMaps(replace));
                     } else {
                         for (JsonElement e : array) {
                             JsonObject current = e.getAsJsonObject();

@@ -97,8 +97,9 @@ public class CompetitionController {
         return competitionService.getCompetitionResponse(competitionService.getCompetitionById(cid));
     }
 
-    @RequestMapping(path = "/api/competitions/{cid}/teams", produces = "application/json", method = RequestMethod.GET)
-    public @ResponseBody String getCompetitionTeams(@PathVariable long cid) {
-        return jsonUtil.toJson(competitionService.getCompetitionResponse(competitionService.getCompetitionById(cid)));
+    @RequestMapping(path = "/api/competitions/{cid}/teams", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ADMIN')")
+    public @ResponseBody CompetitionOuterClass.TeamList getCompetitionTeams(@PathVariable long cid) {
+        return competitionService.getTeamList(competitionService.getCompetitionById(cid));
     }
 }

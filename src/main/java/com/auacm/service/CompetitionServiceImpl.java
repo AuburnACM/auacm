@@ -376,10 +376,38 @@ public class CompetitionServiceImpl implements CompetitionService {
         return CompetitionOuterClass.CompetitionListWrapper.newBuilder().setData(builder).build();
     }
 
+    @Override
+    public CompetitionOuterClass.TeamList getTeamList(Competition competition) {
+        HashMap<String, ScoreboardTeam> teams = getTeamMap(competition);
+        CompetitionOuterClass.TeamList.Builder builder = CompetitionOuterClass.TeamList.newBuilder();
+        for (Map.Entry<String, ScoreboardTeam> team : teams.entrySet()) {
+            CompetitionOuterClass.TeamList.TeamListWrapper.Builder tempBuilder = CompetitionOuterClass.TeamList.TeamListWrapper.newBuilder();
+            for (User user : team.getValue().getUsers()) {
+                tempBuilder.addList(CompetitionOuterClass.SimpleTeam.newBuilder().setDisplay(user.getDisplay())
+                        .setUsername(user.getUsername()));
+            }
+            builder.putData(team.getKey(), tempBuilder.build());
+        }
+        return builder.build();
+    }
+
     private CompetitionOuterClass.Competition.Builder getCompetition(Competition competition) {
         return CompetitionOuterClass.Competition.newBuilder().setCid(competition.getCid())
                 .setClosed(competition.isClosed()).setLength(competition.getStop() - competition.getStart())
                 .setStartTime(competition.getStart()).setRegistered(isCurrentUserRegistered(competition))
                 .setName(competition.getName());
+    }
+
+    private HashMap<String, ScoreboardTeam> getTeamMap(Competition competition) {
+        HashMap<String, ScoreboardTeam> teamMap = new HashMap<>();
+        for (CompetitionUser competitionUser : competition.getCompetitionUsers()) {
+            if (!teamMap.containsKey(competitionUser.getTeam())) {
+                ScoreboardTeam team = new ScoreboardTeam(competitionUser.getTeam());
+                teamMap.put(competitionUser.getTeam(), team);
+            }
+            User user = userService.getUser(competitionUser.getUsername());
+            teamMap.get(competitionUser.getTeam()).addUser(user);
+        }
+        return teamMap;
     }
 }

@@ -7479,6 +7479,2112 @@ public final class CompetitionOuterClass {
 
   }
 
+  public interface SimpleTeamOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.auacm.api.proto.SimpleTeam)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string display = 1;</code>
+     */
+    java.lang.String getDisplay();
+    /**
+     * <code>string display = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getDisplayBytes();
+
+    /**
+     * <code>string username = 2;</code>
+     */
+    java.lang.String getUsername();
+    /**
+     * <code>string username = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getUsernameBytes();
+  }
+  /**
+   * Protobuf type {@code com.auacm.api.proto.SimpleTeam}
+   */
+  public  static final class SimpleTeam extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.auacm.api.proto.SimpleTeam)
+      SimpleTeamOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use SimpleTeam.newBuilder() to construct.
+    private SimpleTeam(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private SimpleTeam() {
+      display_ = "";
+      username_ = "";
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private SimpleTeam(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              display_ = s;
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              username_ = s;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.auacm.api.proto.CompetitionOuterClass.internal_static_com_auacm_api_proto_SimpleTeam_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.auacm.api.proto.CompetitionOuterClass.internal_static_com_auacm_api_proto_SimpleTeam_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.auacm.api.proto.CompetitionOuterClass.SimpleTeam.class, com.auacm.api.proto.CompetitionOuterClass.SimpleTeam.Builder.class);
+    }
+
+    public static final int DISPLAY_FIELD_NUMBER = 1;
+    private volatile java.lang.Object display_;
+    /**
+     * <code>string display = 1;</code>
+     */
+    public java.lang.String getDisplay() {
+      java.lang.Object ref = display_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        display_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string display = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDisplayBytes() {
+      java.lang.Object ref = display_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        display_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int USERNAME_FIELD_NUMBER = 2;
+    private volatile java.lang.Object username_;
+    /**
+     * <code>string username = 2;</code>
+     */
+    public java.lang.String getUsername() {
+      java.lang.Object ref = username_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        username_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string username = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getUsernameBytes() {
+      java.lang.Object ref = username_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        username_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!getDisplayBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, display_);
+      }
+      if (!getUsernameBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, username_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!getDisplayBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, display_);
+      }
+      if (!getUsernameBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, username_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.auacm.api.proto.CompetitionOuterClass.SimpleTeam)) {
+        return super.equals(obj);
+      }
+      com.auacm.api.proto.CompetitionOuterClass.SimpleTeam other = (com.auacm.api.proto.CompetitionOuterClass.SimpleTeam) obj;
+
+      boolean result = true;
+      result = result && getDisplay()
+          .equals(other.getDisplay());
+      result = result && getUsername()
+          .equals(other.getUsername());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + DISPLAY_FIELD_NUMBER;
+      hash = (53 * hash) + getDisplay().hashCode();
+      hash = (37 * hash) + USERNAME_FIELD_NUMBER;
+      hash = (53 * hash) + getUsername().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.auacm.api.proto.CompetitionOuterClass.SimpleTeam parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.auacm.api.proto.CompetitionOuterClass.SimpleTeam parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.auacm.api.proto.CompetitionOuterClass.SimpleTeam parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.auacm.api.proto.CompetitionOuterClass.SimpleTeam parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.auacm.api.proto.CompetitionOuterClass.SimpleTeam parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.auacm.api.proto.CompetitionOuterClass.SimpleTeam parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.auacm.api.proto.CompetitionOuterClass.SimpleTeam parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.auacm.api.proto.CompetitionOuterClass.SimpleTeam parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.auacm.api.proto.CompetitionOuterClass.SimpleTeam parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.auacm.api.proto.CompetitionOuterClass.SimpleTeam parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.auacm.api.proto.CompetitionOuterClass.SimpleTeam parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.auacm.api.proto.CompetitionOuterClass.SimpleTeam parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.auacm.api.proto.CompetitionOuterClass.SimpleTeam prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.auacm.api.proto.SimpleTeam}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.auacm.api.proto.SimpleTeam)
+        com.auacm.api.proto.CompetitionOuterClass.SimpleTeamOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.auacm.api.proto.CompetitionOuterClass.internal_static_com_auacm_api_proto_SimpleTeam_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.auacm.api.proto.CompetitionOuterClass.internal_static_com_auacm_api_proto_SimpleTeam_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.auacm.api.proto.CompetitionOuterClass.SimpleTeam.class, com.auacm.api.proto.CompetitionOuterClass.SimpleTeam.Builder.class);
+      }
+
+      // Construct using com.auacm.api.proto.CompetitionOuterClass.SimpleTeam.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        display_ = "";
+
+        username_ = "";
+
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.auacm.api.proto.CompetitionOuterClass.internal_static_com_auacm_api_proto_SimpleTeam_descriptor;
+      }
+
+      public com.auacm.api.proto.CompetitionOuterClass.SimpleTeam getDefaultInstanceForType() {
+        return com.auacm.api.proto.CompetitionOuterClass.SimpleTeam.getDefaultInstance();
+      }
+
+      public com.auacm.api.proto.CompetitionOuterClass.SimpleTeam build() {
+        com.auacm.api.proto.CompetitionOuterClass.SimpleTeam result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.auacm.api.proto.CompetitionOuterClass.SimpleTeam buildPartial() {
+        com.auacm.api.proto.CompetitionOuterClass.SimpleTeam result = new com.auacm.api.proto.CompetitionOuterClass.SimpleTeam(this);
+        result.display_ = display_;
+        result.username_ = username_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.auacm.api.proto.CompetitionOuterClass.SimpleTeam) {
+          return mergeFrom((com.auacm.api.proto.CompetitionOuterClass.SimpleTeam)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.auacm.api.proto.CompetitionOuterClass.SimpleTeam other) {
+        if (other == com.auacm.api.proto.CompetitionOuterClass.SimpleTeam.getDefaultInstance()) return this;
+        if (!other.getDisplay().isEmpty()) {
+          display_ = other.display_;
+          onChanged();
+        }
+        if (!other.getUsername().isEmpty()) {
+          username_ = other.username_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.auacm.api.proto.CompetitionOuterClass.SimpleTeam parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.auacm.api.proto.CompetitionOuterClass.SimpleTeam) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private java.lang.Object display_ = "";
+      /**
+       * <code>string display = 1;</code>
+       */
+      public java.lang.String getDisplay() {
+        java.lang.Object ref = display_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          display_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string display = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDisplayBytes() {
+        java.lang.Object ref = display_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          display_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string display = 1;</code>
+       */
+      public Builder setDisplay(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        display_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string display = 1;</code>
+       */
+      public Builder clearDisplay() {
+        
+        display_ = getDefaultInstance().getDisplay();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string display = 1;</code>
+       */
+      public Builder setDisplayBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        display_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object username_ = "";
+      /**
+       * <code>string username = 2;</code>
+       */
+      public java.lang.String getUsername() {
+        java.lang.Object ref = username_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          username_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string username = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getUsernameBytes() {
+        java.lang.Object ref = username_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          username_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string username = 2;</code>
+       */
+      public Builder setUsername(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        username_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string username = 2;</code>
+       */
+      public Builder clearUsername() {
+        
+        username_ = getDefaultInstance().getUsername();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string username = 2;</code>
+       */
+      public Builder setUsernameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        username_ = value;
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.auacm.api.proto.SimpleTeam)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.auacm.api.proto.SimpleTeam)
+    private static final com.auacm.api.proto.CompetitionOuterClass.SimpleTeam DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.auacm.api.proto.CompetitionOuterClass.SimpleTeam();
+    }
+
+    public static com.auacm.api.proto.CompetitionOuterClass.SimpleTeam getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<SimpleTeam>
+        PARSER = new com.google.protobuf.AbstractParser<SimpleTeam>() {
+      public SimpleTeam parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new SimpleTeam(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<SimpleTeam> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<SimpleTeam> getParserForType() {
+      return PARSER;
+    }
+
+    public com.auacm.api.proto.CompetitionOuterClass.SimpleTeam getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface TeamListOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.auacm.api.proto.TeamList)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>map&lt;string, .com.auacm.api.proto.TeamList.TeamListWrapper&gt; data = 1;</code>
+     */
+    int getDataCount();
+    /**
+     * <code>map&lt;string, .com.auacm.api.proto.TeamList.TeamListWrapper&gt; data = 1;</code>
+     */
+    boolean containsData(
+        java.lang.String key);
+    /**
+     * Use {@link #getDataMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper>
+    getData();
+    /**
+     * <code>map&lt;string, .com.auacm.api.proto.TeamList.TeamListWrapper&gt; data = 1;</code>
+     */
+    java.util.Map<java.lang.String, com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper>
+    getDataMap();
+    /**
+     * <code>map&lt;string, .com.auacm.api.proto.TeamList.TeamListWrapper&gt; data = 1;</code>
+     */
+
+    com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper getDataOrDefault(
+        java.lang.String key,
+        com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper defaultValue);
+    /**
+     * <code>map&lt;string, .com.auacm.api.proto.TeamList.TeamListWrapper&gt; data = 1;</code>
+     */
+
+    com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper getDataOrThrow(
+        java.lang.String key);
+  }
+  /**
+   * Protobuf type {@code com.auacm.api.proto.TeamList}
+   */
+  public  static final class TeamList extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.auacm.api.proto.TeamList)
+      TeamListOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use TeamList.newBuilder() to construct.
+    private TeamList(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private TeamList() {
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private TeamList(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                data_ = com.google.protobuf.MapField.newMapField(
+                    DataDefaultEntryHolder.defaultEntry);
+                mutable_bitField0_ |= 0x00000001;
+              }
+              com.google.protobuf.MapEntry<java.lang.String, com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper>
+              data__ = input.readMessage(
+                  DataDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              data_.getMutableMap().put(
+                  data__.getKey(), data__.getValue());
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.auacm.api.proto.CompetitionOuterClass.internal_static_com_auacm_api_proto_TeamList_descriptor;
+    }
+
+    @SuppressWarnings({"rawtypes"})
+    protected com.google.protobuf.MapField internalGetMapField(
+        int number) {
+      switch (number) {
+        case 1:
+          return internalGetData();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.auacm.api.proto.CompetitionOuterClass.internal_static_com_auacm_api_proto_TeamList_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.auacm.api.proto.CompetitionOuterClass.TeamList.class, com.auacm.api.proto.CompetitionOuterClass.TeamList.Builder.class);
+    }
+
+    public interface TeamListWrapperOrBuilder extends
+        // @@protoc_insertion_point(interface_extends:com.auacm.api.proto.TeamList.TeamListWrapper)
+        com.google.protobuf.MessageOrBuilder {
+
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+       */
+      java.util.List<com.auacm.api.proto.CompetitionOuterClass.SimpleTeam> 
+          getListList();
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+       */
+      com.auacm.api.proto.CompetitionOuterClass.SimpleTeam getList(int index);
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+       */
+      int getListCount();
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+       */
+      java.util.List<? extends com.auacm.api.proto.CompetitionOuterClass.SimpleTeamOrBuilder> 
+          getListOrBuilderList();
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+       */
+      com.auacm.api.proto.CompetitionOuterClass.SimpleTeamOrBuilder getListOrBuilder(
+          int index);
+    }
+    /**
+     * Protobuf type {@code com.auacm.api.proto.TeamList.TeamListWrapper}
+     */
+    public  static final class TeamListWrapper extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:com.auacm.api.proto.TeamList.TeamListWrapper)
+        TeamListWrapperOrBuilder {
+    private static final long serialVersionUID = 0L;
+      // Use TeamListWrapper.newBuilder() to construct.
+      private TeamListWrapper(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
+      }
+      private TeamListWrapper() {
+        list_ = java.util.Collections.emptyList();
+      }
+
+      @java.lang.Override
+      public final com.google.protobuf.UnknownFieldSet
+      getUnknownFields() {
+        return this.unknownFields;
+      }
+      private TeamListWrapper(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        this();
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!parseUnknownFieldProto3(
+                    input, unknownFields, extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+              case 10: {
+                if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                  list_ = new java.util.ArrayList<com.auacm.api.proto.CompetitionOuterClass.SimpleTeam>();
+                  mutable_bitField0_ |= 0x00000001;
+                }
+                list_.add(
+                    input.readMessage(com.auacm.api.proto.CompetitionOuterClass.SimpleTeam.parser(), extensionRegistry));
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e).setUnfinishedMessage(this);
+        } finally {
+          if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+            list_ = java.util.Collections.unmodifiableList(list_);
+          }
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
+        }
+      }
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.auacm.api.proto.CompetitionOuterClass.internal_static_com_auacm_api_proto_TeamList_TeamListWrapper_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.auacm.api.proto.CompetitionOuterClass.internal_static_com_auacm_api_proto_TeamList_TeamListWrapper_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper.class, com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper.Builder.class);
+      }
+
+      public static final int LIST_FIELD_NUMBER = 1;
+      private java.util.List<com.auacm.api.proto.CompetitionOuterClass.SimpleTeam> list_;
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+       */
+      public java.util.List<com.auacm.api.proto.CompetitionOuterClass.SimpleTeam> getListList() {
+        return list_;
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+       */
+      public java.util.List<? extends com.auacm.api.proto.CompetitionOuterClass.SimpleTeamOrBuilder> 
+          getListOrBuilderList() {
+        return list_;
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+       */
+      public int getListCount() {
+        return list_.size();
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+       */
+      public com.auacm.api.proto.CompetitionOuterClass.SimpleTeam getList(int index) {
+        return list_.get(index);
+      }
+      /**
+       * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+       */
+      public com.auacm.api.proto.CompetitionOuterClass.SimpleTeamOrBuilder getListOrBuilder(
+          int index) {
+        return list_.get(index);
+      }
+
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        for (int i = 0; i < list_.size(); i++) {
+          output.writeMessage(1, list_.get(i));
+        }
+        unknownFields.writeTo(output);
+      }
+
+      public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        for (int i = 0; i < list_.size(); i++) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(1, list_.get(i));
+        }
+        size += unknownFields.getSerializedSize();
+        memoizedSize = size;
+        return size;
+      }
+
+      @java.lang.Override
+      public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+         return true;
+        }
+        if (!(obj instanceof com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper)) {
+          return super.equals(obj);
+        }
+        com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper other = (com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper) obj;
+
+        boolean result = true;
+        result = result && getListList()
+            .equals(other.getListList());
+        result = result && unknownFields.equals(other.unknownFields);
+        return result;
+      }
+
+      @java.lang.Override
+      public int hashCode() {
+        if (memoizedHashCode != 0) {
+          return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptor().hashCode();
+        if (getListCount() > 0) {
+          hash = (37 * hash) + LIST_FIELD_NUMBER;
+          hash = (53 * hash) + getListList().hashCode();
+        }
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+      }
+
+      public static com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper parseFrom(
+          java.nio.ByteBuffer data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper parseFrom(
+          java.nio.ByteBuffer data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input);
+      }
+      public static com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+      }
+      public static Builder newBuilder(com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      }
+      public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+            ? new Builder() : new Builder().mergeFrom(this);
+      }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      /**
+       * Protobuf type {@code com.auacm.api.proto.TeamList.TeamListWrapper}
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+          // @@protoc_insertion_point(builder_implements:com.auacm.api.proto.TeamList.TeamListWrapper)
+          com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapperOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return com.auacm.api.proto.CompetitionOuterClass.internal_static_com_auacm_api_proto_TeamList_TeamListWrapper_descriptor;
+        }
+
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return com.auacm.api.proto.CompetitionOuterClass.internal_static_com_auacm_api_proto_TeamList_TeamListWrapper_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper.class, com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper.Builder.class);
+        }
+
+        // Construct using com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessageV3
+                  .alwaysUseFieldBuilders) {
+            getListFieldBuilder();
+          }
+        }
+        public Builder clear() {
+          super.clear();
+          if (listBuilder_ == null) {
+            list_ = java.util.Collections.emptyList();
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            listBuilder_.clear();
+          }
+          return this;
+        }
+
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return com.auacm.api.proto.CompetitionOuterClass.internal_static_com_auacm_api_proto_TeamList_TeamListWrapper_descriptor;
+        }
+
+        public com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper getDefaultInstanceForType() {
+          return com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper.getDefaultInstance();
+        }
+
+        public com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper build() {
+          com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        public com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper buildPartial() {
+          com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper result = new com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper(this);
+          int from_bitField0_ = bitField0_;
+          if (listBuilder_ == null) {
+            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+              list_ = java.util.Collections.unmodifiableList(list_);
+              bitField0_ = (bitField0_ & ~0x00000001);
+            }
+            result.list_ = list_;
+          } else {
+            result.list_ = listBuilder_.build();
+          }
+          onBuilt();
+          return result;
+        }
+
+        public Builder clone() {
+          return (Builder) super.clone();
+        }
+        public Builder setField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return (Builder) super.setField(field, value);
+        }
+        public Builder clearField(
+            com.google.protobuf.Descriptors.FieldDescriptor field) {
+          return (Builder) super.clearField(field);
+        }
+        public Builder clearOneof(
+            com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          return (Builder) super.clearOneof(oneof);
+        }
+        public Builder setRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            int index, java.lang.Object value) {
+          return (Builder) super.setRepeatedField(field, index, value);
+        }
+        public Builder addRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return (Builder) super.addRepeatedField(field, value);
+        }
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper) {
+            return mergeFrom((com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper other) {
+          if (other == com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper.getDefaultInstance()) return this;
+          if (listBuilder_ == null) {
+            if (!other.list_.isEmpty()) {
+              if (list_.isEmpty()) {
+                list_ = other.list_;
+                bitField0_ = (bitField0_ & ~0x00000001);
+              } else {
+                ensureListIsMutable();
+                list_.addAll(other.list_);
+              }
+              onChanged();
+            }
+          } else {
+            if (!other.list_.isEmpty()) {
+              if (listBuilder_.isEmpty()) {
+                listBuilder_.dispose();
+                listBuilder_ = null;
+                list_ = other.list_;
+                bitField0_ = (bitField0_ & ~0x00000001);
+                listBuilder_ = 
+                  com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                     getListFieldBuilder() : null;
+              } else {
+                listBuilder_.addAllMessages(other.list_);
+              }
+            }
+          }
+          this.mergeUnknownFields(other.unknownFields);
+          onChanged();
+          return this;
+        }
+
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper) e.getUnfinishedMessage();
+            throw e.unwrapIOException();
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+        private int bitField0_;
+
+        private java.util.List<com.auacm.api.proto.CompetitionOuterClass.SimpleTeam> list_ =
+          java.util.Collections.emptyList();
+        private void ensureListIsMutable() {
+          if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+            list_ = new java.util.ArrayList<com.auacm.api.proto.CompetitionOuterClass.SimpleTeam>(list_);
+            bitField0_ |= 0x00000001;
+           }
+        }
+
+        private com.google.protobuf.RepeatedFieldBuilderV3<
+            com.auacm.api.proto.CompetitionOuterClass.SimpleTeam, com.auacm.api.proto.CompetitionOuterClass.SimpleTeam.Builder, com.auacm.api.proto.CompetitionOuterClass.SimpleTeamOrBuilder> listBuilder_;
+
+        /**
+         * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+         */
+        public java.util.List<com.auacm.api.proto.CompetitionOuterClass.SimpleTeam> getListList() {
+          if (listBuilder_ == null) {
+            return java.util.Collections.unmodifiableList(list_);
+          } else {
+            return listBuilder_.getMessageList();
+          }
+        }
+        /**
+         * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+         */
+        public int getListCount() {
+          if (listBuilder_ == null) {
+            return list_.size();
+          } else {
+            return listBuilder_.getCount();
+          }
+        }
+        /**
+         * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+         */
+        public com.auacm.api.proto.CompetitionOuterClass.SimpleTeam getList(int index) {
+          if (listBuilder_ == null) {
+            return list_.get(index);
+          } else {
+            return listBuilder_.getMessage(index);
+          }
+        }
+        /**
+         * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+         */
+        public Builder setList(
+            int index, com.auacm.api.proto.CompetitionOuterClass.SimpleTeam value) {
+          if (listBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            ensureListIsMutable();
+            list_.set(index, value);
+            onChanged();
+          } else {
+            listBuilder_.setMessage(index, value);
+          }
+          return this;
+        }
+        /**
+         * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+         */
+        public Builder setList(
+            int index, com.auacm.api.proto.CompetitionOuterClass.SimpleTeam.Builder builderForValue) {
+          if (listBuilder_ == null) {
+            ensureListIsMutable();
+            list_.set(index, builderForValue.build());
+            onChanged();
+          } else {
+            listBuilder_.setMessage(index, builderForValue.build());
+          }
+          return this;
+        }
+        /**
+         * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+         */
+        public Builder addList(com.auacm.api.proto.CompetitionOuterClass.SimpleTeam value) {
+          if (listBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            ensureListIsMutable();
+            list_.add(value);
+            onChanged();
+          } else {
+            listBuilder_.addMessage(value);
+          }
+          return this;
+        }
+        /**
+         * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+         */
+        public Builder addList(
+            int index, com.auacm.api.proto.CompetitionOuterClass.SimpleTeam value) {
+          if (listBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            ensureListIsMutable();
+            list_.add(index, value);
+            onChanged();
+          } else {
+            listBuilder_.addMessage(index, value);
+          }
+          return this;
+        }
+        /**
+         * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+         */
+        public Builder addList(
+            com.auacm.api.proto.CompetitionOuterClass.SimpleTeam.Builder builderForValue) {
+          if (listBuilder_ == null) {
+            ensureListIsMutable();
+            list_.add(builderForValue.build());
+            onChanged();
+          } else {
+            listBuilder_.addMessage(builderForValue.build());
+          }
+          return this;
+        }
+        /**
+         * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+         */
+        public Builder addList(
+            int index, com.auacm.api.proto.CompetitionOuterClass.SimpleTeam.Builder builderForValue) {
+          if (listBuilder_ == null) {
+            ensureListIsMutable();
+            list_.add(index, builderForValue.build());
+            onChanged();
+          } else {
+            listBuilder_.addMessage(index, builderForValue.build());
+          }
+          return this;
+        }
+        /**
+         * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+         */
+        public Builder addAllList(
+            java.lang.Iterable<? extends com.auacm.api.proto.CompetitionOuterClass.SimpleTeam> values) {
+          if (listBuilder_ == null) {
+            ensureListIsMutable();
+            com.google.protobuf.AbstractMessageLite.Builder.addAll(
+                values, list_);
+            onChanged();
+          } else {
+            listBuilder_.addAllMessages(values);
+          }
+          return this;
+        }
+        /**
+         * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+         */
+        public Builder clearList() {
+          if (listBuilder_ == null) {
+            list_ = java.util.Collections.emptyList();
+            bitField0_ = (bitField0_ & ~0x00000001);
+            onChanged();
+          } else {
+            listBuilder_.clear();
+          }
+          return this;
+        }
+        /**
+         * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+         */
+        public Builder removeList(int index) {
+          if (listBuilder_ == null) {
+            ensureListIsMutable();
+            list_.remove(index);
+            onChanged();
+          } else {
+            listBuilder_.remove(index);
+          }
+          return this;
+        }
+        /**
+         * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+         */
+        public com.auacm.api.proto.CompetitionOuterClass.SimpleTeam.Builder getListBuilder(
+            int index) {
+          return getListFieldBuilder().getBuilder(index);
+        }
+        /**
+         * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+         */
+        public com.auacm.api.proto.CompetitionOuterClass.SimpleTeamOrBuilder getListOrBuilder(
+            int index) {
+          if (listBuilder_ == null) {
+            return list_.get(index);  } else {
+            return listBuilder_.getMessageOrBuilder(index);
+          }
+        }
+        /**
+         * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+         */
+        public java.util.List<? extends com.auacm.api.proto.CompetitionOuterClass.SimpleTeamOrBuilder> 
+             getListOrBuilderList() {
+          if (listBuilder_ != null) {
+            return listBuilder_.getMessageOrBuilderList();
+          } else {
+            return java.util.Collections.unmodifiableList(list_);
+          }
+        }
+        /**
+         * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+         */
+        public com.auacm.api.proto.CompetitionOuterClass.SimpleTeam.Builder addListBuilder() {
+          return getListFieldBuilder().addBuilder(
+              com.auacm.api.proto.CompetitionOuterClass.SimpleTeam.getDefaultInstance());
+        }
+        /**
+         * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+         */
+        public com.auacm.api.proto.CompetitionOuterClass.SimpleTeam.Builder addListBuilder(
+            int index) {
+          return getListFieldBuilder().addBuilder(
+              index, com.auacm.api.proto.CompetitionOuterClass.SimpleTeam.getDefaultInstance());
+        }
+        /**
+         * <code>repeated .com.auacm.api.proto.SimpleTeam list = 1;</code>
+         */
+        public java.util.List<com.auacm.api.proto.CompetitionOuterClass.SimpleTeam.Builder> 
+             getListBuilderList() {
+          return getListFieldBuilder().getBuilderList();
+        }
+        private com.google.protobuf.RepeatedFieldBuilderV3<
+            com.auacm.api.proto.CompetitionOuterClass.SimpleTeam, com.auacm.api.proto.CompetitionOuterClass.SimpleTeam.Builder, com.auacm.api.proto.CompetitionOuterClass.SimpleTeamOrBuilder> 
+            getListFieldBuilder() {
+          if (listBuilder_ == null) {
+            listBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+                com.auacm.api.proto.CompetitionOuterClass.SimpleTeam, com.auacm.api.proto.CompetitionOuterClass.SimpleTeam.Builder, com.auacm.api.proto.CompetitionOuterClass.SimpleTeamOrBuilder>(
+                    list_,
+                    ((bitField0_ & 0x00000001) == 0x00000001),
+                    getParentForChildren(),
+                    isClean());
+            list_ = null;
+          }
+          return listBuilder_;
+        }
+        public final Builder setUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.setUnknownFieldsProto3(unknownFields);
+        }
+
+        public final Builder mergeUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.mergeUnknownFields(unknownFields);
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:com.auacm.api.proto.TeamList.TeamListWrapper)
+      }
+
+      // @@protoc_insertion_point(class_scope:com.auacm.api.proto.TeamList.TeamListWrapper)
+      private static final com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper DEFAULT_INSTANCE;
+      static {
+        DEFAULT_INSTANCE = new com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper();
+      }
+
+      public static com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+      }
+
+      private static final com.google.protobuf.Parser<TeamListWrapper>
+          PARSER = new com.google.protobuf.AbstractParser<TeamListWrapper>() {
+        public TeamListWrapper parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+            return new TeamListWrapper(input, extensionRegistry);
+        }
+      };
+
+      public static com.google.protobuf.Parser<TeamListWrapper> parser() {
+        return PARSER;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<TeamListWrapper> getParserForType() {
+        return PARSER;
+      }
+
+      public com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+      }
+
+    }
+
+    public static final int DATA_FIELD_NUMBER = 1;
+    private static final class DataDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.String, com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.String, com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper>newDefaultInstance(
+                  com.auacm.api.proto.CompetitionOuterClass.internal_static_com_auacm_api_proto_TeamList_DataEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "",
+                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
+                  com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper.getDefaultInstance());
+    }
+    private com.google.protobuf.MapField<
+        java.lang.String, com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper> data_;
+    private com.google.protobuf.MapField<java.lang.String, com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper>
+    internalGetData() {
+      if (data_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            DataDefaultEntryHolder.defaultEntry);
+      }
+      return data_;
+    }
+
+    public int getDataCount() {
+      return internalGetData().getMap().size();
+    }
+    /**
+     * <code>map&lt;string, .com.auacm.api.proto.TeamList.TeamListWrapper&gt; data = 1;</code>
+     */
+
+    public boolean containsData(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      return internalGetData().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getDataMap()} instead.
+     */
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper> getData() {
+      return getDataMap();
+    }
+    /**
+     * <code>map&lt;string, .com.auacm.api.proto.TeamList.TeamListWrapper&gt; data = 1;</code>
+     */
+
+    public java.util.Map<java.lang.String, com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper> getDataMap() {
+      return internalGetData().getMap();
+    }
+    /**
+     * <code>map&lt;string, .com.auacm.api.proto.TeamList.TeamListWrapper&gt; data = 1;</code>
+     */
+
+    public com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper getDataOrDefault(
+        java.lang.String key,
+        com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper defaultValue) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper> map =
+          internalGetData().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <code>map&lt;string, .com.auacm.api.proto.TeamList.TeamListWrapper&gt; data = 1;</code>
+     */
+
+    public com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper getDataOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper> map =
+          internalGetData().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      com.google.protobuf.GeneratedMessageV3
+        .serializeStringMapTo(
+          output,
+          internalGetData(),
+          DataDefaultEntryHolder.defaultEntry,
+          1);
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (java.util.Map.Entry<java.lang.String, com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper> entry
+           : internalGetData().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper>
+        data__ = DataDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
+        size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(1, data__);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.auacm.api.proto.CompetitionOuterClass.TeamList)) {
+        return super.equals(obj);
+      }
+      com.auacm.api.proto.CompetitionOuterClass.TeamList other = (com.auacm.api.proto.CompetitionOuterClass.TeamList) obj;
+
+      boolean result = true;
+      result = result && internalGetData().equals(
+          other.internalGetData());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (!internalGetData().getMap().isEmpty()) {
+        hash = (37 * hash) + DATA_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetData().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.auacm.api.proto.CompetitionOuterClass.TeamList parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.auacm.api.proto.CompetitionOuterClass.TeamList parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.auacm.api.proto.CompetitionOuterClass.TeamList parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.auacm.api.proto.CompetitionOuterClass.TeamList parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.auacm.api.proto.CompetitionOuterClass.TeamList parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.auacm.api.proto.CompetitionOuterClass.TeamList parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.auacm.api.proto.CompetitionOuterClass.TeamList parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.auacm.api.proto.CompetitionOuterClass.TeamList parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.auacm.api.proto.CompetitionOuterClass.TeamList parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.auacm.api.proto.CompetitionOuterClass.TeamList parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.auacm.api.proto.CompetitionOuterClass.TeamList parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.auacm.api.proto.CompetitionOuterClass.TeamList parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.auacm.api.proto.CompetitionOuterClass.TeamList prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.auacm.api.proto.TeamList}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.auacm.api.proto.TeamList)
+        com.auacm.api.proto.CompetitionOuterClass.TeamListOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.auacm.api.proto.CompetitionOuterClass.internal_static_com_auacm_api_proto_TeamList_descriptor;
+      }
+
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMapField(
+          int number) {
+        switch (number) {
+          case 1:
+            return internalGetData();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMutableMapField(
+          int number) {
+        switch (number) {
+          case 1:
+            return internalGetMutableData();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.auacm.api.proto.CompetitionOuterClass.internal_static_com_auacm_api_proto_TeamList_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.auacm.api.proto.CompetitionOuterClass.TeamList.class, com.auacm.api.proto.CompetitionOuterClass.TeamList.Builder.class);
+      }
+
+      // Construct using com.auacm.api.proto.CompetitionOuterClass.TeamList.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        internalGetMutableData().clear();
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.auacm.api.proto.CompetitionOuterClass.internal_static_com_auacm_api_proto_TeamList_descriptor;
+      }
+
+      public com.auacm.api.proto.CompetitionOuterClass.TeamList getDefaultInstanceForType() {
+        return com.auacm.api.proto.CompetitionOuterClass.TeamList.getDefaultInstance();
+      }
+
+      public com.auacm.api.proto.CompetitionOuterClass.TeamList build() {
+        com.auacm.api.proto.CompetitionOuterClass.TeamList result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.auacm.api.proto.CompetitionOuterClass.TeamList buildPartial() {
+        com.auacm.api.proto.CompetitionOuterClass.TeamList result = new com.auacm.api.proto.CompetitionOuterClass.TeamList(this);
+        int from_bitField0_ = bitField0_;
+        result.data_ = internalGetData();
+        result.data_.makeImmutable();
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.auacm.api.proto.CompetitionOuterClass.TeamList) {
+          return mergeFrom((com.auacm.api.proto.CompetitionOuterClass.TeamList)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.auacm.api.proto.CompetitionOuterClass.TeamList other) {
+        if (other == com.auacm.api.proto.CompetitionOuterClass.TeamList.getDefaultInstance()) return this;
+        internalGetMutableData().mergeFrom(
+            other.internalGetData());
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.auacm.api.proto.CompetitionOuterClass.TeamList parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.auacm.api.proto.CompetitionOuterClass.TeamList) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private com.google.protobuf.MapField<
+          java.lang.String, com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper> data_;
+      private com.google.protobuf.MapField<java.lang.String, com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper>
+      internalGetData() {
+        if (data_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              DataDefaultEntryHolder.defaultEntry);
+        }
+        return data_;
+      }
+      private com.google.protobuf.MapField<java.lang.String, com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper>
+      internalGetMutableData() {
+        onChanged();;
+        if (data_ == null) {
+          data_ = com.google.protobuf.MapField.newMapField(
+              DataDefaultEntryHolder.defaultEntry);
+        }
+        if (!data_.isMutable()) {
+          data_ = data_.copy();
+        }
+        return data_;
+      }
+
+      public int getDataCount() {
+        return internalGetData().getMap().size();
+      }
+      /**
+       * <code>map&lt;string, .com.auacm.api.proto.TeamList.TeamListWrapper&gt; data = 1;</code>
+       */
+
+      public boolean containsData(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        return internalGetData().getMap().containsKey(key);
+      }
+      /**
+       * Use {@link #getDataMap()} instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper> getData() {
+        return getDataMap();
+      }
+      /**
+       * <code>map&lt;string, .com.auacm.api.proto.TeamList.TeamListWrapper&gt; data = 1;</code>
+       */
+
+      public java.util.Map<java.lang.String, com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper> getDataMap() {
+        return internalGetData().getMap();
+      }
+      /**
+       * <code>map&lt;string, .com.auacm.api.proto.TeamList.TeamListWrapper&gt; data = 1;</code>
+       */
+
+      public com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper getDataOrDefault(
+          java.lang.String key,
+          com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper defaultValue) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        java.util.Map<java.lang.String, com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper> map =
+            internalGetData().getMap();
+        return map.containsKey(key) ? map.get(key) : defaultValue;
+      }
+      /**
+       * <code>map&lt;string, .com.auacm.api.proto.TeamList.TeamListWrapper&gt; data = 1;</code>
+       */
+
+      public com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper getDataOrThrow(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        java.util.Map<java.lang.String, com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper> map =
+            internalGetData().getMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
+        }
+        return map.get(key);
+      }
+
+      public Builder clearData() {
+        internalGetMutableData().getMutableMap()
+            .clear();
+        return this;
+      }
+      /**
+       * <code>map&lt;string, .com.auacm.api.proto.TeamList.TeamListWrapper&gt; data = 1;</code>
+       */
+
+      public Builder removeData(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        internalGetMutableData().getMutableMap()
+            .remove(key);
+        return this;
+      }
+      /**
+       * Use alternate mutation accessors instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper>
+      getMutableData() {
+        return internalGetMutableData().getMutableMap();
+      }
+      /**
+       * <code>map&lt;string, .com.auacm.api.proto.TeamList.TeamListWrapper&gt; data = 1;</code>
+       */
+      public Builder putData(
+          java.lang.String key,
+          com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper value) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        if (value == null) { throw new java.lang.NullPointerException(); }
+        internalGetMutableData().getMutableMap()
+            .put(key, value);
+        return this;
+      }
+      /**
+       * <code>map&lt;string, .com.auacm.api.proto.TeamList.TeamListWrapper&gt; data = 1;</code>
+       */
+
+      public Builder putAllData(
+          java.util.Map<java.lang.String, com.auacm.api.proto.CompetitionOuterClass.TeamList.TeamListWrapper> values) {
+        internalGetMutableData().getMutableMap()
+            .putAll(values);
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.auacm.api.proto.TeamList)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.auacm.api.proto.TeamList)
+    private static final com.auacm.api.proto.CompetitionOuterClass.TeamList DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.auacm.api.proto.CompetitionOuterClass.TeamList();
+    }
+
+    public static com.auacm.api.proto.CompetitionOuterClass.TeamList getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<TeamList>
+        PARSER = new com.google.protobuf.AbstractParser<TeamList>() {
+      public TeamList parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new TeamList(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<TeamList> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<TeamList> getParserForType() {
+      return PARSER;
+    }
+
+    public com.auacm.api.proto.CompetitionOuterClass.TeamList getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_auacm_api_proto_Competition_descriptor;
   private static final 
@@ -7529,6 +9635,26 @@ public final class CompetitionOuterClass {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_auacm_api_proto_CompetitionListWrapper_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_auacm_api_proto_SimpleTeam_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_auacm_api_proto_SimpleTeam_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_auacm_api_proto_TeamList_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_auacm_api_proto_TeamList_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_auacm_api_proto_TeamList_TeamListWrapper_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_auacm_api_proto_TeamList_TeamListWrapper_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_auacm_api_proto_TeamList_DataEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_auacm_api_proto_TeamList_DataEntry_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -7568,7 +9694,14 @@ public final class CompetitionOuterClass {
       "o.Competition\0222\n\010upcoming\030\003 \003(\0132 .com.au" +
       "acm.api.proto.Competition\"L\n\026Competition" +
       "ListWrapper\0222\n\004data\030\001 \001(\0132$.com.auacm.ap",
-      "i.proto.CompetitionListb\006proto3"
+      "i.proto.CompetitionList\"/\n\nSimpleTeam\022\017\n" +
+      "\007display\030\001 \001(\t\022\020\n\010username\030\002 \001(\t\"\337\001\n\010Tea" +
+      "mList\0225\n\004data\030\001 \003(\0132\'.com.auacm.api.prot" +
+      "o.TeamList.DataEntry\032@\n\017TeamListWrapper\022" +
+      "-\n\004list\030\001 \003(\0132\037.com.auacm.api.proto.Simp" +
+      "leTeam\032Z\n\tDataEntry\022\013\n\003key\030\001 \001(\t\022<\n\005valu" +
+      "e\030\002 \001(\0132-.com.auacm.api.proto.TeamList.T" +
+      "eamListWrapper:\0028\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -7642,6 +9775,30 @@ public final class CompetitionOuterClass {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_auacm_api_proto_CompetitionListWrapper_descriptor,
         new java.lang.String[] { "Data", });
+    internal_static_com_auacm_api_proto_SimpleTeam_descriptor =
+      getDescriptor().getMessageTypes().get(8);
+    internal_static_com_auacm_api_proto_SimpleTeam_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_auacm_api_proto_SimpleTeam_descriptor,
+        new java.lang.String[] { "Display", "Username", });
+    internal_static_com_auacm_api_proto_TeamList_descriptor =
+      getDescriptor().getMessageTypes().get(9);
+    internal_static_com_auacm_api_proto_TeamList_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_auacm_api_proto_TeamList_descriptor,
+        new java.lang.String[] { "Data", });
+    internal_static_com_auacm_api_proto_TeamList_TeamListWrapper_descriptor =
+      internal_static_com_auacm_api_proto_TeamList_descriptor.getNestedTypes().get(0);
+    internal_static_com_auacm_api_proto_TeamList_TeamListWrapper_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_auacm_api_proto_TeamList_TeamListWrapper_descriptor,
+        new java.lang.String[] { "List", });
+    internal_static_com_auacm_api_proto_TeamList_DataEntry_descriptor =
+      internal_static_com_auacm_api_proto_TeamList_descriptor.getNestedTypes().get(1);
+    internal_static_com_auacm_api_proto_TeamList_DataEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_auacm_api_proto_TeamList_DataEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

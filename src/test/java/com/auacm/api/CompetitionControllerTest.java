@@ -475,6 +475,35 @@ public class CompetitionControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
+    @Test
+    @WithACMUser(username = "admin")
+    public void getCompetitionTeams() throws Exception {
+        problemService.createProblem(new MockProblemBuilder().build());
+        competitionService.createCompetition(new MockCompetitionBuilder().addUser("admin").build());
+        String response = mockMvc.perform(MockMvcRequestBuilders.get("/api/competitions/1/teams"))
+                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse().getContentAsString();
+        System.out.println(response);
+        JsonObject object = new JsonParser().parse(response).getAsJsonObject().get("data").getAsJsonObject();
+        Assert.assertNotNull(object);
+        Assert.assertEquals(true, object.has("Admin"));
+        JsonArray adminArray = object.get("Admin").getAsJsonArray();
+        Assert.assertNotNull(adminArray);
+        Assert.assertEquals(1, adminArray.size());
+        Assert.assertEquals(true, adminArray.get(0).getAsJsonObject().has("display"));
+        Assert.assertEquals(true, adminArray.get(0).getAsJsonObject().has("username"));
+        Assert.assertEquals("Admin", adminArray.get(0).getAsJsonObject().get("display").getAsString());
+        Assert.assertEquals("admin", adminArray.get(0).getAsJsonObject().get("username").getAsString());
+    }
+
+    @Test
+    @WithACMUser(username = "user")
+    public void getCompetitionTeamsNotAdmin() throws Exception {
+        problemService.createProblem(new MockProblemBuilder().build());
+        competitionService.createCompetition(new MockCompetitionBuilder().addUser("admin").build());
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/competitions/1/teams"))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
     @After
     public void cleanUp() throws Exception {
         fileSystemService.deleteFile("data");
