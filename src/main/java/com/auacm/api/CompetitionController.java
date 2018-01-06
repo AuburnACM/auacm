@@ -3,6 +3,7 @@ package com.auacm.api;
 import com.auacm.api.model.CompetitionTeams;
 import com.auacm.api.model.CreateCompetition;
 import com.auacm.api.model.RegisterUsers;
+import com.auacm.api.model.SimpleTeam;
 import com.auacm.api.proto.CompetitionOuterClass;
 import com.auacm.api.validator.CreateCompetitionValidator;
 import com.auacm.database.model.User;
@@ -10,10 +11,16 @@ import com.auacm.database.model.UserPrincipal;
 import com.auacm.exception.ForbiddenException;
 import com.auacm.service.CompetitionService;
 import com.auacm.util.JsonUtil;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.annotation.SendToUser;
+import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +30,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class CompetitionController {
@@ -34,7 +43,7 @@ public class CompetitionController {
     private CreateCompetitionValidator createCompetitionValidator;
 
     @Autowired
-    private JsonUtil jsonUtil;
+    private Gson gson;
 
     @InitBinder("newCompetition")
     protected void initBinder(final WebDataBinder binder) {
@@ -104,18 +113,28 @@ public class CompetitionController {
     @RequestMapping(path = "/api/competitions/{cid}/teams", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ADMIN')")
     public @ResponseBody CompetitionOuterClass.TeamList getCompetitionTeams(@PathVariable long cid) {
-        return competitionService.getTeamList(competitionService.getCompetitionById(cid));
+        return competitionService.getTeamListResponse(competitionService.getCompetitionById(cid));
     }
 
     @RequestMapping(path = "/api/competitions/{cid}/teams", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ADMIN')")
     public @ResponseBody CompetitionOuterClass.TeamList updateCompetitionTeams(@PathVariable long cid, @RequestBody CompetitionTeams competitionTeams) {
-        return competitionService.getTeamList(competitionService.updateCompetitionTeams(cid, competitionTeams));
+        return competitionService.getTeamListResponse(competitionService.updateCompetitionTeams(cid, competitionTeams));
     }
 
-    @MessageMapping("/competitions/{cid}")
-    @SendTo("/topic/competitions/{cid}")
-    public String send(@DestinationVariable long cid,  String data) throws Exception {
-        return data;
+    @MessageMapping("/competitions/{cid}/teams")
+    public void updateCompetitionTeamsSocket(@DestinationVariable long cid, CompetitionTeams teams) {
+        competitionService.updateCompetitionTeams(cid, teams);
+    }
+
+    @SubscribeMapping("/competitions/{cid}")
+    @SendTo("/competitions/{cid}")
+    public String initSubscriptionSocket(@DestinationVariable long cid) {
+        JsonObject object = new JsonObject();
+        object.add("eventType", new JsonPrimitive("systemTime"));
+        JsonObject data = new JsonObject();
+        data.add("systemTime", new JsonPrimitive(System.currentTimeMillis()));
+        object.add("data", data);
+        return object.toString();
     }
 }

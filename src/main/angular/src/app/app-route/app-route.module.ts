@@ -21,29 +21,31 @@ import { ProfilePageComponent } from '../profile-page/profile-page.component';
 import { RankingComponent } from '../ranking/ranking.component';
 import { ViewProblemComponent } from '../view-problem/view-problem.component';
 import { ViewScoreboardComponent } from '../view-scoreboard/view-scoreboard.component';
+import { AdminGuard } from 'app/admin-guard';
+import { LoginGuard } from 'app/login.guard';
 
 const appRoutes: Routes = [
   { path: '', component: BlogListComponent },
   { path: 'problems', component: ProblemsComponent },
   { path: 'rankings', component: RankingComponent },
   { path: 'competitions', component: CompetitionsComponent },
-  { path: 'competition/:cid/edit', component: EditCompetitionComponent },
-  { path: 'competition/:cid/teams', component: EditTeamsComponent },
-  { path: 'competitions/create', component: EditCompetitionComponent },
+  { path: 'competition/:cid/edit', component: EditCompetitionComponent, canActivate: [LoginGuard, AdminGuard] },
+  { path: 'competition/:cid/teams', component: EditTeamsComponent, canActivate: [LoginGuard, AdminGuard] },
+  { path: 'competitions/create', component: EditCompetitionComponent, canActivate: [LoginGuard, AdminGuard] },
   { path: 'competition/:cid', component: ViewScoreboardComponent },
-  { path: 'judge/:problem', component: JudgeComponent },
-  { path: 'judge', component: JudgeComponent },
-  { path: 'users/create', component: CreateUserComponent },
-  { path: 'blogs/create', component: CreateBlogComponent },
-  { path: 'blog/:id/edit', component: EditBlogComponent },
+  { path: 'judge/:problem', component: JudgeComponent, canActivate: [LoginGuard] },
+  { path: 'judge', component: JudgeComponent, canActivate: [LoginGuard], runGuardsAndResolvers: 'always' },
+  { path: 'users/create', component: CreateUserComponent, canActivate: [LoginGuard, AdminGuard] },
+  { path: 'blogs/create', component: CreateBlogComponent, canActivate: [LoginGuard, AdminGuard] },
+  { path: 'blog/:id/edit', component: EditBlogComponent, canActivate: [LoginGuard, AdminGuard] },
   { path: 'blog/:id', component: BlogPostComponent },
   { path: 'problem/:pid/edit', component: EditProblemComponent },
   { path: 'problem/:shortName', component: ViewProblemComponent },
-  { path: 'problems/create', component: EditProblemComponent },
+  { path: 'problems/create', component: EditProblemComponent, canActivate: [LoginGuard, AdminGuard] },
   { path: 'profile/:username', component: ProfilePageComponent },
-  { path: 'profile', component: ProfilePageComponent },
-  { path: 'settings', component: EditUserComponent },
-  { path: 'settings/picture', component: EditProfilePictureComponent },
+  { path: 'profile', component: ProfilePageComponent, canActivate: [LoginGuard] },
+  { path: 'settings', component: EditUserComponent, canActivate: [LoginGuard] },
+  { path: 'settings/picture', component: EditProfilePictureComponent, canActivate: [LoginGuard] },
   { path: '404', component: NotFoundComponent }
 ];
 

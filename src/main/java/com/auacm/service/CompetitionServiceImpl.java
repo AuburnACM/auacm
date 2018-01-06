@@ -8,9 +8,14 @@ import com.auacm.database.dao.CompetitionDao;
 import com.auacm.database.dao.CompetitionProblemDao;
 import com.auacm.database.dao.CompetitionUserDao;
 import com.auacm.database.model.*;
+import com.auacm.exception.AlreadyRegisteredException;
 import com.auacm.exception.CompetitionNotFoundException;
 import com.auacm.exception.ForbiddenException;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -39,6 +44,12 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Autowired
     private SubmissionService submissionService;
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+    @Autowired
+    private Gson gson;
 
     @Override
     public boolean isInUpcomingCompetition(Problem problem) {
@@ -124,16 +135,23 @@ public class CompetitionServiceImpl implements CompetitionService {
                 throw new ForbiddenException("This is a closed competition. An admin must register you.");
             }
         }
-        CompetitionUser temp = new CompetitionUser();
-        temp.setCid(competition.getCid());
-        temp.setUsername(user.getUsername());
-        temp.setTeam(user.getDisplay());
-        saveCompetitionUsers(Collections.singletonList(temp));
-        return temp;
+        if (!isUserRegistered(competitionId, user.getUsername())) {
+            CompetitionUser temp = new CompetitionUser();
+            temp.setCid(competition.getCid());
+            temp.setUsername(user.getUsername());
+            temp.setTeam(user.getDisplay());
+            saveCompetitionUsers(Collections.singletonList(temp));
+            competition.getCompetitionUsers().add(temp);
+            broadcastCompetitionUsers(competitionId, getTeamList(competition));
+            return temp;
+        } else {
+            throw new AlreadyRegisteredException();
+        }
     }
 
     @Override
     public List<CompetitionUser> registerUsers(long competitionId, List<String> userNames) {
+        Competition competition = getCompetitionById(competitionId);
         try {
             ArrayList<CompetitionUser> users = new ArrayList<>();
             for (String user : userNames) {
@@ -146,7 +164,8 @@ public class CompetitionServiceImpl implements CompetitionService {
                     users.add(temp);
                 }
             }
-            saveCompetitionUsers(users);
+            competition.getCompetitionUsers().addAll(saveCompetitionUsers(users));
+            broadcastCompetitionUsers(competitionId, getTeamList(competition));
             return users;
         } catch (Exception e) {
             e.printStackTrace();
@@ -155,17 +174,28 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Transactional
-    public void saveCompetitionUsers(List<CompetitionUser> list) {
-        competitionUserDao.save(list);
+    public List<CompetitionUser> saveCompetitionUsers(List<CompetitionUser> list) {
+        return competitionUserDao.save(list);
     }
 
     @Override
     @Transactional
     public void unregisterUsers(long competitionId, List<String> userNames) {
         Competition competition = getCompetitionById(competitionId);
+        List<CompetitionUser> users = new ArrayList<>();
         for (String user : userNames) {
             competitionUserDao.deleteOneByUsernameAndCid(user, competitionId);
+            for (CompetitionUser compUser : competition.getCompetitionUsers()) {
+                if (compUser.getUsername().equals(user)) {
+                    users.add(compUser);
+                    break;
+                }
+            }
         }
+        for (CompetitionUser user : users) {
+            competition.getCompetitionUsers().remove(user);
+        }
+        broadcastCompetitionUsers(competitionId, getTeamList(competition));
     }
 
     @Override
@@ -261,6 +291,7 @@ public class CompetitionServiceImpl implements CompetitionService {
             competitionProblemDao.save(problems);
             competition.getCompetitionProblems().addAll(problems);
         }
+        broadcastCompetitionUsers(competitionId);
         return competition;
     }
 
@@ -319,6 +350,7 @@ public class CompetitionServiceImpl implements CompetitionService {
         }
         deleteCompetitionTeams(toDelete);
         competition.setCompetitionUsers(updateCompetitionTeams(updateCompetitionTeams(toUpdate)));
+        broadcastCompetitionUsers(competitionId);
         return competition;
     }
 
@@ -443,7 +475,34 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public CompetitionOuterClass.TeamList getTeamList(Competition competition) {
+    public Map<String, List<SimpleTeam>> getTeamList(Competition competition) {
+        HashMap<String, ScoreboardTeam> teams = getTeamMap(competition);
+        HashMap<String, List<SimpleTeam>> teamMap = new HashMap<>();
+        for (Map.Entry<String, ScoreboardTeam> team : teams.entrySet()) {
+            teamMap.put(team.getKey(), new ArrayList<>());
+            for (User user : team.getValue().getUsers()) {
+                teamMap.get(team.getKey()).add(new SimpleTeam(user.getDisplay(), user.getUsername()));
+            }
+        }
+        return teamMap;
+    }
+
+    @Override
+    public void broadcastCompetitionUsers(long competitionId, Map<String, List<SimpleTeam>> teamMap) {
+        JsonObject data = gson.toJsonTree(teamMap).getAsJsonObject();
+        JsonObject message = new JsonObject();
+        message.add("eventType", new JsonPrimitive("compUsers"));
+        message.add("data", data);
+        messagingTemplate.convertAndSend("/competitions/" + competitionId, message.toString());
+    }
+
+    @Override
+    public void broadcastCompetitionUsers(long competitionId) {
+        broadcastCompetitionUsers(competitionId, getTeamList(getCompetitionById(competitionId)));
+    }
+
+    @Override
+    public CompetitionOuterClass.TeamList getTeamListResponse(Competition competition) {
         HashMap<String, ScoreboardTeam> teams = getTeamMap(competition);
         CompetitionOuterClass.TeamList.Builder builder = CompetitionOuterClass.TeamList.newBuilder();
         for (Map.Entry<String, ScoreboardTeam> team : teams.entrySet()) {

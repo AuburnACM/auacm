@@ -2,6 +2,7 @@ package com.auacm.service;
 
 import com.auacm.api.model.CompetitionTeams;
 import com.auacm.api.model.CreateCompetition;
+import com.auacm.api.model.SimpleTeam;
 import com.auacm.api.proto.CompetitionOuterClass;
 import com.auacm.database.model.Competition;
 import com.auacm.database.model.CompetitionUser;
@@ -44,5 +45,11 @@ public interface CompetitionService {
 
     CompetitionOuterClass.CompetitionListWrapper getCompetitionListResponse(Map<String, List<Competition>> competitions);
 
-    CompetitionOuterClass.TeamList getTeamList(Competition competition);
+    CompetitionOuterClass.TeamList getTeamListResponse(Competition competition);
+
+    Map<String, List<SimpleTeam>> getTeamList(Competition competition);
+
+    void broadcastCompetitionUsers(long competitionId, Map<String, List<SimpleTeam>> teamMap);
+
+    void broadcastCompetitionUsers(long competitionId);
 }

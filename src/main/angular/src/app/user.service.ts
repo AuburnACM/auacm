@@ -7,6 +7,9 @@ import { SimpleResponse } from './models/response';
 import { DataWrapper } from './models/datawrapper';
 import { UrlEncodedHeader } from './models/service.utils';
 import { environment } from './../environments/environment';
+import { Observable } from 'rxjs/Observable';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 
 /**
  * All methods of this class should notify the userData observable
@@ -16,22 +19,25 @@ import { environment } from './../environments/environment';
 export class UserService {
   private userDataSource: Subject<UserData> = new Subject<UserData>();
   private userData: UserData = new UserData();
+  private fetchedData = false;
   public userData$ = this.userDataSource.asObservable();
 
-  constructor(private _httpClient: HttpClient) { }
+  constructor(private _httpClient: HttpClient, private _router: Router,
+              private _location: Location) { }
 
-  updateUserData(userData: UserData): void {
+  private updateUserData(userData: UserData): void {
     this.userData = userData;
     this.userDataSource.next(userData);
+    this.fetchedData = true;
   }
 
-  refreshUserData(): void {
+  public refreshUserData(): void {
     this.me().then(data => {
       this.updateUserData(data);
     });
   }
 
-  login(username: string, password: string): Promise<boolean> {
+  public login(username: string, password: string): Promise<boolean> {
     const self = this;
     return new Promise((resolve, reject) => {
       const form = new FormData();
@@ -47,11 +53,12 @@ export class UserService {
     });
   }
 
-  logout(): Promise<boolean> {
+  public logout(): Promise<boolean> {
     const self = this;
     return new Promise((resolve, reject) => {
       this._httpClient.get(`${environment.apiUrl}/logout`, {withCredentials: true}).subscribe(data => {
         self.updateUserData(new UserData());
+        console.log(this._location.path());
         resolve(true);
       }, (err: Response) => {
         self.updateUserData(new UserData());
@@ -60,11 +67,11 @@ export class UserService {
     });
   }
 
-  getUserData(): UserData {
+  public getUserData(): UserData {
     return this.userData;
   }
 
-  me(): Promise<UserData> {
+  public me(): Promise<UserData> {
     return new Promise((resolve, reject) => {
       const self = this;
       this._httpClient.get<DataWrapper<UserData>>(`${environment.apiUrl}/me`, {withCredentials: true}).subscribe(data => {
@@ -78,7 +85,7 @@ export class UserService {
     });
   }
 
-  createUser(username: string, password: string, displayName: string): Promise<SimpleResponse> {
+  public createUser(username: string, password: string, displayName: string): Promise<SimpleResponse> {
     return new Promise((resolve, reject) => {
       const params = new FormData();
       params.append('username', username);
@@ -99,7 +106,7 @@ export class UserService {
     });
   }
 
-  changePassword(oldPassword: string, newPassword: string): Promise<boolean> {
+  public changePassword(oldPassword: string, newPassword: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
       const params = new FormData();
       params.append('oldPassword', oldPassword);
@@ -113,7 +120,7 @@ export class UserService {
     });
   }
 
-  changeDisplayName(newDisplayName: string): Promise<boolean> {
+  public changeDisplayName(newDisplayName: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
       const params = new FormData();
       params.append('newDisplayName', newDisplayName);
@@ -130,11 +137,11 @@ export class UserService {
    * We should implement this sometime in the future so that we don't have to edit the
    * database manually if we want to make someone an admin.
    */
-  updateAdminStatus(username: string): Promise<SimpleResponse> {
+  public updateAdminStatus(username: string): Promise<SimpleResponse> {
     return undefined;
   }
 
-  getRanking(timeframe: string): Promise<RankData[]> {
+  public getRanking(timeframe: string): Promise<RankData[]> {
     return new Promise((resolve, reject) => {
       const time = timeframe === undefined ? 'all' : timeframe;
       this._httpClient.get<DataWrapper<RankData[]>>(`${environment.apiUrl}/ranking/${time}`, {withCredentials: true}).subscribe(data => {
@@ -147,6 +154,38 @@ export class UserService {
       }, (err: Response) => {
         resolve([]);
       });
+    });
+  }
+
+  public isAdmin(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      if (this.fetchedData) {
+        resolve(this.userData.isAdmin);
+      } else {
+        console.log('notFetched');
+        this.me().then(data => {
+          this.updateUserData(data);
+          resolve(this.userData.isAdmin);
+        }).catch(reason => {
+          resolve(false);
+        })
+      }
+    });
+  }
+
+  public isLoggedIn(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      if (this.fetchedData) {
+        resolve(this.userData.loggedIn);
+      } else {
+        console.log('notFetched');
+        this.me().then(data => {
+          this.updateUserData(data);
+          resolve(this.userData.loggedIn);
+        }).catch(reason => {
+          resolve(false);
+        })
+      }
     });
   }
 }

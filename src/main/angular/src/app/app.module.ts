@@ -30,6 +30,7 @@ import { BlogService } from './blog.service';
 import { CompetitionService } from './competition.service';
 import { ProblemService } from './problem.service';
 import { ProfileService } from './profile.service';
+import { StompService } from 'ng2-stomp-service';
 import { SubmissionService } from './submission.service';
 import { UserService } from './user.service';
 import { WebsocketService } from './websocket.service';
@@ -45,6 +46,8 @@ import { SecondsToHoursPipe } from './pipes/seconds-to-hours.pipe';
 import { ContestLengthValidatorDirective } from './directives/contest-length-validator.directive';
 import { DateFormatValidatorDirective } from './directives/date-format-validator.directive';
 import { ProblemValidatorDirective } from './directives/problem-validator.directive';
+import { AdminGuard } from 'app/admin-guard';
+import { LoginGuard } from 'app/login.guard';
 
 
 @NgModule({
@@ -89,10 +92,13 @@ import { ProblemValidatorDirective } from './directives/problem-validator.direct
     ReactiveFormsModule
   ],
   providers: [
+    AdminGuard,
     BlogService,
     CompetitionService,
+    LoginGuard,
     ProblemService,
     ProfileService,
+    StompService,
     SubmissionService,
     UserService,
     WebsocketService

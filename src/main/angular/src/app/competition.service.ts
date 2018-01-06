@@ -12,6 +12,8 @@ import { Problem } from './models/problem';
 import { SimpleUser, WebsocketRegisteredUser } from './models/user';
 import { UrlEncodedHeader } from './models/service.utils';
 import { environment } from './../environments/environment';
+import { setTimeout } from 'timers';
+import { MessageWrapper, SystemTimeMessage, CompetitionUsersMessage } from 'app/models/message';
 
 /**
  * This class manages the connection to the competition part of the backend.
@@ -36,6 +38,7 @@ export class CompetitionService {
 
   // Websocket subject for competition teams
   public competitionTeamSource: Subject<WebsocketRegisteredUser> = new Subject<WebsocketRegisteredUser>();
+  public teamSource: Subject<Map<string, SimpleUser[]>> = new Subject<Map<string, SimpleUser[]>>();
 
   /**
    * The constructor for CompetitionService. This handles initializing the
@@ -43,64 +46,65 @@ export class CompetitionService {
    * the websocket. It currently handles the system_time, status, new_user
    * websocket messages.
    */
-  constructor(private _http: Http, private _httpClient: HttpClient, private _websocketService: WebsocketService) {
-    this._websocketService.connect(window.location.host + '/websocket').subscribe(data => {
-        // update the client's time offset and scoreboard data
-        const response = JSON.parse(data.data);
-        const responseData = response.data;
-        const viewed = [];
-        if (response.eventType === 'system_time') {
-          this.clientTimeOffset = responseData.milliseconds - Date.now();
-          this.timeOffsetSource.next(this.clientTimeOffset);
-        } else if (response.eventType === 'status' && this.competition.cid > 0) {
-          if (viewed.indexOf(responseData.submissionId) > -1
-              || !this.problemIsInComp(responseData.problemId)
-              || responseData.submitTime > this.competition.startTime + this.competition.length) {
-            // The scoreboard ignores the problem for any of the following
-            // reasons:
-            // The submission has already been handled,
-            // The competition does not contain this problem, or
-            // The problem was accepted after the contest was over.
-            return;
-          }
-          if (responseData.status !== 'running') {        // if the verdict isn't "running"
-            viewed.push(responseData.submissionId);       // note that we've seen this
-          }
-          for (const team of this.competition.teams) {
-            if (team.users.indexOf(responseData.username) !== -1) {
-              // If the user that submitted the problem was on this team
-              const problem: TeamProblemData = team.problemData[responseData.problemId];
-              if (problem.status !== 'correct') {
-                if (responseData.status === 'correct') {
-                  problem.submitCount++;
-                  problem.submitTime = Math.floor((responseData.submitTime - this.competition.startTime) / 60);
-                  problem.penaltyTime = (problem.submitCount - 1) * 20;
-                  problem.status = 'correct';
-                } else if (responseData.status === 'running') {
-                  problem.penaltyTime = problem.submitCount * 20;
-                  problem.status = 'running';
-                } else {
-                  problem.submitCount++;
-                  problem.penaltyTime = problem.submitCount * 20;
-                  problem.status = 'incorrect';
-                }
-              }
-            }
-          }
-          this.competitionSource.next(this.competition);
-        } else if (response.eventType === 'new_user') {
-          // Handles a new user registering for a competition
-          // Probably should be renamed to comp_register or something
-          const tempRegisteredUser = new WebsocketRegisteredUser();
-          tempRegisteredUser.cid = responseData.cid;
-          tempRegisteredUser.display = responseData.user.display;
-          tempRegisteredUser.username = responseData.user.username;
-          this.competitionTeamSource.next(tempRegisteredUser);
-        }
-    });
+  constructor(private _http: Http, private _httpClient: HttpClient,
+      private _websocketService: WebsocketService) {
+    // this._websocketService.connect(window.location.host + '/websocket').subscribe(data => {
+    //     // update the client's time offset and scoreboard data
+    //     const response = JSON.parse(data.data);
+    //     const responseData = response.data;
+    //     const viewed = [];
+    //     if (response.eventType === 'system_time') {
+    //       this.clientTimeOffset = responseData.milliseconds - Date.now();
+    //       this.timeOffsetSource.next(this.clientTimeOffset);
+    //     } else if (response.eventType === 'status' && this.competition.cid > 0) {
+    //       if (viewed.indexOf(responseData.submissionId) > -1
+    //           || !this.problemIsInComp(responseData.problemId)
+    //           || responseData.submitTime > this.competition.startTime + this.competition.length) {
+    //         // The scoreboard ignores the problem for any of the following
+    //         // reasons:
+    //         // The submission has already been handled,
+    //         // The competition does not contain this problem, or
+    //         // The problem was accepted after the contest was over.
+    //         return;
+    //       }
+    //       if (responseData.status !== 'running') {        // if the verdict isn't "running"
+    //         viewed.push(responseData.submissionId);       // note that we've seen this
+    //       }
+    //       for (const team of this.competition.teams) {
+    //         if (team.users.indexOf(responseData.username) !== -1) {
+    //           // If the user that submitted the problem was on this team
+    //           const problem: TeamProblemData = team.problemData[responseData.problemId];
+    //           if (problem.status !== 'correct') {
+    //             if (responseData.status === 'correct') {
+    //               problem.submitCount++;
+    //               problem.submitTime = Math.floor((responseData.submitTime - this.competition.startTime) / 60);
+    //               problem.penaltyTime = (problem.submitCount - 1) * 20;
+    //               problem.status = 'correct';
+    //             } else if (responseData.status === 'running') {
+    //               problem.penaltyTime = problem.submitCount * 20;
+    //               problem.status = 'running';
+    //             } else {
+    //               problem.submitCount++;
+    //               problem.penaltyTime = problem.submitCount * 20;
+    //               problem.status = 'incorrect';
+    //             }
+    //           }
+    //         }
+    //       }
+    //       this.competitionSource.next(this.competition);
+    //     } else if (response.eventType === 'new_user') {
+    //       // Handles a new user registering for a competition
+    //       // Probably should be renamed to comp_register or something
+    //       const tempRegisteredUser = new WebsocketRegisteredUser();
+    //       tempRegisteredUser.cid = responseData.cid;
+    //       tempRegisteredUser.display = responseData.user.display;
+    //       tempRegisteredUser.username = responseData.user.username;
+    //       this.competitionTeamSource.next(tempRegisteredUser);
+    //     }
+    // });
     const self = this;
     setTimeout(function() {
-      self._websocketService.send({eventType: 'system_time'});
+      // self._websocketService.send({eventType: 'system_time'});
     }, 2000);
   }
 
@@ -178,7 +182,6 @@ export class CompetitionService {
             compMap[type].push(new Competition().deserialize(comp));
           }
         }
-        console.log(compMap);
         if (compMap['past'] === undefined) {
           compMap['past'] = [];
         }
@@ -198,10 +201,7 @@ export class CompetitionService {
   getCompetition(cid: number): Promise<Competition> {
     return new Promise((resolve, reject) => {
       this._httpClient.get<DataWrapper<Competition>>(`${environment.apiUrl}/competitions/${cid}`, {withCredentials: true}).subscribe(data => {
-        const comp = data.data;
-        const temp = new Competition().deserialize(comp);
-        console.log(temp);
-        resolve(new Competition().deserialize(comp));
+        resolve(new Competition().deserialize(new Competition().deserialize(data.data)));
       });
     });
   }
@@ -275,6 +275,30 @@ export class CompetitionService {
         reject(err);
       });
     });
+  }
+
+  updateCompetitionTeamsSocket(cid: number, team: Map<string, SimpleUser[]>) {
+    this._websocketService.sendMessage(`/competitions/${cid}/teams`, {teams: team});
+  }
+
+  watch(cid: number) {
+    setTimeout(function() {
+      this._websocketService.stompOn(`/competitions/${cid}`, {'systemTime': [this.handleSystemTime.bind(this)],
+          'compUsers': [this.handleUpdateUsers.bind(this)]});
+    }.bind(this), 1000);
+  }
+
+  stopWatching(cid: number) {
+    this._websocketService.stompOff(`/competitions/${cid}`);
+  }
+
+  private handleSystemTime(data: SystemTimeMessage) {
+      this.clientTimeOffset = data.systemTime - Date.now();
+      this.timeOffsetSource.next(this.clientTimeOffset);
+  }
+
+  private handleUpdateUsers(data: CompetitionUsersMessage) {
+    this.teamSource.next(data.teams);
   }
 
   private problemIsInComp(problemId: number): boolean {

@@ -17,7 +17,7 @@
 </div>
 <div class="row">
   <div class="col-md-9 gridded">
-    <div class="col-md-6" *ngFor="let team of teamNames">
+    <div class="col-md-6" *ngFor="let team of getTeamNames()">
       <div class="panel panel-default">
         <div class="panel-heading">
           <div class="panel-title">{{ team }}
@@ -40,7 +40,7 @@
           <form class="form-group" submit="addTeam()">
             <div class="col-md-8">
               <input class="form-control" placeholder="New Team"
-                  [(ngModel)]="teamName" name="teamName">
+                  [(ngModel)]="teamName" name="teamName" autocomplete="off">
             </div>
             <button class="btn btn-default" (click)="addTeam()"
                 [disabled]="teamExists()">Add</button>

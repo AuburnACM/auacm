@@ -1,48 +1,65 @@
 import { Injectable } from '@angular/core';
-
-import { Observable, Observer, Subject } from 'rxjs/Rx';
+import { StompService } from 'ng2-stomp-service/dist/stomp.service';
+import { environment } from './../environments/environment';
+import { MessageWrapper } from 'app/models/message';
 
 @Injectable()
 export class WebsocketService {
+  private stompConfig = {
+    host: `${environment.apiUrl}/ws`,
+    debug: false,
+    queue:{'init':false}
+  };
 
-  private subject: Subject<MessageEvent>;
-  private websocket: WebSocket;
+  private subscriptions: Map<string, any>;
 
-  connect(url: string): Subject<MessageEvent> {
-    if (!this.subject) {
-      this.subject = this.create(window.location.protocol === 'http:' ? 'ws://' + url : 'wss://' + url);
-      return this.subject;
-    }
-    return this.subject;
+  constructor(private _stompService: StompService) {
+    this.subscriptions = new Map<string, any>();
+    this._stompService.configure(this.stompConfig);
+    this.connect();
   }
 
-  private create(url: string) {
-    this.websocket = new WebSocket(url);
-    const subject = new Subject<MessageEvent>();
-
-    this.websocket.onmessage = event => {
-      subject.next(event);
-    };
-
-    this.websocket.onerror = event => {
-      subject.error(event);
-    };
-
-    this.websocket.onclose = event => {
-      subject.complete();
-    };
-    return subject;
+  public connect() {
+    this._stompService.startConnect().then(() => {
+      console.log('Websocket connected');
+    }, reason => {
+      console.log(reason);
+    }).catch(reason => {
+      console.log(reason);
+    });
   }
 
-  send(data: Object) {
-    if (this.websocket !== undefined) {
-      if (this.websocket.readyState === WebSocket.OPEN) {
-        this.websocket.send(JSON.stringify(data));
-      } else {
-        console.log('Websocket is not ready.');
+  public disconnect() {
+    this._stompService.disconnect().then(data => {
+      console.log('Websocket disconnected');
+    });
+  }
+
+  public stompOn(destination: string, callbacks: Map<string, Function[]>) {
+    // If a subscription already exists, let's remove it
+    this.stompOff(destination);
+    this.subscriptions[destination] = this._stompService.subscribe(destination, function(data) {
+      const message = new MessageWrapper().deserialize(data);
+      if (callbacks[message.eventType] !== undefined) {
+        for (const callback of callbacks[message.eventType]) {
+          callback(message.data);
+        }
       }
-    } else {
-      console.log('Websocket does not exist!');
+    });
+  }
+
+  public doesStompExist(destination: string): boolean {
+    return this.subscriptions[destination] !== undefined;
+  }
+
+  public stompOff(destination: string) {
+    if (this.doesStompExist(destination)) {
+      this.subscriptions[destination].unsubscribe();
+      this.subscriptions.delete(destination);
     }
+  }
+
+  public sendMessage(destination: string, message: any, headers?: Object) {
+    this._stompService.send(destination, message, headers);
   }
 }

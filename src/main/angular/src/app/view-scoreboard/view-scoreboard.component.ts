@@ -27,8 +27,7 @@ export class ViewScoreboardComponent implements OnInit, OnDestroy {
   private scoreboardTimer: NodeJS.Timer[] = [];
 
   constructor(private _activeRoute: ActivatedRoute, private _competitionService: CompetitionService,
-              private _userService: UserService, private _websocketService: WebsocketService,
-              private _router: Router) {
+              private _userService: UserService, private _router: Router) {
     this._userService.userData$.subscribe(data => this.userData = data);
 
     // Subscribe to the competition service so that the component receives the latest
@@ -46,7 +45,7 @@ export class ViewScoreboardComponent implements OnInit, OnDestroy {
     });
 
     // When a user is added to the competition refresh the competition data
-    this._competitionService.competitionTeamSource.subscribe(data => {
+    this._competitionService.teamSource.subscribe(data => {
       if (this.competition.cid > 0) {
         this._competitionService.fetchCompetition(this.competition.cid);
       }
@@ -59,6 +58,7 @@ export class ViewScoreboardComponent implements OnInit, OnDestroy {
     this._activeRoute.params.subscribe(params => {
       if (params['cid']) {
         this._competitionService.fetchCompetition(+params['cid']);
+        this._competitionService.watch(+params['cid']);
       } else {
         this._router.navigate(['404']);
       }
@@ -74,6 +74,7 @@ export class ViewScoreboardComponent implements OnInit, OnDestroy {
       }
     }
     // If the user is on this page, clear the scoreboard data
+    this._competitionService.stopWatching(this.competition.cid);
     this._competitionService.resetScoreboard();
   }
 

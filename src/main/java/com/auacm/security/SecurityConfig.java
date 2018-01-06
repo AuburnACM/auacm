@@ -28,6 +28,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity security) throws Exception {
         security.exceptionHandling().authenticationEntryPoint(new ForbiddenEntryPoint())
                 .and().authorizeRequests()
+                .antMatchers("/api/ws").permitAll()
+                .antMatchers("/api/ws/**").permitAll()
                 .antMatchers("/api/me", "/api/create_user",
                         "/api/change_password", "/api/update_user").fullyAuthenticated()
                 .antMatchers(HttpMethod.POST, "/api/blog").fullyAuthenticated()

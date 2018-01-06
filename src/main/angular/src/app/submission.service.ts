@@ -26,20 +26,20 @@ export class SubmissionService {
   recentSubmitsData$: Observable<RecentSubmission[]> = this.submissionsSource.asObservable();
 
   constructor(private _http: Http, private _websocketService: WebsocketService) {
-    this._websocketService.connect(window.location.host + '/websocket').subscribe(data => {
-        // Make sure the websocket eventType is for updating a submission
-        const response = JSON.parse(data.data);
-        if (response.eventType === 'status') {
-          const responseData = response.data;
-          for (let i = 0; i < this.recentSubmissions.length; i++) {
-            if (this.recentSubmissions[i].jobId === responseData.submissionId) {
-              this.recentSubmissions[i].status = responseData.status;
-              this.recentSubmissions[i].statusDescription = this.STATUS_NAMES[responseData.status];
-              break;
-            }
-          }
-        }
-    });
+    // this._websocketService.connect(window.location.host + '/websocket').subscribe(data => {
+    //     // Make sure the websocket eventType is for updating a submission
+    //     const response = JSON.parse(data.data);
+    //     if (response.eventType === 'status') {
+    //       const responseData = response.data;
+    //       for (let i = 0; i < this.recentSubmissions.length; i++) {
+    //         if (this.recentSubmissions[i].jobId === responseData.submissionId) {
+    //           this.recentSubmissions[i].status = responseData.status;
+    //           this.recentSubmissions[i].statusDescription = this.STATUS_NAMES[responseData.status];
+    //           break;
+    //         }
+    //       }
+    //     }
+    // });
   }
 
   /**

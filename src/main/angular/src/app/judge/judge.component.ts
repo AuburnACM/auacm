@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
 import 'rxjs/add/operator/switchMap';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';
 
 import { UserService } from '../user.service';
@@ -54,11 +54,11 @@ export class JudgeComponent implements OnInit {
         this._submissionService.refreshSubmits(user.username, 10);
       }
       this.user = user;
-      if (!this.user.loggedIn) {
-        if (this._router.url.startsWith('/judge')) {
-          this._router.navigate(['404']);
-        }
-      }
+      // if (!this.user.loggedIn) {
+      //   if (this._router.url.startsWith('/judge')) {
+      //     this._router.navigate(['404']);
+      //   }
+      // }
     });
     this._submissionService.recentSubmitsData$.subscribe(submissions => {
       this.submitted = submissions;
