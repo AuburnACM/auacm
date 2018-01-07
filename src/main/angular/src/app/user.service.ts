@@ -23,7 +23,7 @@ export class UserService {
   public userData$ = this.userDataSource.asObservable();
 
   constructor(private _httpClient: HttpClient, private _router: Router,
-              private _location: Location) { }
+              private _location: Location, private _activeRoute: ActivatedRoute) { }
 
   private updateUserData(userData: UserData): void {
     this.userData = userData;
@@ -58,7 +58,8 @@ export class UserService {
     return new Promise((resolve, reject) => {
       this._httpClient.get(`${environment.apiUrl}/logout`, {withCredentials: true}).subscribe(data => {
         self.updateUserData(new UserData());
-        console.log(this._location.path());
+        // Route to home when the user logs out
+        this._router.navigate(['/']);
         resolve(true);
       }, (err: Response) => {
         self.updateUserData(new UserData());

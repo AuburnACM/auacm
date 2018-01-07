@@ -46,8 +46,8 @@ import { SecondsToHoursPipe } from './pipes/seconds-to-hours.pipe';
 import { ContestLengthValidatorDirective } from './directives/contest-length-validator.directive';
 import { DateFormatValidatorDirective } from './directives/date-format-validator.directive';
 import { ProblemValidatorDirective } from './directives/problem-validator.directive';
-import { AdminGuard } from 'app/admin-guard';
-import { LoginGuard } from 'app/login.guard';
+import { AdminGuard } from './admin-guard';
+import { LoginGuard } from './login.guard';
 
 
 @NgModule({

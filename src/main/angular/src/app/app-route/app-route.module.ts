@@ -21,8 +21,8 @@ import { ProfilePageComponent } from '../profile-page/profile-page.component';
 import { RankingComponent } from '../ranking/ranking.component';
 import { ViewProblemComponent } from '../view-problem/view-problem.component';
 import { ViewScoreboardComponent } from '../view-scoreboard/view-scoreboard.component';
-import { AdminGuard } from 'app/admin-guard';
-import { LoginGuard } from 'app/login.guard';
+import { AdminGuard } from '../admin-guard';
+import { LoginGuard } from '../login.guard';
 
 const appRoutes: Routes = [
   { path: '', component: BlogListComponent },
@@ -51,7 +51,7 @@ const appRoutes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes, {onSameUrlNavigation: 'reload'})
   ],
   exports: [
     RouterModule
