@@ -4,7 +4,7 @@ import { Subject } from 'rxjs/Subject';
 
 import { Problem, SampleCase } from './models/problem';
 import { HttpClient } from '@angular/common/http';
-import { DataWrapper } from 'app/models/datawrapper';
+import { DataWrapper } from './models/datawrapper';
 import { environment } from './../environments/environment';
 
 @Injectable()

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { UserService } from './user.service';
 import { ProfileService } from './profile.service';
 
+import { environment } from './../environments/environment';
 import { UserData } from './models/user';
 
 declare var $: any;
@@ -26,7 +27,7 @@ export class AppComponent implements OnInit {
     this.user = _userService.getUserData();
     _userService.userData$.subscribe(user => {
       this.user = user;
-      this.profilePictureSource = 'api/profile/image/' + user.username + '?' + new Date().getTime();
+      this.profilePictureSource = `${environment.apiUrl}/profile/image/${user.username}?${Date.now()}`;
     });
     _profileService.profilePictureObservable().subscribe(update => {
       if (update) {
@@ -73,7 +74,7 @@ export class AppComponent implements OnInit {
   }
 
   refreshUserProfilePicture() {
-    this.profilePictureSource = 'api/profile/image/' +
+    this.profilePictureSource = `${environment.apiUrl}/profile/image/` +
       this.user.username + '?' + new Date().getTime();
   }
 }

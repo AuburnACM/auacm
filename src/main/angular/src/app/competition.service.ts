@@ -13,7 +13,7 @@ import { SimpleUser, WebsocketRegisteredUser } from './models/user';
 import { UrlEncodedHeader } from './models/service.utils';
 import { environment } from './../environments/environment';
 import { setTimeout } from 'timers';
-import { MessageWrapper, SystemTimeMessage, CompetitionUsersMessage } from 'app/models/message';
+import { MessageWrapper, SystemTimeMessage, CompetitionUsersMessage } from './models/message';
 
 /**
  * This class manages the connection to the competition part of the backend.

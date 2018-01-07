@@ -1,4 +1,4 @@
-import { SimpleUser } from "app/models/user";
+import { SimpleUser } from "./user";
 
 export interface Message {}
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { StompService } from 'ng2-stomp-service/dist/stomp.service';
 import { environment } from './../environments/environment';
-import { MessageWrapper } from 'app/models/message';
+import { MessageWrapper } from './models/message';
 
 @Injectable()
 export class WebsocketService {

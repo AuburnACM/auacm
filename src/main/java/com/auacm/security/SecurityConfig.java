@@ -24,9 +24,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private FailedLoginHandler failedLoginHandler;
 
+    @Autowired
+    private ForbiddenEntryPoint entryPoint;
+
     @Override
     protected void configure(HttpSecurity security) throws Exception {
-        security.exceptionHandling().authenticationEntryPoint(new ForbiddenEntryPoint())
+        security.cors().and().exceptionHandling().authenticationEntryPoint(entryPoint)
                 .and().authorizeRequests()
                 .antMatchers("/api/ws").permitAll()
                 .antMatchers("/api/ws/**").permitAll()
