@@ -10,6 +10,12 @@ export class AdminGuard implements CanActivate {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    return this._userService.isAdmin();
+    const promise = this._userService.isAdmin();
+    promise.then(value => {
+      if (!value) {
+        this._router.navigate(['/404']);
+      }
+    });
+    return promise;
   }
 }

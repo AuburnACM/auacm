@@ -122,7 +122,7 @@ public class CompetitionController {
         return competitionService.getTeamListResponse(competitionService.updateCompetitionTeams(cid, competitionTeams));
     }
 
-    @MessageMapping("/competitions/{cid}/teams")
+    @MessageMapping("/api/competitions/{cid}/teams")
     public void updateCompetitionTeamsSocket(@DestinationVariable long cid, CompetitionTeams teams) {
         competitionService.updateCompetitionTeams(cid, teams);
     }

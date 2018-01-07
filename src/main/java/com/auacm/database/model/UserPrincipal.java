@@ -14,6 +14,14 @@ public class UserPrincipal implements UserDetails {
         this.user = user;
     }
 
+    public UserPrincipal() {
+        user = new User();
+        user.setAdmin(false);
+        user.setDisplay("Anonymous User");
+        user.setUsername("anonymous_user");
+        user.setPassword("");
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // TODO Implement permissions later

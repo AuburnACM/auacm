@@ -27,6 +27,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private ForbiddenEntryPoint entryPoint;
 
+    @Autowired
+    private BCryptAuthenticationProvider provider;
+
     @Override
     protected void configure(HttpSecurity security) throws Exception {
         security.cors().and().exceptionHandling().authenticationEntryPoint(entryPoint)
@@ -51,6 +54,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(new BCryptAuthenticationProvider(userService));
+        auth.authenticationProvider(provider);
     }
 }

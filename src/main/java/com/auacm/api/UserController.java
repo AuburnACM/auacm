@@ -130,4 +130,6 @@ public class UserController {
     public ResponseEntity<Resource> getProfilePicture(@PathVariable String username) {
         return new ResponseEntity<>(fileSystemService.getProfilePicture(username), HttpStatus.OK);
     }
+
+
 }

@@ -278,7 +278,7 @@ export class CompetitionService {
   }
 
   updateCompetitionTeamsSocket(cid: number, team: Map<string, SimpleUser[]>) {
-    this._websocketService.sendMessage(`/competitions/${cid}/teams`, {teams: team});
+    this._websocketService.sendMessage(`/api/competitions/${cid}/teams`, {teams: team});
   }
 
   watch(cid: number) {

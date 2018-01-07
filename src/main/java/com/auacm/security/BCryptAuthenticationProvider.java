@@ -3,20 +3,20 @@ package com.auacm.security;
 import com.auacm.database.model.UserPrincipal;
 import com.auacm.service.UserService;
 import com.auacm.database.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 
+@Component
 public class BCryptAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
+    @Autowired
     private UserService userService;
-
-    public BCryptAuthenticationProvider(UserService userService) {
-        this.userService = userService;
-    }
 
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws AuthenticationException {
