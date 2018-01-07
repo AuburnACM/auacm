@@ -125,11 +125,4 @@ public class UserController {
         }
         return userService.getRankedResponse(userService.getRanks(timeFrame));
     }
-
-    @RequestMapping(value = "/api/profile/image/{username}", method = RequestMethod.GET)
-    public ResponseEntity<Resource> getProfilePicture(@PathVariable String username) {
-        return new ResponseEntity<>(fileSystemService.getProfilePicture(username), HttpStatus.OK);
-    }
-
-
 }

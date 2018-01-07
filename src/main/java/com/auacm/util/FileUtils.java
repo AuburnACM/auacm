@@ -184,6 +184,17 @@ public class FileUtils {
         }
     }
 
+    public boolean saveFile(String path, byte[] data, boolean overwrite) {
+        try {
+            FileOutputStream out = new FileOutputStream(new File(path), !overwrite);
+            out.write(data);
+            out.close();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
     public boolean saveInputStream(InputStream inputStream, String outputDir, String outputName, boolean overwrite) {
         try {
             FileOutputStream out;

@@ -11,10 +11,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 @Repository
@@ -68,6 +66,11 @@ public class FileSystemDaoImpl implements FileSystemDao {
 
     @Override
     public boolean createFile(String path, String data, boolean overwrite) {
+        return fileUtils.saveFile(path, data, overwrite);
+    }
+
+    @Override
+    public boolean createFile(String path, byte[] data, boolean overwrite) {
         return fileUtils.saveFile(path, data, overwrite);
     }
 

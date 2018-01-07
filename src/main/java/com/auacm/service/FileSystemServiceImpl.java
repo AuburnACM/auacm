@@ -8,9 +8,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Base64;
 
 @Service
 public class FileSystemServiceImpl implements FileSystemService {
@@ -31,6 +32,13 @@ public class FileSystemServiceImpl implements FileSystemService {
         } else {
             return fileSystemDao.getFile("data/profile/default/profile.png");
         }
+    }
+
+    @Override
+    public boolean saveProfilePicture(String username, String data) {
+        byte[] pictureData = Base64.getDecoder().decode(data);
+        fileSystemDao.createDirectory("data/profile/");
+        return fileSystemDao.createFile(String.format("data/profile/%s.png", username), pictureData, true);
     }
 
     @Override

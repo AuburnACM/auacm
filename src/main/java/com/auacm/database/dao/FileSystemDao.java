@@ -22,6 +22,8 @@ public interface FileSystemDao {
 
     boolean createFile(String path, String data, boolean overwrite);
 
+    boolean createFile(String path, byte[] data, boolean overwrite);
+
     boolean createZip(String path, boolean overwrite, String pathReplace, String...files);
 
     String readFile(String path);

@@ -8,6 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 public interface FileSystemService {
     Resource getProfilePicture(String username);
 
+    boolean saveProfilePicture(String username, String data);
+
     Resource getProblemPdf(String shortName);
 
     boolean deleteProblem(String problemId);
