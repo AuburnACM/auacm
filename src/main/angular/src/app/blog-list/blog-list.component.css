@@ -12,6 +12,10 @@
     color: #7c7c7c;
 }
 
+.glyphicon-remove:hover {
+    color: #7c7c7c;
+}
+
 .blog-list {
     padding-right: 15px;
     padding-left: 15px;

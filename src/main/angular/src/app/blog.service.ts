@@ -18,8 +18,6 @@ export class BlogService {
       params.append('title', title);
       params.append('subtitle', subtitle);
       params.append('body', body);
-      const headers = new HttpHeaders();
-      // headers.append('Content-Type', 'multipart/form-data');
 
       this._httpClient.post<DataWrapper<BlogPost>>(`${environment.apiUrl}/blog`, params, {withCredentials: true, responseType: 'json'})
           .subscribe(data => {
@@ -32,15 +30,25 @@ export class BlogService {
 
   updateBlogPost(postId: number, title: string, subtitle: string, body: string): Promise<BlogPost> {
     return new Promise((resolve, reject) => {
-      const params = new HttpParams();
+      const params = new FormData();
       params.append('title', title);
       params.append('subtitle', subtitle);
       params.append('body', body);
 
-      this._httpClient.put<DataWrapper<BlogPost>>(`${environment.apiUrl}/blog/${postId}`, params.toString(), { params: params }).subscribe(data => {
+      this._httpClient.post<DataWrapper<BlogPost>>(`${environment.apiUrl}/blog/${postId}`, params, { withCredentials: true }).subscribe(data => {
         resolve(data.data);
       }, (err: HttpErrorResponse) => {
         resolve(undefined);
+      });
+    });
+  }
+
+  deleteBlogPost(postId: number): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this._httpClient.delete(`${environment.apiUrl}/blog/${postId}`, { withCredentials: true}).subscribe(() => {
+        resolve();
+      }, (err: Response) => {
+        reject(err);
       });
     });
   }

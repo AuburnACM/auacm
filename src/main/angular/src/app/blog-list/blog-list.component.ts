@@ -12,6 +12,8 @@ import { UserData } from '../models/user';
 const EDIT_ICON_NONE: number = -1;
 const WORD_LIMIT_SIZE = 200;
 
+declare var $: any;
+
 @Component({
   templateUrl: './blog-list.component.html',
   styleUrls: ['./blog-list.component.css']
@@ -50,6 +52,12 @@ export class BlogListComponent implements OnInit {
 
   editPost(id: number) {
     this._router.navigate([`/blog/${id}/edit`]);
+  }
+
+  deletePost(id: number, index: number) {
+    this._blogService.deleteBlogPost(id).then(() => {
+      this.blogPosts.splice(index, 1);
+    });
   }
 
   toggleBlogPost(post: BlogPost) {

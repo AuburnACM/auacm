@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
     this.user = _userService.getUserData();
     _userService.userData$.subscribe(user => {
       this.user = user;
-      this.profilePictureSource = `${environment.apiUrl}/profile/image/${user.username}?${Date.now()}`;
+      this.profilePictureSource = `${environment.apiUrl}/profile/${user.username}/image?time=${Date.now()}`;
     });
     _profileService.profilePictureObservable().subscribe(update => {
       if (update) {
@@ -74,7 +74,6 @@ export class AppComponent implements OnInit {
   }
 
   refreshUserProfilePicture() {
-    this.profilePictureSource = `${environment.apiUrl}/profile/image/` +
-      this.user.username + '?' + new Date().getTime();
+    this.profilePictureSource = `${environment.apiUrl}/profile/${this.user.username}/image?time=${new Date().getTime()}`;
   }
 }
