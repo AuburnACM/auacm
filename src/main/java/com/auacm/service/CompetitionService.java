@@ -21,6 +21,8 @@ public interface CompetitionService {
 
     Map<String, List<Competition>> getAllCompetitions();
 
+    List<CompetitionUser> getRecentCompetitionsForUser(String username, int amount);
+
     boolean isUserRegistered(Long competitionId, String user);
 
     boolean isCurrentUserRegistered(Competition competition);

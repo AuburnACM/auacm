@@ -18,7 +18,7 @@ public class Submission implements Serializable {
     private User user;
 
     @Column(name = "username")
-    private String userName;
+    private String username;
 
     @Column(name = "shortname")
     private String shortName;
@@ -62,12 +62,12 @@ public class Submission implements Serializable {
         return this;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String userName) {
+        this.username = userName;
     }
 
     public String getShortName() {

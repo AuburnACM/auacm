@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package com.auacm.api.proto;
+
+message RecentSubmission {
+    bool correct = 1;
+    string name = 2;
+    string shortName = 3;
+    int64 pid = 4;
+    int32 submissionCount = 5;
+    repeated int64 submissionIds = 6;
+}
+
+message RecentCompetition {
+    int64 cid = 1;
+    string compName = 2;
+    string teamName = 3;
+    int32 teamSize = 4;
+}
+
+message RecentBlogPost {
+    string title = 1;
+    string subtitle = 2;
+    int64 postTime = 3;
+    int64 id = 4;
+}
+
+message Profile {
+    string displayName = 1;
+    int32 problemsSolved = 2;
+    repeated RecentSubmission recentAttempts = 3;
+    repeated RecentBlogPost recentBlogPosts = 4;
+    repeated RecentCompetition recentCompetitions = 5;
+}
+
+message ProfileResponse {
+    Profile data = 1;
+}
+
+message RecentBlogPostResponse {
+    repeated RecentBlogPost data = 1;
+}
+
+message RecentCompetitionResponse {
+    repeated RecentCompetition data = 1;
+}
+
+message RecentSubmissionResponse {
+    repeated RecentSubmission data = 1;
+}

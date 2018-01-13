@@ -8,6 +8,7 @@ import com.auacm.api.model.UpdateBlogPost;
 import com.auacm.database.model.User;
 import com.auacm.exception.BlogNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 
@@ -109,6 +110,11 @@ public class BlogPostServiceImpl implements BlogPostService {
         } catch (JpaObjectRetrievalFailureException | EntityNotFoundException e) {
             throw new BlogNotFoundException(String.format("Failed to find blogs for user %s.", username));
         }
+    }
+
+    @Override
+    public List<BlogPost> getRecentBlogPostsForUser(String username, int amount) {
+        return blogPostDao.findAllByUsernameOrderByPostTimeDesc(username, new PageRequest(0, amount));
     }
 
     @Override

@@ -34,6 +34,7 @@ proto:
 	protoc --java_out=src/main/java/ src/main/resources/proto/Blog.proto
 	protoc --java_out=src/main/java/ src/main/resources/proto/Competition.proto
 	protoc --java_out=src/main/java/ src/main/resources/proto/Problem.proto
+	protoc --java_out=src/main/java/ src/main/resources/proto/Profile.proto
 	protoc --java_out=src/main/java/ src/main/resources/proto/User.proto
 
 clean:

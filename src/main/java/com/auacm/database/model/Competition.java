@@ -99,4 +99,14 @@ public class Competition implements Serializable {
     public void setCompetitionUsers(List<CompetitionUser> competitionUsers) {
         this.competitionUsers = competitionUsers;
     }
+
+    public int getUserCountForTeam(String teamName) {
+        int count = 0;
+        for (CompetitionUser user : competitionUsers) {
+            if (user.getTeam().equals(teamName)) {
+                count++;
+            }
+        }
+        return count;
+    }
 }

@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -99,6 +100,11 @@ public class CompetitionServiceImpl implements CompetitionService {
             }
         }
         return competitionMap;
+    }
+
+    @Override
+    public List<CompetitionUser> getRecentCompetitionsForUser(String username, int amount) {
+        return competitionUserDao.findAllByUsernameOrderByCidDesc(username, new PageRequest(0, amount));
     }
 
     @Override
@@ -386,7 +392,7 @@ public class CompetitionServiceImpl implements CompetitionService {
             teamMap.get(competitionUser.getTeam()).addUser(user);
             long start = competition.getStart();
             long stop = competition.getStop();
-            List<Submission> submissions = submissionService.getAllSubmissionsForUserNameBetween(
+            List<Submission> submissions = submissionService.getAllSubmissionsForUsernameBetween(
                     user.getUsername(), start, stop);
             if (submissions != null) {
                 submissionMap.put(user.getUsername(), submissions);

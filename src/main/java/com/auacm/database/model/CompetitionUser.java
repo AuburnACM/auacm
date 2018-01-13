@@ -16,9 +16,9 @@ public class CompetitionUser implements Serializable {
 
     private String team;
 
-//    @ManyToOne(targetEntity = Competition.class, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "cid", nullable = false, insertable = false)
-//    private Competition competition;
+    @ManyToOne(targetEntity = Competition.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "cid", updatable = false, insertable = false)
+    private Competition competition;
 
     public Long getId() {
         return id;
@@ -52,11 +52,11 @@ public class CompetitionUser implements Serializable {
         this.team = team;
     }
 
-//    public Competition getCompetition() {
-//        return competition;
-//    }
-//
-//    public void setCompetition(Competition competition) {
-//        this.competition = competition;
-//    }
+    public Competition getCompetition() {
+        return competition;
+    }
+
+    public void setCompetition(Competition competition) {
+        this.competition = competition;
+    }
 }

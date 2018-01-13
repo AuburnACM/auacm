@@ -27,6 +27,8 @@ public interface BlogPostService {
 
     List<BlogPost> getBlogPostForUser(String username);
 
+    List<BlogPost> getRecentBlogPostsForUser(String username, int amount);
+
     BlogPost getBlogPostForId(long id);
 
     Blog.BlogResponseWrapper getResponseForBlog(BlogPost post, User user);
