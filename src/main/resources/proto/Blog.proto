@@ -6,7 +6,7 @@ message BlogPostResponse {
     int64 id = 1;
     string title = 2;
     string subtitle = 3;
-    int64 post_time = 4;
+    int64 postTime = 4;
     string body = 5;
     message Author {
         string username = 1;

@@ -1,5 +1,6 @@
 import { AppRouteModule } from './app-route/app-route.module';
 import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { DragulaModule } from 'ng2-dragula';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -85,6 +86,7 @@ import { LoginGuard } from './login.guard';
   imports: [
     AppRouteModule,
     BrowserModule,
+    CommonModule,
     DragulaModule,
     FormsModule,
     HttpClientModule,

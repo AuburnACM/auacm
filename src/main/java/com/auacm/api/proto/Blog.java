@@ -44,7 +44,7 @@ public final class Blog {
         getSubtitleBytes();
 
     /**
-     * <code>int64 post_time = 4;</code>
+     * <code>int64 postTime = 4;</code>
      */
     long getPostTime();
 
@@ -920,10 +920,10 @@ public final class Blog {
       }
     }
 
-    public static final int POST_TIME_FIELD_NUMBER = 4;
+    public static final int POSTTIME_FIELD_NUMBER = 4;
     private long postTime_;
     /**
-     * <code>int64 post_time = 4;</code>
+     * <code>int64 postTime = 4;</code>
      */
     public long getPostTime() {
       return postTime_;
@@ -1092,7 +1092,7 @@ public final class Blog {
       hash = (53 * hash) + getTitle().hashCode();
       hash = (37 * hash) + SUBTITLE_FIELD_NUMBER;
       hash = (53 * hash) + getSubtitle().hashCode();
-      hash = (37 * hash) + POST_TIME_FIELD_NUMBER;
+      hash = (37 * hash) + POSTTIME_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getPostTime());
       hash = (37 * hash) + BODY_FIELD_NUMBER;
@@ -1533,13 +1533,13 @@ public final class Blog {
 
       private long postTime_ ;
       /**
-       * <code>int64 post_time = 4;</code>
+       * <code>int64 postTime = 4;</code>
        */
       public long getPostTime() {
         return postTime_;
       }
       /**
-       * <code>int64 post_time = 4;</code>
+       * <code>int64 postTime = 4;</code>
        */
       public Builder setPostTime(long value) {
         
@@ -1548,7 +1548,7 @@ public final class Blog {
         return this;
       }
       /**
-       * <code>int64 post_time = 4;</code>
+       * <code>int64 postTime = 4;</code>
        */
       public Builder clearPostTime() {
         
@@ -3154,16 +3154,16 @@ public final class Blog {
   static {
     java.lang.String[] descriptorData = {
       "\n#src/main/resources/proto/Blog.proto\022\023c" +
-      "om.auacm.api.proto\"\313\001\n\020BlogPostResponse\022" +
+      "om.auacm.api.proto\"\312\001\n\020BlogPostResponse\022" +
       "\n\n\002id\030\001 \001(\003\022\r\n\005title\030\002 \001(\t\022\020\n\010subtitle\030\003" +
-      " \001(\t\022\021\n\tpost_time\030\004 \001(\003\022\014\n\004body\030\005 \001(\t\022<\n" +
-      "\006author\030\006 \001(\0132,.com.auacm.api.proto.Blog" +
-      "PostResponse.Author\032+\n\006Author\022\020\n\010usernam" +
-      "e\030\001 \001(\t\022\017\n\007display\030\002 \001(\t\"J\n\023BlogResponse" +
-      "Wrapper\0223\n\004data\030\001 \001(\0132%.com.auacm.api.pr" +
-      "oto.BlogPostResponse\"G\n\020MultiPostWrapper" +
-      "\0223\n\004data\030\001 \003(\0132%.com.auacm.api.proto.Blo",
-      "gPostResponseb\006proto3"
+      " \001(\t\022\020\n\010postTime\030\004 \001(\003\022\014\n\004body\030\005 \001(\t\022<\n\006" +
+      "author\030\006 \001(\0132,.com.auacm.api.proto.BlogP" +
+      "ostResponse.Author\032+\n\006Author\022\020\n\010username" +
+      "\030\001 \001(\t\022\017\n\007display\030\002 \001(\t\"J\n\023BlogResponseW" +
+      "rapper\0223\n\004data\030\001 \001(\0132%.com.auacm.api.pro" +
+      "to.BlogPostResponse\"G\n\020MultiPostWrapper\022" +
+      "3\n\004data\030\001 \003(\0132%.com.auacm.api.proto.Blog",
+      "PostResponseb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

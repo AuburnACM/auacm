@@ -37,4 +37,10 @@ export class BlogPostComponent implements OnInit {
       this.post = blogPost;
     });
   }
+
+  deletePost(id: number, index: number) {
+    this._blogService.deleteBlogPost(id).then(() => {
+      this._router.navigate(['/']);
+    });
+  }
 }
