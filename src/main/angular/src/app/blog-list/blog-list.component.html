@@ -1,10 +1,10 @@
 <div class="body">
   <!-- Container -->
-  <div class="col-md-8 col-md-offset-2">
+  <div class="col-md-8 col-md-offset-2 text-center">
     <div class="page-header">
       <h1>Auburn ACM Blog</h1>
     </div>
-    <div class="row blog-list" (mouseover)="hoverId = post.id"
+    <div class="row blog-list text-left" (mouseover)="hoverId = post.id"
         (mouseleave)="hoverId = EDIT_ICON_NONE" *ngFor="let post of blogPosts">
       <div class="row header-parent">
         <div class="col-md-11">
@@ -39,5 +39,6 @@
               [ngClass]="{'glyphicon': true, 'glyphicon-chevron-up': post.expanded,
               'glyphicon-chevron-down': !post.expanded}" aria-hidden="true"></span></button>
     </div>
+    <button *ngIf="!loading && blogPosts.length % 10 == 0 && !noMoreBlogs" (click)="fetchMoreBlogs()" class="btn btn-default load-more">Load more...</button>
   </div>
 </div>

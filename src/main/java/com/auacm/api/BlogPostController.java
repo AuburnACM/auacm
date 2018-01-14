@@ -53,8 +53,9 @@ public class BlogPostController {
     }
 
     @RequestMapping(path = "/api/blog", method = RequestMethod.GET)
-    public @ResponseBody Blog.MultiPostWrapper getBlogPosts() {
-        List<BlogPost> blogPosts = blogPostService.getAllBlogPosts();
+    public @ResponseBody Blog.MultiPostWrapper getBlogPosts(@RequestParam(required = false) Integer limit,
+                                                            @RequestParam(required = false) Integer page) {
+        List<BlogPost> blogPosts = blogPostService.getAllBlogPosts(limit == null ? 10 : limit, page == null ? 0 : page);
         return blogPostService.getResponseForBlogs(blogPosts);
     }
 

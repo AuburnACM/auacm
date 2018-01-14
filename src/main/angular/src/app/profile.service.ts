@@ -22,7 +22,6 @@ export class ProfileService {
         resolve(new UserProfile());
       } else {
         this._httpClient.get<DataWrapper<UserProfile>>(`${environment.apiUrl}/profile/${username}`, {withCredentials: true}).subscribe(data => {
-          console.log(data.data);
           resolve(new UserProfile().deserialize(data.data));
         }, (err: Response) => {
           resolve(new UserProfile());

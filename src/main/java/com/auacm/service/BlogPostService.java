@@ -23,7 +23,7 @@ public interface BlogPostService {
 
     BlogPost deleteBlogPost(long postId);
 
-    List<BlogPost> getAllBlogPosts();
+    List<BlogPost> getAllBlogPosts(int limit, int page);
 
     List<BlogPost> getBlogPostForUser(String username);
 

@@ -8,7 +8,9 @@ import com.auacm.api.model.UpdateBlogPost;
 import com.auacm.database.model.User;
 import com.auacm.exception.BlogNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 
@@ -93,11 +95,10 @@ public class BlogPostServiceImpl implements BlogPostService {
     }
 
     @Override
-    public List<BlogPost> getAllBlogPosts() {
+    public List<BlogPost> getAllBlogPosts(int limit, int page) {
         try {
-            List<BlogPost> posts = blogPostDao.findAll();
-            Collections.sort(posts);
-            return posts;
+            PageRequest request = new PageRequest(page, limit, new Sort(Sort.Direction.DESC, "id"));
+            return blogPostDao.findAll(request).getContent();
         } catch (JpaObjectRetrievalFailureException | EntityNotFoundException e) {
             throw new BlogNotFoundException("No blogs exist.");
         }

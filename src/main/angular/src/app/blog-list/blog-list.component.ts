@@ -24,6 +24,10 @@ export class BlogListComponent implements OnInit {
   public user: UserData;
   public hoverId: number = EDIT_ICON_NONE;
   public wordLimitSize = WORD_LIMIT_SIZE;
+  public loadingMore = false;
+  public noMoreBlogs = false;
+  private page = 0;
+  private limit = 10;
 
   constructor(private _blogService: BlogService, private _userService: UserService,
               private _router: Router) {
@@ -38,7 +42,7 @@ export class BlogListComponent implements OnInit {
   }
 
   getBlogs() {
-    this._blogService.getAllBlogPosts().then(blogs => {
+    this._blogService.getAllBlogPosts(this.limit, this.page).then(blogs => {
       const tempPipe = new LimitWordsPipe();
       this.blogPosts = blogs;
       for (let i = 0; i < this.blogPosts.length; i++) {
@@ -47,6 +51,28 @@ export class BlogListComponent implements OnInit {
           this.blogPosts[i].resized = true;
         }
       }
+    });
+  }
+
+  fetchMoreBlogs() {
+    this.loadingMore = true;
+    this.page++;
+    this._blogService.getAllBlogPosts(this.limit, this.page).then(blogs => {
+      if (blogs.length == 0) {
+        this.noMoreBlogs = true;
+      }
+      const tempPipe = new LimitWordsPipe();
+      const start = this.blogPosts.length;
+      for (const blog of blogs) {
+        this.blogPosts.push(blog);
+      }
+      for (let i = start; i < this.blogPosts.length; i++) {
+        if (tempPipe.transform(this.converter.makeHtml(this.blogPosts[i].body),
+            this.wordLimitSize).trim().length < this.converter.makeHtml(this.blogPosts[i].body.trim()).length) {
+          this.blogPosts[i].resized = true;
+        }
+      }
+      this.loadingMore = false;
     });
   }
 

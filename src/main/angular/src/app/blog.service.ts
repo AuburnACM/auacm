@@ -56,9 +56,9 @@ export class BlogService {
   /**
    * Fetches the blog posts from /api/blog.
    */
-  getAllBlogPosts(): Promise<BlogPost[]> {
+  getAllBlogPosts(limit: number, page: number): Promise<BlogPost[]> {
     return new Promise((resolve, reject) => {
-      this._httpClient.get<DataWrapper<BlogPost[]>>(`${environment.apiUrl}/blog`).subscribe(data => {
+      this._httpClient.get<DataWrapper<BlogPost[]>>(`${environment.apiUrl}/blog?limit=${limit}&page=${page}`).subscribe(data => {
         const array: BlogPost[] = [];
         for (const temp of data.data) {
           array.push(new BlogPost().deserialize(temp));
