@@ -1,21 +1,17 @@
 package com.auacm.api;
 
-import com.auacm.api.model.CreateUser;
-import com.auacm.api.model.UpdateUser;
+import com.auacm.api.model.request.UpdateUserRequest;
+import com.auacm.api.model.response.MeResponse;
+import com.auacm.api.model.response.RankedUserListResponse;
 import com.auacm.api.validator.CreateUserValidator;
 import com.auacm.api.validator.UpdateUserValidator;
 import com.auacm.database.model.User;
-import com.auacm.database.model.UserPrincipal;
-import com.auacm.exception.UserException;
 import com.auacm.service.FileSystemService;
 import com.auacm.service.UserService;
 import com.auacm.util.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -60,16 +56,14 @@ public class UserController {
         logger = LoggerFactory.getLogger(UserController.class);
     }
 
-    @RequestMapping(value = "/api/login", method = {RequestMethod.POST, RequestMethod.GET})
-    public com.auacm.api.proto.User.MeResponseWrapper login(HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/api/login", method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
+    public MeResponse login(HttpServletRequest request, HttpServletResponse response) {
         if (response.getStatus() == 200) {
             if (SecurityContextHolder.getContext().getAuthentication() == null
                     || SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
                 throw new BadCredentialsException("Invalid username or password!");
             }
-            return userService
-                    .getMeResponse((UserPrincipal)SecurityContextHolder
-                            .getContext().getAuthentication().getPrincipal());
+            return new MeResponse((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         }
         throw new BadCredentialsException("Invalid username or password!");
     }
@@ -82,47 +76,40 @@ public class UserController {
         SecurityContextHolder.clearContext();
     }
 
-    @RequestMapping(value = "/api/me", method = RequestMethod.GET)
-    public @ResponseBody com.auacm.api.proto.User.MeResponseWrapper me() {
-        UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userService.getMeResponse(principal);
+    @RequestMapping(value = "/api/me", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody MeResponse me() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return new MeResponse(user);
     }
 
-    @RequestMapping(value = "/api/create_user", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/create_user", method = RequestMethod.POST, produces = "application/json")
     @PreAuthorize("hasRole('ADMIN')")
-    public @ResponseBody com.auacm.api.proto.User.MeResponseWrapper
-    createUser(@Validated @ModelAttribute("createUser") CreateUser user) {
-        User user1 = userService.createUser(user.getDisplay(), user.getUsername(), user.getPassword(), user.isAdmin());
-        return userService.getMeResponse(new UserPrincipal(user1));
+    public @ResponseBody MeResponse createUser(@Validated @ModelAttribute("createUser") User user) {
+        return new MeResponse(userService.createUser(user.getDisplayName(),
+                user.getUsername(), user.getPassword(), user.getAdmin()));
     }
 
     @RequestMapping(value = "/api/change_password", method = RequestMethod.POST)
-    public void changePassword(@Validated @ModelAttribute("updateUser") UpdateUser user) {
-        User userInstance = ((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
-        if (user.getNewPassword() != null) {
-            userService.updatePassword(userInstance, user.getNewPassword());
-        } else {
-            throw new UserException("Password is empty!");
-        }
+    public void changePassword(@Validated @ModelAttribute("updateUser") UpdateUserRequest user) {
+        User userInstance = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        userService.updatePassword(userInstance, user.getNewPassword());
     }
 
     @RequestMapping(value = "/api/update_user", produces = "application/json", method = RequestMethod.POST)
-    public void updateUser(@Validated @ModelAttribute("updateUser") UpdateUser user) {
+    public void updateUser(@Validated @ModelAttribute("updateUser") UpdateUserRequest user) {
         userService.updateSelf(user);
     }
 
     @RequestMapping(value = "/api/ranking", produces = "application/json", method = RequestMethod.GET)
-    public @ResponseBody
-    com.auacm.api.proto.User.RankResponseWrapper getRanks() {
+    public @ResponseBody RankedUserListResponse getRanks() {
         return getRanks("all");
     }
 
     @RequestMapping(value = "/api/ranking/{timeFrame}", produces = "application/json", method = RequestMethod.GET)
-    public @ResponseBody
-    com.auacm.api.proto.User.RankResponseWrapper getRanks(@PathVariable String timeFrame) {
+    public @ResponseBody RankedUserListResponse getRanks(@PathVariable String timeFrame) {
         if (timeFrame == null) {
             timeFrame = "all";
         }
-        return userService.getRankedResponse(userService.getRanks(timeFrame));
+        return new RankedUserListResponse(userService.getRanks(timeFrame));
     }
 }

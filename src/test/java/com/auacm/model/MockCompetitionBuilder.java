@@ -1,15 +1,15 @@
 package com.auacm.model;
 
-import com.auacm.api.model.CreateCompetition;
+import com.auacm.api.model.request.CreateCompetitionRequest;
 
 import java.util.ArrayList;
 
 public class MockCompetitionBuilder {
-    private CreateCompetition competition;
+    private CreateCompetitionRequest competition;
 
     public MockCompetitionBuilder() {
-        competition = new CreateCompetition();
-        competition = new CreateCompetition();
+        competition = new CreateCompetitionRequest();
+        competition = new CreateCompetitionRequest();
         competition.setName("Test Competition");
         competition.setClosed(false);
         competition.setLength(3600L);
@@ -54,7 +54,7 @@ public class MockCompetitionBuilder {
         return this;
     }
 
-    public CreateCompetition build() {
+    public CreateCompetitionRequest build() {
         return competition;
     }
 }

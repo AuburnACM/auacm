@@ -1,12 +1,16 @@
 package com.auacm.model;
 
-import com.auacm.api.model.CompetitionTeams;
-import com.auacm.api.model.SimpleTeam;
+import com.auacm.api.model.BasicUser;
+import com.auacm.api.model.request.UpdateTeamsRequest;
+import com.auacm.database.model.User;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MockCompetitionTeamBuilder {
-    private HashMap<String, List<SimpleTeam>> teams;
+    private HashMap<String, List<BasicUser>> teams;
 
     public MockCompetitionTeamBuilder() {
         teams = new HashMap<>();
@@ -15,11 +19,11 @@ public class MockCompetitionTeamBuilder {
     public MockCompetitionTeamBuilder addUser(String username, String display, String team) {
         removeUser(username);
         if (!teams.containsKey(team)) {
-            ArrayList<SimpleTeam> temp = new ArrayList<>();
-            temp.add(new SimpleTeam(display, username));
+            ArrayList<BasicUser> temp = new ArrayList<>();
+            temp.add(new BasicUser(display, username));
             teams.put(team, temp);
         } else {
-            SimpleTeam simpleTeam = new SimpleTeam(display, username);
+            BasicUser simpleTeam = new BasicUser(display, username);
             if (!teams.get(team).contains(simpleTeam)) {
                 teams.get(team).add(simpleTeam);
             }
@@ -29,9 +33,9 @@ public class MockCompetitionTeamBuilder {
 
     public MockCompetitionTeamBuilder removeUser(String username) {
         String removeTeam = null;
-        for (Map.Entry<String, List<SimpleTeam>> teams : teams.entrySet()) {
+        for (Map.Entry<String, List<BasicUser>> teams : teams.entrySet()) {
             boolean found = false;
-            for (SimpleTeam team : new ArrayList<>(teams.getValue())) {
+            for (BasicUser team : new ArrayList<>(teams.getValue())) {
                 if (team.getUsername().equals(username)) {
                     teams.getValue().remove(team);
                     if (teams.getValue().size() == 0) {
@@ -51,8 +55,8 @@ public class MockCompetitionTeamBuilder {
         return this;
     }
 
-    public CompetitionTeams build() {
-        CompetitionTeams teams = new CompetitionTeams();
+    public UpdateTeamsRequest build() {
+        UpdateTeamsRequest teams = new UpdateTeamsRequest();
         teams.setTeams(this.teams);
         return teams;
     }

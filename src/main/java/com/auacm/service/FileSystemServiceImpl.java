@@ -1,5 +1,6 @@
 package com.auacm.service;
 
+import com.auacm.api.model.JudgeFile;
 import com.auacm.database.dao.FileSystemDao;
 import com.auacm.database.model.Problem;
 import com.auacm.exception.PdfNotFoundException;
@@ -11,11 +12,17 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 @Service
 public class FileSystemServiceImpl implements FileSystemService {
     private final String TEMP_FOLDER = "data/tmp/";
+    private final String PROBLEM_FOLDER = "data/problems/";
+    private final String SUBMISSION_FOLDER = "data/submits/";
+
     @Autowired
     private FileSystemDao fileSystemDao;
 
@@ -35,10 +42,10 @@ public class FileSystemServiceImpl implements FileSystemService {
     }
 
     @Override
-    public boolean saveProfilePicture(String username, String data) {
+    public void saveProfilePicture(String username, String data) {
         byte[] pictureData = Base64.getDecoder().decode(data);
         fileSystemDao.createDirectory("data/profile/");
-        return fileSystemDao.createFile(String.format("data/profile/%s.png", username), pictureData, true);
+        fileSystemDao.createFile(String.format("data/profile/%s.png", username), pictureData, true);
     }
 
     @Override
@@ -52,15 +59,16 @@ public class FileSystemServiceImpl implements FileSystemService {
     }
 
     @Override
-    public boolean deleteProblem(String id) {
-        return fileSystemDao.deleteFile(String.format("data/problems/%s", id));
+    public void deleteProblem(String id) {
+        fileSystemDao.deleteFile(String.format("data/problems/%s", id));
     }
 
     @Override
     public boolean saveProblemInputFile(String problemId, MultipartFile file, String outputName) {
         String outputDir = String.format("data/problems/%s/in/", problemId);
         if (fileSystemDao.createDirectory(outputDir)) {
-            return fileSystemDao.saveFile(file, outputDir, outputName, true);
+            fileSystemDao.saveFile(file, outputDir, outputName, true);
+            return true;
         }
         return false;
     }
@@ -69,7 +77,8 @@ public class FileSystemServiceImpl implements FileSystemService {
     public boolean saveProblemOutputFile(String problemId, MultipartFile file, String outputName) {
         String outputDir = String.format("data/problems/%s/out/", problemId);
         if (fileSystemDao.createDirectory(outputDir)) {
-            return fileSystemDao.saveFile(file, outputDir, outputName, true);
+            fileSystemDao.saveFile(file, outputDir, outputName, true);
+            return true;
         }
         return false;
     }
@@ -78,15 +87,10 @@ public class FileSystemServiceImpl implements FileSystemService {
     public boolean saveProblemInputZip(String problemId, MultipartFile file) {
         String outputDir = String.format("data/problems/%s/", problemId);
         if (fileSystemDao.createDirectory(outputDir)) {
-            boolean success = true;
-            success = fileSystemDao.saveFile(file, outputDir, true);
-            if (success) {
-                success = fileSystemDao.unzip(outputDir + file.getOriginalFilename());
-            }
-            if (success) {
-                success = fileSystemDao.deleteFile(outputDir + file.getOriginalFilename());
-            }
-            return success;
+            fileSystemDao.saveFile(file, outputDir, true);
+            fileSystemDao.unzip(outputDir + file.getOriginalFilename());
+            fileSystemDao.deleteFile(outputDir + file.getOriginalFilename());
+            return true;
         }
         return false;
     }
@@ -95,15 +99,10 @@ public class FileSystemServiceImpl implements FileSystemService {
     public boolean saveProblemOutputZip(String problemId, MultipartFile file) {
         String outputDir = String.format("data/problems/%s/", problemId);
         if (fileSystemDao.createDirectory(outputDir)) {
-            boolean success = true;
-            success = fileSystemDao.saveFile(file, outputDir, true);
-            if (success) {
-                success = fileSystemDao.unzip(outputDir + file.getOriginalFilename());
-            }
-            if (success) {
-                success = fileSystemDao.deleteFile(outputDir + file.getOriginalFilename());
-            }
-            return success;
+            fileSystemDao.saveFile(file, outputDir, true);
+            fileSystemDao.unzip(outputDir + file.getOriginalFilename());
+            fileSystemDao.deleteFile(outputDir + file.getOriginalFilename());
+            return true;
         }
         return false;
     }
@@ -118,7 +117,8 @@ public class FileSystemServiceImpl implements FileSystemService {
     public boolean saveSolutionFile(String problemId, MultipartFile file) {
         String outputDir = String.format("data/problems/%s/test/", problemId);
         if (fileSystemDao.createDirectory(outputDir)) {
-            return fileSystemDao.saveFile(file, outputDir, true);
+            fileSystemDao.saveFile(file, outputDir, true);
+            return true;
         }
         return false;
     }
@@ -127,7 +127,18 @@ public class FileSystemServiceImpl implements FileSystemService {
     public boolean saveSolutionFile(String problemId, MultipartFile file, String outputName) {
         String outputDir = String.format("data/problems/%s/test/", problemId);
         if (fileSystemDao.createDirectory(outputDir)) {
-            return fileSystemDao.saveFile(file, outputDir, outputName, true);
+            fileSystemDao.saveFile(file, outputDir, outputName, true);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean saveSubmissionFile(String submissionId, MultipartFile file) {
+        String outputDir = String.format("data/submits/%s/", submissionId);
+        if (fileSystemDao.createDirectory(outputDir)) {
+            fileSystemDao.saveFile(file, outputDir, file.getOriginalFilename(), true);
+            return true;
         }
         return false;
     }
@@ -135,14 +146,12 @@ public class FileSystemServiceImpl implements FileSystemService {
     @Override
     public boolean createProblemZip(String problemId, JsonObject problemData) {
         problemData.add("exportVersion", new JsonPrimitive(1));
-        if (fileSystemDao.createFile(String.format("data/problems/%s/data.json", problemId), gson.toJson(problemData), true)) {
-            return fileSystemDao.createZip(String.format("data/problems/%s/export.zip", problemId),
-                    true, String.format("data/problems/%s/", problemId),
-                    String.format("data/problems/%s/in/", problemId), String.format("data/problems/%s/out/", problemId),
-                    String.format("data/problems/%s/test/", problemId),
-                    String.format("data/problems/%s/data.json", problemId));
-        }
-        return false;
+        fileSystemDao.createFile(String.format("data/problems/%s/data.json", problemId), gson.toJson(problemData), true);
+        return fileSystemDao.createZip(String.format("data/problems/%s/export.zip", problemId),
+                true, String.format("data/problems/%s/", problemId),
+                String.format("data/problems/%s/in/", problemId), String.format("data/problems/%s/out/", problemId),
+                String.format("data/problems/%s/test/", problemId),
+                String.format("data/problems/%s/data.json", problemId));
     }
 
     @Override
@@ -151,14 +160,15 @@ public class FileSystemServiceImpl implements FileSystemService {
     }
 
     @Override
-    public boolean unzipFile(String path) {
-        return fileSystemDao.unzip(path);
+    public void unzipFile(String path) {
+        fileSystemDao.unzip(path);
     }
 
     @Override
     public boolean saveTempFile(MultipartFile file, String outputPath, String outputName) {
         if (fileSystemDao.createDirectory(TEMP_FOLDER) && fileSystemDao.createDirectory(TEMP_FOLDER + outputPath)) {
-            return fileSystemDao.saveFile(file, TEMP_FOLDER + outputPath, outputName, true);
+            fileSystemDao.saveFile(file, TEMP_FOLDER + outputPath, outputName, true);
+            return true;
         }
         return false;
     }
@@ -179,8 +189,8 @@ public class FileSystemServiceImpl implements FileSystemService {
     }
 
     @Override
-    public boolean deleteFile(String path) {
-        return fileSystemDao.deleteFile(path);
+    public void deleteFile(String path) {
+        fileSystemDao.deleteFile(path);
     }
 
     @Override
@@ -189,12 +199,80 @@ public class FileSystemServiceImpl implements FileSystemService {
     }
 
     @Override
-    public boolean moveFile(String path, String toPath) {
-        return fileSystemDao.move(path, toPath);
+    public void moveFile(String path, String toPath) {
+        fileSystemDao.move(path, toPath);
     }
 
     @Override
-    public boolean copyFile(String path, String toPath) {
-        return fileSystemDao.copy(path, toPath);
+    public void copyFile(String path, String toPath) {
+        fileSystemDao.copy(path, toPath);
+    }
+
+    @Override
+    public List<JudgeFile<String>> getInputFilesAsStrings(String problemId) {
+        List<File> inputFileNames = fileSystemDao.listDirectory(String.format("%s%s/in/", PROBLEM_FOLDER, problemId));
+        List<JudgeFile<String>> data = new ArrayList<>();
+        for (File in : inputFileNames) {
+            String tempData = fileSystemDao.readFile(String.format("%s%s/in/%s", PROBLEM_FOLDER, problemId, in.getName()));
+            data.add(new JudgeFile<>(in.getName(), tempData));
+        }
+        return data;
+    }
+
+    @Override
+    public List<JudgeFile<String>> getOutputFilesAsStrings(String problemId) {
+        List<File> outputFileNames = fileSystemDao.listDirectory(String.format("%s%s/out/", PROBLEM_FOLDER, problemId));
+        List<JudgeFile<String>> data = new ArrayList<>();
+        for (File out : outputFileNames) {
+            String tempData = fileSystemDao.readFile(String.format("%s%s/out/%s", PROBLEM_FOLDER, problemId, out.getName()));
+            data.add(new JudgeFile<>(out.getName(), tempData));
+        }
+        return data;
+    }
+
+    @Override
+    public List<JudgeFile<byte[]>> getInputFilesAsByteArrays(String problemId) {
+        List<File> outputFileNames = fileSystemDao.listDirectory(String.format("%s%s/in/", PROBLEM_FOLDER, problemId));
+        List<JudgeFile<byte[]>> data = new ArrayList<>();
+        for (File out : outputFileNames) {
+            byte[] tempData = fileSystemDao.readFileAsByteArray(String.format("%s%s/in/%s", PROBLEM_FOLDER, problemId, out.getName()));
+            data.add(new JudgeFile<>(out.getName(), tempData));
+        }
+        return data;
+    }
+
+    @Override
+    public List<JudgeFile<byte[]>> getOutputFilesAsByteArrays(String problemId) {
+        List<File> outputFileNames = fileSystemDao.listDirectory(String.format("%s%s/out/", PROBLEM_FOLDER, problemId));
+        List<JudgeFile<byte[]>> data = new ArrayList<>();
+        for (File out : outputFileNames) {
+            byte[] tempData = fileSystemDao.readFileAsByteArray(String.format("%s%s/out/%s", PROBLEM_FOLDER, problemId, out.getName()));
+            data.add(new JudgeFile<>(out.getName(), tempData));
+        }
+        return data;
+    }
+
+    @Override
+    public String getSolutionFileAsString(String problemId) {
+        // This isn't even possible
+        return null;
+    }
+
+    @Override
+    public byte[] getSolutionFileAsByteArray(String problemId) {
+        // Not possible right now
+        return new byte[0];
+    }
+
+    @Override
+    public JudgeFile<byte[]> getSubmissionFileAsByteArray(String submissionId, String fileName) {
+        return new JudgeFile<>(fileName, fileSystemDao.readFileAsByteArray(String.format("%s%s/%s", SUBMISSION_FOLDER,
+                submissionId, fileName)));
+    }
+
+    @Override
+    public JudgeFile<String> getSubmissionFileAsString(String submissionId, String fileName) {
+        return new JudgeFile<>(fileName, fileSystemDao.readFile(String.format("%s%s/%s", SUBMISSION_FOLDER,
+                submissionId, fileName)));
     }
 }

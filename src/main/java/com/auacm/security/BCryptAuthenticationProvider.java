@@ -1,8 +1,7 @@
 package com.auacm.security;
 
-import com.auacm.database.model.UserPrincipal;
-import com.auacm.service.UserService;
 import com.auacm.database.model.User;
+import com.auacm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -36,6 +35,6 @@ public class BCryptAuthenticationProvider extends AbstractUserDetailsAuthenticat
         if (user == null) {
             throw new UsernameNotFoundException("Failed to locate a user with that username!");
         }
-        return new UserPrincipal(user);
+        return user;
     }
 }

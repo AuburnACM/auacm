@@ -1,7 +1,8 @@
 package com.auacm.service;
 
+import com.auacm.api.model.SubmissionList;
+import com.auacm.api.model.SubmissionStatus;
 import com.auacm.database.model.Submission;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -12,5 +13,15 @@ public interface SubmissionService {
 
     List<Submission> getRecentSubmissions(String username, int amount);
 
+    List<Object[]> getSubmissionsForCid(Long competitionId);
+
     int getTotalCorrectSubmissions(String username);
+
+    SubmissionStatus submit(com.auacm.api.model.Submission submission);
+
+    SubmissionList getSubmissionsCurrentUser(int limit);
+
+    SubmissionList getSubmissionsForUser(String username, int limit);
+
+    void judge(Submission submission, String submissionName);
 }

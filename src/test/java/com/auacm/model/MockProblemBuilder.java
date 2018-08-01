@@ -1,6 +1,6 @@
 package com.auacm.model;
 
-import com.auacm.api.model.CreateProblem;
+import com.auacm.api.model.request.CreateProblemRequest;
 import com.auacm.request.MockRequest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
@@ -8,17 +8,17 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 
 public class MockProblemBuilder {
-    private CreateProblem problem;
+    private CreateProblemRequest problem;
 
     public MockProblemBuilder() {
-        problem = new CreateProblem();
+        problem = new CreateProblemRequest();
         problem.setName("Test Problem");
         problem.setDescription("Description for the problem.");
-        problem.setDifficulty(50);
-        problem.setInputDesc("Some input");
-        problem.setOutputDesc("Some output");
+        problem.setDifficulty("50");
+        problem.setInputDescription("Some input");
+        problem.setOutputDescription("Some output");
         problem.setSampleCases(MockRequest.getProblemTestCases());
-        problem.setTimeLimit(2);
+        problem.setTimeLimit(2L);
         ArrayList<MultipartFile> inputFiles = new ArrayList<>();
         inputFiles.add(new MockMultipartFile("inputFiles", "in1.txt",
                 "text/plain", "Test\nLine2\n".getBytes()));
@@ -44,17 +44,17 @@ public class MockProblemBuilder {
     }
 
     public MockProblemBuilder setDifficulty(int difficulty) {
-        this.problem.setDifficulty(difficulty);
+        this.problem.setDifficulty(difficulty + "");
         return this;
     }
 
     public MockProblemBuilder setInputDescription(String inputDescription) {
-        this.problem.setInputDesc(inputDescription);
+        this.problem.setInputDescription(inputDescription);
         return this;
     }
 
     public MockProblemBuilder setOutputDescription(String outputDescription) {
-        this.problem.setOutputDesc(outputDescription);
+        this.problem.setOutputDescription(outputDescription);
         return this;
     }
 
@@ -78,7 +78,7 @@ public class MockProblemBuilder {
         return this;
     }
 
-    public CreateProblem build() {
+    public CreateProblemRequest build() {
         return this.problem;
     }
 }

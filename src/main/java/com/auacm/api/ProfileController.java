@@ -1,8 +1,8 @@
 package com.auacm.api;
 
 import com.auacm.api.model.*;
+import com.auacm.api.model.response.ProfileResponse;
 import com.auacm.database.model.User;
-import com.auacm.database.model.UserPrincipal;
 import com.auacm.exception.ForbiddenException;
 import com.auacm.service.FileSystemService;
 import com.auacm.service.ProfileService;
@@ -14,8 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 public class ProfileController {
     @Autowired
@@ -25,7 +23,7 @@ public class ProfileController {
     private ProfileService profileService;
 
     @RequestMapping(value = "/api/profile/{username}", method = RequestMethod.GET)
-    public @ResponseBody Profile getProfile(@PathVariable String username) {
+    public @ResponseBody ProfileResponse getProfile(@PathVariable String username) {
         return profileService.getProfile(username);
     }
 
@@ -36,8 +34,8 @@ public class ProfileController {
 
     @RequestMapping(value = "/api/profile/{username}/image", method = RequestMethod.POST)
     public void updateProfilePicture(@PathVariable String username, @RequestBody @Validated UpdateProfilePicture picture) {
-        User user = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
-        if (user.isAdmin() || user.getUsername().equals(username)) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (user.getAdmin() || user.getUsername().equals(username)) {
             fileSystemService.saveProfilePicture(user.getUsername(), picture.getData());
         } else {
             throw new ForbiddenException("You can only update your own picture!");

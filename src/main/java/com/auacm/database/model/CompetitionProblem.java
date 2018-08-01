@@ -1,62 +1,37 @@
 package com.auacm.database.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "comp_problems")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class CompetitionProblem implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    private Long cid;
-
-    private Long pid;
+    private Long id;
 
     private String label;
 
-//    @ManyToOne(targetEntity = Competition.class, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "cid", nullable = false, insertable = false)
-//    private Competition competition;
+    @ManyToOne
+    @JoinColumn(name = "cid")
+    private Competition competition;
 
-    public long getId() {
-        return id;
-    }
+    @ManyToOne
+    @JoinColumn(name = "pid")
+    private Problem problem;
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public Long getCid() {
-        return cid;
-    }
-
-    public void setCid(Long cid) {
-        this.cid = cid;
-    }
-
-    public Long getPid() {
-        return pid;
-    }
-
-    public void setPid(Long pid) {
-        this.pid = pid;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
+    public CompetitionProblem(String label, Competition competition, Problem problem) {
+        this.problem = problem;
         this.label = label;
+        this.competition = competition;
     }
-
-//    public Competition getCompetition() {
-//        return competition;
-//    }
-//
-//    public void setCompetition(Competition competition) {
-//        this.competition = competition;
-//    }
 }

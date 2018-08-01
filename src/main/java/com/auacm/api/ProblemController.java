@@ -1,7 +1,8 @@
 package com.auacm.api;
 
-import com.auacm.api.model.CreateProblem;
-import com.auacm.api.proto.Problem;
+import com.auacm.api.model.request.CreateProblemRequest;
+import com.auacm.api.model.response.CreateProblemResponse;
+import com.auacm.api.model.response.ProblemListResponse;
 import com.auacm.api.validator.CreateProblemValidator;
 import com.auacm.api.validator.UpdateProblemValidator;
 import com.auacm.service.FileSystemService;
@@ -45,16 +46,14 @@ public class ProblemController {
 
     @RequestMapping(value = "/api/problems", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ADMIN')")
-    public @ResponseBody Problem.ProblemWrapper
-    createProblem(@Validated @ModelAttribute("newProblem") CreateProblem newProblem) {
-        return problemService.getProblemResponse(problemService.createProblem(newProblem));
+    public @ResponseBody CreateProblemResponse createProblem(@Validated @ModelAttribute("newProblem") CreateProblemRequest newProblem) {
+        return problemService.createProblem(newProblem);
     }
 
     @RequestMapping(value = "/api/problems/{identifier}", method = {RequestMethod.PUT, RequestMethod.POST})
     @PreAuthorize("hasRole('ADMIN')")
-    public @ResponseBody Problem.ProblemWrapper
-    updateProblem(@PathVariable String identifier, @ModelAttribute("updateProblem") CreateProblem newProblem) {
-        return problemService.getProblemResponse(problemService.updateProblem(identifier, newProblem));
+    public @ResponseBody CreateProblemResponse updateProblem(@PathVariable String identifier, @ModelAttribute("updateProblem") CreateProblemRequest newProblem) {
+        return problemService.updateProblem(identifier, newProblem);
     }
 
     @RequestMapping(value = "/api/problems/{identifier}", method = {RequestMethod.DELETE})
@@ -64,13 +63,13 @@ public class ProblemController {
     }
 
     @RequestMapping(value = "/api/problems", method = RequestMethod.GET)
-    public @ResponseBody Problem.ProblemListWrapper getProblems() {
-        return problemService.getProblemListResponse(problemService.getAllProblems());
+    public @ResponseBody ProblemListResponse getProblems() {
+        return new ProblemListResponse(problemService.getAllProblems());
     }
 
     @RequestMapping(value = "/api/problems/{identifier}", method = RequestMethod.GET)
-    public @ResponseBody Problem.ProblemWrapper getProblem(@PathVariable String identifier) {
-        return problemService.getProblemResponse(problemService.getProblem(identifier));
+    public @ResponseBody CreateProblemResponse getProblem(@PathVariable String identifier) {
+        return new CreateProblemResponse(problemService.getProblem(identifier));
     }
     //TODO GetProblem and UpdateProblem and CreateProblem
     @RequestMapping(value = "/problems/{shortName}/info.pdf", method = RequestMethod.GET)

@@ -19,4 +19,22 @@ public interface SubmissionDao extends JpaRepository<Submission, Long> {
 
     @Query("SELECT COUNT(DISTINCT s.pid) FROM Submission s WHERE s.username=:username AND s.result=:result")
     int countDistinctByUsernameAndResult(@Param("username") String username, @Param("result") String result);
+
+    /**
+     * Selects all submissions for a competition in ascending order by the team name, then the label, and lastly the
+     * time submitted.
+     *
+     * The first item in the list is the submission.
+     * The second item in the list is the competition problem.
+     * The third item in the list is the competition user
+     * @param cid - the id of the competition
+     * @return a list of submissions
+     */
+    @Query("select sub, compprob, compuser from Submission sub " +
+            "join CompetitionUser compuser on compuser.user.username = sub.user.username " +
+            "join Competition comp on comp.cid = compuser.competition.cid " +
+            "join CompetitionProblem compprob on compprob.problem.pid = sub.pid " +
+            "where comp.cid = :cid and sub.submitTime >= comp.start and sub.submitTime < comp.stop " +
+            "order by compuser.team, compprob.label, sub.submitTime asc")
+    List<Object[]> findAllByCid(@Param("cid") Long cid);
 }

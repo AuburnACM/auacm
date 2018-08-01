@@ -10,11 +10,10 @@ public class Submission implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long job;
 
-    private int pid;
+    private long pid;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "username", updatable = false, insertable = false)
-//    @Transient
     private User user;
 
     @Column(name = "username")
@@ -44,11 +43,11 @@ public class Submission implements Serializable {
         return this;
     }
 
-    public int getPid() {
+    public long getPid() {
         return pid;
     }
 
-    public Submission setPid(int pid) {
+    public Submission setPid(long pid) {
         this.pid = pid;
         return this;
     }

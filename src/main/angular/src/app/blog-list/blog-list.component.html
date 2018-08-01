@@ -39,6 +39,6 @@
               [ngClass]="{'glyphicon': true, 'glyphicon-chevron-up': post.expanded,
               'glyphicon-chevron-down': !post.expanded}" aria-hidden="true"></span></button>
     </div>
-    <button *ngIf="!loading && blogPosts.length % 10 == 0 && !noMoreBlogs" (click)="fetchMoreBlogs()" class="btn btn-default load-more">Load more...</button>
+    <button *ngIf="!loading && blogPosts.length % limit == 0 && !noMoreBlogs" (click)="fetchMoreBlogs()" class="btn btn-default load-more">Load more...</button>
   </div>
 </div>

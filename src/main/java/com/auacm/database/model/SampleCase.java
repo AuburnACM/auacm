@@ -1,12 +1,18 @@
 package com.auacm.database.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gson.JsonObject;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "sample_cases")
+@Getter
+@Setter
+@NoArgsConstructor
 public class SampleCase implements Serializable {
 
     @EmbeddedId
@@ -16,45 +22,21 @@ public class SampleCase implements Serializable {
 
     private String output;
 
-    @JsonIgnore
-    @ManyToOne(targetEntity = Problem.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "pid", insertable=false, updatable=false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @MapsId("pid")
+    @JoinColumn(name = "pid", referencedColumnName = "pid", updatable = false, insertable = false)
     private Problem problem;
 
-    public SampleCase() {
+    public SampleCase(com.auacm.api.model.SampleCase sampleCase) {
+        this.sampleCasePK = new SampleCasePK(null, sampleCase.getCaseNum());
+        this.input = sampleCase.getInput();
+        this.output = sampleCase.getOutput();
+    }
+
+    public SampleCase(JsonObject object) {
         this.sampleCasePK = new SampleCasePK();
-    }
-
-
-    public SampleCasePK getSampleCasePK() {
-        return sampleCasePK;
-    }
-
-    public void setSampleCasePK(SampleCasePK sampleCasePK) {
-        this.sampleCasePK = sampleCasePK;
-    }
-
-    public String getInput() {
-        return input;
-    }
-
-    public void setInput(String input) {
-        this.input = input;
-    }
-
-    public String getOutput() {
-        return output;
-    }
-
-    public void setOutput(String output) {
-        this.output = output;
-    }
-
-    public Problem getProblem() {
-        return problem;
-    }
-
-    public void setProblem(Problem problem) {
-        this.problem = problem;
+        this.sampleCasePK.setCaseNum(object.get("caseNum").getAsLong());
+        this.input = object.get("input").getAsString();
+        this.output = object.get("output").getAsString();
     }
 }

@@ -4,31 +4,36 @@ import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.List;
 
 public interface FileSystemDao {
     Resource getFile(String path);
 
-    boolean saveFile(MultipartFile file, String path, boolean overwrite);
+    void saveFile(MultipartFile file, String path, boolean overwrite);
 
-    boolean saveFile(MultipartFile file, String directory, String outputName, boolean overwrite);
+    void saveFile(MultipartFile file, String directory, String outputName, boolean overwrite);
 
     boolean fileExists(String path);
 
     boolean createDirectory(String path);
 
-    boolean deleteFile(String path);
+    void deleteFile(String path);
 
-    boolean unzip(String zipPath);
+    void unzip(String zipPath);
 
-    boolean createFile(String path, String data, boolean overwrite);
+    void createFile(String path, String data, boolean overwrite);
 
-    boolean createFile(String path, byte[] data, boolean overwrite);
+    void createFile(String path, byte[] data, boolean overwrite);
 
     boolean createZip(String path, boolean overwrite, String pathReplace, String...files);
 
     String readFile(String path);
 
-    boolean move(String path, String toPath);
+    byte[] readFileAsByteArray(String path);
 
-    boolean copy(String path, String toPath);
+    void move(String path, String toPath);
+
+    void copy(String path, String toPath);
+
+    List<File> listDirectory(String path);
 }

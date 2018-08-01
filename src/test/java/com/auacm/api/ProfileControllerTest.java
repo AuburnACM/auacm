@@ -2,17 +2,17 @@ package com.auacm.api;
 
 import com.auacm.Auacm;
 import com.auacm.TestingConfig;
-import com.auacm.api.model.CompetitionTeams;
-import com.auacm.api.model.SimpleTeam;
 import com.auacm.database.dao.BlogPostDao;
-import com.auacm.database.dao.ProblemDao;
 import com.auacm.database.dao.SubmissionDao;
 import com.auacm.database.model.BlogPost;
 import com.auacm.database.model.Submission;
-import com.auacm.model.MockBlogPostBuilder;
+import com.auacm.database.model.User;
 import com.auacm.model.MockCompetitionBuilder;
 import com.auacm.model.MockProblemBuilder;
-import com.auacm.service.*;
+import com.auacm.service.CompetitionService;
+import com.auacm.service.FileSystemService;
+import com.auacm.service.ProblemService;
+import com.auacm.service.UserService;
 import com.auacm.user.WithACMUser;
 import com.google.gson.*;
 import org.apache.commons.io.FileUtils;
@@ -40,8 +40,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {Auacm.class, TestingConfig.class})
@@ -231,8 +229,9 @@ public class ProfileControllerTest {
     }
 
     private void configureProfile() {
-        blogPostDao.save(new BlogPost("Test Title", "Test Subtitle", "Test Body", "user"));
-        blogPostDao.save(new BlogPost("Test Title", "Test Subtitle", "Test Body", "user"));
+        User user = userService.getUser("user");
+        blogPostDao.save(new BlogPost("Test Title", "Test Subtitle", System.currentTimeMillis() / 1000,"Test Body", user));
+        blogPostDao.save(new BlogPost("Test Title", "Test Subtitle", System.currentTimeMillis() / 1000, "Test Body", user));
         problemService.createProblem(new MockProblemBuilder().build());
         problemService.createProblem(new MockProblemBuilder().build());
         competitionService.createCompetition(new MockCompetitionBuilder().addUser("user").build());

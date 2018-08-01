@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface BlogPostDao extends JpaRepository<BlogPost, Long> {
-    List<BlogPost> findByUsernameIgnoreCase(String username);
+    List<BlogPost> findByUserUsernameIgnoreCase(String username);
 
-    List<BlogPost> findAllByUsernameOrderByPostTimeDesc(String username, Pageable pageable);
+    List<BlogPost> findAllByUserUsernameOrderByPostTimeDesc(String username, Pageable pageable);
 }

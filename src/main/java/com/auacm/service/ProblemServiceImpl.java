@@ -1,18 +1,18 @@
 package com.auacm.service;
 
-import com.auacm.api.model.*;
+import com.auacm.api.model.request.CreateProblemRequest;
+import com.auacm.api.model.response.CreateProblemResponse;
 import com.auacm.database.dao.ProblemDao;
 import com.auacm.database.dao.ProblemDataDao;
 import com.auacm.database.dao.SampleCaseDao;
-import com.auacm.database.model.*;
-import com.auacm.database.model.SampleCase;
+import com.auacm.database.model.Competition;
+import com.auacm.database.model.Problem;
 import com.auacm.exception.ProblemNotFoundException;
 import com.auacm.util.JsonUtil;
-import com.google.gson.JsonElement;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProblemServiceImpl implements ProblemService {
@@ -46,110 +47,66 @@ public class ProblemServiceImpl implements ProblemService {
     @Autowired
     private JsonUtil jsonUtil;
 
+    @Autowired
+    private Gson gson;
+
     public ProblemServiceImpl() {}
 
     @Override
-    public Problem createProblem(CreateProblem problem) {
+    public CreateProblemResponse createProblem(CreateProblemRequest problemRequest) {
         if (!fileSystemService.doesFileExist("data/problems/")) {
             fileSystemService.createFolder("data/problems/");
         }
-        if (problem.getImportZip() == null || problem.getImportZip().isEmpty()) {
-            Problem newProblem = new Problem();
-            newProblem.setName(problem.getName());
-            newProblem.setAdded(System.currentTimeMillis() / 1000);
-            if (problem.getAppearedIn() != null) {
-                Competition competition = competitionService.getCompetitionByName(problem.getAppearedIn());
-                if (competition != null) {
-                    newProblem.setAppeared(problem.getAppearedIn());
-                    newProblem.setCompetitionId(competition.getCid());
-                } else {
-                    newProblem.setAppeared("");
-                }
-            } else {
-                newProblem.setAppeared("");
-            }
-            newProblem.setShortName(getShortName(problem.getName()));
-            if (problem.getDifficulty() != null) {
-                newProblem.setDifficulty(problem.getDifficulty() + "");
-            } else {
-                newProblem.setDifficulty("0");
-            }
-            ProblemData newData = new ProblemData();
-            newData.setDescription(problem.getDescription());
-            newData.setInputDescription(problem.getInputDesc());
-            newData.setOutputDescription(problem.getOutputDesc());
-            if (problem.getTimeLimit() != null) {
-                newData.setTimeLimit(problem.getTimeLimit());
-            } else {
-                // TODO Run script and get time limit
-                // Setting the default time limit to 2 seconds
-                newData.setTimeLimit(2);
+        if (problemRequest.getImportZip() == null || problemRequest.getImportZip().isEmpty()) {
+            Problem newProblem = new Problem(problemRequest);
+            setProblemCompetition(problemRequest, newProblem);
+            newProblem.setShortName(getShortName(problemRequest.getName()));
+            newProblem = problemDao.save(newProblem);
+
+
+            if (problemRequest.getInputZip() != null) {
+                fileSystemService.saveProblemInputZip(newProblem.getPid() + "", problemRequest.getInputZip());
             }
 
-            Problem finalProblem = problemDao.save(newProblem);
-            newData.setPid(finalProblem.getPid());
-            problemDataDao.save(newData);
-            finalProblem.setProblemData(newData);
-
-            ArrayList<SampleCase> sampleCases = new ArrayList<>();
-            for (com.auacm.api.model.SampleCase sampleCase : problem.getSampleCaseList()) {
-                SampleCase newSampleCase = new SampleCase();
-                newSampleCase.getSampleCasePK().setCaseNum(sampleCase.getCaseNum());
-                newSampleCase.setInput(sampleCase.getInput());
-                newSampleCase.setOutput(sampleCase.getOutput());
-                sampleCases.add(newSampleCase);
-                newSampleCase.getSampleCasePK().setPid(finalProblem.getPid());
+            if (problemRequest.getOutputZip() != null) {
+                fileSystemService.saveProblemOutputZip(newProblem.getPid() + "", problemRequest.getOutputZip());
             }
 
-            sampleCaseDao.save(sampleCases);
-            newProblem.setSampleCases(sampleCases);
-
-
-            if (problem.getInputZip() != null) {
-                fileSystemService.saveProblemInputZip(finalProblem.getPid() + "", problem.getInputZip());
-            }
-
-            if (problem.getOutputZip() != null) {
-                fileSystemService.saveProblemOutputZip(finalProblem.getPid() + "", problem.getOutputZip());
-            }
-
-            if (problem.getInputFiles() != null) {
+            if (problemRequest.getInputFiles() != null) {
                 int index = 1;
-                for (MultipartFile file : problem.getInputFiles()) {
-                    fileSystemService.saveProblemInputFile(finalProblem.getPid() + "", file, String.format("in%d.txt", index));
+                for (MultipartFile file : problemRequest.getInputFiles()) {
+                    fileSystemService.saveProblemInputFile(newProblem.getPid() + "", file, String.format("in%d.txt", index));
                     index++;
                 }
             }
 
-            if (problem.getOutputFiles() != null) {
+            if (problemRequest.getOutputFiles() != null) {
                 int index = 1;
-                for (MultipartFile file : problem.getOutputFiles()) {
-                    fileSystemService.saveProblemOutputFile(finalProblem.getPid() + "", file, String.format("out%d.txt", index));
+                for (MultipartFile file : problemRequest.getOutputFiles()) {
+                    fileSystemService.saveProblemOutputFile(newProblem.getPid() + "", file, String.format("out%d.txt", index));
                     index++;
                 }
             }
 
-            fileSystemService.saveSolutionFile(finalProblem.getPid() + "", problem.getSolutionFile());
-            fileSystemService.createProblemZip(finalProblem.getPid() + "", jsonUtil.toJsonObject(getProblemResponse(finalProblem)));
-            return finalProblem;
+            CreateProblemResponse problemResponse = new CreateProblemResponse(newProblem);
+
+            fileSystemService.saveSolutionFile(newProblem.getPid() + "", problemRequest.getSolutionFile());
+            fileSystemService.createProblemZip(newProblem.getPid() + "", gson.toJsonTree(problemResponse).getAsJsonObject());
+            return problemResponse;
         } else {
-            return saveProblemZip(problem);
+            return saveProblemZip(problemRequest);
         }
     }
 
     private String getShortName(String name) {
         String shortName = name.toLowerCase().replaceAll(" ", "");
         int index = 0;
-        try {
-            Problem problem = problemDao.findByShortNameIgnoreCase(shortName);
-            while (problem != null) {
-                index++;
-                problem = problemDao.findByShortNameIgnoreCase(shortName+ index);
-            }
-            return shortName + (index > 0 ? index : "");
-        } catch (ProblemNotFoundException e) {
-            return shortName + (index > 0 ? index : "");
+        Optional<Problem> problem = problemDao.findByShortNameIgnoreCase(shortName);
+        while (problem.isPresent()) {
+            index++;
+            problem = problemDao.findByShortNameIgnoreCase(shortName + index);
         }
+        return shortName + (index > 0 ? index : "");
     }
 
     @Override
@@ -166,98 +123,86 @@ public class ProblemServiceImpl implements ProblemService {
 
     @Override
     @Transactional
-    public Problem updateProblem(String identifier, CreateProblem problem) {
-        Problem problem1 = getProblem(identifier);
-        if (problem.getImportZip() == null || problem.getImportZip().isEmpty()) {
-            if (problem.getAppearedIn() != null) {
-                Competition competition = competitionService.getCompetitionByName(problem.getAppearedIn());
-                if (competition != null) {
-                    problem1.setAppeared(problem.getAppearedIn());
-                    problem1.setCompetitionId(competition.getCid());
-                } else {
-                    problem1.setAppeared("");
-                }
-            } else {
-                problem1.setAppeared("");
+    public CreateProblemResponse updateProblem(String identifier, CreateProblemRequest problemRequest) {
+        Problem updateProblem = getProblem(identifier);
+        if (problemRequest.getImportZip() == null || problemRequest.getImportZip().isEmpty()) {
+            updateProblem.update(problemRequest);
+            setProblemCompetition(problemRequest, updateProblem);
+            if (problemRequest.getName() != null) {
+                updateProblem.setShortName(getShortName(problemRequest.getName()));
             }
-            if (problem.getName() != null) {
-                problem1.setName(problem.getName());
-                problem1.setShortName(getShortName(problem.getName()));
-            }
-            if (problem.getDifficulty() != null) {
-                problem1.setDifficulty(problem.getDifficulty() + "");
-            }
-            problemDao.save(problem1);
+
+            updateProblem = problemDao.save(updateProblem);
 
             // Update problem data
-            ProblemData problemData = problemDataDao.findOne(problem1.getPid());
-            if (problem.getDescription() != null) {
-                problemData.setDescription(problem.getDescription());
-            }
-            if (problem.getInputDesc() != null) {
-                problemData.setInputDescription(problem.getInputDesc());
-            }
-            if (problem.getOutputDesc() != null) {
-                problemData.setOutputDescription(problem.getOutputDesc());
-            }
-            if (problem.getTimeLimit() != null) {
-                problemData.setTimeLimit(problem.getTimeLimit());
-            } else {
+//            ProblemData problemData = problemDataDao.getOne(problem1.getPid());
+//            if (problem.getDescription() != null) {
+//                problemData.setDescription(problem.getDescription());
+//            }
+//            if (problem.getInputDesc() != null) {
+//                problemData.setInputDescription(problem.getInputDesc());
+//            }
+//            if (problem.getOutputDesc() != null) {
+//                problemData.setOutputDescription(problem.getOutputDesc());
+//            }
+//            if (problem.getTimeLimit() != null) {
+//                problemData.setTimeLimit(problem.getTimeLimit());
+//            } else {
                 // TODO Run script and get time limit
                 // Setting the default time limit to 2 seconds
-                problemData.setTimeLimit(2);
-            }
-            problemDataDao.save(problemData);
+//                problemData.setTimeLimit(2L);
+//            }
+//            problemDataDao.save(problemData);
 
-            ArrayList<SampleCase> sampleCases = new ArrayList<>();
-            if (problem.getSampleCaseList() != null) {
-                sampleCaseDao.deleteAllBySampleCasePK_Pid(problem1.getPid());
-                for (com.auacm.api.model.SampleCase sampleCase : problem.getSampleCaseList()) {
-                    SampleCase newSampleCase = new SampleCase();
-                    newSampleCase.getSampleCasePK().setCaseNum(sampleCase.getCaseNum());
-                    newSampleCase.setInput(sampleCase.getInput());
-                    newSampleCase.setOutput(sampleCase.getOutput());
-                    sampleCases.add(newSampleCase);
-                    newSampleCase.getSampleCasePK().setPid(problem1.getPid());
-                }
-                sampleCaseDao.save(sampleCases);
-                problem1.setSampleCases(sampleCases);
-            } else {
-                problem1.setSampleCases(sampleCaseDao.findAllBySampleCasePK_Pid(problem1.getPid()));
-            }
+//            ArrayList<SampleCase> sampleCases = new ArrayList<>();
+//            if (problem.getSampleCaseList() != null) {
+//                sampleCaseDao.deleteAllBySampleCasePK_Pid(problem1.getPid());
+//                for (com.auacm.api.model.SampleCase sampleCase : problem.getSampleCaseList()) {
+//                    SampleCase newSampleCase = new SampleCase();
+//                    newSampleCase.getSampleCasePK().setCaseNum(sampleCase.getCaseNum());
+//                    newSampleCase.setInput(sampleCase.getInput());
+//                    newSampleCase.setOutput(sampleCase.getOutput());
+//                    sampleCases.add(newSampleCase);
+//                    newSampleCase.getSampleCasePK().setPid(problem1.getPid());
+//                }
+//                sampleCaseDao.saveAll(sampleCases);
+//                problem1.setSampleCases(sampleCases);
+//            } else {
+//                problem1.setSampleCases(sampleCaseDao.findAllBySampleCasePK_Pid(problem1.getPid()));
+//            }
 
-            if (problem.getInputZip() != null) {
-                fileSystemService.saveProblemInputZip(problem1.getPid() + "", problem.getInputZip());
-            }
-
-            if (problem.getOutputZip() != null) {
-                fileSystemService.saveProblemOutputZip(problem1.getPid() + "", problem.getOutputZip());
+            if (problemRequest.getInputZip() != null) {
+                fileSystemService.saveProblemInputZip(updateProblem.getPid() + "", problemRequest.getInputZip());
             }
 
-            if (problem.getInputFiles() != null) {
+            if (problemRequest.getOutputZip() != null) {
+                fileSystemService.saveProblemOutputZip(updateProblem.getPid() + "", problemRequest.getOutputZip());
+            }
+
+            if (problemRequest.getInputFiles() != null) {
                 int index = 1;
-                for (MultipartFile file : problem.getInputFiles()) {
-                    fileSystemService.saveProblemInputFile(problem1.getPid() + "", file, String.format("in%d.txt", index));
+                for (MultipartFile file : problemRequest.getInputFiles()) {
+                    fileSystemService.saveProblemInputFile(updateProblem.getPid() + "", file, String.format("in%d.txt", index));
                     index++;
                 }
             }
 
-            if (problem.getOutputFiles() != null) {
+            if (problemRequest.getOutputFiles() != null) {
                 int index = 1;
-                for (MultipartFile file : problem.getOutputFiles()) {
-                    fileSystemService.saveProblemOutputFile(problem1.getPid() + "", file, String.format("out%d.txt", index));
+                for (MultipartFile file : problemRequest.getOutputFiles()) {
+                    fileSystemService.saveProblemOutputFile(updateProblem.getPid() + "", file, String.format("out%d.txt", index));
                     index++;
                 }
             }
-            if (problem.getSolutionFile() != null) {
-                fileSystemService.saveSolutionFile(problem1.getPid() + "", problem.getSolutionFile());
+            if (problemRequest.getSolutionFile() != null) {
+                fileSystemService.saveSolutionFile(updateProblem.getPid() + "", problemRequest.getSolutionFile());
             }
-            problem1.setProblemData(problemData);
         } else {
             // TODO Import the zip
         }
-        fileSystemService.createProblemZip(problem1.getPid() + "", jsonUtil.toJsonObject(getProblemResponse(problem1)));
-        return problem1;
+        CreateProblemResponse problemResponse = new CreateProblemResponse(updateProblem);
+        fileSystemService.createProblemZip(updateProblem.getPid() + "", gson.toJsonTree(problemResponse).getAsJsonObject());
+        return problemResponse;
     }
 
     @Override
@@ -269,10 +214,12 @@ public class ProblemServiceImpl implements ProblemService {
     @Override
     @Transactional
     public void deleteProblem(String identifier) {
-        Problem problem = getProblem(identifier);
-        problemDataDao.delete(problem.getPid());
-        sampleCaseDao.deleteAllBySampleCasePK_Pid(problem.getPid());
-        problemDao.delete(problem.getPid());
+        try {
+            Long id = Long.parseLong(identifier);
+            problemDao.deleteById(id);
+        } catch (NumberFormatException e) {
+            problemDao.deleteByShortName(identifier);
+        }
     }
 
     @Override
@@ -303,155 +250,104 @@ public class ProblemServiceImpl implements ProblemService {
     }
 
     @Override
+    @Transactional
     public Problem getProblemForPid(long pid) {
-        try {
-            Problem problem = problemDao.findOne(pid);
-            if (problem == null) {
-                throw new ProblemNotFoundException("Failed to find a problem for pid " + pid + ".");
-            }
-            if (competitionService.isInUpcomingCompetition(problem)) {
-                if (SecurityContextHolder.getContext().getAuthentication().getAuthorities()
-                        .contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-                    return problem;
-                } else {
-                    throw new ProblemNotFoundException("Failed to find a problem for pid " + pid + ".");
-                }
-            } else {
-                return problem;
-            }
-        } catch (JpaObjectRetrievalFailureException e) {
+        Optional<Problem> problem = problemDao.findById(pid);
+        if (!problem.isPresent()) {
             throw new ProblemNotFoundException("Failed to find a problem for pid " + pid + ".");
         }
+        if (competitionService.isInUpcomingCompetition(problem.get())) {
+            if (SecurityContextHolder.getContext().getAuthentication().getAuthorities()
+                    .contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+                return problem.get();
+            } else {
+                throw new ProblemNotFoundException("Failed to find a problem for pid " + pid + ".");
+            }
+        } else {
+            return problem.get();
+        }
     }
 
     @Override
+    @Transactional
     public Problem getProblemForShortName(String shortName) {
-        try {
-            Problem problem = problemDao.findByShortNameIgnoreCase(shortName);
-            if (competitionService.isInUpcomingCompetition(problem)) {
-                if (SecurityContextHolder.getContext().getAuthentication().getAuthorities()
-                        .contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-                    return problem;
-                } else {
-                    throw new ProblemNotFoundException("Failed to find a problem for shortname " + shortName + ".");
-                }
-            } else {
-                return problem;
-            }
-        } catch (JpaObjectRetrievalFailureException e) {
+        Optional<Problem> problem = problemDao.findByShortNameIgnoreCase(shortName);
+        if (!problem.isPresent()) {
             throw new ProblemNotFoundException("Failed to find a problem for shortname " + shortName + ".");
         }
-    }
-
-    @Override
-    public com.auacm.api.proto.Problem.ProblemListWrapper getProblemListResponse(List<Problem> problems) {
-        com.auacm.api.proto.Problem.ProblemListWrapper.Builder builder = com.auacm.api.proto.Problem.ProblemListWrapper.newBuilder();
-        for (Problem problem : problems) {
-            builder.addData(com.auacm.api.proto.Problem.SimpleProblemResponse.newBuilder()
-                    .setAdded(problem.getAdded())
-                    .setAppeared(problem.getAppeared())
-                    .setCompRelease(problem.getCompetitionId())
-                    .setDifficuty(problem.getDifficulty())
-                    .setName(problem.getName())
-                    .setPid(problem.getPid())
-                    .setShortName(problem.getShortName())
-                    .setSolved(solvedProblemService.hasSolved(problem))
-                    .setTimeLimit(problem.getProblemData().getTimeLimit())
-                    .setUrl(String.format("/problems/%s/info.pdf", problem.getShortName())));
+        if (competitionService.isInUpcomingCompetition(problem.get())) {
+            if (SecurityContextHolder.getContext().getAuthentication().getAuthorities()
+                    .contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+                return problem.get();
+            } else {
+                throw new ProblemNotFoundException("Failed to find a problem for shortname " + shortName + ".");
+            }
+        } else {
+            return problem.get();
         }
-        return builder.build();
     }
 
-    @Override
-    public com.auacm.api.proto.Problem.ProblemWrapper getProblemResponse(Problem problem) {
-        com.auacm.api.proto.Problem.ProblemResponse.Builder builder = com.auacm.api.proto.Problem.ProblemResponse.newBuilder();
-        builder.setAdded(problem.getAdded())
-                .setAppeared(problem.getAppeared())
-                .setCompRelease(problem.getCompetitionId())
-                .setDescription(problem.getProblemData().getDescription())
-                .setDifficulty(problem.getDifficulty())
-                .setInputDesc(problem.getProblemData().getInputDescription())
-                .setName(problem.getName())
-                .setOutputDesc(problem.getProblemData().getOutputDescription())
-                .setPid(problem.getPid())
-                .setShortName(problem.getShortName())
-                .setTimeLimit(problem.getProblemData().getTimeLimit());
-        for (SampleCase sampleCase : problem.getSampleCases()) {
-            builder.addSampleCases(com.auacm.api.proto.Problem.SampleCase.newBuilder()
-                    .setCaseNum(sampleCase.getSampleCasePK().getCaseNum())
-                    .setInput(sampleCase.getInput())
-                    .setOutput(sampleCase.getOutput()));
+    private Problem setProblemCompetition(CreateProblemRequest problemRequest, Problem problem) {
+        if (problemRequest.getAppearedIn() != null) {
+            Competition competition = competitionService.getCompetitionByName(problemRequest.getAppearedIn());
+            if (competition != null) {
+                problem.setAppeared(problemRequest.getAppearedIn());
+                problem.setCompetitionId(competition.getCid());
+            } else {
+                problem.setAppeared("");
+            }
+        } else {
+            problem.setAppeared("");
         }
-        return com.auacm.api.proto.Problem.ProblemWrapper.newBuilder().setData(builder).build();
+        return problem;
     }
 
-    private Problem saveProblemZip(CreateProblem problem) {
+    private Problem setProblemCompetition(JsonObject problemRequest, Problem problem) {
+        if (problemRequest.has("appearedIn")) {
+            Competition competition = competitionService.getCompetitionByName(problemRequest.get("appearedIn").getAsString());
+            if (competition != null) {
+                problem.setAppeared(problemRequest.get("appearedIn").getAsString());
+                problem.setCompetitionId(competition.getCid());
+            } else {
+                problem.setAppeared("");
+            }
+        } else {
+            problem.setAppeared("");
+        }
+        return problem;
+    }
+
+    private CreateProblemResponse saveProblemZip(CreateProblemRequest problem) {
         long currentTime = System.currentTimeMillis();
         if (fileSystemService.saveTempFile(problem.getImportZip(),
                 currentTime + "", problem.getImportZip().getOriginalFilename())) {
-            if (fileSystemService.unzipFile(String.format("%s%s/%s", fileSystemService.getTmpFolder(),
-                    currentTime + "", problem.getImportZip().getOriginalFilename()))) {
-                String data = fileSystemService.getFileContents(String.format("%s%s/data.json",
-                        fileSystemService.getTmpFolder(), currentTime + ""));
-                if (data != null) {
-                    JsonObject object = new JsonParser().parse(data).getAsJsonObject();
-                    if (object.get("exportVersion").getAsInt() == 1) {
-                        JsonObject dataObject = object.get("data").getAsJsonObject();
-                        Problem newProblem = new Problem();
-                        newProblem.setName(dataObject.get("name").getAsString());
-                        newProblem.setShortName(getShortName(dataObject.get("name").getAsString()));
-                        newProblem.setAdded(System.currentTimeMillis() / 1000);
-                        if (dataObject.has("appearedIn")) {
-                            Competition competition = competitionService.getCompetitionByName(dataObject.get("appearedIn").getAsString());
-                            if (competition != null) {
-                                newProblem.setAppeared(dataObject.get("appearedIn").getAsString());
-                                newProblem.setCompetitionId(competition.getCid());
-                            } else {
-                                newProblem.setAppeared("");
-                            }
-                        } else {
-                            newProblem.setAppeared("");
-                        }
-                        newProblem.setDifficulty(dataObject.get("difficulty").getAsString());
-                        Problem savedProblem = problemDao.save(newProblem);
-                        ProblemData data1 = new ProblemData();
-                        data1.setDescription(dataObject.get("description").getAsString());
-                        data1.setInputDescription(dataObject.get("inputDesc").getAsString());
-                        data1.setOutputDescription(dataObject.get("outputDesc").getAsString());
-                        data1.setTimeLimit(dataObject.get("timeLimit").getAsInt());
-                        data1.setPid(savedProblem.getPid());
-                        problemDataDao.save(data1);
-                        newProblem.setProblemData(data1);
-                        ArrayList<SampleCase> sampleCases = new ArrayList<>();
-                        if (dataObject.has("sampleCases")) {
-                            for (JsonElement e : dataObject.get("sampleCases").getAsJsonArray()) {
-                                JsonObject obj = e.getAsJsonObject();
-                                SampleCase sampleCase = new SampleCase();
-                                sampleCase.setSampleCasePK(new SampleCasePK(savedProblem.getPid(), obj.get("caseNum").getAsLong()));
-                                sampleCase.setInput(obj.get("input").getAsString());
-                                sampleCase.setOutput(obj.get("output").getAsString());
-                                sampleCases.add(sampleCase);
-                            }
-                            savedProblem.setSampleCases(sampleCases);
-                            sampleCaseDao.save(sampleCases);
-                        } else {
-                            savedProblem.setSampleCases(new ArrayList<>());
-                        }
-                        fileSystemService.moveFile(String.format("%s%s/in/", fileSystemService.getTmpFolder(),
-                                currentTime + ""), String.format("data/problems/%d/in/", savedProblem.getPid()));
-                        fileSystemService.moveFile(String.format("%s%s/out/", fileSystemService.getTmpFolder(),
-                                currentTime + ""), String.format("data/problems/%d/out/", savedProblem.getPid()));
-                        fileSystemService.moveFile(String.format("%s%s/test/", fileSystemService.getTmpFolder(),
-                                currentTime + ""), String.format("data/problems/%d/test/", savedProblem.getPid()));
-                        fileSystemService.createProblemZip(savedProblem.getPid() + "",
-                                jsonUtil.toJsonObject(getProblemResponse(savedProblem)));
-                        fileSystemService.deleteFile(String.format("%s%s", fileSystemService.getTmpFolder(), currentTime + ""));
-                        return savedProblem;
-                    } else {
-                        // TODO A different version
-                    }
+            fileSystemService.unzipFile(String.format("%s%s/%s", fileSystemService.getTmpFolder(),
+                    currentTime + "", problem.getImportZip().getOriginalFilename()));
+            String data = fileSystemService.getFileContents(String.format("%s%s/data.json",
+                    fileSystemService.getTmpFolder(), currentTime + ""));
+            if (data != null) {
+                JsonObject object = new JsonParser().parse(data).getAsJsonObject();
+                if (object.get("exportVersion").getAsInt() == 1) {
+                    Problem newProblem = new Problem(object.get("data").getAsJsonObject());
+                    newProblem.setShortName(getShortName(newProblem.getName()));
+                    setProblemCompetition(object.getAsJsonObject("data"), newProblem);
+
+                    newProblem = problemDao.save(newProblem);
+
+                    CreateProblemResponse problemResponse = new CreateProblemResponse(newProblem);
+
+                    fileSystemService.moveFile(String.format("%s%s/in/", fileSystemService.getTmpFolder(),
+                            currentTime + ""), String.format("data/problems/%d/in/", problemResponse.getPid()));
+                    fileSystemService.moveFile(String.format("%s%s/out/", fileSystemService.getTmpFolder(),
+                            currentTime + ""), String.format("data/problems/%d/out/", problemResponse.getPid()));
+                    fileSystemService.moveFile(String.format("%s%s/test/", fileSystemService.getTmpFolder(),
+                            currentTime + ""), String.format("data/problems/%d/test/", problemResponse.getPid()));
+                    fileSystemService.createProblemZip(problemResponse.getPid() + "",
+                            gson.toJsonTree(problemResponse).getAsJsonObject());
+                    fileSystemService.deleteFile(String.format("%s%s", fileSystemService.getTmpFolder(), currentTime + ""));
+                    return problemResponse;
                 } else {
-                    // TODO Something?
+                    // TODO A different version
                 }
             }
         }

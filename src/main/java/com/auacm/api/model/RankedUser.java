@@ -1,35 +1,31 @@
 package com.auacm.api.model;
 
-public class RankedUser implements Comparable<RankedUser> {
-    private String displayName;
+import com.auacm.database.model.User;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-    private String username;
-
+@Data
+@NoArgsConstructor
+public class RankedUser extends User implements Comparable<RankedUser> {
     private int rank;
-
     private int solved;
 
-    public RankedUser(String displayName, String username, int rank, int solved) {
-        this.displayName = displayName;
-        this.username = username;
+    public RankedUser(User user) {
+        this.admin = user.getAdmin();
+        this.username = user.getUsername();
+        this.displayName = user.getDisplayName();
+        this.password = user.getPassword();
+        this.rank = 0;
+        this.solved = 0;
+    }
+
+    public RankedUser(User user, int rank, int solved) {
+        this.admin = user.getAdmin();
+        this.username = user.getUsername();
+        this.displayName = user.getDisplayName();
+        this.password = user.getPassword();
         this.rank = rank;
         this.solved = solved;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public int getRank() {
@@ -50,7 +46,7 @@ public class RankedUser implements Comparable<RankedUser> {
 
     @Override
     public int compareTo(RankedUser o) {
-        if (solved - o.solved== 0) {
+        if (solved - o.solved == 0) {
             return displayName.compareTo(o.displayName);
         } else {
             return solved - o.solved;

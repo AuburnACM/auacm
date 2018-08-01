@@ -14,7 +14,6 @@ import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.http.converter.protobuf.ProtobufHttpMessageConverter;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Component
+//@Component
 public class CustomProtobufHttpMessageConverter extends ProtobufHttpMessageConverter {
 
     private static final ProtobufFormatter JSON_FORMAT = new JsonFormat();

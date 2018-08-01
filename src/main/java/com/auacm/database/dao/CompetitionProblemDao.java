@@ -8,9 +8,9 @@ import java.util.List;
 
 @Repository
 public interface CompetitionProblemDao extends JpaRepository<CompetitionProblem, Long> {
-    CompetitionProblem findOneByPid(long pid);
+    CompetitionProblem findOneByCompetitionCid(long pid);
 
-    void deleteAllByCid(Long cid);
+    void deleteAllByCompetitionCid(Long cid);
 
-    List<CompetitionProblem> getAllByCid(Long cid);
+    List<CompetitionProblem> getAllByCompetitionCid(Long cid);
 }

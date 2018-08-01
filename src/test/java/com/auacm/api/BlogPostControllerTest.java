@@ -3,12 +3,14 @@ package com.auacm.api;
 import com.auacm.Auacm;
 import com.auacm.TestingConfig;
 import com.auacm.database.model.BlogPost;
-import com.auacm.database.model.User;
-import com.auacm.database.model.UserPrincipal;
 import com.auacm.service.BlogPostService;
 import com.auacm.service.UserService;
 import com.auacm.user.WithACMUser;
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,9 +21,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -30,19 +29,17 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
 
 import static org.junit.Assert.assertNotNull;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {Auacm.class, TestingConfig.class})
-@WebAppConfiguration
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @ContextConfiguration(classes = TestingConfig.class)
+@Slf4j
 public class BlogPostControllerTest {
 
     @Autowired
@@ -81,20 +78,20 @@ public class BlogPostControllerTest {
     @Test
     @WithACMUser(username = "admin")
     public void createBlogPostValid() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/blog")
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/api/blog")
                 .param("title", "Test").param("subtitle", "Test").param("body", "the body")
                 .headers(headers))
                 .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse().getContentAsString();
+        System.out.println(response);
         BlogPost post = blogPostService.getBlogPostForId(1);
         Assert.assertNotNull(post);
         Assert.assertNotNull(post.getTitle());
         Assert.assertNotNull(post.getSubtitle());
         Assert.assertNotNull(post.getBody());
-        Assert.assertNotNull(post.getUsername());
+        Assert.assertNotNull(post.getUser());
         Assert.assertEquals("Test", post.getTitle());
         Assert.assertEquals("Test", post.getSubtitle());
         Assert.assertEquals("the body", post.getBody());
-        Assert.assertEquals("admin", post.getUsername());
     }
 
     @Test
@@ -135,7 +132,8 @@ public class BlogPostControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse().getContentAsString();
 
-        JsonArray data = new JsonParser().parse(response).getAsJsonObject().get("data").getAsJsonArray();
+        JsonObject responseObject = new JsonParser().parse(response).getAsJsonObject();
+        JsonArray data = responseObject.get("data").getAsJsonArray();
         Assert.assertNotNull(data);
         Assert.assertEquals(2, data.size());
         JsonObject object = data.get(0).getAsJsonObject();
@@ -164,6 +162,7 @@ public class BlogPostControllerTest {
         String response = mockMvc.perform(MockMvcRequestBuilders.get("/api/blog/1")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse().getContentAsString();
+        log.debug(response);
         JsonObject object = new JsonParser().parse(response).getAsJsonObject().get("data").getAsJsonObject();
         Assert.assertNotNull(object);
         Assert.assertEquals(true, object.has("title"));

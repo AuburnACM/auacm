@@ -1,7 +1,6 @@
 package com.auacm.request;
 
 import com.auacm.database.model.User;
-import com.auacm.database.model.UserPrincipal;
 import com.auacm.service.UserService;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -90,11 +89,11 @@ public class MockRequest {
         if (!excludeValues.contains("description")) {
             builder.param("description", "Description for the problem.");
         }
-        if (!excludeValues.contains("inputDesc")) {
-            builder.param("inputDesc", "Some input");
+        if (!excludeValues.contains("inputDescription")) {
+            builder.param("inputDescription", "Some input");
         }
-        if (!excludeValues.contains("outputDesc")) {
-            builder.param("outputDesc", "Some output");
+        if (!excludeValues.contains("outputDescription")) {
+            builder.param("outputDescription", "Some output");
         }
         if (!excludeValues.contains("sampleCases")) {
             builder.param("sampleCases", getProblemTestCases());
@@ -136,7 +135,7 @@ public class MockRequest {
         User user = userService.getUser(username);
         SecurityContextHolder.getContext()
                 .setAuthentication(
-                        new UsernamePasswordAuthenticationToken(new UserPrincipal(user), "password"));
+                        new UsernamePasswordAuthenticationToken(user, "password"));
     }
 
 }

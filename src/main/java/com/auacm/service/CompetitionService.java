@@ -1,13 +1,8 @@
 package com.auacm.service;
 
-import com.auacm.api.model.CompetitionTeams;
-import com.auacm.api.model.CreateCompetition;
-import com.auacm.api.model.SimpleTeam;
-import com.auacm.api.proto.CompetitionOuterClass;
-import com.auacm.database.model.Competition;
-import com.auacm.database.model.CompetitionUser;
-import com.auacm.database.model.Problem;
-import com.auacm.database.model.Scoreboard;
+import com.auacm.api.model.request.CreateCompetitionRequest;
+import com.auacm.api.model.request.UpdateTeamsRequest;
+import com.auacm.database.model.*;
 
 import java.util.List;
 import java.util.Map;
@@ -33,25 +28,21 @@ public interface CompetitionService {
 
     void unregisterUsers(long competitionId, List<String> userNames);
 
-    Competition createCompetition(CreateCompetition newCompetition);
+    Competition createCompetition(CreateCompetitionRequest newCompetition);
 
-    Competition updateCompetition(long competitionId, CreateCompetition newCompetition);
+    Competition updateCompetition(long competitionId, CreateCompetitionRequest newCompetition);
 
     void deleteCompetition(long competitionId);
 
-    Competition updateCompetitionTeams(long competitionId, CompetitionTeams competitionTeams);
+    Competition updateCompetitionTeams(long competitionId, UpdateTeamsRequest competitionTeams);
 
     Scoreboard getScoreboard(Competition competition, Map<Long, Problem> problems);
 
-    CompetitionOuterClass.SingleCompetitionWrapper getCompetitionResponse(Competition competition);
+    Map<String, List<User>> getTeamList(Competition competition);
 
-    CompetitionOuterClass.CompetitionListWrapper getCompetitionListResponse(Map<String, List<Competition>> competitions);
+    Map<String, List<User>> getTeams(long competitionId);
 
-    CompetitionOuterClass.TeamList getTeamListResponse(Competition competition);
-
-    Map<String, List<SimpleTeam>> getTeamList(Competition competition);
-
-    void broadcastCompetitionUsers(long competitionId, Map<String, List<SimpleTeam>> teamMap);
+    void broadcastCompetitionUsers(long competitionId, Map<String, List<User>> teamMap);
 
     void broadcastCompetitionUsers(long competitionId);
 }

@@ -1,6 +1,6 @@
 package com.auacm.api.validator;
 
-import com.auacm.api.model.CreateCompetition;
+import com.auacm.api.model.request.CreateCompetitionRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -9,13 +9,13 @@ import org.springframework.validation.Validator;
 public class CreateCompetitionValidator implements Validator {
     @Override
     public boolean supports(Class<?> clazz) {
-        return clazz.equals(CreateCompetition.class);
+        return clazz.equals(CreateCompetitionRequest.class);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        CreateCompetition competition = (CreateCompetition) target;
-        if (competition.isClosed() == null) {
+        CreateCompetitionRequest competition = (CreateCompetitionRequest) target;
+        if (competition.getClosed() == null) {
             errors.reject("Closed cannot be null!");
         }
         if (competition.getLength() == null) {

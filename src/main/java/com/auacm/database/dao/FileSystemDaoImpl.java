@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -30,13 +32,13 @@ public class FileSystemDaoImpl implements FileSystemDao {
     }
 
     @Override
-    public boolean saveFile(MultipartFile file, String path, boolean overwrite) {
-        return fileUtils.saveFile(file, path, file.getOriginalFilename(), overwrite);
+    public void saveFile(MultipartFile file, String path, boolean overwrite) {
+        fileUtils.saveFile(file, path, file.getOriginalFilename(), overwrite);
     }
 
     @Override
-    public boolean saveFile(MultipartFile file, String path, String outputName, boolean overwrite) {
-        return fileUtils.saveFile(file, path, outputName, overwrite);
+    public void saveFile(MultipartFile file, String path, String outputName, boolean overwrite) {
+        fileUtils.saveFile(file, path, outputName, overwrite);
     }
 
     @Override
@@ -55,23 +57,23 @@ public class FileSystemDaoImpl implements FileSystemDao {
     }
 
     @Override
-    public boolean deleteFile(String path) {
-        return fileUtils.deleteFile(new File(path));
+    public void deleteFile(String path) {
+        fileUtils.deleteFile(path);
     }
 
     @Override
-    public boolean unzip(String zipPath) {
-        return fileUtils.unzipFile(zipPath);
+    public void unzip(String zipPath) {
+        fileUtils.unzipFile(zipPath);
     }
 
     @Override
-    public boolean createFile(String path, String data, boolean overwrite) {
-        return fileUtils.saveFile(path, data, overwrite);
+    public void createFile(String path, String data, boolean overwrite) {
+        fileUtils.saveFile(path, data, overwrite);
     }
 
     @Override
-    public boolean createFile(String path, byte[] data, boolean overwrite) {
-        return fileUtils.saveFile(path, data, overwrite);
+    public void createFile(String path, byte[] data, boolean overwrite) {
+        fileUtils.saveFile(path, data, overwrite);
     }
 
     @Override
@@ -79,7 +81,7 @@ public class FileSystemDaoImpl implements FileSystemDao {
         try {
             ZipOutputStream outputStream = new ZipOutputStream(new FileOutputStream(path));
             for (String f : files) {
-                List<String> fileNames = fileUtils.getFileNames(f);
+                Collection<String> fileNames = fileUtils.getFileNames(f);
                 for (String file : fileNames) {
                     outputStream.putNextEntry(new ZipEntry(file.replace(pathReplace, "")));
                     FileInputStream in = new FileInputStream(new File(file));
@@ -111,12 +113,22 @@ public class FileSystemDaoImpl implements FileSystemDao {
     }
 
     @Override
-    public boolean move(String path, String toPath) {
-        return fileUtils.moveFileToPath(path, toPath);
+    public byte[] readFileAsByteArray(String path) {
+        return fileUtils.readFileAsByteArray(path);
     }
 
     @Override
-    public boolean copy(String path, String toPath) {
-        return fileUtils.copyFileToPath(path, toPath);
+    public void move(String path, String toPath) {
+        fileUtils.moveFile(path, toPath);
+    }
+
+    @Override
+    public void copy(String path, String toPath) {
+        fileUtils.copyFile(path, toPath);
+    }
+
+    @Override
+    public List<File> listDirectory(String path) {
+        return new ArrayList<>(org.apache.commons.io.FileUtils.listFiles(new File(path), null, true));
     }
 }

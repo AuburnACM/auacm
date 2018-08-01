@@ -1,9 +1,7 @@
 package com.auacm.service;
 
-import com.auacm.api.model.CompetitionTeams;
-import com.auacm.api.model.CreateCompetition;
-import com.auacm.api.model.SimpleTeam;
-import com.auacm.api.proto.CompetitionOuterClass;
+import com.auacm.api.model.request.CreateCompetitionRequest;
+import com.auacm.api.model.request.UpdateTeamsRequest;
 import com.auacm.database.dao.CompetitionDao;
 import com.auacm.database.dao.CompetitionProblemDao;
 import com.auacm.database.dao.CompetitionUserDao;
@@ -17,12 +15,13 @@ import com.google.gson.JsonPrimitive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CompetitionServiceImpl implements CompetitionService {
@@ -55,7 +54,7 @@ public class CompetitionServiceImpl implements CompetitionService {
     @Override
     public boolean isInUpcomingCompetition(Problem problem) {
         if (problem.getCompetitionId() != null && problem.getCompetitionId() > 0) {
-            Competition competition = competitionDao.findOne(problem.getCompetitionId());
+            Competition competition = competitionDao.getOne(problem.getCompetitionId());
             long currentTime = System.currentTimeMillis() / 1000;
             if (competition.getStart() > currentTime) {
                 return true;
@@ -65,19 +64,27 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
+    @Transactional
     public Competition getCompetitionByName(String name) {
-        try {
-            return competitionDao.getCompetitionByName(name);
-        } catch (JpaObjectRetrievalFailureException e) {
+        Optional<Competition> optComp = competitionDao.getCompetitionByName(name);
+        if (optComp.isPresent()) {
+            Competition competition = optComp.get();
+            configureProblems(competition);
+            return competition;
+        } else {
             throw new CompetitionNotFoundException();
         }
     }
 
     @Override
+    @Transactional
     public Competition getCompetitionById(Long id) {
-        try {
-            return competitionDao.getOne(id);
-        } catch (JpaObjectRetrievalFailureException e) {
+        Optional<Competition> optComp = competitionDao.findById(id);
+        if (optComp.isPresent()) {
+            Competition competition = optComp.get();
+            configureProblems(competition);
+            return competition;
+        } else {
             throw new CompetitionNotFoundException();
         }
     }
@@ -104,26 +111,24 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     public List<CompetitionUser> getRecentCompetitionsForUser(String username, int amount) {
-        return competitionUserDao.findAllByUsernameOrderByCidDesc(username, new PageRequest(0, amount));
+        return competitionUserDao.findAllByUsernameOrderByCidDesc(username, PageRequest.of(0, amount));
     }
 
     @Override
+    @Transactional
     public boolean isUserRegistered(Long competitionId, String user) {
-        try {
-            CompetitionUser competitionUser = competitionUserDao.findOneByUsernameAndCid(user, competitionId);
-            return competitionUser != null;
-        } catch (JpaObjectRetrievalFailureException e) {
-            return false;
-        }
+        Optional<CompetitionUser> competitionUser = competitionUserDao
+                .findOneByUserUsernameAndCompetitionCid(user, competitionId);
+        return competitionUser.isPresent();
     }
 
     @Override
     public boolean isCurrentUserRegistered(Competition competition) {
         boolean registered = false;
-        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof UserPrincipal) {
-            User user = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof User) {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             for (CompetitionUser competitionUser : competition.getCompetitionUsers()) {
-                if (competitionUser.getUsername().equals(user.getUsername())) {
+                if (competitionUser.getUser().getUsername().equals(user.getUsername())) {
                     registered = true;
                     break;
                 }
@@ -133,236 +138,141 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
+    @Transactional
     public CompetitionUser registerCurrentUser(long competitionId) {
-        Competition competition = getCompetitionById(competitionId);
-        User user = ((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
-        if (competition.isClosed()) {
-            if (!user.isAdmin()) {
+        Optional<Competition> competition = competitionDao.findById(competitionId);
+        if (competition.isPresent()) {
+            Competition comp = competition.get();
+            User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (comp.getClosed() && !user.getAdmin()) {
                 throw new ForbiddenException("This is a closed competition. An admin must register you.");
+            } else {
+                if (comp.registerUser(user)) {
+                    competitionDao.save(comp);
+                    broadcastCompetitionUsers(competitionId, getTeamList(comp));
+                    return comp.getUserWithUsername(user.getUsername());
+                } else {
+                    throw new AlreadyRegisteredException();
+                }
             }
-        }
-        if (!isUserRegistered(competitionId, user.getUsername())) {
-            CompetitionUser temp = new CompetitionUser();
-            temp.setCid(competition.getCid());
-            temp.setUsername(user.getUsername());
-            temp.setTeam(user.getDisplay());
-            saveCompetitionUsers(Collections.singletonList(temp));
-            competition.getCompetitionUsers().add(temp);
-            broadcastCompetitionUsers(competitionId, getTeamList(competition));
-            return temp;
         } else {
-            throw new AlreadyRegisteredException();
+            throw new CompetitionNotFoundException("Failed to find a competition for that id.");
         }
     }
 
     @Override
-    public List<CompetitionUser> registerUsers(long competitionId, List<String> userNames) {
-        Competition competition = getCompetitionById(competitionId);
-        try {
-            ArrayList<CompetitionUser> users = new ArrayList<>();
-            for (String user : userNames) {
-                User userData = userService.getUser(user);
-                if (userData != null && !isUserRegistered(competitionId, user)) {
-                    CompetitionUser temp = new CompetitionUser();
-                    temp.setCid(competitionId);
-                    temp.setTeam(userData.getDisplay());
-                    temp.setUsername(user);
-                    users.add(temp);
+    @Transactional
+    public List<CompetitionUser> registerUsers(long competitionId, List<String> usernames) {
+        Optional<Competition> competition = competitionDao.findById(competitionId);
+        if (competition.isPresent()) {
+            Competition comp = competition.get();
+            boolean updated = false;
+            for (String username : usernames) {
+                User user = userService.getUser(username);
+                if (user != null && comp.registerUser(user)) {
+                    updated = true;
                 }
             }
-            competition.getCompetitionUsers().addAll(saveCompetitionUsers(users));
-            broadcastCompetitionUsers(competitionId, getTeamList(competition));
-            return users;
-        } catch (Exception e) {
-            e.printStackTrace();
+            if (updated) {
+                competitionDao.save(comp);
+                broadcastCompetitionUsers(competitionId, getTeamList(comp));
+            }
+            return comp.getCompetitionUsers();
+        } else {
+            throw new CompetitionNotFoundException("Failed to find a competition for that id.");
         }
-        return new ArrayList<>();
     }
 
     @Transactional
     public List<CompetitionUser> saveCompetitionUsers(List<CompetitionUser> list) {
-        return competitionUserDao.save(list);
+        return competitionUserDao.saveAll(list);
     }
 
     @Override
     @Transactional
-    public void unregisterUsers(long competitionId, List<String> userNames) {
-        Competition competition = getCompetitionById(competitionId);
-        List<CompetitionUser> users = new ArrayList<>();
-        for (String user : userNames) {
-            competitionUserDao.deleteOneByUsernameAndCid(user, competitionId);
-            for (CompetitionUser compUser : competition.getCompetitionUsers()) {
-                if (compUser.getUsername().equals(user)) {
-                    users.add(compUser);
-                    break;
-                }
+    public void unregisterUsers(long competitionId, List<String> usernames) {
+        Optional<Competition> competition = competitionDao.findById(competitionId);
+        if (competition.isPresent()) {
+            Competition comp = competition.get();
+            if (comp.unregisterUsers(usernames)) {
+                broadcastCompetitionUsers(competitionId, getTeamList(comp));
+                competitionDao.save(comp);
             }
+        } else {
+            throw new CompetitionNotFoundException("Failed to find a competition for that id.");
         }
-        for (CompetitionUser user : users) {
-            competition.getCompetitionUsers().remove(user);
-        }
-        broadcastCompetitionUsers(competitionId, getTeamList(competition));
     }
 
     @Override
     @Transactional
-    public Competition createCompetition(CreateCompetition newCompetition) {
-        Competition competition = new Competition();
-        competition.setClosed(newCompetition.isClosed());
-        competition.setName(newCompetition.getName());
-        competition.setStart(newCompetition.getStartTime());
-        competition.setStop(newCompetition.getStartTime() + newCompetition.getLength());
-        competition = competitionDao.save(competition);
-
-        ArrayList<CompetitionProblem> problems = new ArrayList<>();
+    public Competition createCompetition(CreateCompetitionRequest newCompetition) {
+        Competition competition = new Competition(newCompetition);
+        for (String username : newCompetition.getUserNames()) {
+            User user = userService.getUser(username);
+            competition.addUser(new CompetitionUser(null, user.getDisplayName(), user, competition));
+        }
         int index = 0;
-        for (Long id : newCompetition.getProblems()) {
-            Problem problem = problemService.getProblemForPid(id);
-            CompetitionProblem tempProblem = new CompetitionProblem();
-            tempProblem.setCid(competition.getCid());
-            tempProblem.setLabel(LABELS.charAt(index) + "");
-            tempProblem.setPid(problem.getPid());
-            problems.add(tempProblem);
+        for (Long problemId : newCompetition.getProblems()) {
+            competition.addProblem(new CompetitionProblem(LABELS.charAt(index) + "", competition,
+                    problemService.getProblem(problemId + "")));
             index++;
         }
-        competitionProblemDao.save(problems);
-        competition.setCompetitionProblems(problems);
-        if (newCompetition.getUserNames() != null) {
-            List<CompetitionUser> users = registerUsers(competition.getCid(), newCompetition.getUserNames());
-            competition.setCompetitionUsers(users);
-        }
+        competition = competitionDao.save(competition);
+        configureProblems(competition);
         return competition;
     }
 
     @Override
     @Transactional
-    public Competition updateCompetition(long competitionId, CreateCompetition newCompetition) {
-        Competition competition = getCompetitionById(competitionId);
-        if (newCompetition.getName() != null) {
-            competition.setName(newCompetition.getName());
-        }
-        if (newCompetition.getStartTime() != null) {
-            long length = competition.getStop() - competition.getStart();
-            competition.setStart(newCompetition.getStartTime());
-            competition.setStop(competition.getStart() + length);
-        }
-        if (newCompetition.getLength() != null) {
-            competition.setStop(competition.getStart() + newCompetition.getLength());
-        }
-        if (newCompetition.isClosed() != null) {
-            competition.setClosed(newCompetition.isClosed());
-        }
-        if (newCompetition.getUserNames() != null) {
-            List<CompetitionUser> users = competition.getCompetitionUsers();
-            ArrayList<String> removeUsers = new ArrayList<>();
-            ArrayList<String> newUsers = new ArrayList<>(newCompetition.getUserNames());
-            // Find the difference between the current users and users to be added/removed
-            for (CompetitionUser user : users) {
-                if (!newCompetition.getUserNames().contains(user.getUsername())) {
-                    removeUsers.add(user.getUsername());
-                } else {
-                    newUsers.remove(user.getUsername());
-                }
+    public Competition updateCompetition(long competitionId, CreateCompetitionRequest newCompetition) {
+        Optional<Competition> optComp = competitionDao.findById(competitionId);
+        if (optComp.isPresent()) {
+            Competition competition = optComp.get();
+            competition.update(newCompetition);
+            if (newCompetition.getUserNames() != null) {
+                competition.updateUsers(newCompetition.getUserNames().stream()
+                        .map(username -> userService.getUser(username))
+                        .filter(Objects::nonNull).collect(Collectors.toList()));
             }
-            // Remove users from competition
-            for (String userName : removeUsers) {
-                CompetitionUser temp = null;
-                for (CompetitionUser user : competition.getCompetitionUsers()) {
-                    if (user.getUsername().equals(userName)) {
-                        temp = user;
-                        break;
-                    }
-                }
-                if (temp != null) {
-                    competition.getCompetitionUsers().remove(temp);
-                }
+            if (newCompetition.getProblems() != null) {
+                competition.updateProblems(newCompetition.getProblems().stream().map(problemId ->
+                        problemService.getProblem(problemId + ""))
+                        .filter(Objects::nonNull).collect(Collectors.toList()));
             }
-            unregisterUsers(competition.getCid(), removeUsers);
-            competition.getCompetitionUsers().addAll(registerUsers(competition.getCid(), newUsers));
+            competition = competitionDao.save(competition);
+            configureProblems(competition);
+            broadcastCompetitionUsers(competitionId);
+            return competition;
+        } else {
+            throw new CompetitionNotFoundException("Failed to find a competition for that id.");
         }
-        if (newCompetition.getProblems() != null) {
-            competitionProblemDao.deleteAllByCid(competitionId);
-            ArrayList<CompetitionProblem> problems = new ArrayList<>();
-            int index = 0;
-            for (Long id : newCompetition.getProblems()) {
-                Problem problem = problemService.getProblemForPid(id);
-                CompetitionProblem tempProblem = new CompetitionProblem();
-                tempProblem.setCid(competition.getCid());
-                tempProblem.setLabel(LABELS.charAt(index) + "");
-                tempProblem.setPid(problem.getPid());
-                problems.add(tempProblem);
-                index++;
-            }
-            competition.getCompetitionProblems().clear();
-            competitionProblemDao.save(problems);
-            competition.getCompetitionProblems().addAll(problems);
-        }
-        broadcastCompetitionUsers(competitionId);
-        return competition;
     }
 
     @Override
     @Transactional
     public void deleteCompetition(long competitionId) {
-        Competition competition = getCompetitionById(competitionId);
-        competitionProblemDao.deleteAllByCid(competitionId);
-        competitionUserDao.deleteAllByCid(competitionId);
-        competitionDao.delete(competitionId);
+        Optional<Competition> competition = competitionDao.findById(competitionId);
+        competition.ifPresent(competition1 -> competitionDao.delete(competition1));
     }
 
     @Override
-    public Competition updateCompetitionTeams(long competitionId, CompetitionTeams competitionTeams) {
-        Competition competition = getCompetitionById(competitionId);
-        ArrayList<CompetitionUser> toUpdate = new ArrayList<>();
-        ArrayList<CompetitionUser> toDelete = new ArrayList<>();
-        // Lets iterate through existing users and update them.
-        // We will also remove the ones we find from the competitionTeams object
-        // That way we can iterate over the ones we have yet to do and add them to the toUpdate object
-        for (CompetitionUser user : competition.getCompetitionUsers()) {
-            boolean found = false;
-            for (String teams : new ArrayList<>(competitionTeams.getTeams().keySet())) {
-                List<SimpleTeam> teamList = new ArrayList<>(competitionTeams.getTeams().get(teams));
-                for (SimpleTeam team : teamList) {
-                    if (team.getUsername().equals(user.getUsername())) {
-                        if (!user.getTeam().equals(teams)) {
-                            user.setTeam(teams);
-                            toUpdate.add(user);
-                            found = true;
-                            competitionTeams.getTeams().get(teams).remove(team);
-                            if (competitionTeams.getTeams().get(teams).size() == 0) {
-                                competitionTeams.getTeams().remove(teams);
-                            }
-                            break;
-                        }
-                    }
-                }
-                if (found) {
-                    break;
-                }
-            }
-            if (!found) {
-                toDelete.add(user);
-            }
+    public Competition updateCompetitionTeams(long competitionId, UpdateTeamsRequest competitionTeams) {
+        Optional<Competition> optCompetition = competitionDao.findById(competitionId);
+        if (optCompetition.isPresent()) {
+            Competition competition = optCompetition.get();
+            competition.updateTeams(competitionTeams.getTeams());
+            competition = competitionDao.save(competition);
+            configureProblems(competition);
+            broadcastCompetitionUsers(competitionId);
+            return competition;
+        } else {
+            throw new CompetitionNotFoundException("Failed to find a competition for that id.");
         }
-        for (String teamName : competitionTeams.getTeams().keySet()) {
-            List<SimpleTeam> teamList = competitionTeams.getTeams().get(teamName);
-            for (SimpleTeam team : teamList) {
-                CompetitionUser newUser = new CompetitionUser();
-                newUser.setTeam(teamName);
-                newUser.setUsername(team.getUsername());
-                newUser.setCid(competitionId);
-                toUpdate.add(newUser);
-            }
-        }
-        deleteCompetitionTeams(toDelete);
-        competition.setCompetitionUsers(updateCompetitionTeams(updateCompetitionTeams(toUpdate)));
-        broadcastCompetitionUsers(competitionId);
-        return competition;
     }
 
     @Transactional
     public List<CompetitionUser> updateCompetitionTeams(List<CompetitionUser> teams) {
-        Iterable<CompetitionUser> users = competitionUserDao.save(teams);
+        Iterable<CompetitionUser> users = competitionUserDao.saveAll(teams);
         ArrayList<CompetitionUser> finalUsers = new ArrayList<>();
         for (CompetitionUser temp : users) {
             finalUsers.add(temp);
@@ -372,7 +282,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Transactional
     public void deleteCompetitionTeams(List<CompetitionUser> teams) {
-        competitionUserDao.delete(teams);
+        competitionUserDao.deleteAll(teams);
     }
 
     @Override
@@ -381,120 +291,80 @@ public class CompetitionServiceImpl implements CompetitionService {
         HashMap<String, List<Submission>> submissionMap = new HashMap<>();
         Scoreboard scoreboard = new Scoreboard();
 
-        // First lets create the teams
-        for (CompetitionUser competitionUser : competition.getCompetitionUsers()) {
-            if (!teamMap.containsKey(competitionUser.getTeam())) {
-                ScoreboardTeam team = new ScoreboardTeam(competitionUser.getTeam());
-                teamMap.put(competitionUser.getTeam(), team);
-                scoreboard.addTeam(team);
-            }
-            User user = userService.getUser(competitionUser.getUsername());
-            teamMap.get(competitionUser.getTeam()).addUser(user);
-            long start = competition.getStart();
-            long stop = competition.getStop();
-            List<Submission> submissions = submissionService.getAllSubmissionsForUsernameBetween(
-                    user.getUsername(), start, stop);
-            if (submissions != null) {
-                submissionMap.put(user.getUsername(), submissions);
-            }
-        }
-
-        // Now we iterate through the teams and find the submissions for each user for every problem
-        for (ScoreboardTeam team : teamMap.values()) {
-            // Iterate over every problem
-            for (CompetitionProblem competitionProblem : competition.getCompetitionProblems()) {
-                ScoreboardProblem scoreboardProblem = new ScoreboardProblem(competitionProblem, problems.get(competitionProblem.getPid()));
-                // Iterate over every person on the team. We will get all of the submissions and find the status
-                for (User user : team.getUsers()) {
-                    if (submissionMap.containsKey(user.getUsername())) {
-                        // Each list of submissions is ordered by the submit time
-                        for (Submission submission : submissionMap.get(user.getUsername())) {
-                            if (submission.getPid() == scoreboardProblem.getProblem().getPid()) {
-                                scoreboardProblem.incrementSubmitCount();
-                                scoreboardProblem.setSubmitTime(submission.getSubmitTime());
-                                if (submission.getResult().equals("correct")) {
-                                    scoreboardProblem.setStatus("correct");
-                                    break;
-                                } else if (submission.getResult().equals("running")) {
-                                    scoreboardProblem.setStatus("running");
-                                } else {
-                                    scoreboardProblem.setStatus("incorrect");
-                                }
-                            }
-                        }
-                    }
-                }
-                team.addProblem(scoreboardProblem.getProblem().getPid() + "", scoreboardProblem);
-            }
-        }
+//        // First lets create the teams
+//        for (CompetitionUser competitionUser : competition.getCompetitionUsers()) {
+//            if (!teamMap.containsKey(competitionUser.getTeam())) {
+//                ScoreboardTeam team = new ScoreboardTeam(competitionUser.getTeam());
+//                teamMap.put(competitionUser.getTeam(), team);
+//                scoreboard.addTeam(team);
+//            }
+//            User user = userService.getUser(competitionUser.getUsername());
+//            teamMap.get(competitionUser.getTeam()).addUser(user);
+//            long start = competition.getStart();
+//            long stop = competition.getStop();
+//            List<Submission> submissions = submissionService.getAllSubmissionsForUsernameBetween(
+//                    user.getUsername(), start, stop);
+//            if (submissions != null) {
+//                submissionMap.put(user.getUsername(), submissions);
+//            }
+//        }
+//
+//        // Now we iterate through the teams and find the submissions for each user for every problem
+//        for (ScoreboardTeam team : teamMap.values()) {
+//            // Iterate over every problem
+//            for (CompetitionProblem competitionProblem : competition.getCompetitionProblems()) {
+//                ScoreboardProblem scoreboardProblem = new ScoreboardProblem(competitionProblem, problems.get(competitionProblem.getPid()));
+//                // Iterate over every person on the team. We will get all of the submissions and find the status
+//                for (User user : team.getUsers()) {
+//                    if (submissionMap.containsKey(user.getUsername())) {
+//                        // Each list of submissions is ordered by the submit time
+//                        for (Submission submission : submissionMap.get(user.getUsername())) {
+//                            if (submission.getPid() == scoreboardProblem.getProblem().getPid()) {
+//                                scoreboardProblem.incrementSubmitCount();
+//                                scoreboardProblem.setSubmitTime(submission.getSubmitTime());
+//                                if (submission.getResult().equals("correct")) {
+//                                    scoreboardProblem.setStatus("correct");
+//                                    break;
+//                                } else if (submission.getResult().equals("running")) {
+//                                    scoreboardProblem.setStatus("running");
+//                                } else {
+//                                    scoreboardProblem.setStatus("incorrect");
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//                team.addProblem(scoreboardProblem.getProblem().getPid() + "", scoreboardProblem);
+//            }
+//        }
         return scoreboard;
     }
 
     @Override
-    public CompetitionOuterClass.SingleCompetitionWrapper getCompetitionResponse(Competition competition) {
-        CompetitionOuterClass.SingleCompetition.Builder builder = CompetitionOuterClass.SingleCompetition.newBuilder()
-                .setCompetition(CompetitionOuterClass.Competition.newBuilder().setCid(competition.getCid())
-                        .setClosed(competition.isClosed()).setLength(competition.getStop() - competition.getStart())
-                        .setStartTime(competition.getStart()).setRegistered(isCurrentUserRegistered(competition))
-                        .setName(competition.getName()));
-        HashMap<Long, Problem> problems = new HashMap<>();
-        for (CompetitionProblem competitionProblem : competition.getCompetitionProblems()) {
-            Problem temp = problemService.getProblemForPid(competitionProblem.getPid());
-            problems.put(temp.getPid(), temp);
-            builder.putCompProblems(competitionProblem.getLabel(), CompetitionOuterClass.CompetitionProblem.newBuilder()
-                    .setName(temp.getName()).setPid(temp.getPid()).setShortName(temp.getShortName()).build());
-        }
-        Scoreboard scoreboard = getScoreboard(competition, problems);
-        for (ScoreboardTeam team : scoreboard.getTeams()) {
-            CompetitionOuterClass.CompetitionTeam.Builder teamBuilder = CompetitionOuterClass.CompetitionTeam.newBuilder();
-            teamBuilder.setName(team.getName());
-            for (User user : team.getUsers()) {
-                teamBuilder.addDisplayNames(user.getDisplay());
-                teamBuilder.addUsers(user.getUsername());
-            }
-            for (ScoreboardProblem scoreboardProblem : team.getProblemsOrderByLabel()) {
-                teamBuilder.putProblemData(scoreboardProblem.getProblem().getPid() + "",
-                        CompetitionOuterClass.CompetitionTeamProblem.newBuilder()
-                                .setLabel(scoreboardProblem.getCompetitionProblem().getLabel())
-                                .setStatus(scoreboardProblem.getStatus())
-                                .setSubmitCount(scoreboardProblem.getSubmitCount())
-                                .setSubmitTime(scoreboardProblem.getSubmitTime()).build());
-            }
-            builder.addTeams(teamBuilder);
-        }
-        return CompetitionOuterClass.SingleCompetitionWrapper.newBuilder().setData(builder).build();
-    }
-
-    @Override
-    public CompetitionOuterClass.CompetitionListWrapper getCompetitionListResponse(Map<String, List<Competition>> competitions) {
-        CompetitionOuterClass.CompetitionList.Builder builder = CompetitionOuterClass.CompetitionList.newBuilder();
-        for (Competition c : competitions.get("ongoing")) {
-            builder.addOngoing(getCompetition(c));
-        }
-        for (Competition c : competitions.get("upcoming")) {
-            builder.addUpcoming(getCompetition(c));
-        }
-        for (Competition c : competitions.get("past")) {
-            builder.addPast(getCompetition(c));
-        }
-        return CompetitionOuterClass.CompetitionListWrapper.newBuilder().setData(builder).build();
-    }
-
-    @Override
-    public Map<String, List<SimpleTeam>> getTeamList(Competition competition) {
+    public Map<String, List<User>> getTeamList(Competition competition) {
         HashMap<String, ScoreboardTeam> teams = getTeamMap(competition);
-        HashMap<String, List<SimpleTeam>> teamMap = new HashMap<>();
+        HashMap<String, List<User>> teamMap = new HashMap<>();
         for (Map.Entry<String, ScoreboardTeam> team : teams.entrySet()) {
             teamMap.put(team.getKey(), new ArrayList<>());
             for (User user : team.getValue().getUsers()) {
-                teamMap.get(team.getKey()).add(new SimpleTeam(user.getDisplay(), user.getUsername()));
+                teamMap.get(team.getKey()).add(user);
             }
         }
         return teamMap;
     }
 
     @Override
-    public void broadcastCompetitionUsers(long competitionId, Map<String, List<SimpleTeam>> teamMap) {
+    public Map<String, List<User>> getTeams(long l) {
+        Optional<Competition> competition = competitionDao.findById(l);
+        if (competition.isPresent()) {
+            return getTeamList(competition.get());
+        } else {
+            return new HashMap<>();
+        }
+    }
+
+    @Override
+    public void broadcastCompetitionUsers(long competitionId, Map<String, List<User>> teamMap) {
         JsonObject data = gson.toJsonTree(teamMap).getAsJsonObject();
         JsonObject message = new JsonObject();
         message.add("eventType", new JsonPrimitive("compUsers"));
@@ -504,29 +374,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     public void broadcastCompetitionUsers(long competitionId) {
-        broadcastCompetitionUsers(competitionId, getTeamList(getCompetitionById(competitionId)));
-    }
-
-    @Override
-    public CompetitionOuterClass.TeamList getTeamListResponse(Competition competition) {
-        HashMap<String, ScoreboardTeam> teams = getTeamMap(competition);
-        CompetitionOuterClass.TeamList.Builder builder = CompetitionOuterClass.TeamList.newBuilder();
-        for (Map.Entry<String, ScoreboardTeam> team : teams.entrySet()) {
-            CompetitionOuterClass.TeamList.TeamListWrapper.Builder tempBuilder = CompetitionOuterClass.TeamList.TeamListWrapper.newBuilder();
-            for (User user : team.getValue().getUsers()) {
-                tempBuilder.addList(CompetitionOuterClass.SimpleTeam.newBuilder().setDisplay(user.getDisplay())
-                        .setUsername(user.getUsername()));
-            }
-            builder.putData(team.getKey(), tempBuilder.build());
-        }
-        return builder.build();
-    }
-
-    private CompetitionOuterClass.Competition.Builder getCompetition(Competition competition) {
-        return CompetitionOuterClass.Competition.newBuilder().setCid(competition.getCid())
-                .setClosed(competition.isClosed()).setLength(competition.getStop() - competition.getStart())
-                .setStartTime(competition.getStart()).setRegistered(isCurrentUserRegistered(competition))
-                .setName(competition.getName());
+        broadcastCompetitionUsers(competitionId, getTeams(competitionId));
     }
 
     private HashMap<String, ScoreboardTeam> getTeamMap(Competition competition) {
@@ -536,9 +384,27 @@ public class CompetitionServiceImpl implements CompetitionService {
                 ScoreboardTeam team = new ScoreboardTeam(competitionUser.getTeam());
                 teamMap.put(competitionUser.getTeam(), team);
             }
-            User user = userService.getUser(competitionUser.getUsername());
+            User user = userService.getUser(competitionUser.getUser().getUsername());
             teamMap.get(competitionUser.getTeam()).addUser(user);
         }
         return teamMap;
+    }
+
+    public void configureProblems(Competition competition) {
+        if (competition.getStart() <= System.currentTimeMillis() / 1000) {
+            competition.configureTeams(true);
+            competition.setProblemData(submissionService.getSubmissionsForCid(competition.getCid()));
+        } else {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null) {
+                User user = (User) authentication.getPrincipal();
+                competition.configureTeams(user.getAdmin());
+                if (user.getAdmin()) {
+                    competition.setProblemData(submissionService.getSubmissionsForCid(competition.getCid()));
+                }
+            } else {
+                competition.configureTeams(false);
+            }
+        }
     }
 }

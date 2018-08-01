@@ -1,12 +1,17 @@
 package com.auacm.service;
 
 import com.auacm.api.model.*;
+import com.auacm.api.model.response.ProfileResponse;
 import com.auacm.database.model.*;
+import com.auacm.database.model.Competition;
+import com.auacm.database.model.Submission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProfileServiceImpl implements ProfileService {
@@ -30,12 +35,12 @@ public class ProfileServiceImpl implements ProfileService {
     private ProblemService problemService;
 
     @Override
-    public Profile getProfile(String username) {
+    public ProfileResponse getProfile(String username) {
         User user = userService.getUser(username);
         if (user == null) {
             throw new UsernameNotFoundException("That user does not exist.");
         }
-        Profile profile = new Profile(user.getDisplay());
+        ProfileResponse profile = new ProfileResponse(user.getDisplayName());
         profile.setProblemsSolved(submissionService.getTotalCorrectSubmissions(username));
         profile.setRecentAttempts(getRecentSubmissions(username, MAX_RECENT_ATTEMPTS));
         profile.setRecentBlogPosts(getRecentBlogPosts(username, MAX_RECENT_BLOG_POSTS));
@@ -66,9 +71,9 @@ public class ProfileServiceImpl implements ProfileService {
         List<CompetitionUser> compUsers = competitionService.getRecentCompetitionsForUser(username, Math.min(amount, MAX_RECENT_COMPETITIONS));
         RecentCompetitionList competitions = new RecentCompetitionList();
         for (CompetitionUser competitionUser : compUsers) {
-            Competition competition = competitionService.getCompetitionById(competitionUser.getCid());
+            Competition competition = competitionService.getCompetitionById(competitionUser.getCompetition().getCid());
             RecentCompetition recentCompetition = new RecentCompetition();
-            recentCompetition.setCid(competitionUser.getCid());
+            recentCompetition.setCid(competitionUser.getCompetition().getCid());
             recentCompetition.setCompName(competition.getName());
             recentCompetition.setTeamName(competitionUser.getTeam());
             recentCompetition.setTeamSize(competition.getUserCountForTeam(competitionUser.getTeam()));

@@ -26,8 +26,8 @@ export class BlogListComponent implements OnInit {
   public wordLimitSize = WORD_LIMIT_SIZE;
   public loadingMore = false;
   public noMoreBlogs = false;
+  public limit = 10;
   private page = 0;
-  private limit = 10;
 
   constructor(private _blogService: BlogService, private _userService: UserService,
               private _router: Router) {

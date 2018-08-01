@@ -33,3 +33,5 @@ auacm/app/templates/index.html
 .settings/
 data/
 src/main/angular/package-lock.json
+docker/
+src/main/java/com/auacm/api/proto/

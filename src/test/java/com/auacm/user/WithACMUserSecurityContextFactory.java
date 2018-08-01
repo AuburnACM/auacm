@@ -1,7 +1,6 @@
 package com.auacm.user;
 
 import com.auacm.database.model.User;
-import com.auacm.database.model.UserPrincipal;
 import com.auacm.service.UserService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -51,9 +50,8 @@ public class WithACMUserSecurityContextFactory implements
         }
 
         User user = userService.getUser(username);
-        UserPrincipal principal = new UserPrincipal(user);
         Authentication authentication = new UsernamePasswordAuthenticationToken(
-                principal, principal.getPassword(), principal.getAuthorities());
+                user, user.getPassword(), user.getAuthorities());
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         return context;

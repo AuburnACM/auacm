@@ -1,12 +1,12 @@
 package com.auacm.model;
 
-import com.auacm.api.model.CreateBlogPost;
+import com.auacm.api.model.request.CreateBlogPostRequest;
 
 public class MockBlogPostBuilder {
-    private CreateBlogPost blogPost;
+    private CreateBlogPostRequest blogPost;
 
     public MockBlogPostBuilder() {
-        blogPost = new CreateBlogPost();
+        blogPost = new CreateBlogPostRequest();
         blogPost.setBody("Test Body");
         blogPost.setTitle("Test Title");
         blogPost.setSubtitle("Test Subtitle");
@@ -27,7 +27,7 @@ public class MockBlogPostBuilder {
         return this;
     }
 
-    public CreateBlogPost build() {
+    public CreateBlogPostRequest build() {
         return blogPost;
     }
 }

@@ -1,5 +1,11 @@
 package com.auacm.database.model;
 
+import com.auacm.api.model.request.CreateBlogPostRequest;
+import com.auacm.api.model.request.UpdateBlogPostRequest;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
@@ -8,6 +14,10 @@ import java.io.Serializable;
 @Entity
 @Table(name = "blog_posts")
 @Proxy(lazy = false)
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class BlogPost implements Serializable, Comparable<BlogPost> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,68 +32,39 @@ public class BlogPost implements Serializable, Comparable<BlogPost> {
 
     private String body;
 
-    private String username;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "username")
+    private User user;
 
-    public BlogPost() {}
-
-    public BlogPost(String title, String subtitle, String body, String username) {
+    public BlogPost(String title, String subtitle, long postTime, String body, User user) {
         this.title = title;
         this.subtitle = subtitle;
-        this.body = body;
-        this.username = username;
-        this.postTime = System.currentTimeMillis() / 1000;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getSubtitle() {
-        return subtitle;
-    }
-
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
-    }
-
-    public long getPostTime() {
-        return postTime;
-    }
-
-    public void setPostTime(long postTime) {
         this.postTime = postTime;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
         this.body = body;
+        this.user = user;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
+    public BlogPost(CreateBlogPostRequest request) {
+        this.body = request.getBody();
+        this.postTime = System.currentTimeMillis() / 1000;
+        this.subtitle = request.getSubtitle();
+        this.title = request.getTitle();
     }
 
     @Override
     public int compareTo(BlogPost o) {
         return Long.compare(o.getId(), id);
+    }
+
+    public void update(UpdateBlogPostRequest blogPostRequest) {
+        if (blogPostRequest.getBody() != null) {
+            this.body = blogPostRequest.getBody();
+        }
+        if (blogPostRequest.getTitle() != null) {
+            this.title = blogPostRequest.getTitle();
+        }
+        if (blogPostRequest.getSubtitle() != null) {
+            this.subtitle = blogPostRequest.getSubtitle();
+        }
     }
 }

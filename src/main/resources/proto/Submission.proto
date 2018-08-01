@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package com.auacm.api.proto;
+
+message SubmissionStatus {
+    int64 submissionId = 1;
+    int64 problemId = 2;
+    string username = 3;
+    int64 submitTime = 4;
+    int64 testNum = 5;
+    string status = 6;
+    string fileType = 7;
+}
+
+message SubmissionStatusResponse {
+    SubmissionStatus data = 1;
+}
+
+message SubmissionStatusListResponse {
+    repeated SubmissionStatus data = 1;
+}

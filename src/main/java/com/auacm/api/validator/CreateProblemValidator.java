@@ -1,6 +1,6 @@
 package com.auacm.api.validator;
 
-import com.auacm.api.model.CreateProblem;
+import com.auacm.api.model.request.CreateProblemRequest;
 import com.auacm.database.model.Competition;
 import com.auacm.service.CompetitionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +16,12 @@ public class CreateProblemValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> aClass) {
-        return CreateProblem.class.equals(aClass);
+        return CreateProblemRequest.class.equals(aClass);
     }
 
     @Override
     public void validate(Object o, Errors errors) {
-        CreateProblem problem = (CreateProblem) o;
+        CreateProblemRequest problem = (CreateProblemRequest) o;
         if (problem.getImportZip() == null || problem.getImportZip().isEmpty()) {
             if (problem.getName() != null) {
                 if (problem.getName().length() < 2) {
@@ -39,16 +39,16 @@ public class CreateProblemValidator implements Validator {
                 errors.reject("Description cannot be null!");
             }
 
-            if (problem.getInputDesc() != null) {
-                if (problem.getInputDesc().length() < 1) {
+            if (problem.getInputDescription() != null) {
+                if (problem.getInputDescription().length() < 1) {
                     errors.reject("Input description must be greater than 1 characters long!");
                 }
             } else {
                 errors.reject("Input description cannot be null!");
             }
 
-            if (problem.getOutputDesc() != null) {
-                if (problem.getOutputDesc().length() < 1) {
+            if (problem.getOutputDescription() != null) {
+                if (problem.getOutputDescription().length() < 1) {
                     errors.reject("Output description must be greater than 1 characters long!");
                 }
             } else {

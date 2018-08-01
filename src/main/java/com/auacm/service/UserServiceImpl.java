@@ -1,15 +1,12 @@
 package com.auacm.service;
 
 import com.auacm.api.model.RankedUser;
-import com.auacm.api.model.UpdateUser;
 import com.auacm.database.dao.UserDao;
 import com.auacm.database.model.SolvedProblem;
 import com.auacm.database.model.User;
-import com.auacm.database.model.UserPrincipal;
 import com.auacm.exception.UserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -17,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.TreeSet;
 
 @Service
@@ -52,7 +50,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User createUser(String displayName, String username, String password, boolean isAdmin) {
         User user = new User();
-        user.setDisplay(displayName);
+        user.setDisplayName(displayName);
         user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
         user.setUsername(username);
         user.setAdmin(isAdmin);
@@ -61,11 +59,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUser(String username) {
-        try {
-            return userDao.getOne(username);
-        } catch (JpaObjectRetrievalFailureException e) {
-            return null;
-        }
+        Optional<User> user = userDao.findById(username);
+        return user.orElse(null);
     }
 
     @Override
@@ -92,7 +87,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updateDisplayName(User user, String newDisplayName) {
-        user.setDisplay(newDisplayName);
+        user.setDisplayName(newDisplayName);
         userDao.save(user);
     }
 
@@ -103,19 +98,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(String username, UpdateUser user) {
+    public User updateUser(String username, User user) {
         User userObj = getUser(username);
         if (userObj == null) {
             throw new UserException("User does not exist!");
         }
-        if (user.getNewPassword() != null) {
-            userObj.setPassword(user.getNewPassword());
+        if (user.getPassword() != null) {
+            userObj.setPassword(user.getPassword());
         }
-        if (user.getDisplay() != null) {
-            userObj.setDisplay(user.getDisplay());
+        if (user.getDisplayName() != null) {
+            userObj.setDisplayName(user.getDisplayName());
         }
-        if (user.isAdmin() != null) {
-            userObj.setAdmin(user.isAdmin());
+        if (user.getAdmin() != null) {
+            userObj.setAdmin(user.getAdmin());
         }
         // TODO Enable this when we don't use usernames as primary keys
 //        if (user.getUsername() != null) {
@@ -126,17 +121,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateSelf(UpdateUser user) {
-        User self = ((UserPrincipal)SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal()).getUser();
+    public User updateSelf(User user) {
+        User self = (User)SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
         if (self == null) {
             throw new UserException("User does not exist!");
         }
-        if (user.getNewPassword() != null) {
-            self.setPassword(user.getNewPassword());
+        if (user.getPassword() != null) {
+            self.setPassword(user.getPassword());
         }
-        if (user.getDisplay() != null) {
-            self.setDisplay(user.getDisplay());
+        if (user.getDisplayName() != null) {
+            self.setDisplayName(user.getDisplayName());
         }
         updateUser(self);
         return self;
@@ -145,8 +140,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public boolean userExists(String username) {
-        User user = userDao.getOne(username);
-        return user != null;
+        return userDao.existsById(username);
     }
 
     @Override
@@ -174,7 +168,7 @@ public class UserServiceImpl implements UserService {
                 }
             }
             if (solvedSize > 0) {
-                rankedUsers.add(new RankedUser(user.getDisplay(), user.getUsername(), 0, solvedSize));
+                rankedUsers.add(new RankedUser(user, 0, solvedSize));
             }
         }
         List<RankedUser> finalList = new ArrayList<>();
@@ -185,38 +179,5 @@ public class UserServiceImpl implements UserService {
             rank++;
         }
         return finalList;
-    }
-
-    @Override
-    public com.auacm.api.proto.User.MeResponseWrapper getMeResponse(UserPrincipal user) {
-        ArrayList<String> perms = new ArrayList<>();
-        for (GrantedAuthority g : user.getAuthorities()) {
-            perms.add(g.getAuthority());
-        }
-        User userObject = user.getUser();
-        return com.auacm.api.proto.User.MeResponseWrapper.newBuilder()
-                .setData(com.auacm.api.proto.User.UserData.newBuilder()
-                        .setUsername(userObject.getUsername())
-                        .setIsAdmin(userObject.isAdmin())
-                        .setDisplayName(userObject.getDisplay())
-                        .addAllPermissions(perms)).build();
-    }
-
-    @Override
-    public com.auacm.api.proto.User.RankResponseWrapper getRankedResponse(List<RankedUser> ranks) {
-        com.auacm.api.proto.User.RankResponseWrapper.Builder rankedWrapper =
-                com.auacm.api.proto.User.RankResponseWrapper.newBuilder();
-        if (ranks.size() == 0) {
-            rankedWrapper.addData(com.auacm.api.proto.User.RankedUser.newBuilder());
-        } else {
-            for (RankedUser rankedUser : ranks) {
-                rankedWrapper.addData(com.auacm.api.proto.User.RankedUser.newBuilder()
-                        .setDisplayName(rankedUser.getDisplayName())
-                        .setUsername(rankedUser.getUsername())
-                        .setRank(rankedUser.getRank())
-                        .setSolved(rankedUser.getSolved()));
-            }
-        }
-        return rankedWrapper.build();
     }
 }

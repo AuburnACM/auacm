@@ -12,10 +12,10 @@ pylint:
 	echo "Linting Python"
 	pylint --load-plugins=pylint_flask auacm/app
 
-nonprod: build_nonprod clean proto mvn
+nonprod: build_nonprod clean mvn
 	echo "Build complete"
 
-prod: build_prod clean proto mvn
+prod: build_prod clean mvn
 	echo "Build complete"
 
 build_nonprod:
@@ -35,6 +35,7 @@ proto:
 	protoc --java_out=src/main/java/ src/main/resources/proto/Competition.proto
 	protoc --java_out=src/main/java/ src/main/resources/proto/Problem.proto
 	protoc --java_out=src/main/java/ src/main/resources/proto/Profile.proto
+	protoc --java_out=src/main/java/ src/main/resources/proto/Submission.proto
 	protoc --java_out=src/main/java/ src/main/resources/proto/User.proto
 
 clean:

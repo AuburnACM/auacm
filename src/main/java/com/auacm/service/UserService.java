@@ -1,9 +1,7 @@
 package com.auacm.service;
 
 import com.auacm.api.model.RankedUser;
-import com.auacm.api.model.UpdateUser;
 import com.auacm.database.model.User;
-import com.auacm.database.model.UserPrincipal;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -28,15 +26,11 @@ public interface UserService {
 
     void updateUser(User user);
 
-    User updateUser(String username, UpdateUser user);
+    User updateUser(String username, User user);
 
-    User updateSelf(UpdateUser user);
+    User updateSelf(User user);
 
     boolean userExists(String username);
 
     List<RankedUser> getRanks(String timeFrame);
-
-    com.auacm.api.proto.User.MeResponseWrapper getMeResponse(UserPrincipal user);
-
-    com.auacm.api.proto.User.RankResponseWrapper getRankedResponse(List<RankedUser> ranks);
 }

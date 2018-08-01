@@ -1,17 +1,23 @@
 package com.auacm.database.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "problem_data")
+@Getter
+@Setter
+@NoArgsConstructor
 public class ProblemData implements Serializable {
-
     @JsonIgnore
     @Id
-    private long pid;
+    private Long pid;
 
     @Column(name = "time_limit")
     private Long timeLimit;
@@ -25,55 +31,8 @@ public class ProblemData implements Serializable {
     private String outputDescription;
 
     @JsonIgnore
-    @OneToOne(targetEntity = Problem.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "pid", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "pid")
+    @MapsId
     private Problem problem;
-
-    public long getPid() {
-        return pid;
-    }
-
-    public void setPid(long pid) {
-        this.pid = pid;
-    }
-
-    public long getTimeLimit() {
-        return timeLimit;
-    }
-
-    public void setTimeLimit(long timeLimit) {
-        this.timeLimit = timeLimit;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getInputDescription() {
-        return inputDescription;
-    }
-
-    public void setInputDescription(String inputDescription) {
-        this.inputDescription = inputDescription;
-    }
-
-    public String getOutputDescription() {
-        return outputDescription;
-    }
-
-    public void setOutputDescription(String outputDescription) {
-        this.outputDescription = outputDescription;
-    }
-
-    public Problem getProblem() {
-        return problem;
-    }
-
-    public void setProblem(Problem problem) {
-        this.problem = problem;
-    }
 }

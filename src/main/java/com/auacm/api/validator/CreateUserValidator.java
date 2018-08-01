@@ -1,6 +1,6 @@
 package com.auacm.api.validator;
 
-import com.auacm.api.model.CreateUser;
+import com.auacm.database.model.User;
 import com.auacm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,12 +15,12 @@ public class CreateUserValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> aClass) {
-        return CreateUser.class.equals(aClass);
+        return User.class.equals(aClass);
     }
 
     @Override
     public void validate(Object o, Errors errors) {
-        CreateUser user = (CreateUser)o;
+        User user = (User) o;
         if (userService.getUser(user.getUsername()) != null) {
             errors.reject("User already exists!");
         }

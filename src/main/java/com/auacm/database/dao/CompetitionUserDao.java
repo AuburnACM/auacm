@@ -8,19 +8,20 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CompetitionUserDao extends JpaRepository<CompetitionUser, Long> {
-    List<CompetitionUser> getAllByCid(Long cid);
+    List<CompetitionUser> getAllByCompetitionCid(Long cid);
 
-    @Query(value = "select cu from CompetitionUser cu join cu.competition cn where cu.username=:username order by cn.start desc")
+    @Query(value = "select cu from CompetitionUser cu join cu.competition cn where cu.user.username=:username order by cn.start desc")
     List<CompetitionUser> findAllByUsernameOrderByCidDesc(@Param("username") String username, Pageable pageable);
 
-    CompetitionUser findOneByUsername(String userName);
+    Optional<CompetitionUser> findOneByUserUsername(String userName);
 
-    CompetitionUser findOneByUsernameAndCid(String userName, Long cid);
+    Optional<CompetitionUser> findOneByUserUsernameAndCompetitionCid(String userName, Long cid);
 
-    void deleteOneByUsernameAndCid(String userName, Long cid);
+    void deleteOneByUserUsernameAndCompetitionCid(String userName, Long cid);
 
-    void deleteAllByCid(Long cid);
+    void deleteAllByCompetitionCid(Long cid);
 }

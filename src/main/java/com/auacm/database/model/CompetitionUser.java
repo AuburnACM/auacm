@@ -1,62 +1,37 @@
 package com.auacm.database.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "comp_users")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class CompetitionUser implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long cid;
-
-    private String username;
-
     private String team;
 
-    @ManyToOne(targetEntity = Competition.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "cid", updatable = false, insertable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "username")
+    private User user;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "cid")
     private Competition competition;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getCid() {
-        return cid;
-    }
-
-    public void setCid(Long cid) {
-        this.cid = cid;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getTeam() {
-        return team;
-    }
-
-    public void setTeam(String team) {
+    public CompetitionUser(String username, String team, Competition competition) {
+        this.user = new User(username);
         this.team = team;
-    }
-
-    public Competition getCompetition() {
-        return competition;
-    }
-
-    public void setCompetition(Competition competition) {
         this.competition = competition;
     }
 }

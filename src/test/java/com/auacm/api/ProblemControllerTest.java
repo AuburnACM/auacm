@@ -81,28 +81,33 @@ public class ProblemControllerTest {
     @WithMockUser(username = "admin")
     public void createProblem() throws Exception {
         MockRequest.setSecurityContext(userService, "admin");
-        String response = mockMvc.perform(getCreateProblemRequest()).andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn().getResponse().getContentAsString();
-        JsonObject object = new JsonParser().parse(response).getAsJsonObject().get("data").getAsJsonObject();
-        Assert.assertEquals(true, object.has("added"));
-        Assert.assertEquals(true, object.has("description"));
-        Assert.assertEquals(true, object.has("difficulty"));
-        Assert.assertEquals(true, object.has("inputDesc"));
-        Assert.assertEquals(true, object.has("outputDesc"));
-        Assert.assertEquals(true, object.has("name"));
-        Assert.assertEquals(true, object.has("pid"));
-        Assert.assertEquals(true, object.has("sampleCases"));
-        Assert.assertEquals(true, object.has("shortName"));
-        Assert.assertEquals(true, fileSystemService.doesFileExist("data/problems/1/in/"));
-        Assert.assertEquals(true, fileSystemService.doesFileExist("data/problems/1/in/in1.txt"));
-        Assert.assertEquals(true, fileSystemService.doesFileExist("data/problems/1/in/in2.txt"));
-        Assert.assertEquals(true, fileSystemService.doesFileExist("data/problems/1/out/"));
-        Assert.assertEquals(true, fileSystemService.doesFileExist("data/problems/1/out/out1.txt"));
-        Assert.assertEquals(true, fileSystemService.doesFileExist("data/problems/1/out/out2.txt"));
-        Assert.assertEquals(true, fileSystemService.doesFileExist("data/problems/1/test/"));
-        Assert.assertEquals(true, fileSystemService.doesFileExist("data/problems/1/test/Solution.java"));
-        Assert.assertEquals(true, fileSystemService.doesFileExist("data/problems/1/data.json"));
-        Assert.assertEquals(true, fileSystemService.doesFileExist("data/problems/1/export.zip"));
+        try {
+            String response = mockMvc.perform(getCreateProblemRequest()).andExpect(MockMvcResultMatchers.status().isOk())
+                    .andReturn().getResponse().getContentAsString();
+            System.out.println(response);
+            JsonObject object = new JsonParser().parse(response).getAsJsonObject().get("data").getAsJsonObject();
+            Assert.assertEquals(true, object.has("added"));
+            Assert.assertEquals(true, object.has("description"));
+            Assert.assertEquals(true, object.has("difficulty"));
+            Assert.assertEquals(true, object.has("inputDescription"));
+            Assert.assertEquals(true, object.has("outputDescription"));
+            Assert.assertEquals(true, object.has("name"));
+            Assert.assertEquals(true, object.has("pid"));
+            Assert.assertEquals(true, object.has("sampleCases"));
+            Assert.assertEquals(true, object.has("shortName"));
+            Assert.assertEquals(true, fileSystemService.doesFileExist("data/problems/1/in/"));
+            Assert.assertEquals(true, fileSystemService.doesFileExist("data/problems/1/in/in1.txt"));
+            Assert.assertEquals(true, fileSystemService.doesFileExist("data/problems/1/in/in2.txt"));
+            Assert.assertEquals(true, fileSystemService.doesFileExist("data/problems/1/out/"));
+            Assert.assertEquals(true, fileSystemService.doesFileExist("data/problems/1/out/out1.txt"));
+            Assert.assertEquals(true, fileSystemService.doesFileExist("data/problems/1/out/out2.txt"));
+            Assert.assertEquals(true, fileSystemService.doesFileExist("data/problems/1/test/"));
+            Assert.assertEquals(true, fileSystemService.doesFileExist("data/problems/1/test/Solution.java"));
+            Assert.assertEquals(true, fileSystemService.doesFileExist("data/problems/1/data.json"));
+            Assert.assertEquals(true, fileSystemService.doesFileExist("data/problems/1/export.zip"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -121,7 +126,7 @@ public class ProblemControllerTest {
     @WithMockUser(username = "admin")
     public void createProblemWithInputZip() throws Exception {
         MockRequest.setSecurityContext(userService, "admin");
-        String response = mockMvc.perform(MockMvcRequestBuilders.fileUpload("/api/problems")
+        String response = mockMvc.perform(MockMvcRequestBuilders.multipart("/api/problems")
                 .file(new MockMultipartFile("importZip", "export.zip", "application/zip", getExportBytes())))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString();
@@ -129,8 +134,8 @@ public class ProblemControllerTest {
         Assert.assertEquals(true, object.has("added"));
         Assert.assertEquals(true, object.has("description"));
         Assert.assertEquals(true, object.has("difficulty"));
-        Assert.assertEquals(true, object.has("inputDesc"));
-        Assert.assertEquals(true, object.has("outputDesc"));
+        Assert.assertEquals(true, object.has("inputDescription"));
+        Assert.assertEquals(true, object.has("outputDescription"));
         Assert.assertEquals(true, object.has("name"));
         Assert.assertEquals(true, object.has("pid"));
         Assert.assertEquals(true, object.has("sampleCases"));
@@ -138,8 +143,8 @@ public class ProblemControllerTest {
         Assert.assertEquals("Test Problem", object.get("name").getAsString());
         Assert.assertEquals("Description for the problem.", object.get("description").getAsString());
         Assert.assertEquals("50", object.get("difficulty").getAsString());
-        Assert.assertEquals("Some input", object.get("inputDesc").getAsString());
-        Assert.assertEquals("Some output", object.get("outputDesc").getAsString());
+        Assert.assertEquals("Some input", object.get("inputDescription").getAsString());
+        Assert.assertEquals("Some output", object.get("outputDescription").getAsString());
         Assert.assertEquals(2, object.get("sampleCases").getAsJsonArray().size());
         Assert.assertEquals(2, object.get("timeLimit").getAsInt());
         Assert.assertEquals(true, fileSystemService.doesFileExist("data/problems/1/in/"));
@@ -172,14 +177,14 @@ public class ProblemControllerTest {
     @WithMockUser(username = "admin")
     public void createProblemMissingInputDescription() throws Exception {
         MockRequest.setSecurityContext(userService, "admin");
-        mockMvc.perform(getCreateProblemRequest("inputDesc")).andExpect(MockMvcResultMatchers.status().isBadRequest());
+        mockMvc.perform(getCreateProblemRequest("inputDescription")).andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
     @WithMockUser(username = "admin")
     public void createProblemMissingOutputDescription() throws Exception {
         MockRequest.setSecurityContext(userService, "admin");
-        mockMvc.perform(getCreateProblemRequest("outputDesc")).andExpect(MockMvcResultMatchers.status().isBadRequest());
+        mockMvc.perform(getCreateProblemRequest("outputDescription")).andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
@@ -225,28 +230,28 @@ public class ProblemControllerTest {
 
     @Test
     @WithMockUser(username = "admin")
-    public void updateProblemInputDesc() throws Exception {
+    public void updateProblemInputDescription() throws Exception {
         MockRequest.setSecurityContext(userService, "admin");
         mockMvc.perform(getCreateProblemRequest()).andExpect(MockMvcResultMatchers.status().isOk());
         String response = mockMvc.perform(MockMvcRequestBuilders.fileUpload("/api/problems/1")
-                .param("inputDesc", "Updated input description")).andExpect(MockMvcResultMatchers.status().isOk())
+                .param("inputDescription", "Updated input description")).andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString();
         JsonObject object = new JsonParser().parse(response).getAsJsonObject().get("data").getAsJsonObject();
-        Assert.assertEquals(true, object.has("inputDesc"));
-        Assert.assertEquals("Updated input description", object.get("inputDesc").getAsString());
+        Assert.assertEquals(true, object.has("inputDescription"));
+        Assert.assertEquals("Updated input description", object.get("inputDescription").getAsString());
     }
 
     @Test
     @WithMockUser(username = "admin")
-    public void updateProblemOutputDesc() throws Exception {
+    public void updateProblemOutputDescription() throws Exception {
         MockRequest.setSecurityContext(userService, "admin");
         mockMvc.perform(getCreateProblemRequest()).andExpect(MockMvcResultMatchers.status().isOk());
         String response = mockMvc.perform(MockMvcRequestBuilders.fileUpload("/api/problems/1")
-                .param("outputDesc", "Updated output description")).andExpect(MockMvcResultMatchers.status().isOk())
+                .param("outputDescription", "Updated output description")).andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString();
         JsonObject object = new JsonParser().parse(response).getAsJsonObject().get("data").getAsJsonObject();
-        Assert.assertEquals(true, object.has("outputDesc"));
-        Assert.assertEquals("Updated output description", object.get("outputDesc").getAsString());
+        Assert.assertEquals(true, object.has("outputDescription"));
+        Assert.assertEquals("Updated output description", object.get("outputDescription").getAsString());
     }
 
     @Test
@@ -332,8 +337,8 @@ public class ProblemControllerTest {
         Assert.assertEquals(true, object.has("added"));
         Assert.assertEquals(true, object.has("description"));
         Assert.assertEquals(true, object.has("difficulty"));
-        Assert.assertEquals(true, object.has("inputDesc"));
-        Assert.assertEquals(true, object.has("outputDesc"));
+        Assert.assertEquals(true, object.has("inputDescription"));
+        Assert.assertEquals(true, object.has("outputDescription"));
         Assert.assertEquals(true, object.has("name"));
         Assert.assertEquals(true, object.has("pid"));
         Assert.assertEquals(true, object.has("sampleCases"));
@@ -351,8 +356,8 @@ public class ProblemControllerTest {
         Assert.assertEquals(true, object.has("added"));
         Assert.assertEquals(true, object.has("description"));
         Assert.assertEquals(true, object.has("difficulty"));
-        Assert.assertEquals(true, object.has("inputDesc"));
-        Assert.assertEquals(true, object.has("outputDesc"));
+        Assert.assertEquals(true, object.has("inputDescription"));
+        Assert.assertEquals(true, object.has("outputDescription"));
         Assert.assertEquals(true, object.has("name"));
         Assert.assertEquals(true, object.has("pid"));
         Assert.assertEquals(true, object.has("sampleCases"));
@@ -367,7 +372,7 @@ public class ProblemControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/problems/1")).andExpect(MockMvcResultMatchers.status().isOk());
         Problem problem = null;
         try {
-            problem = problemService.getProblemForPid(1);
+            problem = problemService.getProblem(1 + "");
             Assert.assertNull(problem);
         } catch (ProblemNotFoundException e) {
             Assert.assertNull(problem);

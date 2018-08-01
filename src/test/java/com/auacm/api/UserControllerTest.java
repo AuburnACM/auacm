@@ -3,7 +3,6 @@ package com.auacm.api;
 import com.auacm.Auacm;
 import com.auacm.TestingConfig;
 import com.auacm.database.model.User;
-import com.auacm.database.model.UserPrincipal;
 import com.auacm.service.UserService;
 import com.auacm.user.WithACMUser;
 import com.google.gson.*;
@@ -15,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -27,9 +23,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.context.WebApplicationContext;
-
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {Auacm.class, TestingConfig.class})
@@ -62,13 +55,13 @@ public class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse().getContentAsString();
         JsonObject object = new JsonParser().parse(response).getAsJsonObject().get("data").getAsJsonObject();
         Assert.assertNotNull(object);
-        Assert.assertEquals(true, object.has("username"));
-        Assert.assertEquals(true, object.has("displayName"));
-        Assert.assertEquals(true, object.has("isAdmin"));
-        Assert.assertEquals(true, object.has("permissions"));
+        Assert.assertTrue(object.has("username"));
+        Assert.assertTrue(object.has("displayName"));
+        Assert.assertTrue(object.has("admin"));
+        Assert.assertTrue(object.has("permissions"));
         Assert.assertEquals("admin", object.get("username").getAsString());
         Assert.assertEquals("Admin", object.get("displayName").getAsString());
-        Assert.assertEquals(true, object.get("isAdmin").getAsBoolean());
+        Assert.assertTrue(object.get("admin").getAsBoolean());
         Assert.assertEquals(1, object.get("permissions").getAsJsonArray().size());
         Assert.assertEquals("ROLE_ADMIN", object.get("permissions").getAsJsonArray().get(0).getAsString());
     }
@@ -103,11 +96,11 @@ public class UserControllerTest {
         Assert.assertNotNull(object);
         Assert.assertEquals(true, object.has("username"));
         Assert.assertEquals(true, object.has("displayName"));
-        Assert.assertEquals(true, object.has("isAdmin"));
+        Assert.assertEquals(true, object.has("admin"));
         Assert.assertEquals(true, object.has("permissions"));
         Assert.assertEquals("admin", object.get("username").getAsString());
         Assert.assertEquals("Admin", object.get("displayName").getAsString());
-        Assert.assertEquals(true, object.get("isAdmin").getAsBoolean());
+        Assert.assertEquals(true, object.get("admin").getAsBoolean());
 
         JsonArray perms = object.get("permissions").getAsJsonArray();
         Assert.assertEquals(true, perms.contains(new JsonPrimitive("ROLE_ADMIN")));
@@ -122,10 +115,11 @@ public class UserControllerTest {
         Assert.assertNotNull(object);
         Assert.assertEquals(true, object.has("username"));
         Assert.assertEquals(true, object.has("displayName"));
-        Assert.assertEquals(false, object.has("isAdmin"));
+        Assert.assertEquals(true, object.has("admin"));
         Assert.assertEquals(true, object.has("permissions"));
         Assert.assertEquals("user", object.get("username").getAsString());
         Assert.assertEquals("User", object.get("displayName").getAsString());
+        Assert.assertEquals(false, object.get("admin").getAsBoolean());
 
         JsonArray perms = object.get("permissions").getAsJsonArray();
         Assert.assertEquals(true, perms.contains(new JsonPrimitive("ROLE_USER")));
@@ -136,7 +130,7 @@ public class UserControllerTest {
     public void createUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/create_user")
                 .param("username", "test").param("password", "password")
-                .param("display", "Test User").param("admin", "true").headers(headers))
+                .param("displayName", "Test User").param("admin", "true").headers(headers))
             .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
@@ -145,7 +139,7 @@ public class UserControllerTest {
     public void createUserNotAdmin() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/create_user")
                 .param("username", "test").param("password", "password")
-                .param("display", "Test User").param("admin", "true").headers(headers))
+                .param("displayName", "Test User").param("admin", "true").headers(headers))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
@@ -153,7 +147,7 @@ public class UserControllerTest {
     public void createUserNotLoggedIn() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/create_user")
                 .param("username", "test").param("password", "password")
-                .param("display", "Test User").param("admin", "true").headers(headers))
+                .param("displayName", "Test User").param("admin", "true").headers(headers))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
@@ -161,16 +155,16 @@ public class UserControllerTest {
     @WithACMUser(username = "user")
     public void changePassword() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/change_password")
-            .param("oldPassword", "password").param("newPassword", "password1").headers(headers))
+            .param("password", "password").param("newPassword", "password1").headers(headers))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-        Assert.assertEquals(true, userService.validatePassword("user", "password1"));
+        Assert.assertTrue(userService.validatePassword("user", "password1"));
     }
 
     @Test
     @WithACMUser(username = "user")
     public void changePasswordInvalidOldPassword() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/change_password")
-                .param("oldPassword", "invalid_password").param("newPassword", "password1").headers(headers))
+                .param("password", "invalid_password").param("newPassword", "password1").headers(headers))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
@@ -178,11 +172,11 @@ public class UserControllerTest {
     @WithACMUser(username = "user")
     public void updateUserDisplayName() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/update_user")
-                .param("display", "New Display").headers(headers))
+                .param("displayName", "New Display").headers(headers))
                 .andExpect(MockMvcResultMatchers.status().isOk());
         User user = userService.getUser("user");
         Assert.assertNotNull(user);
-        Assert.assertEquals("New Display", user.getDisplay());
+        Assert.assertEquals("New Display", user.getDisplayName());
     }
 
     @Test

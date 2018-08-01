@@ -1,11 +1,15 @@
+DROP TABLE IF EXISTS blog_posts;
+
 CREATE TABLE IF NOT EXISTS blog_posts(
   id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   title VARCHAR(255) NOT NULL,
   subtitle VARCHAR(255) NOT NULL,
-  post_time INT UNSIGNED NOT NULL,
+  post_time BIGINT UNSIGNED NOT NULL,
   body TEXT NOT NULL,
   username VARCHAR(32) NOT NULL
 );
+
+DROP TABLE IF EXISTS comp_names;
 
 CREATE TABLE IF NOT EXISTS comp_names(
   cid INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -15,34 +19,7 @@ CREATE TABLE IF NOT EXISTS comp_names(
   closed BOOLEAN NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS comp_problems(
-  id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  cid INT UNSIGNED NOT NULL,
-  pid INT DEFAULT NULL,
-  label VARCHAR(2) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS comp_users(
-  id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  cid INT UNSIGNED NOT NULL,
-  username VARCHAR(32) NOT NULL,
-  team VARCHAR(32) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS problem_data(
-  pid INT NOT NULL PRIMARY KEY,
-  time_limit INT DEFAULT NULL,
-  description TEXT,
-  input_desc TEXT,
-  output_desc TEXT
-);
-
-CREATE TABLE IF NOT EXISTS problem_solved(
-  pid INT NOT NULL DEFAULT 0,
-  username VARCHAR(255) NOT NULL,
-  submit_time INT UNSIGNED NOT NULL DEFAULT 0,
-  PRIMARY KEY (username, pid)
-);
+DROP TABLE IF EXISTS problems;
 
 CREATE TABLE IF NOT EXISTS problems(
   pid INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -51,16 +28,73 @@ CREATE TABLE IF NOT EXISTS problems(
   appeared VARCHAR(255) NOT NULL,
   difficulty VARCHAR(8) NOT NULL,
   added INT UNSIGNED NOT NULL,
-  comp_release INT UNSIGNED DEFAULT NULL
+  comp_release INT UNSIGNED DEFAULT NULL,
+  FOREIGN KEY (comp_release) REFERENCES comp_names(cid)
 );
+
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE IF NOT EXISTS users(
+  username VARCHAR(32) NOT NULL PRIMARY KEY,
+  passw VARCHAR(255) DEFAULT NULL,
+  display VARCHAR(32) NOT NULL,
+  admin BOOLEAN NOT NULL
+);
+
+DROP TABLE IF EXISTS comp_problems;
+
+CREATE TABLE IF NOT EXISTS comp_problems(
+  id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  cid INT UNSIGNED NOT NULL,
+  pid INT DEFAULT NULL,
+  label VARCHAR(2) NOT NULL,
+  FOREIGN KEY (cid) REFERENCES comp_names(cid),
+  FOREIGN KEY (pid) REFERENCES problems(pid)
+);
+
+DROP TABLE IF EXISTS comp_users;
+
+CREATE TABLE IF NOT EXISTS comp_users(
+  id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  cid INT UNSIGNED NOT NULL,
+  username VARCHAR(32) NOT NULL,
+  team VARCHAR(32) NOT NULL,
+  FOREIGN KEY (cid) REFERENCES comp_names(cid),
+  FOREIGN KEY (username) REFERENCES users(username)
+);
+
+DROP TABLE IF EXISTS problem_data;
+
+CREATE TABLE IF NOT EXISTS problem_data(
+  pid INT NOT NULL PRIMARY KEY,
+  time_limit INT DEFAULT NULL,
+  description TEXT,
+  input_desc TEXT,
+  output_desc TEXT,
+  FOREIGN KEY (pid) REFERENCES problems(pid)
+);
+
+DROP TABLE IF EXISTS problem_solved;
+
+CREATE TABLE IF NOT EXISTS problem_solved(
+  pid INT NOT NULL DEFAULT 0,
+  username VARCHAR(255) NOT NULL,
+  submit_time INT UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (username, pid)
+);
+
+DROP TABLE IF EXISTS sample_cases;
 
 CREATE TABLE IF NOT EXISTS sample_cases(
   pid INT NOT NULL DEFAULT 0,
   case_num INT NOT NULL DEFAULT 0,
   input TEXT,
   output TEXT,
-  PRIMARY KEY (pid, case_num)
+  PRIMARY KEY (pid, case_num),
+  FOREIGN KEY (pid) REFERENCES problems(pid)
 );
+
+DROP TABLE IF EXISTS submits;
 
 CREATE TABLE IF NOT EXISTS submits(
   job INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -70,24 +104,6 @@ CREATE TABLE IF NOT EXISTS submits(
   submit_time INT UNSIGNED NOT NULL,
   auto_id BOOLEAN NOT NULL,
   file_type VARCHAR(4) NOT NULL,
-  result VARCHAR(8) DEFAULT NULL
+  result VARCHAR(8) DEFAULT NULL,
+  FOREIGN KEY (pid) REFERENCES problems(pid)
 );
-
-CREATE TABLE IF NOT EXISTS users(
-  username VARCHAR(32) NOT NULL PRIMARY KEY,
-  passw VARCHAR(255) DEFAULT NULL,
-  display VARCHAR(32) NOT NULL,
-  admin BOOLEAN NOT NULL
-);
-
-ALTER TABLE comp_problems ADD CONSTRAINT comp_problems_ibfk_1 FOREIGN KEY (pid) REFERENCES problems (pid);
-
-ALTER TABLE comp_problems ADD CONSTRAINT comp_problems_ibfk_2 FOREIGN KEY (cid) REFERENCES comp_names (cid);
-
-ALTER TABLE comp_users ADD CONSTRAINT comp_users_ibfk_1 FOREIGN KEY (cid) REFERENCES comp_names (cid);
-
-ALTER TABLE problem_data ADD CONSTRAINT comp_data_ibfk_1 FOREIGN KEY (pid) REFERENCES problems (pid);
-
-ALTER TABLE problems ADD CONSTRAINT problems_ibfk_1 FOREIGN KEY (comp_release) REFERENCES comp_names (cid);
-
-ALTER TABLE sample_cases ADD CONSTRAINT sample_cases_ibfk_1 FOREIGN KEY (pid) REFERENCES problems (pid);

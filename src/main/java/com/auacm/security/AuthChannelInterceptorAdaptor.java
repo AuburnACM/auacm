@@ -1,6 +1,6 @@
 package com.auacm.security;
 
-import com.auacm.database.model.UserPrincipal;
+import com.auacm.database.model.User;
 import com.auacm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
@@ -35,7 +35,7 @@ public class AuthChannelInterceptorAdaptor extends ChannelInterceptorAdapter {
         if (StompCommand.CONNECT == accessor.getCommand()) {
             List<GrantedAuthority> authorityList = new ArrayList<>();
             authorityList.add(new SimpleGrantedAuthority("ROLE_ANONYMOUS"));
-            AnonymousAuthenticationToken token = new AnonymousAuthenticationToken(UUID.randomUUID().toString(), new UserPrincipal(), authorityList);
+            AnonymousAuthenticationToken token = new AnonymousAuthenticationToken(UUID.randomUUID().toString(), new User(), authorityList);
             accessor.setUser(token);
         }
         return message;

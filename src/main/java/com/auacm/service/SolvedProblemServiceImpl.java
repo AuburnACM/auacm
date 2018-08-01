@@ -4,7 +4,6 @@ import com.auacm.database.dao.SolvedProblemDao;
 import com.auacm.database.model.Problem;
 import com.auacm.database.model.SolvedProblem;
 import com.auacm.database.model.User;
-import com.auacm.database.model.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,7 +34,7 @@ public class SolvedProblemServiceImpl implements SolvedProblemService {
     @Override
     public boolean hasSolved(Problem problem) {
         try {
-            User user = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             SolvedProblem solvedProblem = solvedProblemDao.findOneByUsernameAndPid(user.getUsername(), problem.getPid());
             if (solvedProblem != null) {
                 return true;

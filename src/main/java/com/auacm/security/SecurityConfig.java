@@ -51,6 +51,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/profile/*/competitions").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/profile/*/blogs").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/profile/*/submits").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/submit", "/api/submit/**").fullyAuthenticated()
+                .antMatchers(HttpMethod.POST, "/api/submit", "/api/submit/**").fullyAuthenticated()
                 // Enable if we want to support http basic
 //                .and().httpBasic().authenticationEntryPoint(new Http403ForbiddenEntryPoint())
                 .and().formLogin().loginPage("/api/login").successHandler(handler).failureHandler(failedLoginHandler).permitAll()

@@ -1,23 +1,22 @@
 package com.auacm.service;
 
-import com.auacm.api.proto.Blog;
+import com.auacm.api.model.request.CreateBlogPostRequest;
+import com.auacm.api.model.request.UpdateBlogPostRequest;
 import com.auacm.database.dao.BlogPostDao;
 import com.auacm.database.model.BlogPost;
-import com.auacm.api.model.CreateBlogPost;
-import com.auacm.api.model.UpdateBlogPost;
 import com.auacm.database.model.User;
 import com.auacm.exception.BlogNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BlogPostServiceImpl implements BlogPostService {
@@ -30,24 +29,23 @@ public class BlogPostServiceImpl implements BlogPostService {
 
     @Override
     @Transactional
-    public BlogPost addBlogPost(BlogPost post) {
-        return blogPostDao.save(post);
-    }
-
-    @Override
-    @Transactional
-    public BlogPost addBlogPost(CreateBlogPost post, String username) {
-        BlogPost newBlogPost = new BlogPost(post.getTitle(), post.getSubtitle(), post.getBody(), username);
-        return addBlogPost(newBlogPost);
-
+    public BlogPost addBlogPost(CreateBlogPostRequest blogPostRequest) {
+        BlogPost newBlogPost = new BlogPost(blogPostRequest);
+        if (blogPostRequest.getUsername() == null) {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            newBlogPost.setUser(user);
+        } else {
+            User user = userService.getUser(blogPostRequest.getUsername());
+            newBlogPost.setUser(user);
+        }
+        return blogPostDao.save(newBlogPost);
     }
 
     @Override
     @Transactional
     public BlogPost addBlogPost(String title, String subtitle, String body, String username) {
-        BlogPost post = new BlogPost(title, subtitle, body, username);
-        addBlogPost(post);
-        return post;
+        CreateBlogPostRequest newBlogPost = new CreateBlogPostRequest(title, subtitle, body, username);
+        return addBlogPost(newBlogPost);
     }
 
     @Override
@@ -58,20 +56,10 @@ public class BlogPostServiceImpl implements BlogPostService {
 
     @Override
     @Transactional
-    public BlogPost updateBlogPost(UpdateBlogPost post, long id) {
+    public BlogPost updateBlogPost(UpdateBlogPostRequest updateBlogPostRequest, long id) {
         BlogPost toUpdate = getBlogPostForId(id);
-        if (toUpdate != null) {
-            if (post.getBody() != null) {
-                toUpdate.setBody(post.getBody());
-            }
-            if (post.getTitle() != null) {
-                toUpdate.setTitle(post.getTitle());
-            }
-            if (post.getSubtitle() != null) {
-                toUpdate.setSubtitle(post.getSubtitle());
-            }
-            updateBlogPost(toUpdate);
-        }
+        toUpdate.update(updateBlogPostRequest);
+        blogPostDao.save(toUpdate);
         return toUpdate;
     }
 
@@ -97,7 +85,7 @@ public class BlogPostServiceImpl implements BlogPostService {
     @Override
     public List<BlogPost> getAllBlogPosts(int limit, int page) {
         try {
-            PageRequest request = new PageRequest(page, limit, new Sort(Sort.Direction.DESC, "id"));
+            PageRequest request = PageRequest.of(page, limit, new Sort(Sort.Direction.DESC, "id"));
             return blogPostDao.findAll(request).getContent();
         } catch (JpaObjectRetrievalFailureException | EntityNotFoundException e) {
             throw new BlogNotFoundException("No blogs exist.");
@@ -107,7 +95,7 @@ public class BlogPostServiceImpl implements BlogPostService {
     @Override
     public List<BlogPost> getBlogPostForUser(String username) {
         try {
-            return blogPostDao.findByUsernameIgnoreCase(username);
+            return blogPostDao.findByUserUsernameIgnoreCase(username);
         } catch (JpaObjectRetrievalFailureException | EntityNotFoundException e) {
             throw new BlogNotFoundException(String.format("Failed to find blogs for user %s.", username));
         }
@@ -115,51 +103,17 @@ public class BlogPostServiceImpl implements BlogPostService {
 
     @Override
     public List<BlogPost> getRecentBlogPostsForUser(String username, int amount) {
-        return blogPostDao.findAllByUsernameOrderByPostTimeDesc(username, new PageRequest(0, amount));
+        return blogPostDao.findAllByUserUsernameOrderByPostTimeDesc(username, PageRequest.of(0, amount));
     }
 
     @Override
+    @Transactional
     public BlogPost getBlogPostForId(long id) {
-        try {
-            return blogPostDao.getOne(id);
-        } catch (JpaObjectRetrievalFailureException | EntityNotFoundException e) {
+        Optional<BlogPost> blogPost = blogPostDao.findById(id);
+        if (blogPost.isPresent()) {
+            return blogPost.get();
+        } else {
             throw new BlogNotFoundException(String.format("Failed to find a blog for id %d.", id));
         }
-    }
-
-    @Override
-    public Blog.BlogResponseWrapper getResponseForBlog(BlogPost post, User user) {
-        return Blog.BlogResponseWrapper.newBuilder().setData(Blog.BlogPostResponse.newBuilder()
-                .setId(post.getId()).setBody(post.getBody()).setPostTime(post.getPostTime())
-                .setSubtitle(post.getSubtitle()).setTitle(post.getTitle())
-                .setAuthor(Blog.BlogPostResponse.Author.newBuilder().setDisplay(user.getDisplay())
-                        .setUsername(user.getUsername()))).build();
-    }
-
-    @Override
-    public Blog.BlogResponseWrapper getResponseForBlog(BlogPost post) {
-        User user = userService.getUser(post.getUsername());
-        return Blog.BlogResponseWrapper.newBuilder().setData(Blog.BlogPostResponse.newBuilder()
-                .setId(post.getId()).setBody(post.getBody()).setPostTime(post.getPostTime())
-                .setSubtitle(post.getSubtitle()).setTitle(post.getTitle())
-                .setAuthor(Blog.BlogPostResponse.Author.newBuilder().setDisplay(user.getDisplay())
-                        .setUsername(user.getUsername()))).build();
-    }
-
-    @Override
-    public Blog.MultiPostWrapper getResponseForBlogs(List<BlogPost> posts) {
-        Blog.MultiPostWrapper.Builder wrapper = Blog.MultiPostWrapper.newBuilder();
-        if (posts.size() == 0) {
-            wrapper.addData(Blog.BlogPostResponse.newBuilder());
-        }
-        for (BlogPost post : posts) {
-            User user = userService.getUser(post.getUsername());
-            wrapper.addData(Blog.BlogPostResponse.newBuilder()
-                    .setId(post.getId()).setBody(post.getBody()).setPostTime(post.getPostTime())
-                    .setSubtitle(post.getSubtitle()).setTitle(post.getTitle())
-                    .setAuthor(Blog.BlogPostResponse.Author.newBuilder().setDisplay(user.getDisplay())
-                            .setUsername(user.getUsername())));
-        }
-        return wrapper.build();
     }
 }

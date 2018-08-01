@@ -1,18 +1,19 @@
 package com.auacm.service;
 
-import com.auacm.api.model.CreateProblem;
+import com.auacm.api.model.request.CreateProblemRequest;
+import com.auacm.api.model.response.CreateProblemResponse;
 import com.auacm.database.model.Problem;
 
 import java.util.List;
 
 public interface ProblemService {
-    Problem createProblem(CreateProblem problem);
+    CreateProblemResponse createProblem(CreateProblemRequest problem);
 
     Problem addProblem(Problem problem);
 
     Problem updateProblem(Problem problem);
 
-    Problem updateProblem(String identifier, CreateProblem problem);
+    CreateProblemResponse updateProblem(String identifier, CreateProblemRequest problem);
 
     void deleteProblem(Problem problem);
 
@@ -25,9 +26,4 @@ public interface ProblemService {
     Problem getProblemForPid(long pid);
 
     Problem getProblemForShortName(String shortName);
-    //TODO implement Problem.ProblemResponseWrapper Problem.ProblemResponseWrapper getResponseForProblem(Problem problem, User user);
-
-    com.auacm.api.proto.Problem.ProblemListWrapper getProblemListResponse(List<Problem> problems);
-
-    com.auacm.api.proto.Problem.ProblemWrapper getProblemResponse(Problem problem);
 }

@@ -2,7 +2,6 @@ package com.auacm.api;
 
 import com.auacm.Auacm;
 import com.auacm.TestingConfig;
-import com.auacm.database.dao.UserDao;
 import com.auacm.database.model.Competition;
 import com.auacm.database.model.CompetitionUser;
 import com.auacm.exception.CompetitionNotFoundException;
@@ -10,9 +9,15 @@ import com.auacm.model.MockCompetitionBuilder;
 import com.auacm.model.MockCompetitionTeamBuilder;
 import com.auacm.model.MockProblemBuilder;
 import com.auacm.request.MockRequest;
-import com.auacm.service.*;
+import com.auacm.service.CompetitionService;
+import com.auacm.service.FileSystemService;
+import com.auacm.service.ProblemService;
+import com.auacm.service.UserService;
 import com.auacm.user.WithACMUser;
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,15 +25,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
-import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -36,13 +36,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertNotNull;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {Auacm.class, TestingConfig.class})
@@ -100,7 +98,7 @@ public class CompetitionControllerTest {
         Assert.assertNotNull(competition);
         Assert.assertEquals(1, competition.getCompetitionUsers().size());
         CompetitionUser user = competition.getCompetitionUsers().get(0);
-        Assert.assertEquals("admin", user.getUsername());
+        Assert.assertEquals("admin", user.getUser().getUsername());
     }
 
     @Test
@@ -128,7 +126,7 @@ public class CompetitionControllerTest {
         Assert.assertNotNull(competition);
         Assert.assertEquals(1, competition.getCompetitionUsers().size());
         CompetitionUser user = competition.getCompetitionUsers().get(0);
-        Assert.assertEquals("user", user.getUsername());
+        Assert.assertEquals("user", user.getUser().getUsername());
     }
 
     @Test
@@ -230,7 +228,7 @@ public class CompetitionControllerTest {
         JsonObject object = new JsonParser().parse(content).getAsJsonObject().get("data").getAsJsonObject();
         Assert.assertNotNull(object);
         Assert.assertEquals(true, object.has("competition"));
-        Assert.assertEquals(true, object.has("compProblems"));
+        Assert.assertEquals(true, object.has("problems"));
         Assert.assertEquals(true, object.has("teams"));
 
         // Check the competition object
@@ -247,7 +245,7 @@ public class CompetitionControllerTest {
         Assert.assertEquals("Test Competition", competition.get("name").getAsString());
 
         // Check the competition problems
-        JsonObject compProblems = object.get("compProblems").getAsJsonObject();
+        JsonObject compProblems = object.get("problems").getAsJsonObject();
         Assert.assertNotNull(compProblems);
         Assert.assertEquals(1, compProblems.size());
         Assert.assertEquals(true, compProblems.has("A"));
@@ -262,20 +260,19 @@ public class CompetitionControllerTest {
         Assert.assertEquals("testproblem", aProblem.get("shortName").getAsString());
 
         // Check the teams
-        JsonArray teams = object.get("teams").getAsJsonArray();
+        JsonObject teams = object.get("teams").getAsJsonObject();
         Assert.assertNotNull(teams);
         Assert.assertEquals(1, teams.size());
-        JsonObject team = teams.get(0).getAsJsonObject();
+        Assert.assertTrue(teams.has("Admin"));
+        JsonObject team = teams.get("Admin").getAsJsonObject();
         Assert.assertNotNull(team);
-        Assert.assertEquals(true, team.has("displayNames"));
-        Assert.assertEquals(true, team.has("name"));
-        Assert.assertEquals(true, team.has("problemData"));
         Assert.assertEquals(true, team.has("users"));
-        Assert.assertEquals(1, team.get("displayNames").getAsJsonArray().size());
-        Assert.assertEquals("Admin", team.get("displayNames").getAsJsonArray().get(0).getAsString());
-        Assert.assertEquals("Admin", team.get("name").getAsString());
+        Assert.assertEquals(true, team.has("problemData"));
         Assert.assertEquals(1, team.get("users").getAsJsonArray().size());
-        Assert.assertEquals("admin", team.get("users").getAsJsonArray().get(0).getAsString());
+        Assert.assertEquals("admin", team.get("users").getAsJsonArray().get(0)
+                .getAsJsonObject().get("username").getAsString());
+        Assert.assertEquals("Admin", team.get("users").getAsJsonArray()
+                .get(0).getAsJsonObject().get("displayName").getAsString());
 
         // Check team problem data
         JsonObject problemData = team.get("problemData").getAsJsonObject();
@@ -287,8 +284,6 @@ public class CompetitionControllerTest {
         Assert.assertEquals(true, problem.has("status"));
         Assert.assertEquals("A", problem.get("label").getAsString());
         Assert.assertEquals("unattempted", problem.get("status").getAsString());
-        Competition competition1 = competitionService.getCompetitionById(1L);
-        Assert.assertNotNull(competition1);
     }
 
     @Test
@@ -374,12 +369,12 @@ public class CompetitionControllerTest {
         createNewCompetition();
         Competition competition = competitionService.getCompetitionById(1L);
         Assert.assertNotNull(competition);
-        Assert.assertEquals(false, competition.isClosed());
+        Assert.assertEquals(false, competition.getClosed());
         mockMvc.perform(MockMvcRequestBuilders.post("/api/competitions/1")
                 .param("closed", "true")).andExpect(MockMvcResultMatchers.status().isOk());
         competition = competitionService.getCompetitionById(1L);
         Assert.assertNotNull(competition);
-        Assert.assertEquals(true, competition.isClosed());
+        Assert.assertEquals(true, competition.getClosed());
     }
 
     @Test
@@ -486,13 +481,13 @@ public class CompetitionControllerTest {
         System.out.println(response);
         JsonObject object = new JsonParser().parse(response).getAsJsonObject().get("data").getAsJsonObject();
         Assert.assertNotNull(object);
-        Assert.assertEquals(true, object.has("Admin"));
+        Assert.assertTrue(object.has("Admin"));
         JsonArray adminArray = object.get("Admin").getAsJsonArray();
         Assert.assertNotNull(adminArray);
         Assert.assertEquals(1, adminArray.size());
-        Assert.assertEquals(true, adminArray.get(0).getAsJsonObject().has("display"));
-        Assert.assertEquals(true, adminArray.get(0).getAsJsonObject().has("username"));
-        Assert.assertEquals("Admin", adminArray.get(0).getAsJsonObject().get("display").getAsString());
+        Assert.assertTrue(adminArray.get(0).getAsJsonObject().has("displayName"));
+        Assert.assertTrue(adminArray.get(0).getAsJsonObject().has("username"));
+        Assert.assertEquals("Admin", adminArray.get(0).getAsJsonObject().get("displayName").getAsString());
         Assert.assertEquals("admin", adminArray.get(0).getAsJsonObject().get("username").getAsString());
     }
 
@@ -516,8 +511,12 @@ public class CompetitionControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse().getContentAsString();
         JsonObject object = new JsonParser().parse(response).getAsJsonObject().get("data").getAsJsonObject();
         Assert.assertNotNull(object);
-        Assert.assertEquals(true, object.has("New Team Name"));
-        Assert.assertEquals(1, object.get("New Team Name").getAsJsonArray().size());
+        JsonObject teams = object.get("teams").getAsJsonObject();
+        Assert.assertTrue(teams.has("New Team Name"));
+        Assert.assertEquals(1, teams.size());
+        JsonObject team = teams.get("New Team Name").getAsJsonObject();
+        Assert.assertNotNull(team);
+        Assert.assertEquals(1, team.get("users").getAsJsonArray().size());
     }
 
     @Test
@@ -531,8 +530,12 @@ public class CompetitionControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse().getContentAsString();
         JsonObject object = new JsonParser().parse(response).getAsJsonObject().get("data").getAsJsonObject();
         Assert.assertNotNull(object);
-        Assert.assertEquals(true, object.has("New Team Name"));
-        Assert.assertEquals(2, object.get("New Team Name").getAsJsonArray().size());
+        JsonObject teams = object.get("teams").getAsJsonObject();
+        Assert.assertTrue(teams.has("New Team Name"));
+        Assert.assertEquals(1, teams.size());
+        JsonObject team = teams.get("New Team Name").getAsJsonObject();
+        Assert.assertNotNull(team);
+        Assert.assertEquals(2, team.get("users").getAsJsonArray().size());
     }
 
     @Test
@@ -546,9 +549,12 @@ public class CompetitionControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse().getContentAsString();
         JsonObject object = new JsonParser().parse(response).getAsJsonObject().get("data").getAsJsonObject();
         Assert.assertNotNull(object);
-        Assert.assertEquals(true, object.has("New Team Name"));
-        Assert.assertEquals(1, object.size());
-        Assert.assertEquals(1, object.get("New Team Name").getAsJsonArray().size());
+        JsonObject teams = object.get("teams").getAsJsonObject();
+        Assert.assertTrue(teams.has("New Team Name"));
+        Assert.assertEquals(1, teams.size());
+        JsonObject team = teams.get("New Team Name").getAsJsonObject();
+        Assert.assertNotNull(team);
+        Assert.assertEquals(1, team.get("users").getAsJsonArray().size());
     }
 
     @Test
@@ -569,11 +575,16 @@ public class CompetitionControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse().getContentAsString();
         JsonObject object = new JsonParser().parse(response).getAsJsonObject().get("data").getAsJsonObject();
         Assert.assertNotNull(object);
-        Assert.assertEquals(true, object.has("Team One"));
-        Assert.assertEquals(true, object.has("Team Two"));
-        Assert.assertEquals(2, object.size());
-        Assert.assertEquals(1, object.get("Team One").getAsJsonArray().size());
-        Assert.assertEquals(1, object.get("Team Two").getAsJsonArray().size());
+        JsonObject teams = object.get("teams").getAsJsonObject();
+        Assert.assertEquals(2, teams.size());
+        Assert.assertTrue(teams.has("Team One"));
+        Assert.assertTrue(teams.has("Team Two"));
+        JsonObject team1 = teams.get("Team One").getAsJsonObject();
+        JsonObject team2 = teams.get("Team Two").getAsJsonObject();
+        Assert.assertNotNull(team1);
+        Assert.assertNotNull(team2);
+        Assert.assertEquals(1, team1.get("users").getAsJsonArray().size());
+        Assert.assertEquals(1, team1.get("users").getAsJsonArray().size());
     }
 
     @After
